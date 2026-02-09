@@ -1,0 +1,13 @@
+# Include package files
+recursive-include Tepilora *.py *.pyi py.typed
+
+# Exclude dev/internal files from distribution
+exclude CLAUDE.md
+exclude RELEASING.md
+prune scripts
+prune schema
+prune tests
+prune examples
+global-exclude __pycache__
+global-exclude *.py[cod]
+global-exclude .git*

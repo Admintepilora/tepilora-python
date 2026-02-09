@@ -1,0 +1,58 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "Tepilora"
+dynamic = ["version"]
+description = "Python SDK for Tepilora API v3"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.9"
+authors = [
+    {name = "Tepilora", email = "info@tepiloradata.com"},
+]
+keywords = ["tepilora", "finance", "api", "sdk", "portfolio", "analytics"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Office/Business :: Financial",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+dependencies = ["httpx>=0.26.0"]
+
+[project.optional-dependencies]
+arrow = ["pyarrow>=12"]
+polars = ["polars>=0.20"]
+dev = ["pytest>=7", "pytest-asyncio>=0.21", "httpx>=0.26.0"]
+
+[project.urls]
+Homepage = "https://tepiloradata.com"
+Repository = "https://github.com/Admintepilora/tepilora-python"
+Issues = "https://github.com/Admintepilora/tepilora-python/issues"
+
+[tool.setuptools.dynamic]
+version = { attr = "Tepilora.version.__version__" }
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["Tepilora*"]
+
+[tool.setuptools.package-data]
+Tepilora = ["py.typed", "*.pyi"]
+
+# Exclude internal/dev files from package
+[tool.setuptools.exclude-package-data]
+"*" = ["*.pyc", "__pycache__"]
+
+# pytest config
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
