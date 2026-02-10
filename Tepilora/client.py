@@ -219,6 +219,7 @@ class TepiloraClient:
             PortfolioAPI, MacroAPI, AlertsAPI,
             StocksAPI, BondsAPI, OptionsAPI, EsgAPI, FactorsAPI, FhAPI, DataAPI,
             ClientsAPI, ProfilingAPI, BillingAPI, DocumentsAPI, AlternativesAPI,
+            WorkflowsAPI,
         )
         from .analytics import AnalyticsAPI
 
@@ -250,6 +251,9 @@ class TepiloraClient:
         self.billing = BillingAPI(self)
         self.documents = DocumentsAPI(self)
         self.alternatives = AlternativesAPI(self)
+
+        # Cross-module
+        self.workflows = WorkflowsAPI(self)
 
     def close(self) -> None:
         if self._owns_client:
@@ -443,6 +447,7 @@ class AsyncTepiloraClient:
             AsyncPortfolioAPI, AsyncMacroAPI, AsyncAlertsAPI,
             AsyncStocksAPI, AsyncBondsAPI, AsyncOptionsAPI, AsyncEsgAPI, AsyncFactorsAPI, AsyncFhAPI, AsyncDataAPI,
             AsyncClientsAPI, AsyncProfilingAPI, AsyncBillingAPI, AsyncDocumentsAPI, AsyncAlternativesAPI,
+            AsyncWorkflowsAPI,
         )
         from .analytics import AsyncAnalyticsAPI
 
@@ -474,6 +479,9 @@ class AsyncTepiloraClient:
         self.billing = AsyncBillingAPI(self)
         self.documents = AsyncDocumentsAPI(self)
         self.alternatives = AsyncAlternativesAPI(self)
+
+        # Cross-module
+        self.workflows = AsyncWorkflowsAPI(self)
 
     async def aclose(self) -> None:
         if self._owns_client:

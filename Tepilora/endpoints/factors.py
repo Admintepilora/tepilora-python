@@ -6,13 +6,13 @@ Regenerate with: python scripts/generate_sdk.py --category factors
 """
 from __future__ import annotations
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional, Union
 
 from ._base import AsyncBaseAPI, BaseAPI
 
 
 class FactorsAPI(BaseAPI):
-    """Factors namespace: get, list, status."""
+    """Factors namespace: get, list, portfolio_exposure, risk_model, rolling_covariance, scenario, status."""
 
     def get(
         self,
@@ -49,6 +49,189 @@ class FactorsAPI(BaseAPI):
         params: Dict[str, Any] = {}
         return self._call("factors.list", params=params, options=options, context=context)
 
+    def portfolio_exposure(
+        self,
+        *,
+        portfolio_id: Optional[str] = None,
+        id: Optional[str] = None,
+        weights: Optional[Dict[str, Any]] = None,
+        benchmark: Optional[str] = None,
+        model: Optional[str] = "FF5",
+        period: Optional[int] = 252,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+        response_format: Optional[str] = None,
+    ) -> Any:
+        """Portfolio factor exposure
+
+        Compute aggregated portfolio-level factor exposures from constituent holdings.
+
+        Args:
+        portfolio_id: Portfolio ID
+        id: Alias for portfolio_id
+        weights: Weights dict {identifier: weight}
+        benchmark: Benchmark identifier
+        model: FF3|FF5|Carhart
+        period: Rolling window
+        start_date: Start date (YYYY-MM-DD)
+        end_date: End date (YYYY-MM-DD)"""
+        params: Dict[str, Any] = {}
+        if portfolio_id is not None:
+            params["portfolio_id"] = portfolio_id
+        if id is not None:
+            params["id"] = id
+        if weights is not None:
+            params["weights"] = weights
+        if benchmark is not None:
+            params["benchmark"] = benchmark
+        if model is not None:
+            params["model"] = model
+        if period is not None:
+            params["period"] = period
+        if start_date is not None:
+            params["start_date"] = start_date
+        if end_date is not None:
+            params["end_date"] = end_date
+        return self._call("factors.portfolio_exposure", params=params, options=options, context=context, response_format=response_format)
+
+    def risk_model(
+        self,
+        *,
+        identifiers: Optional[Union[str, List[str]]] = None,
+        model: Optional[str] = "FF5",
+        period: Optional[int] = 252,
+        cov_method: Optional[str] = "sample",
+        include_statistics: Optional[bool] = False,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+        response_format: Optional[str] = None,
+    ) -> Any:
+        """Factor risk decomposition
+
+        Compute factor covariance and decompose security risk into systematic and specific components.
+
+        Args:
+        identifiers: Security identifier(s)
+        model: FF3|FF5|Carhart
+        period: Rolling window for covariance
+        cov_method: Covariance method: sample|ledoit_wolf|oas|ewma
+        include_statistics: Include SE/t-stats/p-values for betas
+        start_date: Start date (YYYY-MM-DD)
+        end_date: End date (YYYY-MM-DD)"""
+        params: Dict[str, Any] = {}
+        if identifiers is not None:
+            params["identifiers"] = identifiers
+        if model is not None:
+            params["model"] = model
+        if period is not None:
+            params["period"] = period
+        if cov_method is not None:
+            params["cov_method"] = cov_method
+        if include_statistics is not None:
+            params["include_statistics"] = include_statistics
+        if start_date is not None:
+            params["start_date"] = start_date
+        if end_date is not None:
+            params["end_date"] = end_date
+        return self._call("factors.risk_model", params=params, options=options, context=context, response_format=response_format)
+
+    def rolling_covariance(
+        self,
+        *,
+        model: Optional[str] = "FF5",
+        period: Optional[int] = 126,
+        cov_method: Optional[str] = "sample",
+        output: Optional[str] = "correlation",
+        annualize: Optional[bool] = True,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+        response_format: Optional[str] = None,
+    ) -> Any:
+        """Rolling factor covariance
+
+        Compute time-varying factor correlation/covariance matrices.
+
+        Args:
+        model: FF3|FF5|Carhart
+        period: Rolling window
+        cov_method: Covariance method: sample|ledoit_wolf|oas|ewma
+        output: correlation|covariance|both
+        annualize: Annualize covariance
+        start_date: Start date (YYYY-MM-DD)
+        end_date: End date (YYYY-MM-DD)"""
+        params: Dict[str, Any] = {}
+        if model is not None:
+            params["model"] = model
+        if period is not None:
+            params["period"] = period
+        if cov_method is not None:
+            params["cov_method"] = cov_method
+        if output is not None:
+            params["output"] = output
+        if annualize is not None:
+            params["annualize"] = annualize
+        if start_date is not None:
+            params["start_date"] = start_date
+        if end_date is not None:
+            params["end_date"] = end_date
+        return self._call("factors.rolling_covariance", params=params, options=options, context=context, response_format=response_format)
+
+    def scenario(
+        self,
+        *,
+        scenarios: List[Any],
+        identifiers: Optional[Union[str, List[str]]] = None,
+        portfolio_id: Optional[str] = None,
+        id: Optional[str] = None,
+        weights: Optional[Dict[str, Any]] = None,
+        model: Optional[str] = "FF5",
+        period: Optional[int] = 252,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+        response_format: Optional[str] = None,
+    ) -> Any:
+        """Factor scenario analysis
+
+        Stress test portfolio/securities with hypothetical factor shocks.
+
+        Args:
+        scenarios: List of scenario dicts or 'historical'
+        identifiers: Security identifier(s)
+        portfolio_id: Portfolio ID
+        id: Alias for portfolio_id
+        weights: Weights dict
+        model: FF3|FF5|Carhart
+        period: Regression window
+        start_date: Start date (YYYY-MM-DD)
+        end_date: End date (YYYY-MM-DD)"""
+        params: Dict[str, Any] = {}
+        params["scenarios"] = scenarios
+        if identifiers is not None:
+            params["identifiers"] = identifiers
+        if portfolio_id is not None:
+            params["portfolio_id"] = portfolio_id
+        if id is not None:
+            params["id"] = id
+        if weights is not None:
+            params["weights"] = weights
+        if model is not None:
+            params["model"] = model
+        if period is not None:
+            params["period"] = period
+        if start_date is not None:
+            params["start_date"] = start_date
+        if end_date is not None:
+            params["end_date"] = end_date
+        return self._call("factors.scenario", params=params, options=options, context=context, response_format=response_format)
+
     def status(
         self,
         *,
@@ -64,7 +247,7 @@ class FactorsAPI(BaseAPI):
 
 
 class AsyncFactorsAPI(AsyncBaseAPI):
-    """Factors namespace: get, list, status."""
+    """Factors namespace: get, list, portfolio_exposure, risk_model, rolling_covariance, scenario, status."""
 
     async def get(
         self,
@@ -100,6 +283,189 @@ class AsyncFactorsAPI(AsyncBaseAPI):
         """List available factors"""
         params: Dict[str, Any] = {}
         return await self._call("factors.list", params=params, options=options, context=context)
+
+    async def portfolio_exposure(
+        self,
+        *,
+        portfolio_id: Optional[str] = None,
+        id: Optional[str] = None,
+        weights: Optional[Dict[str, Any]] = None,
+        benchmark: Optional[str] = None,
+        model: Optional[str] = "FF5",
+        period: Optional[int] = 252,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+        response_format: Optional[str] = None,
+    ) -> Any:
+        """Portfolio factor exposure
+
+        Compute aggregated portfolio-level factor exposures from constituent holdings.
+
+        Args:
+        portfolio_id: Portfolio ID
+        id: Alias for portfolio_id
+        weights: Weights dict {identifier: weight}
+        benchmark: Benchmark identifier
+        model: FF3|FF5|Carhart
+        period: Rolling window
+        start_date: Start date (YYYY-MM-DD)
+        end_date: End date (YYYY-MM-DD)"""
+        params: Dict[str, Any] = {}
+        if portfolio_id is not None:
+            params["portfolio_id"] = portfolio_id
+        if id is not None:
+            params["id"] = id
+        if weights is not None:
+            params["weights"] = weights
+        if benchmark is not None:
+            params["benchmark"] = benchmark
+        if model is not None:
+            params["model"] = model
+        if period is not None:
+            params["period"] = period
+        if start_date is not None:
+            params["start_date"] = start_date
+        if end_date is not None:
+            params["end_date"] = end_date
+        return await self._call("factors.portfolio_exposure", params=params, options=options, context=context, response_format=response_format)
+
+    async def risk_model(
+        self,
+        *,
+        identifiers: Optional[Union[str, List[str]]] = None,
+        model: Optional[str] = "FF5",
+        period: Optional[int] = 252,
+        cov_method: Optional[str] = "sample",
+        include_statistics: Optional[bool] = False,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+        response_format: Optional[str] = None,
+    ) -> Any:
+        """Factor risk decomposition
+
+        Compute factor covariance and decompose security risk into systematic and specific components.
+
+        Args:
+        identifiers: Security identifier(s)
+        model: FF3|FF5|Carhart
+        period: Rolling window for covariance
+        cov_method: Covariance method: sample|ledoit_wolf|oas|ewma
+        include_statistics: Include SE/t-stats/p-values for betas
+        start_date: Start date (YYYY-MM-DD)
+        end_date: End date (YYYY-MM-DD)"""
+        params: Dict[str, Any] = {}
+        if identifiers is not None:
+            params["identifiers"] = identifiers
+        if model is not None:
+            params["model"] = model
+        if period is not None:
+            params["period"] = period
+        if cov_method is not None:
+            params["cov_method"] = cov_method
+        if include_statistics is not None:
+            params["include_statistics"] = include_statistics
+        if start_date is not None:
+            params["start_date"] = start_date
+        if end_date is not None:
+            params["end_date"] = end_date
+        return await self._call("factors.risk_model", params=params, options=options, context=context, response_format=response_format)
+
+    async def rolling_covariance(
+        self,
+        *,
+        model: Optional[str] = "FF5",
+        period: Optional[int] = 126,
+        cov_method: Optional[str] = "sample",
+        output: Optional[str] = "correlation",
+        annualize: Optional[bool] = True,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+        response_format: Optional[str] = None,
+    ) -> Any:
+        """Rolling factor covariance
+
+        Compute time-varying factor correlation/covariance matrices.
+
+        Args:
+        model: FF3|FF5|Carhart
+        period: Rolling window
+        cov_method: Covariance method: sample|ledoit_wolf|oas|ewma
+        output: correlation|covariance|both
+        annualize: Annualize covariance
+        start_date: Start date (YYYY-MM-DD)
+        end_date: End date (YYYY-MM-DD)"""
+        params: Dict[str, Any] = {}
+        if model is not None:
+            params["model"] = model
+        if period is not None:
+            params["period"] = period
+        if cov_method is not None:
+            params["cov_method"] = cov_method
+        if output is not None:
+            params["output"] = output
+        if annualize is not None:
+            params["annualize"] = annualize
+        if start_date is not None:
+            params["start_date"] = start_date
+        if end_date is not None:
+            params["end_date"] = end_date
+        return await self._call("factors.rolling_covariance", params=params, options=options, context=context, response_format=response_format)
+
+    async def scenario(
+        self,
+        *,
+        scenarios: List[Any],
+        identifiers: Optional[Union[str, List[str]]] = None,
+        portfolio_id: Optional[str] = None,
+        id: Optional[str] = None,
+        weights: Optional[Dict[str, Any]] = None,
+        model: Optional[str] = "FF5",
+        period: Optional[int] = 252,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+        response_format: Optional[str] = None,
+    ) -> Any:
+        """Factor scenario analysis
+
+        Stress test portfolio/securities with hypothetical factor shocks.
+
+        Args:
+        scenarios: List of scenario dicts or 'historical'
+        identifiers: Security identifier(s)
+        portfolio_id: Portfolio ID
+        id: Alias for portfolio_id
+        weights: Weights dict
+        model: FF3|FF5|Carhart
+        period: Regression window
+        start_date: Start date (YYYY-MM-DD)
+        end_date: End date (YYYY-MM-DD)"""
+        params: Dict[str, Any] = {}
+        params["scenarios"] = scenarios
+        if identifiers is not None:
+            params["identifiers"] = identifiers
+        if portfolio_id is not None:
+            params["portfolio_id"] = portfolio_id
+        if id is not None:
+            params["id"] = id
+        if weights is not None:
+            params["weights"] = weights
+        if model is not None:
+            params["model"] = model
+        if period is not None:
+            params["period"] = period
+        if start_date is not None:
+            params["start_date"] = start_date
+        if end_date is not None:
+            params["end_date"] = end_date
+        return await self._call("factors.scenario", params=params, options=options, context=context, response_format=response_format)
 
     async def status(
         self,

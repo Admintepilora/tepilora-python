@@ -12,52 +12,39 @@ from ._base import AsyncBaseAPI, BaseAPI
 
 
 class BondsAPI(BaseAPI):
-    """Bonds namespace: analyze, curve, ladder, metrics, portfolio, screen, spread."""
+    """Bonds namespace: analyze, curve, ladder, lookup, maturity_profile, metrics, portfolio, screen, spread."""
 
     def analyze(
         self,
         *,
-        identifier: Optional[str] = None,
-        cash_flows: Optional[List[Any]] = None,
-        price: Optional[float] = None,
-        face_value: Optional[float] = 100,
+        identifier: str,
+        face_value: Optional[float] = 1000,
         coupon_rate: Optional[float] = None,
         maturity_date: Optional[str] = None,
-        settlement_date: Optional[str] = None,
-        frequency: Optional[int] = 2,
-        day_count: Optional[str] = "ACT/ACT",
+        frequency: Optional[int] = None,
+        day_count: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
         """Analyze bond
 
-        Calculate YTM, duration, convexity.
+        Calculate YTM, duration, convexity. coupon_rate and maturity_date auto-populated from metadata if missing.
 
         Args:
         identifier: TepiloraCode or ISIN
-        cash_flows: User-provided cash flows
-        price: Current price
-        face_value: Face value
-        coupon_rate: Coupon rate
-        maturity_date: Maturity date
-        settlement_date: Settlement date
-        frequency: Coupon frequency (1,2,4)
-        day_count: Day count convention"""
+        face_value: Face/par value
+        coupon_rate: Coupon rate (decimal). Auto-populated from metadata if missing
+        maturity_date: Maturity date YYYY-MM-DD. Auto-populated from metadata if missing
+        frequency: Coupon frequency (1,2,4,12). Auto-populated from metadata if missing
+        day_count: Day count convention. Auto-populated from metadata if missing"""
         params: Dict[str, Any] = {}
-        if identifier is not None:
-            params["identifier"] = identifier
-        if cash_flows is not None:
-            params["cash_flows"] = cash_flows
-        if price is not None:
-            params["price"] = price
+        params["identifier"] = identifier
         if face_value is not None:
             params["face_value"] = face_value
         if coupon_rate is not None:
             params["coupon_rate"] = coupon_rate
         if maturity_date is not None:
             params["maturity_date"] = maturity_date
-        if settlement_date is not None:
-            params["settlement_date"] = settlement_date
         if frequency is not None:
             params["frequency"] = frequency
         if day_count is not None:
@@ -117,6 +104,51 @@ class BondsAPI(BaseAPI):
             params["rungs"] = rungs
         return self._call("bonds.ladder", params=params, options=options, context=context, response_format=response_format)
 
+    def lookup(
+        self,
+        *,
+        identifier: Optional[str] = None,
+        identifiers: Optional[Union[str, List[str]]] = None,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+        response_format: Optional[str] = None,
+    ) -> Any:
+        """Fast bond metadata lookup
+
+        Returns bond metadata from D_full.parquet without calculations
+
+        Args:
+        identifier: Single bond identifier
+        identifiers: Multiple bond identifiers"""
+        params: Dict[str, Any] = {}
+        if identifier is not None:
+            params["identifier"] = identifier
+        if identifiers is not None:
+            params["identifiers"] = identifiers
+        return self._call("bonds.lookup", params=params, options=options, context=context, response_format=response_format)
+
+    def maturity_profile(
+        self,
+        *,
+        identifiers: Union[str, List[str]],
+        weights: Optional[List[Any]] = None,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+        response_format: Optional[str] = None,
+    ) -> Any:
+        """Maturity distribution by bucket
+
+        Maturity distribution (0-1y, 1-3y, 3-5y, 5-7y, 7-10y, 10+y)
+
+        Args:
+        identifiers: Bond identifiers
+        weights: Portfolio weights"""
+        params: Dict[str, Any] = {}
+        params["identifiers"] = identifiers
+        if weights is not None:
+            params["weights"] = weights
+        return self._call("bonds.maturity_profile", params=params, options=options, context=context, response_format=response_format)
+
     def metrics(
         self,
         *,
@@ -138,7 +170,7 @@ class BondsAPI(BaseAPI):
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
-        weights: Optional[Dict[str, Any]] = None,
+        weights: Optional[List[Any]] = None,
         include_duration: Optional[bool] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
@@ -150,7 +182,7 @@ class BondsAPI(BaseAPI):
 
         Args:
         identifiers: List of TepiloraCodes
-        weights: Weights by identifier
+        weights: Portfolio weights (list of floats, same order as identifiers)
         include_duration: Include duration analysis"""
         params: Dict[str, Any] = {}
         if identifiers is not None:
@@ -165,21 +197,29 @@ class BondsAPI(BaseAPI):
         self,
         *,
         criteria: Optional[Dict[str, Any]] = None,
-        limit: Optional[int] = 50,
+        universe: Optional[Dict[str, Any]] = None,
+        rank_by: Optional[str] = None,
+        limit: Optional[int] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
         """Screen bonds
 
-        Screen bonds by criteria.
+        Screen bonds by criteria. Returns all matching bonds by default.
 
         Args:
         criteria: Screening criteria
-        limit: Maximum results"""
+        universe: Universe filter (e.g. TepiloraBondType, TepiloraBondIssuer)
+        rank_by: Metric to rank by (ytm, duration, etc.)
+        limit: Max results (default: all)"""
         params: Dict[str, Any] = {}
         if criteria is not None:
             params["criteria"] = criteria
+        if universe is not None:
+            params["universe"] = universe
+        if rank_by is not None:
+            params["rank_by"] = rank_by
         if limit is not None:
             params["limit"] = limit
         return self._call("bonds.screen", params=params, options=options, context=context, response_format=response_format)
@@ -187,70 +227,61 @@ class BondsAPI(BaseAPI):
     def spread(
         self,
         *,
-        identifier: str,
+        identifiers: Union[str, List[str]],
+        benchmark: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
         """Credit spread
 
-        Calculate credit spread.
+        Calculate credit spread vs benchmark.
 
         Args:
-        identifier: TepiloraCode or ISIN"""
+        identifiers: List of TepiloraCodes
+        benchmark: Benchmark bond identifier"""
         params: Dict[str, Any] = {}
-        params["identifier"] = identifier
+        params["identifiers"] = identifiers
+        if benchmark is not None:
+            params["benchmark"] = benchmark
         return self._call("bonds.spread", params=params, options=options, context=context, response_format=response_format)
 
 
 
 class AsyncBondsAPI(AsyncBaseAPI):
-    """Bonds namespace: analyze, curve, ladder, metrics, portfolio, screen, spread."""
+    """Bonds namespace: analyze, curve, ladder, lookup, maturity_profile, metrics, portfolio, screen, spread."""
 
     async def analyze(
         self,
         *,
-        identifier: Optional[str] = None,
-        cash_flows: Optional[List[Any]] = None,
-        price: Optional[float] = None,
-        face_value: Optional[float] = 100,
+        identifier: str,
+        face_value: Optional[float] = 1000,
         coupon_rate: Optional[float] = None,
         maturity_date: Optional[str] = None,
-        settlement_date: Optional[str] = None,
-        frequency: Optional[int] = 2,
-        day_count: Optional[str] = "ACT/ACT",
+        frequency: Optional[int] = None,
+        day_count: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
         """Analyze bond
 
-        Calculate YTM, duration, convexity.
+        Calculate YTM, duration, convexity. coupon_rate and maturity_date auto-populated from metadata if missing.
 
         Args:
         identifier: TepiloraCode or ISIN
-        cash_flows: User-provided cash flows
-        price: Current price
-        face_value: Face value
-        coupon_rate: Coupon rate
-        maturity_date: Maturity date
-        settlement_date: Settlement date
-        frequency: Coupon frequency (1,2,4)
-        day_count: Day count convention"""
+        face_value: Face/par value
+        coupon_rate: Coupon rate (decimal). Auto-populated from metadata if missing
+        maturity_date: Maturity date YYYY-MM-DD. Auto-populated from metadata if missing
+        frequency: Coupon frequency (1,2,4,12). Auto-populated from metadata if missing
+        day_count: Day count convention. Auto-populated from metadata if missing"""
         params: Dict[str, Any] = {}
-        if identifier is not None:
-            params["identifier"] = identifier
-        if cash_flows is not None:
-            params["cash_flows"] = cash_flows
-        if price is not None:
-            params["price"] = price
+        params["identifier"] = identifier
         if face_value is not None:
             params["face_value"] = face_value
         if coupon_rate is not None:
             params["coupon_rate"] = coupon_rate
         if maturity_date is not None:
             params["maturity_date"] = maturity_date
-        if settlement_date is not None:
-            params["settlement_date"] = settlement_date
         if frequency is not None:
             params["frequency"] = frequency
         if day_count is not None:
@@ -310,6 +341,51 @@ class AsyncBondsAPI(AsyncBaseAPI):
             params["rungs"] = rungs
         return await self._call("bonds.ladder", params=params, options=options, context=context, response_format=response_format)
 
+    async def lookup(
+        self,
+        *,
+        identifier: Optional[str] = None,
+        identifiers: Optional[Union[str, List[str]]] = None,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+        response_format: Optional[str] = None,
+    ) -> Any:
+        """Fast bond metadata lookup
+
+        Returns bond metadata from D_full.parquet without calculations
+
+        Args:
+        identifier: Single bond identifier
+        identifiers: Multiple bond identifiers"""
+        params: Dict[str, Any] = {}
+        if identifier is not None:
+            params["identifier"] = identifier
+        if identifiers is not None:
+            params["identifiers"] = identifiers
+        return await self._call("bonds.lookup", params=params, options=options, context=context, response_format=response_format)
+
+    async def maturity_profile(
+        self,
+        *,
+        identifiers: Union[str, List[str]],
+        weights: Optional[List[Any]] = None,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+        response_format: Optional[str] = None,
+    ) -> Any:
+        """Maturity distribution by bucket
+
+        Maturity distribution (0-1y, 1-3y, 3-5y, 5-7y, 7-10y, 10+y)
+
+        Args:
+        identifiers: Bond identifiers
+        weights: Portfolio weights"""
+        params: Dict[str, Any] = {}
+        params["identifiers"] = identifiers
+        if weights is not None:
+            params["weights"] = weights
+        return await self._call("bonds.maturity_profile", params=params, options=options, context=context, response_format=response_format)
+
     async def metrics(
         self,
         *,
@@ -331,7 +407,7 @@ class AsyncBondsAPI(AsyncBaseAPI):
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
-        weights: Optional[Dict[str, Any]] = None,
+        weights: Optional[List[Any]] = None,
         include_duration: Optional[bool] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
@@ -343,7 +419,7 @@ class AsyncBondsAPI(AsyncBaseAPI):
 
         Args:
         identifiers: List of TepiloraCodes
-        weights: Weights by identifier
+        weights: Portfolio weights (list of floats, same order as identifiers)
         include_duration: Include duration analysis"""
         params: Dict[str, Any] = {}
         if identifiers is not None:
@@ -358,21 +434,29 @@ class AsyncBondsAPI(AsyncBaseAPI):
         self,
         *,
         criteria: Optional[Dict[str, Any]] = None,
-        limit: Optional[int] = 50,
+        universe: Optional[Dict[str, Any]] = None,
+        rank_by: Optional[str] = None,
+        limit: Optional[int] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
         """Screen bonds
 
-        Screen bonds by criteria.
+        Screen bonds by criteria. Returns all matching bonds by default.
 
         Args:
         criteria: Screening criteria
-        limit: Maximum results"""
+        universe: Universe filter (e.g. TepiloraBondType, TepiloraBondIssuer)
+        rank_by: Metric to rank by (ytm, duration, etc.)
+        limit: Max results (default: all)"""
         params: Dict[str, Any] = {}
         if criteria is not None:
             params["criteria"] = criteria
+        if universe is not None:
+            params["universe"] = universe
+        if rank_by is not None:
+            params["rank_by"] = rank_by
         if limit is not None:
             params["limit"] = limit
         return await self._call("bonds.screen", params=params, options=options, context=context, response_format=response_format)
@@ -380,19 +464,23 @@ class AsyncBondsAPI(AsyncBaseAPI):
     async def spread(
         self,
         *,
-        identifier: str,
+        identifiers: Union[str, List[str]],
+        benchmark: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
         """Credit spread
 
-        Calculate credit spread.
+        Calculate credit spread vs benchmark.
 
         Args:
-        identifier: TepiloraCode or ISIN"""
+        identifiers: List of TepiloraCodes
+        benchmark: Benchmark bond identifier"""
         params: Dict[str, Any] = {}
-        params["identifier"] = identifier
+        params["identifiers"] = identifiers
+        if benchmark is not None:
+            params["benchmark"] = benchmark
         return await self._call("bonds.spread", params=params, options=options, context=context, response_format=response_format)
 
 
