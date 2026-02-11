@@ -1,9 +1,12 @@
 import json
+import importlib.util
 import unittest
 
 import httpx
 
 from Tepilora import TepiloraClient
+
+_HAS_PYARROW = importlib.util.find_spec("pyarrow") is not None
 
 
 class TestAnalyticsSync(unittest.TestCase):
@@ -134,6 +137,7 @@ class TestAnalyticsSync(unittest.TestCase):
         self.assertGreaterEqual(calls["info"], 1)
         self.assertEqual(calls["call"], 1)
 
+    @unittest.skipUnless(_HAS_PYARROW, "pyarrow not installed")
     def test_analytics_as_table_from_json_result(self) -> None:
         def handler(request: httpx.Request) -> httpx.Response:
             return httpx.Response(
