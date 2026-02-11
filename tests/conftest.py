@@ -15,11 +15,19 @@ from Tepilora import TepiloraClient, AsyncTepiloraClient
 SCHEMA_PATH = Path(__file__).parent.parent / "schema" / "registry.json"
 
 
+def _load_schema() -> Dict[str, Any]:
+    """Load schema from JSON file if available, otherwise from embedded schema."""
+    if SCHEMA_PATH.exists():
+        with open(SCHEMA_PATH, "r", encoding="utf-8") as f:
+            return json.load(f)
+    from Tepilora._schema import SCHEMA
+    return SCHEMA
+
+
 @pytest.fixture(scope="session")
 def schema() -> Dict[str, Any]:
     """Load registry schema (session-scoped for performance)."""
-    with open(SCHEMA_PATH, "r", encoding="utf-8") as f:
-        return json.load(f)
+    return _load_schema()
 
 
 @pytest.fixture(scope="session")

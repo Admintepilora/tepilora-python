@@ -1,14 +1,19 @@
+
+# Python cache
 __pycache__/
-*.py[cod]
-*.egg-info/
-dist/
-build/
-.eggs/
-*.egg
-.pytest_cache/
-.tox/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Virtualenv / tooling
 .venv/
 venv/
-*.so
-.DS_Store
+dist/
+build/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# Local secrets
 .env

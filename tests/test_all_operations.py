@@ -7,19 +7,15 @@ Tests that each operation:
 3. Handles required parameters correctly
 """
 
-import json
-from pathlib import Path
 from typing import Any, Dict, List
 
 import pytest
 
-from conftest import build_minimal_params, generate_test_value
+from conftest import build_minimal_params, generate_test_value, _load_schema
 
 
 # Load schema at module level for parametrize
-SCHEMA_PATH = Path(__file__).parent.parent / "schema" / "registry.json"
-with open(SCHEMA_PATH, "r", encoding="utf-8") as f:
-    SCHEMA = json.load(f)
+SCHEMA = _load_schema()
 
 # Skip categories (internal only or not implemented)
 SKIP_CATEGORIES = {"audit", "exports"}
