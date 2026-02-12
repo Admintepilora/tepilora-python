@@ -1,8 +1,8 @@
 # Tepilora SDK (Python)
 
-SDK Python (sync + async) per Tepilora API v3.
+Python SDK (sync + async) for Tepilora API v3.
 
-**218 operazioni** in **23 namespace** auto-generati dal registry.
+**218 operations** across **23 namespaces**, auto-generated from the registry.
 
 ## Install
 
@@ -12,7 +12,7 @@ pip install Tepilora
 
 Optional extras:
 ```bash
-pip install 'Tepilora[arrow]'   # PyArrow per formati binari
+pip install 'Tepilora[arrow]'   # PyArrow for binary formats
 pip install 'Tepilora[polars]'  # Polars DataFrame support
 ```
 
@@ -48,7 +48,7 @@ asyncio.run(main())
 
 ## Namespaces
 
-| Namespace | Operazioni | Descrizione |
+| Namespace | Operations | Description |
 |-----------|------------|-------------|
 | `securities` | 12 | Search, filter, history, facets, MiFID, fees |
 | `news` | 7 | Search, latest, trending, details |
@@ -73,7 +73,7 @@ asyncio.run(main())
 | `data` | 1 | Raw data access |
 | `exports` | 2 | Data export to file formats |
 
-## Esempi per Namespace
+## Examples by Namespace
 
 ### Securities
 
@@ -261,5 +261,5 @@ except TepiloraAPIError as e:
 
 ```python
 import Tepilora
-print(Tepilora.__version__)  # 0.3.0
+print(Tepilora.__version__)  # 0.3.1
 ```
