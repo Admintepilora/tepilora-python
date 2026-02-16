@@ -1,9 +1,15 @@
 from __future__ import annotations
 
+import json
 import logging
 import os
+import random
+import time
 import warnings
 from dataclasses import dataclass
+from datetime import date, datetime, timezone
+from decimal import Decimal
+from email.utils import parsedate_to_datetime
 from typing import Any, Dict, Mapping, Optional, Tuple, Union
 
 import httpx
@@ -12,11 +18,36 @@ from .errors import TepiloraAPIError
 from .capabilities import _client_capabilities
 
 logger = logging.getLogger("Tepilora")
-from .models import V3BinaryMeta, V3BinaryResponse, V3Request, V3Response
+from .models import CreditInfo, V3BinaryMeta, V3BinaryResponse, V3Request, V3Response, parse_credit_headers
 from .version import __version__
 
 
 V3_PREFIX = "/T-Api/v3"
+
+
+class _TepiloraJSONEncoder(json.JSONEncoder):
+    """JSON encoder that handles Decimal and date objects."""
+
+    def default(self, obj: Any) -> Any:
+        if isinstance(obj, Decimal):
+            # Use float for JSON number representation.
+            return float(obj)
+        if isinstance(obj, (datetime, date)):
+            return obj.isoformat()
+        return super().default(obj)
+
+
+def _sanitize_params(value: Any) -> Any:
+    """Convert Decimal and date objects to JSON-safe types."""
+    if isinstance(value, Decimal):
+        return float(value)
+    if isinstance(value, (datetime, date)):
+        return value.isoformat()
+    if isinstance(value, dict):
+        return {k: _sanitize_params(v) for k, v in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_sanitize_params(v) for v in value]
+    return value
 
 
 def _normalize_base_url(base_url: str) -> str:
@@ -59,6 +90,38 @@ def _format_to_accept(response_format: str) -> str:
         f"Unsupported response format: {response_format!r}. "
         f"Valid formats: {', '.join(format_map.keys())} or explicit MIME type"
     )
+
+
+def _parse_retry_after(headers: Mapping[str, str]) -> Optional[float]:
+    raw = headers.get("Retry-After")
+    if not raw:
+        return None
+    value = raw.strip()
+    try:
+        delay = float(value)
+        return delay if delay >= 0 else None
+    except ValueError:
+        pass
+    try:
+        dt = parsedate_to_datetime(value)
+    except (TypeError, ValueError, IndexError):
+        return None
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    delay = (dt - datetime.now(timezone.utc)).total_seconds()
+    return delay if delay > 0 else 0.0
+
+
+def _compute_backoff(base: float, attempt: int) -> float:
+    return base * (2 ** attempt) * random.uniform(0.75, 1.25)
+
+
+def _should_retry_status(status: int, retry_status_codes: Tuple[int, ...]) -> bool:
+    if status not in retry_status_codes:
+        return False
+    if 400 <= status < 500 and status != 429:
+        return False
+    return True
 
 
 def _parse_binary_meta(headers: Mapping[str, str]) -> V3BinaryMeta:
@@ -136,10 +199,16 @@ def _raise_for_error_response(response: httpx.Response) -> None:
         if _is_json_response(response):
             error_data = response.json()
             if isinstance(error_data, dict):
+                error_field = error_data.get("error")
+                nested_msg = (
+                    error_field.get("message")
+                    if isinstance(error_field, dict)
+                    else (error_field if isinstance(error_field, str) else None)
+                )
                 message = (
                     error_data.get("message")
                     or error_data.get("detail")
-                    or error_data.get("error", {}).get("message")
+                    or nested_msg
                     or message
                 )
         else:
@@ -147,6 +216,10 @@ def _raise_for_error_response(response: httpx.Response) -> None:
     except (ValueError, TypeError, KeyError):
         # JSON parsing failed, fall back to raw text
         response_text = response.text
+
+    # Normalize message to string (handle dict/list detail responses)
+    if not isinstance(message, str):
+        message = str(message)
 
     # Option 3: suggest upgrade for unknown action errors
     if status in (400, 404):
@@ -163,6 +236,9 @@ class _ClientConfig:
     base_url: str
     timeout: Union[float, httpx.Timeout, None]
     send_legacy_query_key: bool
+    max_retries: int
+    retry_backoff: float
+    retry_status_codes: Tuple[int, ...]
 
     def auth_headers(self) -> Dict[str, str]:
         headers: Dict[str, str] = {
@@ -187,6 +263,10 @@ class TepiloraClient:
         base_url: str = "https://tepiloradata.com",
         timeout: Union[float, httpx.Timeout, None] = 30.0,
         send_legacy_query_key: bool = False,
+        max_retries: int = 0,
+        retry_backoff: float = 0.5,
+        retry_status_codes: Tuple[int, ...] = (429, 502, 503, 504),
+        event_hooks: Optional[Dict[str, Any]] = None,
         client: Optional[httpx.Client] = None,
         transport: Optional[httpx.BaseTransport] = None,
     ) -> None:
@@ -200,7 +280,12 @@ class TepiloraClient:
             base_url=resolved_base_url,
             timeout=timeout,
             send_legacy_query_key=send_legacy_query_key,
+            max_retries=max(0, max_retries),
+            retry_backoff=retry_backoff,
+            retry_status_codes=tuple(retry_status_codes),
         )
+        self._credits_remaining: Optional[int] = None
+        self._credits_used: int = 0
 
         if client is not None:
             self._client = client
@@ -210,6 +295,7 @@ class TepiloraClient:
                 base_url=self._config.base_url,
                 timeout=self._config.timeout,
                 headers=self._config.auth_headers(),
+                event_hooks=event_hooks,
                 transport=transport,
             )
             self._owns_client = True
@@ -219,7 +305,7 @@ class TepiloraClient:
             PortfolioAPI, MacroAPI, AlertsAPI,
             StocksAPI, BondsAPI, OptionsAPI, EsgAPI, FactorsAPI, FhAPI, DataAPI,
             ClientsAPI, ProfilingAPI, BillingAPI, DocumentsAPI, AlternativesAPI,
-            WorkflowsAPI,
+            WorkflowsAPI, AssetAllocationAPI, ExportsAPI,
         )
         from .analytics import AnalyticsAPI
 
@@ -254,6 +340,8 @@ class TepiloraClient:
 
         # Cross-module
         self.workflows = WorkflowsAPI(self)
+        self.asset_allocation = AssetAllocationAPI(self)
+        self.exports = ExportsAPI(self)
 
     def close(self) -> None:
         if self._owns_client:
@@ -266,6 +354,21 @@ class TepiloraClient:
         self.close()
         return None
 
+    @property
+    def credits_remaining(self) -> Optional[int]:
+        return self._credits_remaining
+
+    @property
+    def credits_used(self) -> int:
+        return self._credits_used
+
+    def _update_credits_from_headers(self, headers: Mapping[str, str]) -> None:
+        credit_info: CreditInfo = parse_credit_headers(headers)
+        if credit_info.remaining is not None:
+            self._credits_remaining = credit_info.remaining
+        if credit_info.used is not None:
+            self._credits_used += credit_info.used
+
     def _request(
         self,
         method: str,
@@ -277,13 +380,33 @@ class TepiloraClient:
     ) -> Any:
         query = dict(params or {})
         query.update(self._config.auth_query())
-        logger.debug("Request: %s %s", method, path)
-        response = self._client.request(method, path, params=query or None, json=json_body, headers=headers)
-        logger.debug("Response: %d", response.status_code)
-        _raise_for_error_response(response)
-        if _is_json_response(response):
-            return response.json()
-        return response.text
+        max_retries = self._config.max_retries
+        for attempt in range(max_retries + 1):
+            logger.debug("Request: %s %s", method, path)
+            response = self._client.request(method, path, params=query or None, json=json_body, headers=headers)
+            logger.debug("Response: %d", response.status_code)
+            if _should_retry_status(response.status_code, self._config.retry_status_codes) and attempt < max_retries:
+                retry_after = _parse_retry_after(response.headers) if response.status_code == 429 else None
+                delay = retry_after if retry_after is not None else _compute_backoff(self._config.retry_backoff, attempt)
+                if delay < 0:
+                    delay = 0.0
+                logger.warning(
+                    "Retrying %s %s in %.2fs (attempt %d/%d) due to status %d",
+                    method,
+                    path,
+                    delay,
+                    attempt + 1,
+                    max_retries,
+                    response.status_code,
+                )
+                response.close()
+                time.sleep(delay)
+                continue
+            _raise_for_error_response(response)
+            if _is_json_response(response):
+                return response.json()
+            return response.text
+        raise TepiloraAPIError(message="Request failed after retries")
 
     def health(self) -> Any:
         return self._request("GET", f"{V3_PREFIX}/health")
@@ -325,6 +448,7 @@ class TepiloraClient:
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
+        idempotency_key: Optional[str] = None,
     ) -> Union[V3Response, V3BinaryResponse]:
         request_options = dict(options or {})
         if response_format is not None and "format" not in request_options:
@@ -336,37 +460,62 @@ class TepiloraClient:
         if isinstance(effective_format, str) and effective_format.strip():
             query_params["format"] = effective_format
             accept_headers["Accept"] = _format_to_accept(effective_format)
+        request_headers = dict(accept_headers)
+        if idempotency_key:
+            request_headers["X-Idempotency-Key"] = idempotency_key
 
-        req = V3Request(action=action, params=params or {}, options=(request_options or None), context=context)
-        logger.debug("V3 call: %s", action)
-        response = self._client.request(
-            "POST",
-            V3_PREFIX,
-            params={**query_params, **self._config.auth_query()} or None,
-            json=req.to_dict(),
-            headers=accept_headers or None,
-        )
-        logger.debug("V3 response: %d", response.status_code)
-        _check_sdk_version(response.headers)
-        _raise_for_error_response(response)
+        sanitized_params = _sanitize_params(params or {})
+        req = V3Request(action=action, params=sanitized_params, options=(request_options or None), context=context)
+        max_retries = self._config.max_retries
+        for attempt in range(max_retries + 1):
+            logger.debug("V3 call: %s", action)
+            response = self._client.request(
+                "POST",
+                V3_PREFIX,
+                params={**query_params, **self._config.auth_query()} or None,
+                json=req.to_dict(),
+                headers=request_headers or None,
+            )
+            logger.debug("V3 response: %d", response.status_code)
+            self._update_credits_from_headers(response.headers)
+            _check_sdk_version(response.headers)
+            if _should_retry_status(response.status_code, self._config.retry_status_codes) and attempt < max_retries:
+                retry_after = _parse_retry_after(response.headers) if response.status_code == 429 else None
+                delay = retry_after if retry_after is not None else _compute_backoff(self._config.retry_backoff, attempt)
+                if delay < 0:
+                    delay = 0.0
+                logger.warning(
+                    "Retrying %s %s in %.2fs (attempt %d/%d) due to status %d",
+                    "POST",
+                    V3_PREFIX,
+                    delay,
+                    attempt + 1,
+                    max_retries,
+                    response.status_code,
+                )
+                response.close()
+                time.sleep(delay)
+                continue
+            _raise_for_error_response(response)
 
-        if _is_json_response(response):
-            payload = response.json()
-            if not isinstance(payload, dict):
-                raise TepiloraAPIError(message="Unexpected non-object JSON response from v3 endpoint")
-            return V3Response.from_dict(payload)
+            if _is_json_response(response):
+                payload = response.json()
+                if not isinstance(payload, dict):
+                    raise TepiloraAPIError(message="Unexpected non-object JSON response from v3 endpoint")
+                return V3Response.from_dict(payload)
 
-        content = response.content
-        ctype = _content_type(response)
-        fmt = str(effective_format or "binary")
-        return V3BinaryResponse(
-            action=action,
-            format=fmt,
-            content_type=ctype,
-            content=content,
-            meta=_parse_binary_meta(response.headers),
-            headers=dict(response.headers),
-        )
+            content = response.content
+            ctype = _content_type(response)
+            fmt = str(effective_format or "binary")
+            return V3BinaryResponse(
+                action=action,
+                format=fmt,
+                content_type=ctype,
+                content=content,
+                meta=_parse_binary_meta(response.headers),
+                headers=dict(response.headers),
+            )
+        raise TepiloraAPIError(message="Request failed after retries")
 
     # Option 3: suggest upgrade for unknown namespaces
     def __getattr__(self, name: str) -> Any:
@@ -415,6 +564,11 @@ class AsyncTepiloraClient:
         base_url: str = "https://tepiloradata.com",
         timeout: Union[float, httpx.Timeout, None] = 30.0,
         send_legacy_query_key: bool = False,
+        max_retries: int = 0,
+        retry_backoff: float = 0.5,
+        retry_status_codes: Tuple[int, ...] = (429, 502, 503, 504),
+        event_hooks: Optional[Dict[str, Any]] = None,
+        max_concurrent: Optional[int] = None,
         client: Optional[httpx.AsyncClient] = None,
         transport: Optional[httpx.AsyncBaseTransport] = None,
     ) -> None:
@@ -428,7 +582,17 @@ class AsyncTepiloraClient:
             base_url=resolved_base_url,
             timeout=timeout,
             send_legacy_query_key=send_legacy_query_key,
+            max_retries=max(0, max_retries),
+            retry_backoff=retry_backoff,
+            retry_status_codes=tuple(retry_status_codes),
         )
+        self._credits_remaining: Optional[int] = None
+        self._credits_used: int = 0
+        self._semaphore = None
+        if max_concurrent is not None:
+            import asyncio
+
+            self._semaphore = asyncio.Semaphore(max_concurrent)
 
         if client is not None:
             self._client = client
@@ -438,6 +602,7 @@ class AsyncTepiloraClient:
                 base_url=self._config.base_url,
                 timeout=self._config.timeout,
                 headers=self._config.auth_headers(),
+                event_hooks=event_hooks,
                 transport=transport,
             )
             self._owns_client = True
@@ -447,7 +612,7 @@ class AsyncTepiloraClient:
             AsyncPortfolioAPI, AsyncMacroAPI, AsyncAlertsAPI,
             AsyncStocksAPI, AsyncBondsAPI, AsyncOptionsAPI, AsyncEsgAPI, AsyncFactorsAPI, AsyncFhAPI, AsyncDataAPI,
             AsyncClientsAPI, AsyncProfilingAPI, AsyncBillingAPI, AsyncDocumentsAPI, AsyncAlternativesAPI,
-            AsyncWorkflowsAPI,
+            AsyncWorkflowsAPI, AsyncAssetAllocationAPI, AsyncExportsAPI,
         )
         from .analytics import AsyncAnalyticsAPI
 
@@ -482,6 +647,8 @@ class AsyncTepiloraClient:
 
         # Cross-module
         self.workflows = AsyncWorkflowsAPI(self)
+        self.asset_allocation = AsyncAssetAllocationAPI(self)
+        self.exports = AsyncExportsAPI(self)
 
     async def aclose(self) -> None:
         if self._owns_client:
@@ -494,6 +661,21 @@ class AsyncTepiloraClient:
         await self.aclose()
         return None
 
+    @property
+    def credits_remaining(self) -> Optional[int]:
+        return self._credits_remaining
+
+    @property
+    def credits_used(self) -> int:
+        return self._credits_used
+
+    def _update_credits_from_headers(self, headers: Mapping[str, str]) -> None:
+        credit_info: CreditInfo = parse_credit_headers(headers)
+        if credit_info.remaining is not None:
+            self._credits_remaining = credit_info.remaining
+        if credit_info.used is not None:
+            self._credits_used += credit_info.used
+
     async def _request(
         self,
         method: str,
@@ -503,15 +685,63 @@ class AsyncTepiloraClient:
         json_body: Any = None,
         headers: Optional[Mapping[str, str]] = None,
     ) -> Any:
+        if self._semaphore is None:
+            return await self._request_with_retries(
+                method,
+                path,
+                params=params,
+                json_body=json_body,
+                headers=headers,
+            )
+        async with self._semaphore:
+            return await self._request_with_retries(
+                method,
+                path,
+                params=params,
+                json_body=json_body,
+                headers=headers,
+            )
+
+    async def _request_with_retries(
+        self,
+        method: str,
+        path: str,
+        *,
+        params: Optional[Mapping[str, Any]] = None,
+        json_body: Any = None,
+        headers: Optional[Mapping[str, str]] = None,
+    ) -> Any:
+        import asyncio
+
         query = dict(params or {})
         query.update(self._config.auth_query())
-        logger.debug("Request: %s %s", method, path)
-        response = await self._client.request(method, path, params=query or None, json=json_body, headers=headers)
-        logger.debug("Response: %d", response.status_code)
-        _raise_for_error_response(response)
-        if _is_json_response(response):
-            return response.json()
-        return response.text
+        max_retries = self._config.max_retries
+        for attempt in range(max_retries + 1):
+            logger.debug("Request: %s %s", method, path)
+            response = await self._client.request(method, path, params=query or None, json=json_body, headers=headers)
+            logger.debug("Response: %d", response.status_code)
+            if _should_retry_status(response.status_code, self._config.retry_status_codes) and attempt < max_retries:
+                retry_after = _parse_retry_after(response.headers) if response.status_code == 429 else None
+                delay = retry_after if retry_after is not None else _compute_backoff(self._config.retry_backoff, attempt)
+                if delay < 0:
+                    delay = 0.0
+                logger.warning(
+                    "Retrying %s %s in %.2fs (attempt %d/%d) due to status %d",
+                    method,
+                    path,
+                    delay,
+                    attempt + 1,
+                    max_retries,
+                    response.status_code,
+                )
+                await response.aclose()
+                await asyncio.sleep(delay)
+                continue
+            _raise_for_error_response(response)
+            if _is_json_response(response):
+                return response.json()
+            return response.text
+        raise TepiloraAPIError(message="Request failed after retries")
 
     async def health(self) -> Any:
         return await self._request("GET", f"{V3_PREFIX}/health")
@@ -548,7 +778,39 @@ class AsyncTepiloraClient:
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
+        idempotency_key: Optional[str] = None,
     ) -> Union[V3Response, V3BinaryResponse]:
+        if self._semaphore is None:
+            return await self._call_with_retries(
+                action,
+                params=params,
+                options=options,
+                context=context,
+                response_format=response_format,
+                idempotency_key=idempotency_key,
+            )
+        async with self._semaphore:
+            return await self._call_with_retries(
+                action,
+                params=params,
+                options=options,
+                context=context,
+                response_format=response_format,
+                idempotency_key=idempotency_key,
+            )
+
+    async def _call_with_retries(
+        self,
+        action: str,
+        *,
+        params: Optional[Dict[str, Any]] = None,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+        response_format: Optional[str] = None,
+        idempotency_key: Optional[str] = None,
+    ) -> Union[V3Response, V3BinaryResponse]:
+        import asyncio
+
         request_options = dict(options or {})
         if response_format is not None and "format" not in request_options:
             request_options["format"] = response_format
@@ -559,37 +821,62 @@ class AsyncTepiloraClient:
         if isinstance(effective_format, str) and effective_format.strip():
             query_params["format"] = effective_format
             accept_headers["Accept"] = _format_to_accept(effective_format)
+        request_headers = dict(accept_headers)
+        if idempotency_key:
+            request_headers["X-Idempotency-Key"] = idempotency_key
 
-        req = V3Request(action=action, params=params or {}, options=(request_options or None), context=context)
-        logger.debug("V3 call: %s", action)
-        response = await self._client.request(
-            "POST",
-            V3_PREFIX,
-            params={**query_params, **self._config.auth_query()} or None,
-            json=req.to_dict(),
-            headers=accept_headers or None,
-        )
-        logger.debug("V3 response: %d", response.status_code)
-        _check_sdk_version(response.headers)
-        _raise_for_error_response(response)
+        sanitized_params = _sanitize_params(params or {})
+        req = V3Request(action=action, params=sanitized_params, options=(request_options or None), context=context)
+        max_retries = self._config.max_retries
+        for attempt in range(max_retries + 1):
+            logger.debug("V3 call: %s", action)
+            response = await self._client.request(
+                "POST",
+                V3_PREFIX,
+                params={**query_params, **self._config.auth_query()} or None,
+                json=req.to_dict(),
+                headers=request_headers or None,
+            )
+            logger.debug("V3 response: %d", response.status_code)
+            self._update_credits_from_headers(response.headers)
+            _check_sdk_version(response.headers)
+            if _should_retry_status(response.status_code, self._config.retry_status_codes) and attempt < max_retries:
+                retry_after = _parse_retry_after(response.headers) if response.status_code == 429 else None
+                delay = retry_after if retry_after is not None else _compute_backoff(self._config.retry_backoff, attempt)
+                if delay < 0:
+                    delay = 0.0
+                logger.warning(
+                    "Retrying %s %s in %.2fs (attempt %d/%d) due to status %d",
+                    "POST",
+                    V3_PREFIX,
+                    delay,
+                    attempt + 1,
+                    max_retries,
+                    response.status_code,
+                )
+                await response.aclose()
+                await asyncio.sleep(delay)
+                continue
+            _raise_for_error_response(response)
 
-        if _is_json_response(response):
-            payload = response.json()
-            if not isinstance(payload, dict):
-                raise TepiloraAPIError(message="Unexpected non-object JSON response from v3 endpoint")
-            return V3Response.from_dict(payload)
+            if _is_json_response(response):
+                payload = response.json()
+                if not isinstance(payload, dict):
+                    raise TepiloraAPIError(message="Unexpected non-object JSON response from v3 endpoint")
+                return V3Response.from_dict(payload)
 
-        content = response.content
-        ctype = _content_type(response)
-        fmt = str(effective_format or "binary")
-        return V3BinaryResponse(
-            action=action,
-            format=fmt,
-            content_type=ctype,
-            content=content,
-            meta=_parse_binary_meta(response.headers),
-            headers=dict(response.headers),
-        )
+            content = response.content
+            ctype = _content_type(response)
+            fmt = str(effective_format or "binary")
+            return V3BinaryResponse(
+                action=action,
+                format=fmt,
+                content_type=ctype,
+                content=content,
+                meta=_parse_binary_meta(response.headers),
+                headers=dict(response.headers),
+            )
+        raise TepiloraAPIError(message="Request failed after retries")
 
     # Option 3: suggest upgrade for unknown namespaces
     def __getattr__(self, name: str) -> Any:

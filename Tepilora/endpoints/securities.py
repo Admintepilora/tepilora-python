@@ -122,24 +122,40 @@ class SecuritiesAPI(BaseAPI):
         filters: Dict[str, Any],
         limit: Optional[int] = 50,
         offset: Optional[int] = 0,
+        sort: Optional[str] = None,
+        order: Optional[str] = None,
+        group_by: Optional[str] = None,
+        preferred_currency: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
         """Filter securities
 
-        Filter by field values without text search.
+        Filter by field values without text search. Results include TepiloraRating, TER, AUM. Sort is page-local.
 
         Args:
         filters: Field filters
         limit: Maximum results
-        offset: Pagination offset"""
+        offset: Pagination offset
+        sort: Sort field: TepiloraRating, TER, AUM, Name
+        order: Sort order: asc, desc (default per field)
+        group_by: Deduplicate by field (TepiloraParentId). Keeps one per group.
+        preferred_currency: When group_by active, prefer share class with this currency (e.g. EUR)"""
         params: Dict[str, Any] = {}
         params["filters"] = filters
         if limit is not None:
             params["limit"] = limit
         if offset is not None:
             params["offset"] = offset
+        if sort is not None:
+            params["sort"] = sort
+        if order is not None:
+            params["order"] = order
+        if group_by is not None:
+            params["group_by"] = group_by
+        if preferred_currency is not None:
+            params["preferred_currency"] = preferred_currency
         return self._call("securities.filter", params=params, options=options, context=context, response_format=response_format)
 
     def history(
@@ -272,20 +288,28 @@ class SecuritiesAPI(BaseAPI):
         limit: Optional[int] = 50,
         offset: Optional[int] = 0,
         include_facets: Optional[bool] = False,
+        sort: Optional[str] = None,
+        order: Optional[str] = None,
+        group_by: Optional[str] = None,
+        preferred_currency: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
         """Search securities
 
-        Full-text search with filters and facets.
+        Full-text search with filters and facets. Results include TepiloraRating, TER, AUM. Sort is page-local.
 
         Args:
         query: Search query
         filters: Field filters
         limit: Maximum results
         offset: Pagination offset
-        include_facets: Include aggregations"""
+        include_facets: Include aggregations
+        sort: Sort field: TepiloraRating, TER, AUM, Name
+        order: Sort order: asc, desc (default per field)
+        group_by: Deduplicate by field (TepiloraParentId). Keeps one per group.
+        preferred_currency: When group_by active, prefer share class with this currency (e.g. EUR)"""
         params: Dict[str, Any] = {}
         if query is not None:
             params["query"] = query
@@ -297,6 +321,14 @@ class SecuritiesAPI(BaseAPI):
             params["offset"] = offset
         if include_facets is not None:
             params["include_facets"] = include_facets
+        if sort is not None:
+            params["sort"] = sort
+        if order is not None:
+            params["order"] = order
+        if group_by is not None:
+            params["group_by"] = group_by
+        if preferred_currency is not None:
+            params["preferred_currency"] = preferred_currency
         return self._call("securities.search", params=params, options=options, context=context, response_format=response_format)
 
 
@@ -412,24 +444,40 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
         filters: Dict[str, Any],
         limit: Optional[int] = 50,
         offset: Optional[int] = 0,
+        sort: Optional[str] = None,
+        order: Optional[str] = None,
+        group_by: Optional[str] = None,
+        preferred_currency: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
         """Filter securities
 
-        Filter by field values without text search.
+        Filter by field values without text search. Results include TepiloraRating, TER, AUM. Sort is page-local.
 
         Args:
         filters: Field filters
         limit: Maximum results
-        offset: Pagination offset"""
+        offset: Pagination offset
+        sort: Sort field: TepiloraRating, TER, AUM, Name
+        order: Sort order: asc, desc (default per field)
+        group_by: Deduplicate by field (TepiloraParentId). Keeps one per group.
+        preferred_currency: When group_by active, prefer share class with this currency (e.g. EUR)"""
         params: Dict[str, Any] = {}
         params["filters"] = filters
         if limit is not None:
             params["limit"] = limit
         if offset is not None:
             params["offset"] = offset
+        if sort is not None:
+            params["sort"] = sort
+        if order is not None:
+            params["order"] = order
+        if group_by is not None:
+            params["group_by"] = group_by
+        if preferred_currency is not None:
+            params["preferred_currency"] = preferred_currency
         return await self._call("securities.filter", params=params, options=options, context=context, response_format=response_format)
 
     async def history(
@@ -562,20 +610,28 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
         limit: Optional[int] = 50,
         offset: Optional[int] = 0,
         include_facets: Optional[bool] = False,
+        sort: Optional[str] = None,
+        order: Optional[str] = None,
+        group_by: Optional[str] = None,
+        preferred_currency: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
         """Search securities
 
-        Full-text search with filters and facets.
+        Full-text search with filters and facets. Results include TepiloraRating, TER, AUM. Sort is page-local.
 
         Args:
         query: Search query
         filters: Field filters
         limit: Maximum results
         offset: Pagination offset
-        include_facets: Include aggregations"""
+        include_facets: Include aggregations
+        sort: Sort field: TepiloraRating, TER, AUM, Name
+        order: Sort order: asc, desc (default per field)
+        group_by: Deduplicate by field (TepiloraParentId). Keeps one per group.
+        preferred_currency: When group_by active, prefer share class with this currency (e.g. EUR)"""
         params: Dict[str, Any] = {}
         if query is not None:
             params["query"] = query
@@ -587,6 +643,14 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
             params["offset"] = offset
         if include_facets is not None:
             params["include_facets"] = include_facets
+        if sort is not None:
+            params["sort"] = sort
+        if order is not None:
+            params["order"] = order
+        if group_by is not None:
+            params["group_by"] = group_by
+        if preferred_currency is not None:
+            params["preferred_currency"] = preferred_currency
         return await self._call("securities.search", params=params, options=options, context=context, response_format=response_format)
 
 

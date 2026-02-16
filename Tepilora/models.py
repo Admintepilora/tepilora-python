@@ -1,7 +1,16 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Mapping, Optional
+
+
+def _parse_bool(value: Any) -> bool:
+    """Parse boolean value, handling string representations."""
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        return value.lower() in ("true", "1", "yes")
+    return bool(value)
 
 
 @dataclass(frozen=True)
@@ -38,7 +47,7 @@ class V3Meta:
                 int(data["execution_time_ms"]) if "execution_time_ms" in data and data["execution_time_ms"] is not None else None
             ),
             timestamp=(str(data["timestamp"]) if "timestamp" in data and data["timestamp"] is not None else None),
-            cache_hit=(bool(data["cache_hit"]) if "cache_hit" in data and data["cache_hit"] is not None else None),
+            cache_hit=(_parse_bool(data["cache_hit"]) if "cache_hit" in data and data["cache_hit"] is not None else None),
             extra=extra,
         )
 
@@ -78,3 +87,25 @@ class V3BinaryResponse:
     content: bytes
     meta: V3BinaryMeta
     headers: Dict[str, str]
+
+
+@dataclass(frozen=True)
+class CreditInfo:
+    remaining: Optional[int] = None
+    used: Optional[int] = None
+
+
+def parse_credit_headers(headers: Mapping[str, str]) -> CreditInfo:
+    def _get_int(name: str) -> Optional[int]:
+        raw = headers.get(name)
+        if raw is None or raw == "":
+            return None
+        try:
+            return int(raw)
+        except (TypeError, ValueError):
+            return None
+
+    return CreditInfo(
+        remaining=_get_int("X-Tepilora-Credits-Remaining"),
+        used=_get_int("X-Tepilora-Credits-Used"),
+    )

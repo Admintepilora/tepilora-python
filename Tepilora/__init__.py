@@ -2,6 +2,7 @@ from .client import AsyncTepiloraClient, TepiloraClient
 from ._default_client import close_default_client, configure_default_client
 from .errors import TepiloraAPIError, TepiloraError
 from .models import V3BinaryMeta, V3BinaryResponse, V3Meta, V3Request, V3Response
+from ._validators import coerce_date, validate_date, validate_date_range
 from .version import __version__
 
 from .analytics import AnalyticsAPI, AnalyticsFunction, analytics
@@ -37,9 +38,12 @@ __all__ = [
     "__version__",
     "analytics",
     "capabilities",
+    "coerce_date",
     "configure",
     "close_default_client",
     "get_operation_info",
     "list_namespaces",
     "list_operations",
+    "validate_date",
+    "validate_date_range",
 ]

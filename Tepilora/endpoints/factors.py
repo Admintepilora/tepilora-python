@@ -12,7 +12,7 @@ from ._base import AsyncBaseAPI, BaseAPI
 
 
 class FactorsAPI(BaseAPI):
-    """Factors namespace: get, list, portfolio_exposure, risk_model, rolling_covariance, scenario, status."""
+    """Factors namespace: get, list, loading, portfolio_exposure, risk_model, rolling_covariance, scenario, status."""
 
     def get(
         self,
@@ -48,6 +48,33 @@ class FactorsAPI(BaseAPI):
         """List available factors"""
         params: Dict[str, Any] = {}
         return self._call("factors.list", params=params, options=options, context=context)
+
+    def loading(
+        self,
+        *,
+        model: Optional[str] = "FF3",
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+        response_format: Optional[str] = None,
+    ) -> Any:
+        """Load factor data (alias of factors.get)
+
+        Alias for factors.get. Use factors.get instead.
+
+        Args:
+        model: FF3|FF5|Carhart
+        start_date: Start date (YYYY-MM-DD)
+        end_date: End date (YYYY-MM-DD)"""
+        params: Dict[str, Any] = {}
+        if model is not None:
+            params["model"] = model
+        if start_date is not None:
+            params["start_date"] = start_date
+        if end_date is not None:
+            params["end_date"] = end_date
+        return self._call("factors.loading", params=params, options=options, context=context, response_format=response_format)
 
     def portfolio_exposure(
         self,
@@ -247,7 +274,7 @@ class FactorsAPI(BaseAPI):
 
 
 class AsyncFactorsAPI(AsyncBaseAPI):
-    """Factors namespace: get, list, portfolio_exposure, risk_model, rolling_covariance, scenario, status."""
+    """Factors namespace: get, list, loading, portfolio_exposure, risk_model, rolling_covariance, scenario, status."""
 
     async def get(
         self,
@@ -283,6 +310,33 @@ class AsyncFactorsAPI(AsyncBaseAPI):
         """List available factors"""
         params: Dict[str, Any] = {}
         return await self._call("factors.list", params=params, options=options, context=context)
+
+    async def loading(
+        self,
+        *,
+        model: Optional[str] = "FF3",
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+        response_format: Optional[str] = None,
+    ) -> Any:
+        """Load factor data (alias of factors.get)
+
+        Alias for factors.get. Use factors.get instead.
+
+        Args:
+        model: FF3|FF5|Carhart
+        start_date: Start date (YYYY-MM-DD)
+        end_date: End date (YYYY-MM-DD)"""
+        params: Dict[str, Any] = {}
+        if model is not None:
+            params["model"] = model
+        if start_date is not None:
+            params["start_date"] = start_date
+        if end_date is not None:
+            params["end_date"] = end_date
+        return await self._call("factors.loading", params=params, options=options, context=context, response_format=response_format)
 
     async def portfolio_exposure(
         self,

@@ -12,7 +12,7 @@ from ._base import AsyncBaseAPI, BaseAPI
 
 
 class OptionsAPI(BaseAPI):
-    """Options namespace: greeks, iv, payoff, price, strategies, strategy."""
+    """Options namespace: greeks, iv, payoff, price, pricing, strategies, strategy."""
 
     def greeks(
         self,
@@ -153,6 +153,32 @@ class OptionsAPI(BaseAPI):
             params["dividend_yield"] = dividend_yield
         return self._call("options.price", params=params, options=options, context=context)
 
+    def pricing(
+        self,
+        *,
+        spot: float,
+        strike: float,
+        time_to_expiry: float,
+        volatility: float,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+    ) -> Any:
+        """Price option (alias of options.price)
+
+        Alias for options.price. Use options.price instead.
+
+        Args:
+        spot: Underlying price
+        strike: Strike price
+        time_to_expiry: Time to expiry (years)
+        volatility: Volatility"""
+        params: Dict[str, Any] = {}
+        params["spot"] = spot
+        params["strike"] = strike
+        params["time_to_expiry"] = time_to_expiry
+        params["volatility"] = volatility
+        return self._call("options.pricing", params=params, options=options, context=context)
+
     def strategies(
         self,
         *,
@@ -204,7 +230,7 @@ class OptionsAPI(BaseAPI):
 
 
 class AsyncOptionsAPI(AsyncBaseAPI):
-    """Options namespace: greeks, iv, payoff, price, strategies, strategy."""
+    """Options namespace: greeks, iv, payoff, price, pricing, strategies, strategy."""
 
     async def greeks(
         self,
@@ -344,6 +370,32 @@ class AsyncOptionsAPI(AsyncBaseAPI):
         if dividend_yield is not None:
             params["dividend_yield"] = dividend_yield
         return await self._call("options.price", params=params, options=options, context=context)
+
+    async def pricing(
+        self,
+        *,
+        spot: float,
+        strike: float,
+        time_to_expiry: float,
+        volatility: float,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+    ) -> Any:
+        """Price option (alias of options.price)
+
+        Alias for options.price. Use options.price instead.
+
+        Args:
+        spot: Underlying price
+        strike: Strike price
+        time_to_expiry: Time to expiry (years)
+        volatility: Volatility"""
+        params: Dict[str, Any] = {}
+        params["spot"] = spot
+        params["strike"] = strike
+        params["time_to_expiry"] = time_to_expiry
+        params["volatility"] = volatility
+        return await self._call("options.pricing", params=params, options=options, context=context)
 
     async def strategies(
         self,

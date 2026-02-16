@@ -12,7 +12,7 @@ from ._base import AsyncBaseAPI, BaseAPI
 
 
 class EsgAPI(BaseAPI):
-    """Esg namespace: compare, get, portfolio, screen, summary."""
+    """Esg namespace: compare, get, portfolio, scores, screen, summary."""
 
     def compare(
         self,
@@ -64,6 +64,23 @@ class EsgAPI(BaseAPI):
         params: Dict[str, Any] = {}
         params["id"] = id
         return self._call("esg.portfolio", params=params, options=options, context=context)
+
+    def scores(
+        self,
+        *,
+        identifiers: Union[str, List[str]],
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+    ) -> Any:
+        """Get ESG scores (alias of esg.get)
+
+        Alias for esg.get. Use esg.get instead.
+
+        Args:
+        identifiers: List of TepiloraCodes"""
+        params: Dict[str, Any] = {}
+        params["identifiers"] = identifiers
+        return self._call("esg.scores", params=params, options=options, context=context)
 
     def screen(
         self,
@@ -125,7 +142,7 @@ class EsgAPI(BaseAPI):
 
 
 class AsyncEsgAPI(AsyncBaseAPI):
-    """Esg namespace: compare, get, portfolio, screen, summary."""
+    """Esg namespace: compare, get, portfolio, scores, screen, summary."""
 
     async def compare(
         self,
@@ -177,6 +194,23 @@ class AsyncEsgAPI(AsyncBaseAPI):
         params: Dict[str, Any] = {}
         params["id"] = id
         return await self._call("esg.portfolio", params=params, options=options, context=context)
+
+    async def scores(
+        self,
+        *,
+        identifiers: Union[str, List[str]],
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+    ) -> Any:
+        """Get ESG scores (alias of esg.get)
+
+        Alias for esg.get. Use esg.get instead.
+
+        Args:
+        identifiers: List of TepiloraCodes"""
+        params: Dict[str, Any] = {}
+        params["identifiers"] = identifiers
+        return await self._call("esg.scores", params=params, options=options, context=context)
 
     async def screen(
         self,

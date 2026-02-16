@@ -2,7 +2,7 @@
 
 Python SDK (sync + async) for Tepilora API v3.
 
-**218 operations** across **23 namespaces**, auto-generated from the registry.
+**236 operations** across **25 namespaces**, auto-generated from the registry.
 
 ## Install
 
@@ -247,7 +247,7 @@ try:
     data = client.securities.search(query="invalid")
 except TepiloraAPIError as e:
     print(f"Error: {e.message}")
-    print(f"Code: {e.code}")
+    print(f"Code: {e.status_code}")
 ```
 
 ## API Endpoints
@@ -261,5 +261,5 @@ except TepiloraAPIError as e:
 
 ```python
 import Tepilora
-print(Tepilora.__version__)  # 0.3.1
+print(Tepilora.__version__)  # 0.3.2
 ```

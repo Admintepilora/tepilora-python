@@ -1,5 +1,5 @@
 """
-Parametric tests for all SDK operations.
+Parametric async tests for all SDK operations.
 
 Tests that each operation:
 1. Is accessible via the correct namespace
@@ -7,11 +7,11 @@ Tests that each operation:
 3. Handles required parameters correctly
 """
 
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 import pytest
 
-from conftest import build_minimal_params, generate_test_value, _load_schema
+from conftest import build_minimal_params, _load_schema
 
 
 # Load schema at module level for parametrize
@@ -55,13 +55,12 @@ def all_categories():
         yield pytest.param(category, id=category)
 
 
-class TestAllOperations:
-    """Test all operations send correct actions."""
+class TestAllOperationsAsync:
+    """Test all operations send correct actions using async client."""
 
     @pytest.mark.parametrize("action,op", all_operations())
-    def test_operation_sends_correct_action(self, action: str, op: Dict[str, Any], mock_client):
+    async def test_operation_sends_correct_action(self, action: str, op: Dict[str, Any], async_mock_client):
         """Verify each operation sends the correct action string."""
-        # Skip special operations that don't use V3 unified endpoint
         if action in SPECIAL_OPERATIONS:
             pytest.skip(f"{action} uses special endpoint")
 
@@ -70,36 +69,29 @@ class TestAllOperations:
         method_name = get_method_name(operation)
         params = op.get("params", [])
 
-        # Get namespace
-        namespace = getattr(mock_client, category, None)
+        namespace = getattr(async_mock_client, category, None)
         assert namespace is not None, f"Namespace '{category}' not found on client"
 
-        # Get method
         method = getattr(namespace, method_name, None)
         assert method is not None, f"Method '{method_name}' not found on {category}"
 
-        # Build minimal params
         kwargs = build_minimal_params(params)
 
-        # Call method
         try:
-            result = method(**kwargs)
+            await method(**kwargs)
         except Exception as e:
             pytest.fail(f"Method {action} raised {type(e).__name__}: {e}")
 
-        # Verify call was made
-        assert len(mock_client._calls) >= 1, f"No calls recorded for {action}"
+        assert len(async_mock_client._calls) >= 1, f"No calls recorded for {action}"
 
-        # Find the call (might be multiple for analytics.list, etc.)
-        call = mock_client._calls[-1]
+        call = async_mock_client._calls[-1]
         sent_action = call["payload"].get("action")
 
         assert sent_action == action, f"Expected action '{action}', got '{sent_action}'"
 
     @pytest.mark.parametrize("action,op", all_operations())
-    def test_operation_includes_required_params(self, action: str, op: Dict[str, Any], mock_client):
+    async def test_operation_includes_required_params(self, action: str, op: Dict[str, Any], async_mock_client):
         """Verify required params are included in request."""
-        # Skip special operations that don't use V3 unified endpoint
         if action in SPECIAL_OPERATIONS:
             pytest.skip(f"{action} uses special endpoint")
 
@@ -112,62 +104,52 @@ class TestAllOperations:
         if not required_params:
             pytest.skip("No required params")
 
-        namespace = getattr(mock_client, category)
+        namespace = getattr(async_mock_client, category)
         method = getattr(namespace, method_name)
         kwargs = build_minimal_params(params)
 
-        method(**kwargs)
+        await method(**kwargs)
 
-        call = mock_client._calls[-1]
+        call = async_mock_client._calls[-1]
         sent_params = call["payload"].get("params", {})
 
         for pname in required_params:
             assert pname in sent_params, f"Required param '{pname}' missing in {action}"
 
 
-class TestAllNamespaces:
-    """Test all namespaces are accessible."""
+class TestAllNamespacesAsync:
+    """Test all namespaces are accessible on async client."""
 
     @pytest.mark.parametrize("category", all_categories())
-    def test_namespace_exists(self, category: str, mock_client):
-        """Verify each namespace is accessible on client."""
-        namespace = getattr(mock_client, category, None)
+    def test_namespace_exists(self, category: str, async_mock_client):
+        """Verify each namespace is accessible on async client."""
+        namespace = getattr(async_mock_client, category, None)
         assert namespace is not None, f"Namespace '{category}' not found"
 
     @pytest.mark.parametrize("category", all_categories())
-    def test_namespace_has_all_methods(self, category: str, mock_client):
+    def test_namespace_has_all_methods(self, category: str, async_mock_client):
         """Verify each namespace has all its methods."""
-        namespace = getattr(mock_client, category)
+        namespace = getattr(async_mock_client, category)
         operations = SCHEMA["by_category"].get(category, [])
 
         for op_name in operations:
             method_name = get_method_name(op_name)
 
-            # Analytics uses __getattr__, so check differently
             if category == "analytics":
-                # Just verify we can get the function
                 func = getattr(namespace, method_name)
                 assert func is not None
             else:
                 assert hasattr(namespace, method_name), f"{category}.{method_name} not found"
 
 
-class TestOperationCounts:
+class TestOperationCountsAsync:
     """Verify operation counts match schema."""
 
     def test_total_operations(self, schema, all_operations):
         """Verify total operation count."""
         expected = schema["stats"]["total_operations"]
-        # Exclude internal operations
-        actual = len([
-            op for op in all_operations.values()
-            if op["category"] not in SKIP_CATEGORIES
-        ])
-        # Adjust for skipped categories
-        skipped = sum(
-            len(schema["by_category"].get(cat, []))
-            for cat in SKIP_CATEGORIES
-        )
+        actual = len([op for op in all_operations.values() if op["category"] not in SKIP_CATEGORIES])
+        skipped = sum(len(schema["by_category"].get(cat, [])) for cat in SKIP_CATEGORIES)
         assert actual == expected - skipped
 
     def test_category_counts(self, schema):
@@ -181,44 +163,42 @@ class TestOperationCounts:
             assert actual == count, f"{category}: expected {count}, got {actual}"
 
 
-class TestAnalyticsSpecial:
-    """Special tests for analytics namespace (dynamic methods)."""
+class TestAnalyticsSpecialAsync:
+    """Special tests for async analytics namespace (dynamic methods)."""
 
     def test_analytics_has_68_operations(self, schema):
-        """Verify analytics has 68 operations."""
+        """Verify analytics operation count."""
         count = schema["stats"]["operations_by_category"].get("analytics", 0)
         assert count == 68
 
-    def test_analytics_dynamic_access(self, mock_client):
-        """Test analytics dynamic method access."""
-        # Access a method dynamically
-        func = mock_client.analytics.rolling_volatility
+    def test_analytics_dynamic_access(self, async_mock_client):
+        """Test async analytics dynamic method access."""
+        func = async_mock_client.analytics.rolling_volatility
         assert func is not None
         assert callable(func)
 
-    def test_analytics_with_as_table_param(self, mock_client):
-        """Test analytics supports as_table parameter."""
-        # This should not raise (even though as_table won't work with mock)
-        func = mock_client.analytics.rolling_volatility
-        # The function should accept as_table kwarg
-        # We can't fully test it without real data, but we verify it's accepted
+    async def test_analytics_with_as_table_param(self, async_mock_client):
+        """Test async analytics supports as_table parameter."""
+        func = async_mock_client.analytics.rolling_volatility
         try:
-            # This will fail at decode stage, but shouldn't fail at param stage
-            func(identifiers="TEST", as_table="pandas")
+            await func(identifiers="TEST", as_table="pandas")
         except Exception as e:
-            # Expected: will fail at table decode, not at param validation
             assert "pandas" in str(e).lower() or "arrow" in str(e).lower() or "table" in str(e).lower()
 
-    def test_analytics_help_and_info(self, mock_client):
-        """Test analytics help and info methods."""
-        # These require API calls, so we just verify they exist
-        assert hasattr(mock_client.analytics, "help")
-        assert hasattr(mock_client.analytics, "info")
-        assert hasattr(mock_client.analytics, "list")
-        assert hasattr(mock_client.analytics, "search")
+    async def test_analytics_help_and_info(self, async_mock_client):
+        """Test async analytics list/info/help/search methods are awaitable."""
+        listing = await async_mock_client.analytics.list()
+        info = await async_mock_client.analytics.info("rolling_volatility")
+        help_text = await async_mock_client.analytics.help("rolling_volatility")
+        matches = await async_mock_client.analytics.search("rolling")
+
+        assert isinstance(listing, dict)
+        assert isinstance(info, dict)
+        assert isinstance(help_text, str)
+        assert isinstance(matches, list)
 
 
-class TestOperationMetadata:
+class TestOperationMetadataAsync:
     """Test operation metadata is correct."""
 
     @pytest.mark.parametrize("action,op", all_operations())

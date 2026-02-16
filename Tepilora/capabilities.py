@@ -18,13 +18,14 @@ from __future__ import annotations
 from functools import lru_cache
 from typing import Any, Dict, List, Optional, Union
 
-from ._schema import SCHEMA
 from .version import __version__
 
 
 @lru_cache(maxsize=1)
 def _load_schema() -> Dict[str, Any]:
-    """Load schema from package data."""
+    """Load schema lazily (not at module import time)."""
+    from ._schema import SCHEMA
+
     return SCHEMA
 
 
@@ -255,7 +256,8 @@ def capabilities(
                     action: op for action, op in operations.items()
                     if op["category"] == namespace_or_action and not op.get("internal")
                 }
-        return schema
+        import json
+        return json.loads(json.dumps(schema))
 
     # Text output
     if search:
