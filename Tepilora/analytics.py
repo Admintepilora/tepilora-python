@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from textwrap import indent
 from typing import Any, Dict, List, Mapping, Optional
 
+from .endpoints.analytics import _AnalyticsMethodsMixin, _AsyncAnalyticsMethodsMixin
 from .errors import TepiloraAPIError
 
 logger = logging.getLogger("Tepilora.analytics")
@@ -78,6 +79,38 @@ def _validate_and_fill_params(info: Mapping[str, Any], provided: Dict[str, Any])
             elif required:
                 raise ValueError(f"Missing required parameter: {name}")
     return filled
+
+
+def _normalize_param_names(info: Mapping[str, Any], provided: Dict[str, Any]) -> Dict[str, Any]:
+    specs = _extract_param_specs(info)
+    allowed = {p.get("name") for p in specs if isinstance(p.get("name"), str)}
+    if not allowed:
+        return dict(provided)
+
+    lower_map: Dict[str, Optional[str]] = {}
+    for name in allowed:
+        lower = name.lower()
+        if lower in lower_map and lower_map[lower] != name:
+            lower_map[lower] = None
+        else:
+            lower_map[lower] = name
+
+    normalized: Dict[str, Any] = {}
+    for key, value in provided.items():
+        if key in allowed:
+            if key in normalized:
+                raise ValueError(f"Duplicate parameter: {key}")
+            normalized[key] = value
+            continue
+        mapped = lower_map.get(key.lower())
+        if mapped:
+            if mapped in normalized:
+                raise ValueError(f"Duplicate parameter: {key}")
+            normalized[mapped] = value
+            continue
+        normalized[key] = value
+
+    return normalized
 
 
 def _decode_table(content: bytes, as_table: str) -> Any:
@@ -158,14 +191,28 @@ class AnalyticsFunction:
         strict: bool = False,
         **params: Any,
     ) -> Any:
+        call = getattr(self._api, "_call_analytics", None)
+        if callable(call):
+            return call(
+                self.name,
+                params,
+                options=options,
+                context=context,
+                response_format=response_format,
+                as_table=as_table,
+                strict=strict,
+            )
+
         action = f"analytics.{self.name}"
+        payload = dict(params)
         if strict:
             info = self._api.info(self.name)
-            params = _validate_and_fill_params(info, dict(params))
+            payload = _normalize_param_names(info, payload)
+            payload = _validate_and_fill_params(info, payload)
         effective_format = "arrow" if as_table else response_format
         result = self._api._client.call_data(
             action,
-            params=params,
+            params=payload,
             options=options,
             context=context,
             response_format=effective_format,
@@ -201,14 +248,28 @@ class AsyncAnalyticsFunction:
         strict: bool = False,
         **params: Any,
     ) -> Any:
+        call = getattr(self._api, "_call_analytics", None)
+        if callable(call):
+            return await call(
+                self.name,
+                params,
+                options=options,
+                context=context,
+                response_format=response_format,
+                as_table=as_table,
+                strict=strict,
+            )
+
         action = f"analytics.{self.name}"
+        payload = dict(params)
         if strict:
             info = await self._api.info(self.name)
-            params = _validate_and_fill_params(info, dict(params))
+            payload = _normalize_param_names(info, payload)
+            payload = _validate_and_fill_params(info, payload)
         effective_format = "arrow" if as_table else response_format
         result = await self._api._client.call_data(
             action,
-            params=params,
+            params=payload,
             options=options,
             context=context,
             response_format=effective_format,
@@ -229,11 +290,45 @@ class AsyncAnalyticsFunction:
         return await self._api.help(self.name)
 
 
-class AnalyticsAPI:
+class AnalyticsAPI(_AnalyticsMethodsMixin):
     def __init__(self, client: Any) -> None:
         self._client = client
         self._list_cache: Optional[Dict[str, Any]] = None
         self._info_cache: Dict[str, Dict[str, Any]] = {}
+
+    def _call_analytics(
+        self,
+        name: str,
+        params: Dict[str, Any],
+        *,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+        response_format: Optional[str] = None,
+        as_table: Optional[str] = None,
+        strict: bool = False,
+    ) -> Any:
+        payload = dict(params)
+        action = f"analytics.{name}"
+        if strict:
+            info = self.info(name)
+            payload = _normalize_param_names(info, payload)
+            payload = _validate_and_fill_params(info, payload)
+        effective_format = "arrow" if as_table else response_format
+        result = self._client.call_data(
+            action,
+            params=payload,
+            options=options,
+            context=context,
+            response_format=effective_format,
+        )
+        if as_table:
+            if isinstance(result, (bytes, bytearray)):
+                return _decode_table(bytes(result), as_table)
+            tabular = _coerce_tabular_json(result)
+            if tabular is None:
+                raise TepiloraAPIError(message="Expected Arrow bytes or tabular JSON for as_table")
+            return _decode_table_from_json(tabular, as_table)
+        return result
 
     def list(self, *, category: Optional[str] = None, refresh: bool = False) -> Dict[str, Any]:
         if self._list_cache is not None and not refresh and category is None:
@@ -381,11 +476,45 @@ class AnalyticsAPI:
         return sorted(base)
 
 
-class AsyncAnalyticsAPI:
+class AsyncAnalyticsAPI(_AsyncAnalyticsMethodsMixin):
     def __init__(self, client: Any) -> None:
         self._client = client
         self._list_cache: Optional[Dict[str, Any]] = None
         self._info_cache: Dict[str, Dict[str, Any]] = {}
+
+    async def _call_analytics(
+        self,
+        name: str,
+        params: Dict[str, Any],
+        *,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+        response_format: Optional[str] = None,
+        as_table: Optional[str] = None,
+        strict: bool = False,
+    ) -> Any:
+        payload = dict(params)
+        action = f"analytics.{name}"
+        if strict:
+            info = await self.info(name)
+            payload = _normalize_param_names(info, payload)
+            payload = _validate_and_fill_params(info, payload)
+        effective_format = "arrow" if as_table else response_format
+        result = await self._client.call_data(
+            action,
+            params=payload,
+            options=options,
+            context=context,
+            response_format=effective_format,
+        )
+        if as_table:
+            if isinstance(result, (bytes, bytearray)):
+                return _decode_table(bytes(result), as_table)
+            tabular = _coerce_tabular_json(result)
+            if tabular is None:
+                raise TepiloraAPIError(message="Expected Arrow bytes or tabular JSON for as_table")
+            return _decode_table_from_json(tabular, as_table)
+        return result
 
     async def list(self, *, category: Optional[str] = None, refresh: bool = False) -> Dict[str, Any]:
         if self._list_cache is not None and not refresh and category is None:
