@@ -89,7 +89,7 @@ class NewsAPI(BaseAPI):
         Full-text search in news articles.
 
         Args:
-        query: Search query
+        query: Search query. Multi-word queries use OR logic (e.g. 'inflation eurozone' matches articles containing either word). Use quotes for exact phrase.
         limit: Maximum results
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)
@@ -269,7 +269,7 @@ class AsyncNewsAPI(AsyncBaseAPI):
         Full-text search in news articles.
 
         Args:
-        query: Search query
+        query: Search query. Multi-word queries use OR logic (e.g. 'inflation eurozone' matches articles containing either word). Use quotes for exact phrase.
         limit: Maximum results
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)

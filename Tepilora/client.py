@@ -16,6 +16,7 @@ import httpx
 
 from .errors import TepiloraAPIError
 from .capabilities import _client_capabilities
+from .endpoints.realtime import RealtimeAPI, AsyncRealtimeAPI
 
 logger = logging.getLogger("Tepilora")
 from .models import CreditInfo, V3BinaryMeta, V3BinaryResponse, V3Request, V3Response, parse_credit_headers
@@ -321,6 +322,7 @@ class TepiloraClient:
         self.portfolio = PortfolioAPI(self)
         self.macro = MacroAPI(self)
         self.alerts = AlertsAPI(self)
+        self.realtime = RealtimeAPI(self)
 
         # Medium priority namespaces
         self.stocks = StocksAPI(self)
@@ -628,6 +630,7 @@ class AsyncTepiloraClient:
         self.portfolio = AsyncPortfolioAPI(self)
         self.macro = AsyncMacroAPI(self)
         self.alerts = AsyncAlertsAPI(self)
+        self.realtime = AsyncRealtimeAPI(self)
 
         # Medium priority namespaces
         self.stocks = AsyncStocksAPI(self)

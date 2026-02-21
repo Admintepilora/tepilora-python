@@ -17,8 +17,8 @@ class TestCapabilities:
         """Test full summary output."""
         result = capabilities()
         assert "TepiloraSDK" in result
-        assert "239 operations" in result
-        assert "25 namespaces" in result
+        assert "244 operations" in result
+        assert "26 namespaces" in result
         assert "analytics" in result
 
     def test_capabilities_namespace(self):
@@ -60,7 +60,7 @@ class TestCapabilities:
         assert isinstance(ns, list)
         assert "analytics" in ns
         assert "portfolio" in ns
-        assert len(ns) == 25
+        assert len(ns) == 26
 
     def test_list_operations(self):
         """Test list_operations helper."""
@@ -72,7 +72,7 @@ class TestCapabilities:
     def test_list_operations_all(self):
         """Test list_operations without filter."""
         ops = list_operations()
-        assert len(ops) == 239
+        assert len(ops) == 244
 
     def test_get_operation_info(self):
         """Test get_operation_info helper."""
