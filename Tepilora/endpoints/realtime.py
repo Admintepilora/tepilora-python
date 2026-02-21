@@ -19,13 +19,12 @@ class RealtimeAPI(BaseAPI):
         *,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
-        response_format: Optional[str] = None,
     ) -> Any:
-        """Get economic calendar
+        """Get realtime economic calendar
 
-        Get upcoming and recent economic events with actual, forecast and previous values."""
+        Get current economic calendar events from realtime feed."""
         params: Dict[str, Any] = {}
-        return self._call("realtime.calendar", params=params, options=options, context=context, response_format=response_format)
+        return self._call("realtime.calendar", params=params, options=options, context=context)
 
     def chart(
         self,
@@ -35,16 +34,15 @@ class RealtimeAPI(BaseAPI):
         timeframe: Optional[str] = "1D",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
-        response_format: Optional[str] = None,
     ) -> Any:
-        """Get intraday/historical chart data
+        """Get realtime chart data
 
-        Get OHLCV chart data for a symbol over a given timeframe.
+        Get OHLC chart data for a symbol+timeframe or by TepiloraCode identifier.
 
         Args:
         symbol: Symbol identifier (required if no identifier)
-        identifier: TepiloraCode — resolves symbol automatically
-        timeframe: Chart timeframe: 1D, 5D, 1M, 1Y (default 1D)"""
+        identifier: TepiloraCode — resolves symbol automatically via rt:map:tc
+        timeframe: Timeframe: 1D, 5D, 1M, 1Y"""
         params: Dict[str, Any] = {}
         if symbol is not None:
             params["symbol"] = symbol
@@ -52,7 +50,7 @@ class RealtimeAPI(BaseAPI):
             params["identifier"] = identifier
         if timeframe is not None:
             params["timeframe"] = timeframe
-        return self._call("realtime.chart", params=params, options=options, context=context, response_format=response_format)
+        return self._call("realtime.chart", params=params, options=options, context=context)
 
     def health(
         self,
@@ -60,9 +58,9 @@ class RealtimeAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Check realtime feed health
+        """Get data source health status
 
-        Check connectivity and freshness of realtime data feeds."""
+        Get health status for all realtime data sources."""
         params: Dict[str, Any] = {}
         return self._call("realtime.health", params=params, options=options, context=context)
 
@@ -74,16 +72,15 @@ class RealtimeAPI(BaseAPI):
         identifier: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
-        response_format: Optional[str] = None,
     ) -> Any:
-        """Get realtime quote for a symbol
+        """Get single realtime quote
 
-        Get latest price, bid/ask, change and volume for a specific symbol in a category.
+        Get a single realtime quote by category+symbol or by TepiloraCode identifier.
 
         Args:
         category: Asset category: idx, bond, fx, cmd, crypto, futures, stock (required if no identifier)
         symbol: Symbol identifier e.g. DAX, EURUSD, BTC (required if no identifier)
-        identifier: TepiloraCode — resolves category+symbol automatically"""
+        identifier: TepiloraCode — resolves category+symbol automatically via rt:map:tc"""
         params: Dict[str, Any] = {}
         if category is not None:
             params["category"] = category
@@ -91,7 +88,7 @@ class RealtimeAPI(BaseAPI):
             params["symbol"] = symbol
         if identifier is not None:
             params["identifier"] = identifier
-        return self._call("realtime.quote", params=params, options=options, context=context, response_format=response_format)
+        return self._call("realtime.quote", params=params, options=options, context=context)
 
     def quotes(
         self,
@@ -99,18 +96,17 @@ class RealtimeAPI(BaseAPI):
         category: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
-        response_format: Optional[str] = None,
     ) -> Any:
-        """Get realtime quotes for a category
+        """Get all realtime quotes
 
-        Get latest prices for all symbols in a market category, or all categories if none specified.
+        Get all realtime quotes, optionally filtered by category.
 
         Args:
-        category: Market category: idx, bond, fx, cmd, crypto, futures, stock. Omit for all."""
+        category: Filter by category: idx, bond, fx, cmd, crypto, futures, stock"""
         params: Dict[str, Any] = {}
         if category is not None:
             params["category"] = category
-        return self._call("realtime.quotes", params=params, options=options, context=context, response_format=response_format)
+        return self._call("realtime.quotes", params=params, options=options, context=context)
 
 
 
@@ -122,13 +118,12 @@ class AsyncRealtimeAPI(AsyncBaseAPI):
         *,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
-        response_format: Optional[str] = None,
     ) -> Any:
-        """Get economic calendar
+        """Get realtime economic calendar
 
-        Get upcoming and recent economic events with actual, forecast and previous values."""
+        Get current economic calendar events from realtime feed."""
         params: Dict[str, Any] = {}
-        return await self._call("realtime.calendar", params=params, options=options, context=context, response_format=response_format)
+        return await self._call("realtime.calendar", params=params, options=options, context=context)
 
     async def chart(
         self,
@@ -138,16 +133,15 @@ class AsyncRealtimeAPI(AsyncBaseAPI):
         timeframe: Optional[str] = "1D",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
-        response_format: Optional[str] = None,
     ) -> Any:
-        """Get intraday/historical chart data
+        """Get realtime chart data
 
-        Get OHLCV chart data for a symbol over a given timeframe.
+        Get OHLC chart data for a symbol+timeframe or by TepiloraCode identifier.
 
         Args:
         symbol: Symbol identifier (required if no identifier)
-        identifier: TepiloraCode — resolves symbol automatically
-        timeframe: Chart timeframe: 1D, 5D, 1M, 1Y (default 1D)"""
+        identifier: TepiloraCode — resolves symbol automatically via rt:map:tc
+        timeframe: Timeframe: 1D, 5D, 1M, 1Y"""
         params: Dict[str, Any] = {}
         if symbol is not None:
             params["symbol"] = symbol
@@ -155,7 +149,7 @@ class AsyncRealtimeAPI(AsyncBaseAPI):
             params["identifier"] = identifier
         if timeframe is not None:
             params["timeframe"] = timeframe
-        return await self._call("realtime.chart", params=params, options=options, context=context, response_format=response_format)
+        return await self._call("realtime.chart", params=params, options=options, context=context)
 
     async def health(
         self,
@@ -163,9 +157,9 @@ class AsyncRealtimeAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Check realtime feed health
+        """Get data source health status
 
-        Check connectivity and freshness of realtime data feeds."""
+        Get health status for all realtime data sources."""
         params: Dict[str, Any] = {}
         return await self._call("realtime.health", params=params, options=options, context=context)
 
@@ -177,16 +171,15 @@ class AsyncRealtimeAPI(AsyncBaseAPI):
         identifier: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
-        response_format: Optional[str] = None,
     ) -> Any:
-        """Get realtime quote for a symbol
+        """Get single realtime quote
 
-        Get latest price, bid/ask, change and volume for a specific symbol in a category.
+        Get a single realtime quote by category+symbol or by TepiloraCode identifier.
 
         Args:
         category: Asset category: idx, bond, fx, cmd, crypto, futures, stock (required if no identifier)
         symbol: Symbol identifier e.g. DAX, EURUSD, BTC (required if no identifier)
-        identifier: TepiloraCode — resolves category+symbol automatically"""
+        identifier: TepiloraCode — resolves category+symbol automatically via rt:map:tc"""
         params: Dict[str, Any] = {}
         if category is not None:
             params["category"] = category
@@ -194,7 +187,7 @@ class AsyncRealtimeAPI(AsyncBaseAPI):
             params["symbol"] = symbol
         if identifier is not None:
             params["identifier"] = identifier
-        return await self._call("realtime.quote", params=params, options=options, context=context, response_format=response_format)
+        return await self._call("realtime.quote", params=params, options=options, context=context)
 
     async def quotes(
         self,
@@ -202,17 +195,16 @@ class AsyncRealtimeAPI(AsyncBaseAPI):
         category: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
-        response_format: Optional[str] = None,
     ) -> Any:
-        """Get realtime quotes for a category
+        """Get all realtime quotes
 
-        Get latest prices for all symbols in a market category, or all categories if none specified.
+        Get all realtime quotes, optionally filtered by category.
 
         Args:
-        category: Market category: idx, bond, fx, cmd, crypto, futures, stock. Omit for all."""
+        category: Filter by category: idx, bond, fx, cmd, crypto, futures, stock"""
         params: Dict[str, Any] = {}
         if category is not None:
             params["category"] = category
-        return await self._call("realtime.quotes", params=params, options=options, context=context, response_format=response_format)
+        return await self._call("realtime.quotes", params=params, options=options, context=context)
 
 
