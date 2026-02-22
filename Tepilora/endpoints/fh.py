@@ -39,7 +39,7 @@ class FhAPI(BaseAPI):
     def history(
         self,
         *,
-        identifiers: Union[str, List[str]],
+        identifier: str,
         columns: Optional[List[Any]] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
@@ -52,12 +52,12 @@ class FhAPI(BaseAPI):
         Historical fundamental data.
 
         Args:
-        identifiers: List of TepiloraCodes
+        identifier: TepiloraCode (single)
         columns: Columns to return
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)"""
         params: Dict[str, Any] = {}
-        params["identifiers"] = identifiers
+        params["identifier"] = identifier
         if columns is not None:
             params["columns"] = columns
         if start_date is not None:
@@ -192,7 +192,7 @@ class AsyncFhAPI(AsyncBaseAPI):
     async def history(
         self,
         *,
-        identifiers: Union[str, List[str]],
+        identifier: str,
         columns: Optional[List[Any]] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
@@ -205,12 +205,12 @@ class AsyncFhAPI(AsyncBaseAPI):
         Historical fundamental data.
 
         Args:
-        identifiers: List of TepiloraCodes
+        identifier: TepiloraCode (single)
         columns: Columns to return
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)"""
         params: Dict[str, Any] = {}
-        params["identifiers"] = identifiers
+        params["identifier"] = identifier
         if columns is not None:
             params["columns"] = columns
         if start_date is not None:

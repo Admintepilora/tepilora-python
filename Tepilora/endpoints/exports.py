@@ -19,6 +19,7 @@ class ExportsAPI(BaseAPI):
         *,
         source: str,
         source_params: Optional[Dict[str, Any]] = None,
+        format: Optional[str] = "json",
         filename: Optional[str] = None,
         include_metadata: Optional[bool] = True,
         compression: Optional[str] = None,
@@ -32,6 +33,7 @@ class ExportsAPI(BaseAPI):
         Args:
         source: Source action (e.g., 'securities.search')
         source_params: Parameters for source action
+        format: json|csv|xlsx|parquet
         filename: Output filename
         include_metadata: Include metadata
         compression: Compression (for parquet)"""
@@ -39,6 +41,8 @@ class ExportsAPI(BaseAPI):
         params["source"] = source
         if source_params is not None:
             params["source_params"] = source_params
+        if format is not None:
+            params["format"] = format
         if filename is not None:
             params["filename"] = filename
         if include_metadata is not None:
@@ -69,6 +73,7 @@ class AsyncExportsAPI(AsyncBaseAPI):
         *,
         source: str,
         source_params: Optional[Dict[str, Any]] = None,
+        format: Optional[str] = "json",
         filename: Optional[str] = None,
         include_metadata: Optional[bool] = True,
         compression: Optional[str] = None,
@@ -82,6 +87,7 @@ class AsyncExportsAPI(AsyncBaseAPI):
         Args:
         source: Source action (e.g., 'securities.search')
         source_params: Parameters for source action
+        format: json|csv|xlsx|parquet
         filename: Output filename
         include_metadata: Include metadata
         compression: Compression (for parquet)"""
@@ -89,6 +95,8 @@ class AsyncExportsAPI(AsyncBaseAPI):
         params["source"] = source
         if source_params is not None:
             params["source_params"] = source_params
+        if format is not None:
+            params["format"] = format
         if filename is not None:
             params["filename"] = filename
         if include_metadata is not None:

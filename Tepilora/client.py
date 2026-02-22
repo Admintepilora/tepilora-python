@@ -306,7 +306,7 @@ class TepiloraClient:
             PortfolioAPI, MacroAPI, AlertsAPI,
             StocksAPI, BondsAPI, OptionsAPI, EsgAPI, FactorsAPI, FhAPI, DataAPI,
             ClientsAPI, ProfilingAPI, BillingAPI, DocumentsAPI, AlternativesAPI,
-            WorkflowsAPI, AssetAllocationAPI, ExportsAPI,
+            AssetAllocationAPI, ExportsAPI,
         )
         from .analytics import AnalyticsAPI
 
@@ -341,7 +341,6 @@ class TepiloraClient:
         self.alternatives = AlternativesAPI(self)
 
         # Cross-module
-        self.workflows = WorkflowsAPI(self)
         self.asset_allocation = AssetAllocationAPI(self)
         self.exports = ExportsAPI(self)
 
@@ -614,7 +613,7 @@ class AsyncTepiloraClient:
             AsyncPortfolioAPI, AsyncMacroAPI, AsyncAlertsAPI,
             AsyncStocksAPI, AsyncBondsAPI, AsyncOptionsAPI, AsyncEsgAPI, AsyncFactorsAPI, AsyncFhAPI, AsyncDataAPI,
             AsyncClientsAPI, AsyncProfilingAPI, AsyncBillingAPI, AsyncDocumentsAPI, AsyncAlternativesAPI,
-            AsyncWorkflowsAPI, AsyncAssetAllocationAPI, AsyncExportsAPI,
+            AsyncAssetAllocationAPI, AsyncExportsAPI,
         )
         from .analytics import AsyncAnalyticsAPI
 
@@ -649,7 +648,6 @@ class AsyncTepiloraClient:
         self.alternatives = AsyncAlternativesAPI(self)
 
         # Cross-module
-        self.workflows = AsyncWorkflowsAPI(self)
         self.asset_allocation = AsyncAssetAllocationAPI(self)
         self.exports = AsyncExportsAPI(self)
 

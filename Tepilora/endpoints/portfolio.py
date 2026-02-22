@@ -43,7 +43,7 @@ class PortfolioAPI(BaseAPI):
     def compare(
         self,
         *,
-        portfolio_ids: List[Any],
+        portfolios: List[Any],
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
@@ -55,11 +55,11 @@ class PortfolioAPI(BaseAPI):
         Compare multiple portfolios.
 
         Args:
-        portfolio_ids: Portfolio IDs to compare
+        portfolios: List of portfolio definitions (id or weights)
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)"""
         params: Dict[str, Any] = {}
-        params["portfolio_ids"] = portfolio_ids
+        params["portfolios"] = portfolios
         if start_date is not None:
             params["start_date"] = start_date
         if end_date is not None:
@@ -116,7 +116,8 @@ class PortfolioAPI(BaseAPI):
         name: str,
         input_type: str,
         portfolio_type: Optional[str] = "Real",
-        input_data: Optional[Dict[str, Any]] = None,
+        weights: Optional[Dict[str, Any]] = None,
+        start_date: Optional[str] = None,
         benchmark: Optional[str] = None,
         description: Optional[str] = "",
         settings: Optional[Dict[str, Any]] = None,
@@ -131,7 +132,8 @@ class PortfolioAPI(BaseAPI):
         name: Portfolio name
         input_type: fixed_weights|drifting_weights|holdings|values|trades
         portfolio_type: Real|Suggested|Simulation|Backtest|Model
-        input_data: Holdings/weights data
+        weights: Portfolio weights (Dict[TepiloraCode, float])
+        start_date: Start date (YYYY-MM-DD). Required for fixed_weights
         benchmark: Benchmark TepiloraCode
         description: Description
         settings: Portfolio settings"""
@@ -140,8 +142,10 @@ class PortfolioAPI(BaseAPI):
         params["input_type"] = input_type
         if portfolio_type is not None:
             params["portfolio_type"] = portfolio_type
-        if input_data is not None:
-            params["input_data"] = input_data
+        if weights is not None:
+            params["weights"] = weights
+        if start_date is not None:
+            params["start_date"] = start_date
         if benchmark is not None:
             params["benchmark"] = benchmark
         if description is not None:
@@ -521,7 +525,7 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
     async def compare(
         self,
         *,
-        portfolio_ids: List[Any],
+        portfolios: List[Any],
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
@@ -533,11 +537,11 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         Compare multiple portfolios.
 
         Args:
-        portfolio_ids: Portfolio IDs to compare
+        portfolios: List of portfolio definitions (id or weights)
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)"""
         params: Dict[str, Any] = {}
-        params["portfolio_ids"] = portfolio_ids
+        params["portfolios"] = portfolios
         if start_date is not None:
             params["start_date"] = start_date
         if end_date is not None:
@@ -594,7 +598,8 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         name: str,
         input_type: str,
         portfolio_type: Optional[str] = "Real",
-        input_data: Optional[Dict[str, Any]] = None,
+        weights: Optional[Dict[str, Any]] = None,
+        start_date: Optional[str] = None,
         benchmark: Optional[str] = None,
         description: Optional[str] = "",
         settings: Optional[Dict[str, Any]] = None,
@@ -609,7 +614,8 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         name: Portfolio name
         input_type: fixed_weights|drifting_weights|holdings|values|trades
         portfolio_type: Real|Suggested|Simulation|Backtest|Model
-        input_data: Holdings/weights data
+        weights: Portfolio weights (Dict[TepiloraCode, float])
+        start_date: Start date (YYYY-MM-DD). Required for fixed_weights
         benchmark: Benchmark TepiloraCode
         description: Description
         settings: Portfolio settings"""
@@ -618,8 +624,10 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         params["input_type"] = input_type
         if portfolio_type is not None:
             params["portfolio_type"] = portfolio_type
-        if input_data is not None:
-            params["input_data"] = input_data
+        if weights is not None:
+            params["weights"] = weights
+        if start_date is not None:
+            params["start_date"] = start_date
         if benchmark is not None:
             params["benchmark"] = benchmark
         if description is not None:
