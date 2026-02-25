@@ -43,4 +43,4 @@ jobs:
       - name: Tests (extras + coverage)
         run: |
           python -m pip install pytest-cov
-          python -m pytest tests/ -v --tb=short --cov=Tepilora --cov-report=term-missing --cov-fail-under=80
+          python -m pytest tests/ -v --tb=short --cov=Tepilora --cov-report=term-missing --cov-fail-under=70

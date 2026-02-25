@@ -7,16 +7,11 @@ Tests that each operation:
 3. Handles required parameters correctly
 """
 
-import sys
-from pathlib import Path
 from typing import Any, Dict
 
 import pytest
 
 from conftest import build_minimal_params, _load_schema
-
-sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
-from generate_sdk import sanitize_method_name
 
 # Load schema at module level for parametrize
 SCHEMA = _load_schema()
@@ -27,9 +22,9 @@ SKIP_CATEGORIES = {"audit"}
 # Operations that use special endpoints (not V3 unified)
 SPECIAL_OPERATIONS = {"analytics.info", "analytics.list"}
 
-def get_method_name(operation: str) -> str:
-    """Get Python method name from operation name."""
-    return sanitize_method_name(operation)
+def get_method_name(operation_dict: Dict[str, Any]) -> str:
+    """Get Python method name from operation metadata."""
+    return operation_dict["method_name"]
 
 
 def all_operations():
@@ -60,8 +55,7 @@ class TestAllOperationsAsync:
             pytest.skip(f"{action} uses special endpoint")
 
         category = op["category"]
-        operation = op["operation"]
-        method_name = get_method_name(operation)
+        method_name = get_method_name(op)
         params = op.get("params", [])
 
         namespace = getattr(async_mock_client, category, None)
@@ -91,8 +85,7 @@ class TestAllOperationsAsync:
             pytest.skip(f"{action} uses special endpoint")
 
         category = op["category"]
-        operation = op["operation"]
-        method_name = get_method_name(operation)
+        method_name = get_method_name(op)
         params = op.get("params", [])
         required_params = [p["name"] for p in params if p.get("required") and p["name"] != "format"]
 
@@ -128,7 +121,9 @@ class TestAllNamespacesAsync:
         operations = SCHEMA["by_category"].get(category, [])
 
         for op_name in operations:
-            method_name = get_method_name(op_name)
+            action = f"{category}.{op_name}"
+            operation = SCHEMA["operations"][action]
+            method_name = get_method_name(operation)
 
             if category == "analytics":
                 func = getattr(namespace, method_name)
