@@ -18,6 +18,8 @@ class SecuritiesAPI(BaseAPI):
         self,
         *,
         identifiers: Union[str, List[str]],
+        fields: Optional[List[Any]] = None,
+        identifier: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -27,9 +29,13 @@ class SecuritiesAPI(BaseAPI):
 
         Args:
         identifiers: List of TepiloraCodes"""
-        params: Dict[str, Any] = {}
-        params["identifiers"] = identifiers
-        return self._call("securities.breakdowns", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["identifiers"] = identifiers
+        if fields is not None:
+            _payload["fields"] = fields
+        if identifier is not None:
+            _payload["identifier"] = identifier
+        return self._call("securities.breakdowns", params=_payload, options=options, context=context)
 
     def description(
         self,
@@ -47,12 +53,12 @@ class SecuritiesAPI(BaseAPI):
         Args:
         identifier: Single identifier
         identifiers: Multiple identifiers"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if identifier is not None:
-            params["identifier"] = identifier
+            _payload["identifier"] = identifier
         if identifiers is not None:
-            params["identifiers"] = identifiers
-        return self._call("securities.description", params=params, options=options, context=context, response_format=response_format)
+            _payload["identifiers"] = identifiers
+        return self._call("securities.description", params=_payload, options=options, context=context, response_format=response_format)
 
     def details(
         self,
@@ -70,12 +76,12 @@ class SecuritiesAPI(BaseAPI):
         Args:
         identifier: Single identifier
         identifiers: Multiple identifiers"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if identifier is not None:
-            params["identifier"] = identifier
+            _payload["identifier"] = identifier
         if identifiers is not None:
-            params["identifiers"] = identifiers
-        return self._call("securities.details", params=params, options=options, context=context, response_format=response_format)
+            _payload["identifiers"] = identifiers
+        return self._call("securities.details", params=_payload, options=options, context=context, response_format=response_format)
 
     def facets(
         self,
@@ -92,16 +98,17 @@ class SecuritiesAPI(BaseAPI):
         Args:
         fields: Fields to aggregate
         filters: Pre-filter"""
-        params: Dict[str, Any] = {}
-        params["fields"] = fields
+        _payload: Dict[str, Any] = {}
+        _payload["fields"] = fields
         if filters is not None:
-            params["filters"] = filters
-        return self._call("securities.facets", params=params, options=options, context=context)
+            _payload["filters"] = filters
+        return self._call("securities.facets", params=_payload, options=options, context=context)
 
     def fees(
         self,
         *,
         identifiers: Union[str, List[str]],
+        identifier: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -112,14 +119,17 @@ class SecuritiesAPI(BaseAPI):
 
         Args:
         identifiers: List of TepiloraCodes"""
-        params: Dict[str, Any] = {}
-        params["identifiers"] = identifiers
-        return self._call("securities.fees", params=params, options=options, context=context, response_format=response_format)
+        _payload: Dict[str, Any] = {}
+        _payload["identifiers"] = identifiers
+        if identifier is not None:
+            _payload["identifier"] = identifier
+        return self._call("securities.fees", params=_payload, options=options, context=context, response_format=response_format)
 
     def filter(
         self,
         *,
         filters: Dict[str, Any],
+        include_facets: Optional[bool] = None,
         limit: Optional[int] = 50,
         offset: Optional[int] = 0,
         sort: Optional[str] = None,
@@ -142,30 +152,35 @@ class SecuritiesAPI(BaseAPI):
         order: Sort order: asc, desc (default per field)
         group_by: Deduplicate by field (TepiloraParentId). Keeps one per group.
         preferred_currency: When group_by active, prefer share class with this currency (e.g. EUR)"""
-        params: Dict[str, Any] = {}
-        params["filters"] = filters
+        _payload: Dict[str, Any] = {}
+        _payload["filters"] = filters
+        if include_facets is not None:
+            _payload["include_facets"] = include_facets
         if limit is not None:
-            params["limit"] = limit
+            _payload["limit"] = limit
         if offset is not None:
-            params["offset"] = offset
+            _payload["offset"] = offset
         if sort is not None:
-            params["sort"] = sort
+            _payload["sort"] = sort
         if order is not None:
-            params["order"] = order
+            _payload["order"] = order
         if group_by is not None:
-            params["group_by"] = group_by
+            _payload["group_by"] = group_by
         if preferred_currency is not None:
-            params["preferred_currency"] = preferred_currency
-        return self._call("securities.filter", params=params, options=options, context=context, response_format=response_format)
+            _payload["preferred_currency"] = preferred_currency
+        return self._call("securities.filter", params=_payload, options=options, context=context, response_format=response_format)
 
     def history(
         self,
         *,
         identifiers: Union[str, List[str]],
+        currency: Optional[str] = None,
+        identifier: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         limit: Optional[int] = 5000,
         pivot: Optional[bool] = False,
+        total_return: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -180,22 +195,30 @@ class SecuritiesAPI(BaseAPI):
         end_date: End date (YYYY-MM-DD)
         limit: Maximum results
         pivot: Pivot format (dates as rows, TCs as columns)"""
-        params: Dict[str, Any] = {}
-        params["identifiers"] = identifiers
+        _payload: Dict[str, Any] = {}
+        _payload["identifiers"] = identifiers
+        if currency is not None:
+            _payload["currency"] = currency
+        if identifier is not None:
+            _payload["identifier"] = identifier
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
+            _payload["end_date"] = end_date
         if limit is not None:
-            params["limit"] = limit
+            _payload["limit"] = limit
         if pivot is not None:
-            params["pivot"] = pivot
-        return self._call("securities.history", params=params, options=options, context=context, response_format=response_format)
+            _payload["pivot"] = pivot
+        if total_return is not None:
+            _payload["total_return"] = total_return
+        return self._call("securities.history", params=_payload, options=options, context=context, response_format=response_format)
 
     def lookup(
         self,
         *,
         identifier: str,
+        filters: Optional[Dict[str, Any]] = None,
+        query: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -205,14 +228,19 @@ class SecuritiesAPI(BaseAPI):
 
         Args:
         identifier: TepiloraCode or ISIN"""
-        params: Dict[str, Any] = {}
-        params["identifier"] = identifier
-        return self._call("securities.lookup", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["identifier"] = identifier
+        if filters is not None:
+            _payload["filters"] = filters
+        if query is not None:
+            _payload["query"] = query
+        return self._call("securities.lookup", params=_payload, options=options, context=context)
 
     def mifid(
         self,
         *,
         identifiers: Union[str, List[str]],
+        identifier: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -223,14 +251,17 @@ class SecuritiesAPI(BaseAPI):
 
         Args:
         identifiers: List of TepiloraCodes"""
-        params: Dict[str, Any] = {}
-        params["identifiers"] = identifiers
-        return self._call("securities.mifid", params=params, options=options, context=context, response_format=response_format)
+        _payload: Dict[str, Any] = {}
+        _payload["identifiers"] = identifiers
+        if identifier is not None:
+            _payload["identifier"] = identifier
+        return self._call("securities.mifid", params=_payload, options=options, context=context, response_format=response_format)
 
     def rels(
         self,
         *,
         identifier: str,
+        identifiers: Optional[Union[str, List[str]]] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -241,13 +272,19 @@ class SecuritiesAPI(BaseAPI):
 
         Args:
         identifier: TepiloraCode or ISIN"""
-        params: Dict[str, Any] = {}
-        params["identifier"] = identifier
-        return self._call("securities.rels", params=params, options=options, context=context, response_format=response_format)
+        _payload: Dict[str, Any] = {}
+        _payload["identifier"] = identifier
+        if identifiers is not None:
+            _payload["identifiers"] = identifiers
+        return self._call("securities.rels", params=_payload, options=options, context=context, response_format=response_format)
 
     def screen(
         self,
         *,
+        benchmark: Optional[str] = None,
+        metrics: Optional[List[Any]] = None,
+        period: Optional[int] = None,
+        query_id: Optional[str] = None,
         universe: Optional[Dict[str, Any]] = None,
         query_name: Optional[str] = None,
         criteria: Optional[Dict[str, Any]] = None,
@@ -267,22 +304,31 @@ class SecuritiesAPI(BaseAPI):
         criteria: Metric criteria
         rank_by: Ranking metric
         limit: Maximum results"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
+        if benchmark is not None:
+            _payload["benchmark"] = benchmark
+        if metrics is not None:
+            _payload["metrics"] = metrics
+        if period is not None:
+            _payload["period"] = period
+        if query_id is not None:
+            _payload["query_id"] = query_id
         if universe is not None:
-            params["universe"] = universe
+            _payload["universe"] = universe
         if query_name is not None:
-            params["query_name"] = query_name
+            _payload["query_name"] = query_name
         if criteria is not None:
-            params["criteria"] = criteria
+            _payload["criteria"] = criteria
         if rank_by is not None:
-            params["rank_by"] = rank_by
+            _payload["rank_by"] = rank_by
         if limit is not None:
-            params["limit"] = limit
-        return self._call("securities.screen", params=params, options=options, context=context, response_format=response_format)
+            _payload["limit"] = limit
+        return self._call("securities.screen", params=_payload, options=options, context=context, response_format=response_format)
 
     def search(
         self,
         *,
+        include_metrics: Optional[bool] = None,
         query: Optional[str] = "",
         filters: Optional[Dict[str, Any]] = None,
         limit: Optional[int] = 50,
@@ -310,26 +356,28 @@ class SecuritiesAPI(BaseAPI):
         order: Sort order: asc, desc (default per field)
         group_by: Deduplicate by field (TepiloraParentId). Keeps one per group.
         preferred_currency: When group_by active, prefer share class with this currency (e.g. EUR)"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
+        if include_metrics is not None:
+            _payload["include_metrics"] = include_metrics
         if query is not None:
-            params["query"] = query
+            _payload["query"] = query
         if filters is not None:
-            params["filters"] = filters
+            _payload["filters"] = filters
         if limit is not None:
-            params["limit"] = limit
+            _payload["limit"] = limit
         if offset is not None:
-            params["offset"] = offset
+            _payload["offset"] = offset
         if include_facets is not None:
-            params["include_facets"] = include_facets
+            _payload["include_facets"] = include_facets
         if sort is not None:
-            params["sort"] = sort
+            _payload["sort"] = sort
         if order is not None:
-            params["order"] = order
+            _payload["order"] = order
         if group_by is not None:
-            params["group_by"] = group_by
+            _payload["group_by"] = group_by
         if preferred_currency is not None:
-            params["preferred_currency"] = preferred_currency
-        return self._call("securities.search", params=params, options=options, context=context, response_format=response_format)
+            _payload["preferred_currency"] = preferred_currency
+        return self._call("securities.search", params=_payload, options=options, context=context, response_format=response_format)
 
 
 
@@ -340,6 +388,8 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
         self,
         *,
         identifiers: Union[str, List[str]],
+        fields: Optional[List[Any]] = None,
+        identifier: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -349,9 +399,13 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
 
         Args:
         identifiers: List of TepiloraCodes"""
-        params: Dict[str, Any] = {}
-        params["identifiers"] = identifiers
-        return await self._call("securities.breakdowns", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["identifiers"] = identifiers
+        if fields is not None:
+            _payload["fields"] = fields
+        if identifier is not None:
+            _payload["identifier"] = identifier
+        return await self._call("securities.breakdowns", params=_payload, options=options, context=context)
 
     async def description(
         self,
@@ -369,12 +423,12 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
         Args:
         identifier: Single identifier
         identifiers: Multiple identifiers"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if identifier is not None:
-            params["identifier"] = identifier
+            _payload["identifier"] = identifier
         if identifiers is not None:
-            params["identifiers"] = identifiers
-        return await self._call("securities.description", params=params, options=options, context=context, response_format=response_format)
+            _payload["identifiers"] = identifiers
+        return await self._call("securities.description", params=_payload, options=options, context=context, response_format=response_format)
 
     async def details(
         self,
@@ -392,12 +446,12 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
         Args:
         identifier: Single identifier
         identifiers: Multiple identifiers"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if identifier is not None:
-            params["identifier"] = identifier
+            _payload["identifier"] = identifier
         if identifiers is not None:
-            params["identifiers"] = identifiers
-        return await self._call("securities.details", params=params, options=options, context=context, response_format=response_format)
+            _payload["identifiers"] = identifiers
+        return await self._call("securities.details", params=_payload, options=options, context=context, response_format=response_format)
 
     async def facets(
         self,
@@ -414,16 +468,17 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
         Args:
         fields: Fields to aggregate
         filters: Pre-filter"""
-        params: Dict[str, Any] = {}
-        params["fields"] = fields
+        _payload: Dict[str, Any] = {}
+        _payload["fields"] = fields
         if filters is not None:
-            params["filters"] = filters
-        return await self._call("securities.facets", params=params, options=options, context=context)
+            _payload["filters"] = filters
+        return await self._call("securities.facets", params=_payload, options=options, context=context)
 
     async def fees(
         self,
         *,
         identifiers: Union[str, List[str]],
+        identifier: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -434,14 +489,17 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
 
         Args:
         identifiers: List of TepiloraCodes"""
-        params: Dict[str, Any] = {}
-        params["identifiers"] = identifiers
-        return await self._call("securities.fees", params=params, options=options, context=context, response_format=response_format)
+        _payload: Dict[str, Any] = {}
+        _payload["identifiers"] = identifiers
+        if identifier is not None:
+            _payload["identifier"] = identifier
+        return await self._call("securities.fees", params=_payload, options=options, context=context, response_format=response_format)
 
     async def filter(
         self,
         *,
         filters: Dict[str, Any],
+        include_facets: Optional[bool] = None,
         limit: Optional[int] = 50,
         offset: Optional[int] = 0,
         sort: Optional[str] = None,
@@ -464,30 +522,35 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
         order: Sort order: asc, desc (default per field)
         group_by: Deduplicate by field (TepiloraParentId). Keeps one per group.
         preferred_currency: When group_by active, prefer share class with this currency (e.g. EUR)"""
-        params: Dict[str, Any] = {}
-        params["filters"] = filters
+        _payload: Dict[str, Any] = {}
+        _payload["filters"] = filters
+        if include_facets is not None:
+            _payload["include_facets"] = include_facets
         if limit is not None:
-            params["limit"] = limit
+            _payload["limit"] = limit
         if offset is not None:
-            params["offset"] = offset
+            _payload["offset"] = offset
         if sort is not None:
-            params["sort"] = sort
+            _payload["sort"] = sort
         if order is not None:
-            params["order"] = order
+            _payload["order"] = order
         if group_by is not None:
-            params["group_by"] = group_by
+            _payload["group_by"] = group_by
         if preferred_currency is not None:
-            params["preferred_currency"] = preferred_currency
-        return await self._call("securities.filter", params=params, options=options, context=context, response_format=response_format)
+            _payload["preferred_currency"] = preferred_currency
+        return await self._call("securities.filter", params=_payload, options=options, context=context, response_format=response_format)
 
     async def history(
         self,
         *,
         identifiers: Union[str, List[str]],
+        currency: Optional[str] = None,
+        identifier: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         limit: Optional[int] = 5000,
         pivot: Optional[bool] = False,
+        total_return: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -502,22 +565,30 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
         end_date: End date (YYYY-MM-DD)
         limit: Maximum results
         pivot: Pivot format (dates as rows, TCs as columns)"""
-        params: Dict[str, Any] = {}
-        params["identifiers"] = identifiers
+        _payload: Dict[str, Any] = {}
+        _payload["identifiers"] = identifiers
+        if currency is not None:
+            _payload["currency"] = currency
+        if identifier is not None:
+            _payload["identifier"] = identifier
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
+            _payload["end_date"] = end_date
         if limit is not None:
-            params["limit"] = limit
+            _payload["limit"] = limit
         if pivot is not None:
-            params["pivot"] = pivot
-        return await self._call("securities.history", params=params, options=options, context=context, response_format=response_format)
+            _payload["pivot"] = pivot
+        if total_return is not None:
+            _payload["total_return"] = total_return
+        return await self._call("securities.history", params=_payload, options=options, context=context, response_format=response_format)
 
     async def lookup(
         self,
         *,
         identifier: str,
+        filters: Optional[Dict[str, Any]] = None,
+        query: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -527,14 +598,19 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
 
         Args:
         identifier: TepiloraCode or ISIN"""
-        params: Dict[str, Any] = {}
-        params["identifier"] = identifier
-        return await self._call("securities.lookup", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["identifier"] = identifier
+        if filters is not None:
+            _payload["filters"] = filters
+        if query is not None:
+            _payload["query"] = query
+        return await self._call("securities.lookup", params=_payload, options=options, context=context)
 
     async def mifid(
         self,
         *,
         identifiers: Union[str, List[str]],
+        identifier: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -545,14 +621,17 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
 
         Args:
         identifiers: List of TepiloraCodes"""
-        params: Dict[str, Any] = {}
-        params["identifiers"] = identifiers
-        return await self._call("securities.mifid", params=params, options=options, context=context, response_format=response_format)
+        _payload: Dict[str, Any] = {}
+        _payload["identifiers"] = identifiers
+        if identifier is not None:
+            _payload["identifier"] = identifier
+        return await self._call("securities.mifid", params=_payload, options=options, context=context, response_format=response_format)
 
     async def rels(
         self,
         *,
         identifier: str,
+        identifiers: Optional[Union[str, List[str]]] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -563,13 +642,19 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
 
         Args:
         identifier: TepiloraCode or ISIN"""
-        params: Dict[str, Any] = {}
-        params["identifier"] = identifier
-        return await self._call("securities.rels", params=params, options=options, context=context, response_format=response_format)
+        _payload: Dict[str, Any] = {}
+        _payload["identifier"] = identifier
+        if identifiers is not None:
+            _payload["identifiers"] = identifiers
+        return await self._call("securities.rels", params=_payload, options=options, context=context, response_format=response_format)
 
     async def screen(
         self,
         *,
+        benchmark: Optional[str] = None,
+        metrics: Optional[List[Any]] = None,
+        period: Optional[int] = None,
+        query_id: Optional[str] = None,
         universe: Optional[Dict[str, Any]] = None,
         query_name: Optional[str] = None,
         criteria: Optional[Dict[str, Any]] = None,
@@ -589,22 +674,31 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
         criteria: Metric criteria
         rank_by: Ranking metric
         limit: Maximum results"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
+        if benchmark is not None:
+            _payload["benchmark"] = benchmark
+        if metrics is not None:
+            _payload["metrics"] = metrics
+        if period is not None:
+            _payload["period"] = period
+        if query_id is not None:
+            _payload["query_id"] = query_id
         if universe is not None:
-            params["universe"] = universe
+            _payload["universe"] = universe
         if query_name is not None:
-            params["query_name"] = query_name
+            _payload["query_name"] = query_name
         if criteria is not None:
-            params["criteria"] = criteria
+            _payload["criteria"] = criteria
         if rank_by is not None:
-            params["rank_by"] = rank_by
+            _payload["rank_by"] = rank_by
         if limit is not None:
-            params["limit"] = limit
-        return await self._call("securities.screen", params=params, options=options, context=context, response_format=response_format)
+            _payload["limit"] = limit
+        return await self._call("securities.screen", params=_payload, options=options, context=context, response_format=response_format)
 
     async def search(
         self,
         *,
+        include_metrics: Optional[bool] = None,
         query: Optional[str] = "",
         filters: Optional[Dict[str, Any]] = None,
         limit: Optional[int] = 50,
@@ -632,25 +726,27 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
         order: Sort order: asc, desc (default per field)
         group_by: Deduplicate by field (TepiloraParentId). Keeps one per group.
         preferred_currency: When group_by active, prefer share class with this currency (e.g. EUR)"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
+        if include_metrics is not None:
+            _payload["include_metrics"] = include_metrics
         if query is not None:
-            params["query"] = query
+            _payload["query"] = query
         if filters is not None:
-            params["filters"] = filters
+            _payload["filters"] = filters
         if limit is not None:
-            params["limit"] = limit
+            _payload["limit"] = limit
         if offset is not None:
-            params["offset"] = offset
+            _payload["offset"] = offset
         if include_facets is not None:
-            params["include_facets"] = include_facets
+            _payload["include_facets"] = include_facets
         if sort is not None:
-            params["sort"] = sort
+            _payload["sort"] = sort
         if order is not None:
-            params["order"] = order
+            _payload["order"] = order
         if group_by is not None:
-            params["group_by"] = group_by
+            _payload["group_by"] = group_by
         if preferred_currency is not None:
-            params["preferred_currency"] = preferred_currency
-        return await self._call("securities.search", params=params, options=options, context=context, response_format=response_format)
+            _payload["preferred_currency"] = preferred_currency
+        return await self._call("securities.search", params=_payload, options=options, context=context, response_format=response_format)
 
 

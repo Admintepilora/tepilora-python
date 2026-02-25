@@ -1,5 +1,8 @@
 """Tests for capabilities discovery."""
 
+import json
+from pathlib import Path
+
 import pytest
 from Tepilora import (
     TepiloraClient,
@@ -8,6 +11,46 @@ from Tepilora import (
     list_operations,
     get_operation_info,
 )
+from conftest import _load_schema
+
+
+SCHEMA = _load_schema()
+HIDDEN_CATEGORIES = {"audit"}
+
+
+def _non_internal_ops():
+    return {
+        action: op
+        for action, op in SCHEMA["operations"].items()
+        if not op.get("internal") and op["category"] not in HIDDEN_CATEGORIES
+    }
+
+
+def _expected_total_ops():
+    return len(_non_internal_ops())
+
+
+def _expected_namespaces():
+    return sorted({op["category"] for op in _non_internal_ops().values()})
+
+
+def _expected_ops_for_namespace(namespace: str):
+    return [
+        action
+        for action, op in _non_internal_ops().items()
+        if op["category"] == namespace
+    ]
+
+
+def test_schema_json_matches_embedded():
+    """Ensure _schema.py is in sync with schema/registry.json."""
+    from Tepilora._schema import SCHEMA
+
+    schema_path = Path(__file__).parent.parent / "schema" / "registry.json"
+    with open(schema_path, "r", encoding="utf-8") as f:
+        json_schema = json.load(f)
+    assert SCHEMA["version"] == json_schema["version"]
+    assert set(SCHEMA["operations"].keys()) == set(json_schema["operations"].keys())
 
 
 class TestCapabilities:
@@ -16,15 +59,18 @@ class TestCapabilities:
     def test_capabilities_summary(self):
         """Test full summary output."""
         result = capabilities()
+        total_ops = _expected_total_ops()
+        total_ns = len(_expected_namespaces())
         assert "TepiloraSDK" in result
-        assert "242 operations" in result
-        assert "25 namespaces" in result
+        assert f"{total_ops} operations" in result
+        assert f"{total_ns} namespaces" in result
         assert "analytics" in result
 
     def test_capabilities_namespace(self):
         """Test namespace detail output."""
         result = capabilities("portfolio")
-        assert "portfolio - 19 operations" in result
+        portfolio_ops = len(_expected_ops_for_namespace("portfolio"))
+        assert f"portfolio - {portfolio_ops} operations" in result
         assert "create" in result
         assert "delete" in result
 
@@ -57,22 +103,24 @@ class TestCapabilities:
     def test_list_namespaces(self):
         """Test list_namespaces helper."""
         ns = list_namespaces()
+        expected = _expected_namespaces()
         assert isinstance(ns, list)
         assert "analytics" in ns
         assert "portfolio" in ns
-        assert len(ns) == 25
+        assert len(ns) == len(expected)
 
     def test_list_operations(self):
         """Test list_operations helper."""
         ops = list_operations("esg")
+        expected = _expected_ops_for_namespace("esg")
         assert isinstance(ops, list)
         assert "esg.compare" in ops
-        assert len(ops) == 6
+        assert len(ops) == len(expected)
 
     def test_list_operations_all(self):
         """Test list_operations without filter."""
         ops = list_operations()
-        assert len(ops) == 242
+        assert len(ops) == _expected_total_ops()
 
     def test_get_operation_info(self):
         """Test get_operation_info helper."""

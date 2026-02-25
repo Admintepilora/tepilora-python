@@ -21,6 +21,7 @@ class AlternativesAPI(BaseAPI):
         date: str,
         flow_type: str,
         amount: float,
+        document_id: Optional[str] = None,
         description: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
@@ -33,23 +34,29 @@ class AlternativesAPI(BaseAPI):
         flow_type: capital_call|distribution|fee
         amount: Amount
         description: Description"""
-        params: Dict[str, Any] = {}
-        params["asset_id"] = asset_id
-        params["date"] = date
-        params["flow_type"] = flow_type
-        params["amount"] = amount
+        _payload: Dict[str, Any] = {}
+        _payload["asset_id"] = asset_id
+        _payload["date"] = date
+        _payload["flow_type"] = flow_type
+        _payload["amount"] = amount
+        if document_id is not None:
+            _payload["document_id"] = document_id
         if description is not None:
-            params["description"] = description
-        return self._call("alternatives.cash_flow", params=params, options=options, context=context)
+            _payload["description"] = description
+        return self._call("alternatives.cash_flow", params=_payload, options=options, context=context)
 
     def create(
         self,
         *,
         name: str,
         asset_type: str,
+        external_id: Optional[str] = None,
+        geography: Optional[str] = None,
         fund_name: Optional[str] = None,
         commitment: Optional[float] = None,
         currency: Optional[str] = "EUR",
+        notes: Optional[str] = None,
+        strategy: Optional[str] = None,
         vintage_year: Optional[int] = None,
         manager: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
@@ -65,20 +72,28 @@ class AlternativesAPI(BaseAPI):
         currency: Currency
         vintage_year: Vintage year
         manager: Manager name"""
-        params: Dict[str, Any] = {}
-        params["name"] = name
-        params["asset_type"] = asset_type
+        _payload: Dict[str, Any] = {}
+        _payload["name"] = name
+        _payload["asset_type"] = asset_type
+        if external_id is not None:
+            _payload["external_id"] = external_id
+        if geography is not None:
+            _payload["geography"] = geography
         if fund_name is not None:
-            params["fund_name"] = fund_name
+            _payload["fund_name"] = fund_name
         if commitment is not None:
-            params["commitment"] = commitment
+            _payload["commitment"] = commitment
         if currency is not None:
-            params["currency"] = currency
+            _payload["currency"] = currency
+        if notes is not None:
+            _payload["notes"] = notes
+        if strategy is not None:
+            _payload["strategy"] = strategy
         if vintage_year is not None:
-            params["vintage_year"] = vintage_year
+            _payload["vintage_year"] = vintage_year
         if manager is not None:
-            params["manager"] = manager
-        return self._call("alternatives.create", params=params, options=options, context=context)
+            _payload["manager"] = manager
+        return self._call("alternatives.create", params=_payload, options=options, context=context)
 
     def delete(
         self,
@@ -91,9 +106,9 @@ class AlternativesAPI(BaseAPI):
 
         Args:
         asset_id: Asset ID"""
-        params: Dict[str, Any] = {}
-        params["asset_id"] = asset_id
-        return self._call("alternatives.delete", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["asset_id"] = asset_id
+        return self._call("alternatives.delete", params=_payload, options=options, context=context)
 
     def get(
         self,
@@ -110,18 +125,20 @@ class AlternativesAPI(BaseAPI):
         asset_id: Asset ID
         include_cash_flows: Include cash flows
         include_nav_history: Include NAV history"""
-        params: Dict[str, Any] = {}
-        params["asset_id"] = asset_id
+        _payload: Dict[str, Any] = {}
+        _payload["asset_id"] = asset_id
         if include_cash_flows is not None:
-            params["include_cash_flows"] = include_cash_flows
+            _payload["include_cash_flows"] = include_cash_flows
         if include_nav_history is not None:
-            params["include_nav_history"] = include_nav_history
-        return self._call("alternatives.get", params=params, options=options, context=context)
+            _payload["include_nav_history"] = include_nav_history
+        return self._call("alternatives.get", params=_payload, options=options, context=context)
 
     def list(
         self,
         *,
         asset_type: Optional[str] = None,
+        offset: Optional[int] = None,
+        sort: Optional[str] = None,
         status: Optional[str] = None,
         search: Optional[str] = None,
         limit: Optional[int] = 50,
@@ -136,16 +153,20 @@ class AlternativesAPI(BaseAPI):
         status: Filter by status
         search: Search in name
         limit: Maximum results"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if asset_type is not None:
-            params["asset_type"] = asset_type
+            _payload["asset_type"] = asset_type
+        if offset is not None:
+            _payload["offset"] = offset
+        if sort is not None:
+            _payload["sort"] = sort
         if status is not None:
-            params["status"] = status
+            _payload["status"] = status
         if search is not None:
-            params["search"] = search
+            _payload["search"] = search
         if limit is not None:
-            params["limit"] = limit
-        return self._call("alternatives.list", params=params, options=options, context=context, response_format=response_format)
+            _payload["limit"] = limit
+        return self._call("alternatives.list", params=_payload, options=options, context=context, response_format=response_format)
 
     def nav_update(
         self,
@@ -153,6 +174,8 @@ class AlternativesAPI(BaseAPI):
         asset_id: str,
         date: str,
         nav: float,
+        document_id: Optional[str] = None,
+        notes: Optional[str] = None,
         source: Optional[str] = "manual",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
@@ -164,13 +187,17 @@ class AlternativesAPI(BaseAPI):
         date: Valuation date
         nav: NAV value
         source: Source"""
-        params: Dict[str, Any] = {}
-        params["asset_id"] = asset_id
-        params["date"] = date
-        params["nav"] = nav
+        _payload: Dict[str, Any] = {}
+        _payload["asset_id"] = asset_id
+        _payload["date"] = date
+        _payload["nav"] = nav
+        if document_id is not None:
+            _payload["document_id"] = document_id
+        if notes is not None:
+            _payload["notes"] = notes
         if source is not None:
-            params["source"] = source
-        return self._call("alternatives.nav_update", params=params, options=options, context=context)
+            _payload["source"] = source
+        return self._call("alternatives.nav_update", params=_payload, options=options, context=context)
 
     def performance(
         self,
@@ -187,11 +214,11 @@ class AlternativesAPI(BaseAPI):
         Args:
         asset_id: Asset ID
         as_of_date: As of date"""
-        params: Dict[str, Any] = {}
-        params["asset_id"] = asset_id
+        _payload: Dict[str, Any] = {}
+        _payload["asset_id"] = asset_id
         if as_of_date is not None:
-            params["as_of_date"] = as_of_date
-        return self._call("alternatives.performance", params=params, options=options, context=context)
+            _payload["as_of_date"] = as_of_date
+        return self._call("alternatives.performance", params=_payload, options=options, context=context)
 
     def summary(
         self,
@@ -206,18 +233,23 @@ class AlternativesAPI(BaseAPI):
 
         Args:
         asset_type: Filter by type"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if asset_type is not None:
-            params["asset_type"] = asset_type
-        return self._call("alternatives.summary", params=params, options=options, context=context)
+            _payload["asset_type"] = asset_type
+        return self._call("alternatives.summary", params=_payload, options=options, context=context)
 
     def update(
         self,
         *,
         asset_id: str,
+        commitment: Optional[str] = None,
+        geography: Optional[str] = None,
+        manager: Optional[str] = None,
         name: Optional[str] = None,
         fund_name: Optional[str] = None,
+        notes: Optional[str] = None,
         status: Optional[str] = None,
+        strategy: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -228,15 +260,25 @@ class AlternativesAPI(BaseAPI):
         name: New name
         fund_name: New fund name
         status: New status"""
-        params: Dict[str, Any] = {}
-        params["asset_id"] = asset_id
+        _payload: Dict[str, Any] = {}
+        _payload["asset_id"] = asset_id
+        if commitment is not None:
+            _payload["commitment"] = commitment
+        if geography is not None:
+            _payload["geography"] = geography
+        if manager is not None:
+            _payload["manager"] = manager
         if name is not None:
-            params["name"] = name
+            _payload["name"] = name
         if fund_name is not None:
-            params["fund_name"] = fund_name
+            _payload["fund_name"] = fund_name
+        if notes is not None:
+            _payload["notes"] = notes
         if status is not None:
-            params["status"] = status
-        return self._call("alternatives.update", params=params, options=options, context=context)
+            _payload["status"] = status
+        if strategy is not None:
+            _payload["strategy"] = strategy
+        return self._call("alternatives.update", params=_payload, options=options, context=context)
 
 
 
@@ -250,6 +292,7 @@ class AsyncAlternativesAPI(AsyncBaseAPI):
         date: str,
         flow_type: str,
         amount: float,
+        document_id: Optional[str] = None,
         description: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
@@ -262,23 +305,29 @@ class AsyncAlternativesAPI(AsyncBaseAPI):
         flow_type: capital_call|distribution|fee
         amount: Amount
         description: Description"""
-        params: Dict[str, Any] = {}
-        params["asset_id"] = asset_id
-        params["date"] = date
-        params["flow_type"] = flow_type
-        params["amount"] = amount
+        _payload: Dict[str, Any] = {}
+        _payload["asset_id"] = asset_id
+        _payload["date"] = date
+        _payload["flow_type"] = flow_type
+        _payload["amount"] = amount
+        if document_id is not None:
+            _payload["document_id"] = document_id
         if description is not None:
-            params["description"] = description
-        return await self._call("alternatives.cash_flow", params=params, options=options, context=context)
+            _payload["description"] = description
+        return await self._call("alternatives.cash_flow", params=_payload, options=options, context=context)
 
     async def create(
         self,
         *,
         name: str,
         asset_type: str,
+        external_id: Optional[str] = None,
+        geography: Optional[str] = None,
         fund_name: Optional[str] = None,
         commitment: Optional[float] = None,
         currency: Optional[str] = "EUR",
+        notes: Optional[str] = None,
+        strategy: Optional[str] = None,
         vintage_year: Optional[int] = None,
         manager: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
@@ -294,20 +343,28 @@ class AsyncAlternativesAPI(AsyncBaseAPI):
         currency: Currency
         vintage_year: Vintage year
         manager: Manager name"""
-        params: Dict[str, Any] = {}
-        params["name"] = name
-        params["asset_type"] = asset_type
+        _payload: Dict[str, Any] = {}
+        _payload["name"] = name
+        _payload["asset_type"] = asset_type
+        if external_id is not None:
+            _payload["external_id"] = external_id
+        if geography is not None:
+            _payload["geography"] = geography
         if fund_name is not None:
-            params["fund_name"] = fund_name
+            _payload["fund_name"] = fund_name
         if commitment is not None:
-            params["commitment"] = commitment
+            _payload["commitment"] = commitment
         if currency is not None:
-            params["currency"] = currency
+            _payload["currency"] = currency
+        if notes is not None:
+            _payload["notes"] = notes
+        if strategy is not None:
+            _payload["strategy"] = strategy
         if vintage_year is not None:
-            params["vintage_year"] = vintage_year
+            _payload["vintage_year"] = vintage_year
         if manager is not None:
-            params["manager"] = manager
-        return await self._call("alternatives.create", params=params, options=options, context=context)
+            _payload["manager"] = manager
+        return await self._call("alternatives.create", params=_payload, options=options, context=context)
 
     async def delete(
         self,
@@ -320,9 +377,9 @@ class AsyncAlternativesAPI(AsyncBaseAPI):
 
         Args:
         asset_id: Asset ID"""
-        params: Dict[str, Any] = {}
-        params["asset_id"] = asset_id
-        return await self._call("alternatives.delete", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["asset_id"] = asset_id
+        return await self._call("alternatives.delete", params=_payload, options=options, context=context)
 
     async def get(
         self,
@@ -339,18 +396,20 @@ class AsyncAlternativesAPI(AsyncBaseAPI):
         asset_id: Asset ID
         include_cash_flows: Include cash flows
         include_nav_history: Include NAV history"""
-        params: Dict[str, Any] = {}
-        params["asset_id"] = asset_id
+        _payload: Dict[str, Any] = {}
+        _payload["asset_id"] = asset_id
         if include_cash_flows is not None:
-            params["include_cash_flows"] = include_cash_flows
+            _payload["include_cash_flows"] = include_cash_flows
         if include_nav_history is not None:
-            params["include_nav_history"] = include_nav_history
-        return await self._call("alternatives.get", params=params, options=options, context=context)
+            _payload["include_nav_history"] = include_nav_history
+        return await self._call("alternatives.get", params=_payload, options=options, context=context)
 
     async def list(
         self,
         *,
         asset_type: Optional[str] = None,
+        offset: Optional[int] = None,
+        sort: Optional[str] = None,
         status: Optional[str] = None,
         search: Optional[str] = None,
         limit: Optional[int] = 50,
@@ -365,16 +424,20 @@ class AsyncAlternativesAPI(AsyncBaseAPI):
         status: Filter by status
         search: Search in name
         limit: Maximum results"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if asset_type is not None:
-            params["asset_type"] = asset_type
+            _payload["asset_type"] = asset_type
+        if offset is not None:
+            _payload["offset"] = offset
+        if sort is not None:
+            _payload["sort"] = sort
         if status is not None:
-            params["status"] = status
+            _payload["status"] = status
         if search is not None:
-            params["search"] = search
+            _payload["search"] = search
         if limit is not None:
-            params["limit"] = limit
-        return await self._call("alternatives.list", params=params, options=options, context=context, response_format=response_format)
+            _payload["limit"] = limit
+        return await self._call("alternatives.list", params=_payload, options=options, context=context, response_format=response_format)
 
     async def nav_update(
         self,
@@ -382,6 +445,8 @@ class AsyncAlternativesAPI(AsyncBaseAPI):
         asset_id: str,
         date: str,
         nav: float,
+        document_id: Optional[str] = None,
+        notes: Optional[str] = None,
         source: Optional[str] = "manual",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
@@ -393,13 +458,17 @@ class AsyncAlternativesAPI(AsyncBaseAPI):
         date: Valuation date
         nav: NAV value
         source: Source"""
-        params: Dict[str, Any] = {}
-        params["asset_id"] = asset_id
-        params["date"] = date
-        params["nav"] = nav
+        _payload: Dict[str, Any] = {}
+        _payload["asset_id"] = asset_id
+        _payload["date"] = date
+        _payload["nav"] = nav
+        if document_id is not None:
+            _payload["document_id"] = document_id
+        if notes is not None:
+            _payload["notes"] = notes
         if source is not None:
-            params["source"] = source
-        return await self._call("alternatives.nav_update", params=params, options=options, context=context)
+            _payload["source"] = source
+        return await self._call("alternatives.nav_update", params=_payload, options=options, context=context)
 
     async def performance(
         self,
@@ -416,11 +485,11 @@ class AsyncAlternativesAPI(AsyncBaseAPI):
         Args:
         asset_id: Asset ID
         as_of_date: As of date"""
-        params: Dict[str, Any] = {}
-        params["asset_id"] = asset_id
+        _payload: Dict[str, Any] = {}
+        _payload["asset_id"] = asset_id
         if as_of_date is not None:
-            params["as_of_date"] = as_of_date
-        return await self._call("alternatives.performance", params=params, options=options, context=context)
+            _payload["as_of_date"] = as_of_date
+        return await self._call("alternatives.performance", params=_payload, options=options, context=context)
 
     async def summary(
         self,
@@ -435,18 +504,23 @@ class AsyncAlternativesAPI(AsyncBaseAPI):
 
         Args:
         asset_type: Filter by type"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if asset_type is not None:
-            params["asset_type"] = asset_type
-        return await self._call("alternatives.summary", params=params, options=options, context=context)
+            _payload["asset_type"] = asset_type
+        return await self._call("alternatives.summary", params=_payload, options=options, context=context)
 
     async def update(
         self,
         *,
         asset_id: str,
+        commitment: Optional[str] = None,
+        geography: Optional[str] = None,
+        manager: Optional[str] = None,
         name: Optional[str] = None,
         fund_name: Optional[str] = None,
+        notes: Optional[str] = None,
         status: Optional[str] = None,
+        strategy: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -457,14 +531,24 @@ class AsyncAlternativesAPI(AsyncBaseAPI):
         name: New name
         fund_name: New fund name
         status: New status"""
-        params: Dict[str, Any] = {}
-        params["asset_id"] = asset_id
+        _payload: Dict[str, Any] = {}
+        _payload["asset_id"] = asset_id
+        if commitment is not None:
+            _payload["commitment"] = commitment
+        if geography is not None:
+            _payload["geography"] = geography
+        if manager is not None:
+            _payload["manager"] = manager
         if name is not None:
-            params["name"] = name
+            _payload["name"] = name
         if fund_name is not None:
-            params["fund_name"] = fund_name
+            _payload["fund_name"] = fund_name
+        if notes is not None:
+            _payload["notes"] = notes
         if status is not None:
-            params["status"] = status
-        return await self._call("alternatives.update", params=params, options=options, context=context)
+            _payload["status"] = status
+        if strategy is not None:
+            _payload["strategy"] = strategy
+        return await self._call("alternatives.update", params=_payload, options=options, context=context)
 
 

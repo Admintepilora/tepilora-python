@@ -18,6 +18,8 @@ class FhAPI(BaseAPI):
         self,
         *,
         identifiers: Union[str, List[str]],
+        end_date: Optional[str] = None,
+        start_date: Optional[str] = None,
         statement: Optional[str] = "all",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
@@ -30,19 +32,22 @@ class FhAPI(BaseAPI):
         Args:
         identifiers: List of TepiloraCodes
         statement: income|balance|cashflow|all"""
-        params: Dict[str, Any] = {}
-        params["identifiers"] = identifiers
+        _payload: Dict[str, Any] = {}
+        _payload["identifiers"] = identifiers
+        if end_date is not None:
+            _payload["end_date"] = end_date
+        if start_date is not None:
+            _payload["start_date"] = start_date
         if statement is not None:
-            params["statement"] = statement
-        return self._call("fh.financials", params=params, options=options, context=context, response_format=response_format)
+            _payload["statement"] = statement
+        return self._call("fh.financials", params=_payload, options=options, context=context, response_format=response_format)
 
     def history(
         self,
         *,
         identifier: str,
         columns: Optional[List[Any]] = None,
-        start_date: Optional[str] = None,
-        end_date: Optional[str] = None,
+        limit: Optional[int] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -52,31 +57,30 @@ class FhAPI(BaseAPI):
         Historical fundamental data.
 
         Args:
-        identifier: TepiloraCode (single)
-        columns: Columns to return
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = {}
-        params["identifier"] = identifier
+        identifier: TepiloraCode or ISIN
+        columns: Columns to return"""
+        _payload: Dict[str, Any] = {}
+        _payload["identifier"] = identifier
         if columns is not None:
-            params["columns"] = columns
-        if start_date is not None:
-            params["start_date"] = start_date
-        if end_date is not None:
-            params["end_date"] = end_date
-        return self._call("fh.history", params=params, options=options, context=context, response_format=response_format)
+            _payload["columns"] = columns
+        if limit is not None:
+            _payload["limit"] = limit
+        return self._call("fh.history", params=_payload, options=options, context=context, response_format=response_format)
 
     def info(
         self,
         *,
+        identifier: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
         """Column info
 
         Get information about available columns."""
-        params: Dict[str, Any] = {}
-        return self._call("fh.info", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        if identifier is not None:
+            _payload["identifier"] = identifier
+        return self._call("fh.info", params=_payload, options=options, context=context)
 
     def latest(
         self,
@@ -94,17 +98,20 @@ class FhAPI(BaseAPI):
         Args:
         identifiers: List of TepiloraCodes
         columns: Columns to return"""
-        params: Dict[str, Any] = {}
-        params["identifiers"] = identifiers
+        _payload: Dict[str, Any] = {}
+        _payload["identifiers"] = identifiers
         if columns is not None:
-            params["columns"] = columns
-        return self._call("fh.latest", params=params, options=options, context=context, response_format=response_format)
+            _payload["columns"] = columns
+        return self._call("fh.latest", params=_payload, options=options, context=context, response_format=response_format)
 
     def load(
         self,
         *,
         identifiers: Union[str, List[str]],
+        end_date: Optional[str] = None,
         columns: Optional[List[Any]] = None,
+        rt_policy: Optional[str] = None,
+        start_date: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -116,17 +123,27 @@ class FhAPI(BaseAPI):
         Args:
         identifiers: List of TepiloraCodes
         columns: Columns to load"""
-        params: Dict[str, Any] = {}
-        params["identifiers"] = identifiers
+        _payload: Dict[str, Any] = {}
+        _payload["identifiers"] = identifiers
+        if end_date is not None:
+            _payload["end_date"] = end_date
         if columns is not None:
-            params["columns"] = columns
-        return self._call("fh.load", params=params, options=options, context=context, response_format=response_format)
+            _payload["columns"] = columns
+        if rt_policy is not None:
+            _payload["rt_policy"] = rt_policy
+        if start_date is not None:
+            _payload["start_date"] = start_date
+        return self._call("fh.load", params=_payload, options=options, context=context, response_format=response_format)
 
     def metrics(
         self,
         *,
         identifiers: Union[str, List[str]],
+        end_date: Optional[str] = None,
         metrics: Optional[List[Any]] = None,
+        output_columns: Optional[str] = None,
+        rt_policy: Optional[str] = None,
+        start_date: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -138,11 +155,19 @@ class FhAPI(BaseAPI):
         Args:
         identifiers: List of TepiloraCodes
         metrics: Metric groups: margins|profitability|leverage|efficiency|growth"""
-        params: Dict[str, Any] = {}
-        params["identifiers"] = identifiers
+        _payload: Dict[str, Any] = {}
+        _payload["identifiers"] = identifiers
+        if end_date is not None:
+            _payload["end_date"] = end_date
         if metrics is not None:
-            params["metrics"] = metrics
-        return self._call("fh.metrics", params=params, options=options, context=context, response_format=response_format)
+            _payload["metrics"] = metrics
+        if output_columns is not None:
+            _payload["output_columns"] = output_columns
+        if rt_policy is not None:
+            _payload["rt_policy"] = rt_policy
+        if start_date is not None:
+            _payload["start_date"] = start_date
+        return self._call("fh.metrics", params=_payload, options=options, context=context, response_format=response_format)
 
     def quality(
         self,
@@ -158,9 +183,9 @@ class FhAPI(BaseAPI):
 
         Args:
         identifiers: List of TepiloraCodes"""
-        params: Dict[str, Any] = {}
-        params["identifiers"] = identifiers
-        return self._call("fh.quality", params=params, options=options, context=context, response_format=response_format)
+        _payload: Dict[str, Any] = {}
+        _payload["identifiers"] = identifiers
+        return self._call("fh.quality", params=_payload, options=options, context=context, response_format=response_format)
 
 
 
@@ -171,6 +196,8 @@ class AsyncFhAPI(AsyncBaseAPI):
         self,
         *,
         identifiers: Union[str, List[str]],
+        end_date: Optional[str] = None,
+        start_date: Optional[str] = None,
         statement: Optional[str] = "all",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
@@ -183,19 +210,22 @@ class AsyncFhAPI(AsyncBaseAPI):
         Args:
         identifiers: List of TepiloraCodes
         statement: income|balance|cashflow|all"""
-        params: Dict[str, Any] = {}
-        params["identifiers"] = identifiers
+        _payload: Dict[str, Any] = {}
+        _payload["identifiers"] = identifiers
+        if end_date is not None:
+            _payload["end_date"] = end_date
+        if start_date is not None:
+            _payload["start_date"] = start_date
         if statement is not None:
-            params["statement"] = statement
-        return await self._call("fh.financials", params=params, options=options, context=context, response_format=response_format)
+            _payload["statement"] = statement
+        return await self._call("fh.financials", params=_payload, options=options, context=context, response_format=response_format)
 
     async def history(
         self,
         *,
         identifier: str,
         columns: Optional[List[Any]] = None,
-        start_date: Optional[str] = None,
-        end_date: Optional[str] = None,
+        limit: Optional[int] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -205,31 +235,30 @@ class AsyncFhAPI(AsyncBaseAPI):
         Historical fundamental data.
 
         Args:
-        identifier: TepiloraCode (single)
-        columns: Columns to return
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = {}
-        params["identifier"] = identifier
+        identifier: TepiloraCode or ISIN
+        columns: Columns to return"""
+        _payload: Dict[str, Any] = {}
+        _payload["identifier"] = identifier
         if columns is not None:
-            params["columns"] = columns
-        if start_date is not None:
-            params["start_date"] = start_date
-        if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call("fh.history", params=params, options=options, context=context, response_format=response_format)
+            _payload["columns"] = columns
+        if limit is not None:
+            _payload["limit"] = limit
+        return await self._call("fh.history", params=_payload, options=options, context=context, response_format=response_format)
 
     async def info(
         self,
         *,
+        identifier: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
         """Column info
 
         Get information about available columns."""
-        params: Dict[str, Any] = {}
-        return await self._call("fh.info", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        if identifier is not None:
+            _payload["identifier"] = identifier
+        return await self._call("fh.info", params=_payload, options=options, context=context)
 
     async def latest(
         self,
@@ -247,17 +276,20 @@ class AsyncFhAPI(AsyncBaseAPI):
         Args:
         identifiers: List of TepiloraCodes
         columns: Columns to return"""
-        params: Dict[str, Any] = {}
-        params["identifiers"] = identifiers
+        _payload: Dict[str, Any] = {}
+        _payload["identifiers"] = identifiers
         if columns is not None:
-            params["columns"] = columns
-        return await self._call("fh.latest", params=params, options=options, context=context, response_format=response_format)
+            _payload["columns"] = columns
+        return await self._call("fh.latest", params=_payload, options=options, context=context, response_format=response_format)
 
     async def load(
         self,
         *,
         identifiers: Union[str, List[str]],
+        end_date: Optional[str] = None,
         columns: Optional[List[Any]] = None,
+        rt_policy: Optional[str] = None,
+        start_date: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -269,17 +301,27 @@ class AsyncFhAPI(AsyncBaseAPI):
         Args:
         identifiers: List of TepiloraCodes
         columns: Columns to load"""
-        params: Dict[str, Any] = {}
-        params["identifiers"] = identifiers
+        _payload: Dict[str, Any] = {}
+        _payload["identifiers"] = identifiers
+        if end_date is not None:
+            _payload["end_date"] = end_date
         if columns is not None:
-            params["columns"] = columns
-        return await self._call("fh.load", params=params, options=options, context=context, response_format=response_format)
+            _payload["columns"] = columns
+        if rt_policy is not None:
+            _payload["rt_policy"] = rt_policy
+        if start_date is not None:
+            _payload["start_date"] = start_date
+        return await self._call("fh.load", params=_payload, options=options, context=context, response_format=response_format)
 
     async def metrics(
         self,
         *,
         identifiers: Union[str, List[str]],
+        end_date: Optional[str] = None,
         metrics: Optional[List[Any]] = None,
+        output_columns: Optional[str] = None,
+        rt_policy: Optional[str] = None,
+        start_date: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -291,11 +333,19 @@ class AsyncFhAPI(AsyncBaseAPI):
         Args:
         identifiers: List of TepiloraCodes
         metrics: Metric groups: margins|profitability|leverage|efficiency|growth"""
-        params: Dict[str, Any] = {}
-        params["identifiers"] = identifiers
+        _payload: Dict[str, Any] = {}
+        _payload["identifiers"] = identifiers
+        if end_date is not None:
+            _payload["end_date"] = end_date
         if metrics is not None:
-            params["metrics"] = metrics
-        return await self._call("fh.metrics", params=params, options=options, context=context, response_format=response_format)
+            _payload["metrics"] = metrics
+        if output_columns is not None:
+            _payload["output_columns"] = output_columns
+        if rt_policy is not None:
+            _payload["rt_policy"] = rt_policy
+        if start_date is not None:
+            _payload["start_date"] = start_date
+        return await self._call("fh.metrics", params=_payload, options=options, context=context, response_format=response_format)
 
     async def quality(
         self,
@@ -311,8 +361,8 @@ class AsyncFhAPI(AsyncBaseAPI):
 
         Args:
         identifiers: List of TepiloraCodes"""
-        params: Dict[str, Any] = {}
-        params["identifiers"] = identifiers
-        return await self._call("fh.quality", params=params, options=options, context=context, response_format=response_format)
+        _payload: Dict[str, Any] = {}
+        _payload["identifiers"] = identifiers
+        return await self._call("fh.quality", params=_payload, options=options, context=context, response_format=response_format)
 
 

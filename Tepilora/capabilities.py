@@ -21,6 +21,14 @@ from typing import Any, Dict, List, Optional, Union
 from .version import __version__
 
 
+_HIDDEN_CATEGORIES = {"audit"}
+
+
+def _is_public_op(op: Dict[str, Any]) -> bool:
+    """Return True for operations visible in client capabilities."""
+    return not op.get("internal") and op.get("category") not in _HIDDEN_CATEGORIES
+
+
 @lru_cache(maxsize=1)
 def _load_schema() -> Dict[str, Any]:
     """Load schema lazily (not at module import time)."""
@@ -33,7 +41,7 @@ def _count_by_category(operations: Dict[str, Any]) -> Dict[str, int]:
     """Count operations per category."""
     counts: Dict[str, int] = {}
     for op in operations.values():
-        if op.get("internal"):
+        if not _is_public_op(op):
             continue
         cat = op["category"]
         counts[cat] = counts.get(cat, 0) + 1
@@ -61,7 +69,7 @@ def _format_summary(schema: Dict[str, Any]) -> str:
         ops = [
             op["operation"]
             for op in operations.values()
-            if op["category"] == cat and not op.get("internal")
+            if op["category"] == cat and _is_public_op(op)
         ]
         ops_str = ", ".join(sorted(ops)[:5])
         if len(ops) > 5:
@@ -79,12 +87,12 @@ def _format_namespace(schema: Dict[str, Any], namespace: str) -> str:
     # Filter operations for this namespace
     ns_ops = [
         op for op in operations.values()
-        if op["category"] == namespace and not op.get("internal")
+        if op["category"] == namespace and _is_public_op(op)
     ]
 
     if not ns_ops:
         available = sorted(set(
-            op["category"] for op in operations.values() if not op.get("internal")
+            op["category"] for op in operations.values() if _is_public_op(op)
         ))
         return f"Namespace '{namespace}' not found.\nAvailable: {', '.join(available)}"
 
@@ -131,7 +139,7 @@ def _format_search(schema: Dict[str, Any], query: str) -> str:
 
     matches = []
     for action, op in operations.items():
-        if op.get("internal"):
+        if not _is_public_op(op):
             continue
 
         # Search in action, operation, summary, description
@@ -254,7 +262,7 @@ def capabilities(
                 # Namespace
                 return {
                     action: op for action, op in operations.items()
-                    if op["category"] == namespace_or_action and not op.get("internal")
+                    if op["category"] == namespace_or_action and _is_public_op(op)
                 }
         import json
         return json.loads(json.dumps(schema))
@@ -297,7 +305,7 @@ def list_namespaces() -> List[str]:
     schema = _load_schema()
     operations = schema["operations"]
     return sorted(set(
-        op["category"] for op in operations.values() if not op.get("internal")
+        op["category"] for op in operations.values() if _is_public_op(op)
     ))
 
 
@@ -308,7 +316,7 @@ def list_operations(namespace: Optional[str] = None) -> List[str]:
 
     result = []
     for action, op in operations.items():
-        if op.get("internal"):
+        if not _is_public_op(op):
             continue
         if namespace and op["category"] != namespace:
             continue

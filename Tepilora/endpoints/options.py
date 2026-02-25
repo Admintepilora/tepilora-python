@@ -39,18 +39,18 @@ class OptionsAPI(BaseAPI):
         risk_free_rate: Risk-free rate
         option_type: call|put
         dividend_yield: Dividend yield"""
-        params: Dict[str, Any] = {}
-        params["spot"] = spot
-        params["strike"] = strike
-        params["time_to_expiry"] = time_to_expiry
-        params["volatility"] = volatility
+        _payload: Dict[str, Any] = {}
+        _payload["spot"] = spot
+        _payload["strike"] = strike
+        _payload["time_to_expiry"] = time_to_expiry
+        _payload["volatility"] = volatility
         if risk_free_rate is not None:
-            params["risk_free_rate"] = risk_free_rate
+            _payload["risk_free_rate"] = risk_free_rate
         if option_type is not None:
-            params["option_type"] = option_type
+            _payload["option_type"] = option_type
         if dividend_yield is not None:
-            params["dividend_yield"] = dividend_yield
-        return self._call("options.greeks", params=params, options=options, context=context)
+            _payload["dividend_yield"] = dividend_yield
+        return self._call("options.greeks", params=_payload, options=options, context=context)
 
     def iv(
         self,
@@ -77,23 +77,24 @@ class OptionsAPI(BaseAPI):
         risk_free_rate: Risk-free rate
         option_type: call|put
         dividend_yield: Dividend yield"""
-        params: Dict[str, Any] = {}
-        params["market_price"] = market_price
-        params["spot"] = spot
-        params["strike"] = strike
-        params["time_to_expiry"] = time_to_expiry
+        _payload: Dict[str, Any] = {}
+        _payload["market_price"] = market_price
+        _payload["spot"] = spot
+        _payload["strike"] = strike
+        _payload["time_to_expiry"] = time_to_expiry
         if risk_free_rate is not None:
-            params["risk_free_rate"] = risk_free_rate
+            _payload["risk_free_rate"] = risk_free_rate
         if option_type is not None:
-            params["option_type"] = option_type
+            _payload["option_type"] = option_type
         if dividend_yield is not None:
-            params["dividend_yield"] = dividend_yield
-        return self._call("options.iv", params=params, options=options, context=context)
+            _payload["dividend_yield"] = dividend_yield
+        return self._call("options.iv", params=_payload, options=options, context=context)
 
     def payoff(
         self,
         *,
         legs: List[Any],
+        num_points: Optional[str] = None,
         spot_range: Optional[List[Any]] = None,
         spot: Optional[float] = None,
         options: Optional[Dict[str, Any]] = None,
@@ -107,13 +108,15 @@ class OptionsAPI(BaseAPI):
         legs: Strategy legs
         spot_range: Spot price range [min, max]
         spot: Current spot price"""
-        params: Dict[str, Any] = {}
-        params["legs"] = legs
+        _payload: Dict[str, Any] = {}
+        _payload["legs"] = legs
+        if num_points is not None:
+            _payload["num_points"] = num_points
         if spot_range is not None:
-            params["spot_range"] = spot_range
+            _payload["spot_range"] = spot_range
         if spot is not None:
-            params["spot"] = spot
-        return self._call("options.payoff", params=params, options=options, context=context)
+            _payload["spot"] = spot
+        return self._call("options.payoff", params=_payload, options=options, context=context)
 
     def price(
         self,
@@ -140,18 +143,18 @@ class OptionsAPI(BaseAPI):
         risk_free_rate: Risk-free rate
         option_type: call|put
         dividend_yield: Dividend yield"""
-        params: Dict[str, Any] = {}
-        params["spot"] = spot
-        params["strike"] = strike
-        params["time_to_expiry"] = time_to_expiry
-        params["volatility"] = volatility
+        _payload: Dict[str, Any] = {}
+        _payload["spot"] = spot
+        _payload["strike"] = strike
+        _payload["time_to_expiry"] = time_to_expiry
+        _payload["volatility"] = volatility
         if risk_free_rate is not None:
-            params["risk_free_rate"] = risk_free_rate
+            _payload["risk_free_rate"] = risk_free_rate
         if option_type is not None:
-            params["option_type"] = option_type
+            _payload["option_type"] = option_type
         if dividend_yield is not None:
-            params["dividend_yield"] = dividend_yield
-        return self._call("options.price", params=params, options=options, context=context)
+            _payload["dividend_yield"] = dividend_yield
+        return self._call("options.price", params=_payload, options=options, context=context)
 
     def pricing(
         self,
@@ -160,6 +163,14 @@ class OptionsAPI(BaseAPI):
         strike: float,
         time_to_expiry: float,
         volatility: float,
+        dividend_yield: Optional[str] = None,
+        legs: Optional[str] = None,
+        market_price: Optional[str] = None,
+        num_points: Optional[str] = None,
+        option_type: Optional[str] = None,
+        risk_free_rate: Optional[str] = None,
+        spot_range: Optional[str] = None,
+        strategy_type: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -167,17 +178,38 @@ class OptionsAPI(BaseAPI):
 
         Alias for options.price. Use options.price instead.
 
+        .. deprecated:: 3.2.0
+            Use options.price instead.
+
         Args:
         spot: Underlying price
         strike: Strike price
         time_to_expiry: Time to expiry (years)
         volatility: Volatility"""
-        params: Dict[str, Any] = {}
-        params["spot"] = spot
-        params["strike"] = strike
-        params["time_to_expiry"] = time_to_expiry
-        params["volatility"] = volatility
-        return self._call("options.pricing", params=params, options=options, context=context)
+        import warnings
+        warnings.warn("options.pricing is deprecated: Use options.price instead.", DeprecationWarning, stacklevel=2)
+        _payload: Dict[str, Any] = {}
+        _payload["spot"] = spot
+        _payload["strike"] = strike
+        _payload["time_to_expiry"] = time_to_expiry
+        _payload["volatility"] = volatility
+        if dividend_yield is not None:
+            _payload["dividend_yield"] = dividend_yield
+        if legs is not None:
+            _payload["legs"] = legs
+        if market_price is not None:
+            _payload["market_price"] = market_price
+        if num_points is not None:
+            _payload["num_points"] = num_points
+        if option_type is not None:
+            _payload["option_type"] = option_type
+        if risk_free_rate is not None:
+            _payload["risk_free_rate"] = risk_free_rate
+        if spot_range is not None:
+            _payload["spot_range"] = spot_range
+        if strategy_type is not None:
+            _payload["strategy_type"] = strategy_type
+        return self._call("options.pricing", params=_payload, options=options, context=context)
 
     def strategies(
         self,
@@ -188,14 +220,15 @@ class OptionsAPI(BaseAPI):
         """List strategies
 
         List predefined option strategies."""
-        params: Dict[str, Any] = {}
-        return self._call("options.strategies", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        return self._call("options.strategies", params=_payload, options=options, context=context)
 
     def strategy(
         self,
         *,
         strategy_type: str,
         spot: float,
+        dividend_yield: Optional[str] = None,
         legs: Optional[List[Any]] = None,
         volatility: Optional[float] = None,
         time_to_expiry: Optional[float] = None,
@@ -214,18 +247,20 @@ class OptionsAPI(BaseAPI):
         volatility: Volatility
         time_to_expiry: Time to expiry
         risk_free_rate: Risk-free rate"""
-        params: Dict[str, Any] = {}
-        params["strategy_type"] = strategy_type
-        params["spot"] = spot
+        _payload: Dict[str, Any] = {}
+        _payload["strategy_type"] = strategy_type
+        _payload["spot"] = spot
+        if dividend_yield is not None:
+            _payload["dividend_yield"] = dividend_yield
         if legs is not None:
-            params["legs"] = legs
+            _payload["legs"] = legs
         if volatility is not None:
-            params["volatility"] = volatility
+            _payload["volatility"] = volatility
         if time_to_expiry is not None:
-            params["time_to_expiry"] = time_to_expiry
+            _payload["time_to_expiry"] = time_to_expiry
         if risk_free_rate is not None:
-            params["risk_free_rate"] = risk_free_rate
-        return self._call("options.strategy", params=params, options=options, context=context)
+            _payload["risk_free_rate"] = risk_free_rate
+        return self._call("options.strategy", params=_payload, options=options, context=context)
 
 
 
@@ -257,18 +292,18 @@ class AsyncOptionsAPI(AsyncBaseAPI):
         risk_free_rate: Risk-free rate
         option_type: call|put
         dividend_yield: Dividend yield"""
-        params: Dict[str, Any] = {}
-        params["spot"] = spot
-        params["strike"] = strike
-        params["time_to_expiry"] = time_to_expiry
-        params["volatility"] = volatility
+        _payload: Dict[str, Any] = {}
+        _payload["spot"] = spot
+        _payload["strike"] = strike
+        _payload["time_to_expiry"] = time_to_expiry
+        _payload["volatility"] = volatility
         if risk_free_rate is not None:
-            params["risk_free_rate"] = risk_free_rate
+            _payload["risk_free_rate"] = risk_free_rate
         if option_type is not None:
-            params["option_type"] = option_type
+            _payload["option_type"] = option_type
         if dividend_yield is not None:
-            params["dividend_yield"] = dividend_yield
-        return await self._call("options.greeks", params=params, options=options, context=context)
+            _payload["dividend_yield"] = dividend_yield
+        return await self._call("options.greeks", params=_payload, options=options, context=context)
 
     async def iv(
         self,
@@ -295,23 +330,24 @@ class AsyncOptionsAPI(AsyncBaseAPI):
         risk_free_rate: Risk-free rate
         option_type: call|put
         dividend_yield: Dividend yield"""
-        params: Dict[str, Any] = {}
-        params["market_price"] = market_price
-        params["spot"] = spot
-        params["strike"] = strike
-        params["time_to_expiry"] = time_to_expiry
+        _payload: Dict[str, Any] = {}
+        _payload["market_price"] = market_price
+        _payload["spot"] = spot
+        _payload["strike"] = strike
+        _payload["time_to_expiry"] = time_to_expiry
         if risk_free_rate is not None:
-            params["risk_free_rate"] = risk_free_rate
+            _payload["risk_free_rate"] = risk_free_rate
         if option_type is not None:
-            params["option_type"] = option_type
+            _payload["option_type"] = option_type
         if dividend_yield is not None:
-            params["dividend_yield"] = dividend_yield
-        return await self._call("options.iv", params=params, options=options, context=context)
+            _payload["dividend_yield"] = dividend_yield
+        return await self._call("options.iv", params=_payload, options=options, context=context)
 
     async def payoff(
         self,
         *,
         legs: List[Any],
+        num_points: Optional[str] = None,
         spot_range: Optional[List[Any]] = None,
         spot: Optional[float] = None,
         options: Optional[Dict[str, Any]] = None,
@@ -325,13 +361,15 @@ class AsyncOptionsAPI(AsyncBaseAPI):
         legs: Strategy legs
         spot_range: Spot price range [min, max]
         spot: Current spot price"""
-        params: Dict[str, Any] = {}
-        params["legs"] = legs
+        _payload: Dict[str, Any] = {}
+        _payload["legs"] = legs
+        if num_points is not None:
+            _payload["num_points"] = num_points
         if spot_range is not None:
-            params["spot_range"] = spot_range
+            _payload["spot_range"] = spot_range
         if spot is not None:
-            params["spot"] = spot
-        return await self._call("options.payoff", params=params, options=options, context=context)
+            _payload["spot"] = spot
+        return await self._call("options.payoff", params=_payload, options=options, context=context)
 
     async def price(
         self,
@@ -358,18 +396,18 @@ class AsyncOptionsAPI(AsyncBaseAPI):
         risk_free_rate: Risk-free rate
         option_type: call|put
         dividend_yield: Dividend yield"""
-        params: Dict[str, Any] = {}
-        params["spot"] = spot
-        params["strike"] = strike
-        params["time_to_expiry"] = time_to_expiry
-        params["volatility"] = volatility
+        _payload: Dict[str, Any] = {}
+        _payload["spot"] = spot
+        _payload["strike"] = strike
+        _payload["time_to_expiry"] = time_to_expiry
+        _payload["volatility"] = volatility
         if risk_free_rate is not None:
-            params["risk_free_rate"] = risk_free_rate
+            _payload["risk_free_rate"] = risk_free_rate
         if option_type is not None:
-            params["option_type"] = option_type
+            _payload["option_type"] = option_type
         if dividend_yield is not None:
-            params["dividend_yield"] = dividend_yield
-        return await self._call("options.price", params=params, options=options, context=context)
+            _payload["dividend_yield"] = dividend_yield
+        return await self._call("options.price", params=_payload, options=options, context=context)
 
     async def pricing(
         self,
@@ -378,6 +416,14 @@ class AsyncOptionsAPI(AsyncBaseAPI):
         strike: float,
         time_to_expiry: float,
         volatility: float,
+        dividend_yield: Optional[str] = None,
+        legs: Optional[str] = None,
+        market_price: Optional[str] = None,
+        num_points: Optional[str] = None,
+        option_type: Optional[str] = None,
+        risk_free_rate: Optional[str] = None,
+        spot_range: Optional[str] = None,
+        strategy_type: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -385,17 +431,38 @@ class AsyncOptionsAPI(AsyncBaseAPI):
 
         Alias for options.price. Use options.price instead.
 
+        .. deprecated:: 3.2.0
+            Use options.price instead.
+
         Args:
         spot: Underlying price
         strike: Strike price
         time_to_expiry: Time to expiry (years)
         volatility: Volatility"""
-        params: Dict[str, Any] = {}
-        params["spot"] = spot
-        params["strike"] = strike
-        params["time_to_expiry"] = time_to_expiry
-        params["volatility"] = volatility
-        return await self._call("options.pricing", params=params, options=options, context=context)
+        import warnings
+        warnings.warn("options.pricing is deprecated: Use options.price instead.", DeprecationWarning, stacklevel=2)
+        _payload: Dict[str, Any] = {}
+        _payload["spot"] = spot
+        _payload["strike"] = strike
+        _payload["time_to_expiry"] = time_to_expiry
+        _payload["volatility"] = volatility
+        if dividend_yield is not None:
+            _payload["dividend_yield"] = dividend_yield
+        if legs is not None:
+            _payload["legs"] = legs
+        if market_price is not None:
+            _payload["market_price"] = market_price
+        if num_points is not None:
+            _payload["num_points"] = num_points
+        if option_type is not None:
+            _payload["option_type"] = option_type
+        if risk_free_rate is not None:
+            _payload["risk_free_rate"] = risk_free_rate
+        if spot_range is not None:
+            _payload["spot_range"] = spot_range
+        if strategy_type is not None:
+            _payload["strategy_type"] = strategy_type
+        return await self._call("options.pricing", params=_payload, options=options, context=context)
 
     async def strategies(
         self,
@@ -406,14 +473,15 @@ class AsyncOptionsAPI(AsyncBaseAPI):
         """List strategies
 
         List predefined option strategies."""
-        params: Dict[str, Any] = {}
-        return await self._call("options.strategies", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        return await self._call("options.strategies", params=_payload, options=options, context=context)
 
     async def strategy(
         self,
         *,
         strategy_type: str,
         spot: float,
+        dividend_yield: Optional[str] = None,
         legs: Optional[List[Any]] = None,
         volatility: Optional[float] = None,
         time_to_expiry: Optional[float] = None,
@@ -432,17 +500,19 @@ class AsyncOptionsAPI(AsyncBaseAPI):
         volatility: Volatility
         time_to_expiry: Time to expiry
         risk_free_rate: Risk-free rate"""
-        params: Dict[str, Any] = {}
-        params["strategy_type"] = strategy_type
-        params["spot"] = spot
+        _payload: Dict[str, Any] = {}
+        _payload["strategy_type"] = strategy_type
+        _payload["spot"] = spot
+        if dividend_yield is not None:
+            _payload["dividend_yield"] = dividend_yield
         if legs is not None:
-            params["legs"] = legs
+            _payload["legs"] = legs
         if volatility is not None:
-            params["volatility"] = volatility
+            _payload["volatility"] = volatility
         if time_to_expiry is not None:
-            params["time_to_expiry"] = time_to_expiry
+            _payload["time_to_expiry"] = time_to_expiry
         if risk_free_rate is not None:
-            params["risk_free_rate"] = risk_free_rate
-        return await self._call("options.strategy", params=params, options=options, context=context)
+            _payload["risk_free_rate"] = risk_free_rate
+        return await self._call("options.strategy", params=_payload, options=options, context=context)
 
 

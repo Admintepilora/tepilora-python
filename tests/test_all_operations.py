@@ -7,34 +7,29 @@ Tests that each operation:
 3. Handles required parameters correctly
 """
 
+import sys
+from pathlib import Path
 from typing import Any, Dict, List
 
 import pytest
 
 from conftest import build_minimal_params, generate_test_value, _load_schema
 
+sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
+from generate_sdk import sanitize_method_name
 
 # Load schema at module level for parametrize
 SCHEMA = _load_schema()
 
 # Skip categories (internal only or not implemented)
-SKIP_CATEGORIES = {"audit", "exports"}
+SKIP_CATEGORIES = {"audit"}
 
 # Operations that use special endpoints (not V3 unified)
 SPECIAL_OPERATIONS = {"analytics.info", "analytics.list"}
 
-# Method name renames (must match generate_sdk.py)
-METHOD_RENAMES = {
-    "global": "global_search",
-    "import": "import_data",
-    "exec": "execute",
-    "eval": "evaluate",
-}
-
-
 def get_method_name(operation: str) -> str:
     """Get Python method name from operation name."""
-    return METHOD_RENAMES.get(operation, operation)
+    return sanitize_method_name(operation)
 
 
 def all_operations():
@@ -184,10 +179,16 @@ class TestOperationCounts:
 class TestAnalyticsSpecial:
     """Special tests for analytics namespace (dynamic methods)."""
 
-    def test_analytics_has_68_operations(self, schema):
-        """Verify analytics has 68 operations."""
+    def test_analytics_operation_count_matches_schema(self, schema):
+        """Verify analytics operation count matches schema."""
         count = schema["stats"]["operations_by_category"].get("analytics", 0)
-        assert count == 68
+        actual = len([
+            op for op in schema["operations"].values()
+            if op["category"] == "analytics" and not op.get("internal")
+        ])
+        assert count > 0
+        assert actual > 0
+        assert count == actual
 
     def test_analytics_dynamic_access(self, mock_client):
         """Test analytics dynamic method access."""

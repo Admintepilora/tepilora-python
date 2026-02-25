@@ -23,8 +23,8 @@ class RealtimeAPI(BaseAPI):
         """Get realtime economic calendar
 
         Get current economic calendar events from realtime feed."""
-        params: Dict[str, Any] = {}
-        return self._call("realtime.calendar", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        return self._call("realtime.calendar", params=_payload, options=options, context=context)
 
     def chart(
         self,
@@ -43,14 +43,14 @@ class RealtimeAPI(BaseAPI):
         symbol: Symbol identifier (required if no identifier)
         identifier: TepiloraCode — resolves symbol automatically via rt:map:tc
         timeframe: Timeframe: 1D, 5D, 1M, 1Y"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if symbol is not None:
-            params["symbol"] = symbol
+            _payload["symbol"] = symbol
         if identifier is not None:
-            params["identifier"] = identifier
+            _payload["identifier"] = identifier
         if timeframe is not None:
-            params["timeframe"] = timeframe
-        return self._call("realtime.chart", params=params, options=options, context=context)
+            _payload["timeframe"] = timeframe
+        return self._call("realtime.chart", params=_payload, options=options, context=context)
 
     def health(
         self,
@@ -61,8 +61,8 @@ class RealtimeAPI(BaseAPI):
         """Get data source health status
 
         Get health status for all realtime data sources."""
-        params: Dict[str, Any] = {}
-        return self._call("realtime.health", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        return self._call("realtime.health", params=_payload, options=options, context=context)
 
     def quote(
         self,
@@ -81,14 +81,14 @@ class RealtimeAPI(BaseAPI):
         category: Asset category: idx, bond, fx, cmd, crypto, futures, stock (required if no identifier)
         symbol: Symbol identifier e.g. DAX, EURUSD, BTC (required if no identifier)
         identifier: TepiloraCode — resolves category+symbol automatically via rt:map:tc"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if category is not None:
-            params["category"] = category
+            _payload["category"] = category
         if symbol is not None:
-            params["symbol"] = symbol
+            _payload["symbol"] = symbol
         if identifier is not None:
-            params["identifier"] = identifier
-        return self._call("realtime.quote", params=params, options=options, context=context)
+            _payload["identifier"] = identifier
+        return self._call("realtime.quote", params=_payload, options=options, context=context)
 
     def quotes(
         self,
@@ -103,10 +103,10 @@ class RealtimeAPI(BaseAPI):
 
         Args:
         category: Filter by category: idx, bond, fx, cmd, crypto, futures, stock"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if category is not None:
-            params["category"] = category
-        return self._call("realtime.quotes", params=params, options=options, context=context)
+            _payload["category"] = category
+        return self._call("realtime.quotes", params=_payload, options=options, context=context)
 
 
 
@@ -122,8 +122,8 @@ class AsyncRealtimeAPI(AsyncBaseAPI):
         """Get realtime economic calendar
 
         Get current economic calendar events from realtime feed."""
-        params: Dict[str, Any] = {}
-        return await self._call("realtime.calendar", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        return await self._call("realtime.calendar", params=_payload, options=options, context=context)
 
     async def chart(
         self,
@@ -142,14 +142,14 @@ class AsyncRealtimeAPI(AsyncBaseAPI):
         symbol: Symbol identifier (required if no identifier)
         identifier: TepiloraCode — resolves symbol automatically via rt:map:tc
         timeframe: Timeframe: 1D, 5D, 1M, 1Y"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if symbol is not None:
-            params["symbol"] = symbol
+            _payload["symbol"] = symbol
         if identifier is not None:
-            params["identifier"] = identifier
+            _payload["identifier"] = identifier
         if timeframe is not None:
-            params["timeframe"] = timeframe
-        return await self._call("realtime.chart", params=params, options=options, context=context)
+            _payload["timeframe"] = timeframe
+        return await self._call("realtime.chart", params=_payload, options=options, context=context)
 
     async def health(
         self,
@@ -160,8 +160,8 @@ class AsyncRealtimeAPI(AsyncBaseAPI):
         """Get data source health status
 
         Get health status for all realtime data sources."""
-        params: Dict[str, Any] = {}
-        return await self._call("realtime.health", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        return await self._call("realtime.health", params=_payload, options=options, context=context)
 
     async def quote(
         self,
@@ -180,14 +180,14 @@ class AsyncRealtimeAPI(AsyncBaseAPI):
         category: Asset category: idx, bond, fx, cmd, crypto, futures, stock (required if no identifier)
         symbol: Symbol identifier e.g. DAX, EURUSD, BTC (required if no identifier)
         identifier: TepiloraCode — resolves category+symbol automatically via rt:map:tc"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if category is not None:
-            params["category"] = category
+            _payload["category"] = category
         if symbol is not None:
-            params["symbol"] = symbol
+            _payload["symbol"] = symbol
         if identifier is not None:
-            params["identifier"] = identifier
-        return await self._call("realtime.quote", params=params, options=options, context=context)
+            _payload["identifier"] = identifier
+        return await self._call("realtime.quote", params=_payload, options=options, context=context)
 
     async def quotes(
         self,
@@ -202,9 +202,9 @@ class AsyncRealtimeAPI(AsyncBaseAPI):
 
         Args:
         category: Filter by category: idx, bond, fx, cmd, crypto, futures, stock"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if category is not None:
-            params["category"] = category
-        return await self._call("realtime.quotes", params=params, options=options, context=context)
+            _payload["category"] = category
+        return await self._call("realtime.quotes", params=_payload, options=options, context=context)
 
 

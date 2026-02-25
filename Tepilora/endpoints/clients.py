@@ -19,6 +19,7 @@ class ClientsAPI(BaseAPI):
         *,
         client_id: str,
         id: str,
+        portfolio_id: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -27,18 +28,25 @@ class ClientsAPI(BaseAPI):
         Args:
         client_id: Client ID
         id: Portfolio ID"""
-        params: Dict[str, Any] = {}
-        params["client_id"] = client_id
-        params["id"] = id
-        return self._call("clients.assign_portfolio", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["client_id"] = client_id
+        _payload["id"] = id
+        if portfolio_id is not None:
+            _payload["portfolio_id"] = portfolio_id
+        return self._call("clients.assign_portfolio", params=_payload, options=options, context=context)
 
     def create(
         self,
         *,
         name: str,
-        email: Optional[str] = None,
+        client_type: Optional[str] = None,
+        contact: Optional[str] = None,
+        members: Optional[str] = None,
         external_id: Optional[str] = None,
-        metadata: Optional[Dict[str, Any]] = None,
+        notes: Optional[str] = None,
+        tags: Optional[str] = None,
+        type_: Optional[str] = None,
+        visibility: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -46,23 +54,32 @@ class ClientsAPI(BaseAPI):
 
         Args:
         name: Client name
-        email: Client email
-        external_id: External system ID
-        metadata: Additional metadata"""
-        params: Dict[str, Any] = {}
-        params["name"] = name
-        if email is not None:
-            params["email"] = email
+        external_id: External system ID"""
+        _payload: Dict[str, Any] = {}
+        _payload["name"] = name
+        if client_type is not None:
+            _payload["client_type"] = client_type
+        if contact is not None:
+            _payload["contact"] = contact
+        if members is not None:
+            _payload["members"] = members
         if external_id is not None:
-            params["external_id"] = external_id
-        if metadata is not None:
-            params["metadata"] = metadata
-        return self._call("clients.create", params=params, options=options, context=context)
+            _payload["external_id"] = external_id
+        if notes is not None:
+            _payload["notes"] = notes
+        if tags is not None:
+            _payload["tags"] = tags
+        if type_ is not None:
+            _payload["type"] = type_
+        if visibility is not None:
+            _payload["visibility"] = visibility
+        return self._call("clients.create", params=_payload, options=options, context=context)
 
     def delete(
         self,
         *,
         client_id: str,
+        id: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -70,14 +87,18 @@ class ClientsAPI(BaseAPI):
 
         Args:
         client_id: Client ID"""
-        params: Dict[str, Any] = {}
-        params["client_id"] = client_id
-        return self._call("clients.delete", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["client_id"] = client_id
+        if id is not None:
+            _payload["id"] = id
+        return self._call("clients.delete", params=_payload, options=options, context=context)
 
     def get(
         self,
         *,
         client_id: str,
+        id: Optional[str] = None,
+        include_portfolios: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -85,17 +106,26 @@ class ClientsAPI(BaseAPI):
 
         Args:
         client_id: Client ID"""
-        params: Dict[str, Any] = {}
-        params["client_id"] = client_id
-        return self._call("clients.get", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["client_id"] = client_id
+        if id is not None:
+            _payload["id"] = id
+        if include_portfolios is not None:
+            _payload["include_portfolios"] = include_portfolios
+        return self._call("clients.get", params=_payload, options=options, context=context)
 
     def list(
         self,
         *,
+        client_type: Optional[str] = None,
+        order: Optional[str] = None,
         search: Optional[str] = None,
+        sort: Optional[str] = None,
         status: Optional[str] = "active",
         limit: Optional[int] = 50,
         offset: Optional[int] = 0,
+        tags: Optional[str] = None,
+        type_: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -107,21 +137,33 @@ class ClientsAPI(BaseAPI):
         status: active|inactive|all
         limit: Maximum results
         offset: Pagination offset"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
+        if client_type is not None:
+            _payload["client_type"] = client_type
+        if order is not None:
+            _payload["order"] = order
         if search is not None:
-            params["search"] = search
+            _payload["search"] = search
+        if sort is not None:
+            _payload["sort"] = sort
         if status is not None:
-            params["status"] = status
+            _payload["status"] = status
         if limit is not None:
-            params["limit"] = limit
+            _payload["limit"] = limit
         if offset is not None:
-            params["offset"] = offset
-        return self._call("clients.list", params=params, options=options, context=context, response_format=response_format)
+            _payload["offset"] = offset
+        if tags is not None:
+            _payload["tags"] = tags
+        if type_ is not None:
+            _payload["type"] = type_
+        return self._call("clients.list", params=_payload, options=options, context=context, response_format=response_format)
 
     def portfolios(
         self,
         *,
         client_id: str,
+        id: Optional[str] = None,
+        include_summary: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -130,36 +172,46 @@ class ClientsAPI(BaseAPI):
 
         Args:
         client_id: Client ID"""
-        params: Dict[str, Any] = {}
-        params["client_id"] = client_id
-        return self._call("clients.portfolios", params=params, options=options, context=context, response_format=response_format)
+        _payload: Dict[str, Any] = {}
+        _payload["client_id"] = client_id
+        if id is not None:
+            _payload["id"] = id
+        if include_summary is not None:
+            _payload["include_summary"] = include_summary
+        return self._call("clients.portfolios", params=_payload, options=options, context=context, response_format=response_format)
 
     def unassign_portfolio(
         self,
         *,
-        client_id: str,
         id: str,
+        portfolio_id: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
         """Unassign portfolio from client
 
         Args:
-        client_id: Client ID
         id: Portfolio ID"""
-        params: Dict[str, Any] = {}
-        params["client_id"] = client_id
-        params["id"] = id
-        return self._call("clients.unassign_portfolio", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["id"] = id
+        if portfolio_id is not None:
+            _payload["portfolio_id"] = portfolio_id
+        return self._call("clients.unassign_portfolio", params=_payload, options=options, context=context)
 
     def update(
         self,
         *,
         client_id: str,
+        client_type: Optional[str] = None,
+        contact: Optional[str] = None,
+        external_id: Optional[str] = None,
+        id: Optional[str] = None,
+        members: Optional[str] = None,
         name: Optional[str] = None,
-        email: Optional[str] = None,
+        notes: Optional[str] = None,
         status: Optional[str] = None,
-        metadata: Optional[Dict[str, Any]] = None,
+        tags: Optional[str] = None,
+        type_: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -168,20 +220,30 @@ class ClientsAPI(BaseAPI):
         Args:
         client_id: Client ID
         name: New name
-        email: New email
-        status: New status
-        metadata: New metadata"""
-        params: Dict[str, Any] = {}
-        params["client_id"] = client_id
+        status: New status"""
+        _payload: Dict[str, Any] = {}
+        _payload["client_id"] = client_id
+        if client_type is not None:
+            _payload["client_type"] = client_type
+        if contact is not None:
+            _payload["contact"] = contact
+        if external_id is not None:
+            _payload["external_id"] = external_id
+        if id is not None:
+            _payload["id"] = id
+        if members is not None:
+            _payload["members"] = members
         if name is not None:
-            params["name"] = name
-        if email is not None:
-            params["email"] = email
+            _payload["name"] = name
+        if notes is not None:
+            _payload["notes"] = notes
         if status is not None:
-            params["status"] = status
-        if metadata is not None:
-            params["metadata"] = metadata
-        return self._call("clients.update", params=params, options=options, context=context)
+            _payload["status"] = status
+        if tags is not None:
+            _payload["tags"] = tags
+        if type_ is not None:
+            _payload["type"] = type_
+        return self._call("clients.update", params=_payload, options=options, context=context)
 
 
 
@@ -193,6 +255,7 @@ class AsyncClientsAPI(AsyncBaseAPI):
         *,
         client_id: str,
         id: str,
+        portfolio_id: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -201,18 +264,25 @@ class AsyncClientsAPI(AsyncBaseAPI):
         Args:
         client_id: Client ID
         id: Portfolio ID"""
-        params: Dict[str, Any] = {}
-        params["client_id"] = client_id
-        params["id"] = id
-        return await self._call("clients.assign_portfolio", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["client_id"] = client_id
+        _payload["id"] = id
+        if portfolio_id is not None:
+            _payload["portfolio_id"] = portfolio_id
+        return await self._call("clients.assign_portfolio", params=_payload, options=options, context=context)
 
     async def create(
         self,
         *,
         name: str,
-        email: Optional[str] = None,
+        client_type: Optional[str] = None,
+        contact: Optional[str] = None,
+        members: Optional[str] = None,
         external_id: Optional[str] = None,
-        metadata: Optional[Dict[str, Any]] = None,
+        notes: Optional[str] = None,
+        tags: Optional[str] = None,
+        type_: Optional[str] = None,
+        visibility: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -220,23 +290,32 @@ class AsyncClientsAPI(AsyncBaseAPI):
 
         Args:
         name: Client name
-        email: Client email
-        external_id: External system ID
-        metadata: Additional metadata"""
-        params: Dict[str, Any] = {}
-        params["name"] = name
-        if email is not None:
-            params["email"] = email
+        external_id: External system ID"""
+        _payload: Dict[str, Any] = {}
+        _payload["name"] = name
+        if client_type is not None:
+            _payload["client_type"] = client_type
+        if contact is not None:
+            _payload["contact"] = contact
+        if members is not None:
+            _payload["members"] = members
         if external_id is not None:
-            params["external_id"] = external_id
-        if metadata is not None:
-            params["metadata"] = metadata
-        return await self._call("clients.create", params=params, options=options, context=context)
+            _payload["external_id"] = external_id
+        if notes is not None:
+            _payload["notes"] = notes
+        if tags is not None:
+            _payload["tags"] = tags
+        if type_ is not None:
+            _payload["type"] = type_
+        if visibility is not None:
+            _payload["visibility"] = visibility
+        return await self._call("clients.create", params=_payload, options=options, context=context)
 
     async def delete(
         self,
         *,
         client_id: str,
+        id: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -244,14 +323,18 @@ class AsyncClientsAPI(AsyncBaseAPI):
 
         Args:
         client_id: Client ID"""
-        params: Dict[str, Any] = {}
-        params["client_id"] = client_id
-        return await self._call("clients.delete", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["client_id"] = client_id
+        if id is not None:
+            _payload["id"] = id
+        return await self._call("clients.delete", params=_payload, options=options, context=context)
 
     async def get(
         self,
         *,
         client_id: str,
+        id: Optional[str] = None,
+        include_portfolios: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -259,17 +342,26 @@ class AsyncClientsAPI(AsyncBaseAPI):
 
         Args:
         client_id: Client ID"""
-        params: Dict[str, Any] = {}
-        params["client_id"] = client_id
-        return await self._call("clients.get", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["client_id"] = client_id
+        if id is not None:
+            _payload["id"] = id
+        if include_portfolios is not None:
+            _payload["include_portfolios"] = include_portfolios
+        return await self._call("clients.get", params=_payload, options=options, context=context)
 
     async def list(
         self,
         *,
+        client_type: Optional[str] = None,
+        order: Optional[str] = None,
         search: Optional[str] = None,
+        sort: Optional[str] = None,
         status: Optional[str] = "active",
         limit: Optional[int] = 50,
         offset: Optional[int] = 0,
+        tags: Optional[str] = None,
+        type_: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -281,21 +373,33 @@ class AsyncClientsAPI(AsyncBaseAPI):
         status: active|inactive|all
         limit: Maximum results
         offset: Pagination offset"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
+        if client_type is not None:
+            _payload["client_type"] = client_type
+        if order is not None:
+            _payload["order"] = order
         if search is not None:
-            params["search"] = search
+            _payload["search"] = search
+        if sort is not None:
+            _payload["sort"] = sort
         if status is not None:
-            params["status"] = status
+            _payload["status"] = status
         if limit is not None:
-            params["limit"] = limit
+            _payload["limit"] = limit
         if offset is not None:
-            params["offset"] = offset
-        return await self._call("clients.list", params=params, options=options, context=context, response_format=response_format)
+            _payload["offset"] = offset
+        if tags is not None:
+            _payload["tags"] = tags
+        if type_ is not None:
+            _payload["type"] = type_
+        return await self._call("clients.list", params=_payload, options=options, context=context, response_format=response_format)
 
     async def portfolios(
         self,
         *,
         client_id: str,
+        id: Optional[str] = None,
+        include_summary: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -304,36 +408,46 @@ class AsyncClientsAPI(AsyncBaseAPI):
 
         Args:
         client_id: Client ID"""
-        params: Dict[str, Any] = {}
-        params["client_id"] = client_id
-        return await self._call("clients.portfolios", params=params, options=options, context=context, response_format=response_format)
+        _payload: Dict[str, Any] = {}
+        _payload["client_id"] = client_id
+        if id is not None:
+            _payload["id"] = id
+        if include_summary is not None:
+            _payload["include_summary"] = include_summary
+        return await self._call("clients.portfolios", params=_payload, options=options, context=context, response_format=response_format)
 
     async def unassign_portfolio(
         self,
         *,
-        client_id: str,
         id: str,
+        portfolio_id: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
         """Unassign portfolio from client
 
         Args:
-        client_id: Client ID
         id: Portfolio ID"""
-        params: Dict[str, Any] = {}
-        params["client_id"] = client_id
-        params["id"] = id
-        return await self._call("clients.unassign_portfolio", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["id"] = id
+        if portfolio_id is not None:
+            _payload["portfolio_id"] = portfolio_id
+        return await self._call("clients.unassign_portfolio", params=_payload, options=options, context=context)
 
     async def update(
         self,
         *,
         client_id: str,
+        client_type: Optional[str] = None,
+        contact: Optional[str] = None,
+        external_id: Optional[str] = None,
+        id: Optional[str] = None,
+        members: Optional[str] = None,
         name: Optional[str] = None,
-        email: Optional[str] = None,
+        notes: Optional[str] = None,
         status: Optional[str] = None,
-        metadata: Optional[Dict[str, Any]] = None,
+        tags: Optional[str] = None,
+        type_: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -342,19 +456,29 @@ class AsyncClientsAPI(AsyncBaseAPI):
         Args:
         client_id: Client ID
         name: New name
-        email: New email
-        status: New status
-        metadata: New metadata"""
-        params: Dict[str, Any] = {}
-        params["client_id"] = client_id
+        status: New status"""
+        _payload: Dict[str, Any] = {}
+        _payload["client_id"] = client_id
+        if client_type is not None:
+            _payload["client_type"] = client_type
+        if contact is not None:
+            _payload["contact"] = contact
+        if external_id is not None:
+            _payload["external_id"] = external_id
+        if id is not None:
+            _payload["id"] = id
+        if members is not None:
+            _payload["members"] = members
         if name is not None:
-            params["name"] = name
-        if email is not None:
-            params["email"] = email
+            _payload["name"] = name
+        if notes is not None:
+            _payload["notes"] = notes
         if status is not None:
-            params["status"] = status
-        if metadata is not None:
-            params["metadata"] = metadata
-        return await self._call("clients.update", params=params, options=options, context=context)
+            _payload["status"] = status
+        if tags is not None:
+            _payload["tags"] = tags
+        if type_ is not None:
+            _payload["type"] = type_
+        return await self._call("clients.update", params=_payload, options=options, context=context)
 
 

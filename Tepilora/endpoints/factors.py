@@ -18,6 +18,7 @@ class FactorsAPI(BaseAPI):
         self,
         *,
         model: Optional[str] = "FF3",
+        frequency: Optional[str] = "daily",
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
@@ -28,16 +29,19 @@ class FactorsAPI(BaseAPI):
 
         Args:
         model: FF3|FF5|Carhart
+        frequency: Data frequency: daily|monthly
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if model is not None:
-            params["model"] = model
+            _payload["model"] = model
+        if frequency is not None:
+            _payload["frequency"] = frequency
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call("factors.get", params=params, options=options, context=context, response_format=response_format)
+            _payload["end_date"] = end_date
+        return self._call("factors.get", params=_payload, options=options, context=context, response_format=response_format)
 
     def list(
         self,
@@ -46,15 +50,29 @@ class FactorsAPI(BaseAPI):
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
         """List available factors"""
-        params: Dict[str, Any] = {}
-        return self._call("factors.list", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        return self._call("factors.list", params=_payload, options=options, context=context)
 
     def loading(
         self,
         *,
+        annualize: Optional[str] = None,
+        benchmark: Optional[str] = None,
+        cov_method: Optional[str] = None,
+        force: Optional[str] = None,
+        frequency: Optional[str] = None,
+        id: Optional[str] = None,
+        identifiers: Optional[Union[str, List[str]]] = None,
+        include_statistics: Optional[bool] = None,
         model: Optional[str] = "FF3",
+        output: Optional[str] = None,
+        period: Optional[int] = None,
+        portfolio_id: Optional[str] = None,
+        prices: Optional[str] = None,
+        scenarios: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        weights: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -63,24 +81,58 @@ class FactorsAPI(BaseAPI):
 
         Alias for factors.get. Use factors.get instead.
 
+        .. deprecated:: 3.2.0
+            Use factors.get instead.
+
         Args:
         model: FF3|FF5|Carhart
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = {}
+        import warnings
+        warnings.warn("factors.loading is deprecated: Use factors.get instead.", DeprecationWarning, stacklevel=2)
+        _payload: Dict[str, Any] = {}
+        if annualize is not None:
+            _payload["annualize"] = annualize
+        if benchmark is not None:
+            _payload["benchmark"] = benchmark
+        if cov_method is not None:
+            _payload["cov_method"] = cov_method
+        if force is not None:
+            _payload["force"] = force
+        if frequency is not None:
+            _payload["frequency"] = frequency
+        if id is not None:
+            _payload["id"] = id
+        if identifiers is not None:
+            _payload["identifiers"] = identifiers
+        if include_statistics is not None:
+            _payload["include_statistics"] = include_statistics
         if model is not None:
-            params["model"] = model
+            _payload["model"] = model
+        if output is not None:
+            _payload["output"] = output
+        if period is not None:
+            _payload["period"] = period
+        if portfolio_id is not None:
+            _payload["portfolio_id"] = portfolio_id
+        if prices is not None:
+            _payload["prices"] = prices
+        if scenarios is not None:
+            _payload["scenarios"] = scenarios
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call("factors.loading", params=params, options=options, context=context, response_format=response_format)
+            _payload["end_date"] = end_date
+        if weights is not None:
+            _payload["weights"] = weights
+        return self._call("factors.loading", params=_payload, options=options, context=context, response_format=response_format)
 
     def portfolio_exposure(
         self,
         *,
         portfolio_id: Optional[str] = None,
         id: Optional[str] = None,
+        prices: Optional[str] = None,
         weights: Optional[Dict[str, Any]] = None,
         benchmark: Optional[str] = None,
         model: Optional[str] = "FF5",
@@ -104,24 +156,26 @@ class FactorsAPI(BaseAPI):
         period: Rolling window
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if portfolio_id is not None:
-            params["portfolio_id"] = portfolio_id
+            _payload["portfolio_id"] = portfolio_id
         if id is not None:
-            params["id"] = id
+            _payload["id"] = id
+        if prices is not None:
+            _payload["prices"] = prices
         if weights is not None:
-            params["weights"] = weights
+            _payload["weights"] = weights
         if benchmark is not None:
-            params["benchmark"] = benchmark
+            _payload["benchmark"] = benchmark
         if model is not None:
-            params["model"] = model
+            _payload["model"] = model
         if period is not None:
-            params["period"] = period
+            _payload["period"] = period
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call("factors.portfolio_exposure", params=params, options=options, context=context, response_format=response_format)
+            _payload["end_date"] = end_date
+        return self._call("factors.portfolio_exposure", params=_payload, options=options, context=context, response_format=response_format)
 
     def risk_model(
         self,
@@ -131,6 +185,7 @@ class FactorsAPI(BaseAPI):
         period: Optional[int] = 252,
         cov_method: Optional[str] = "sample",
         include_statistics: Optional[bool] = False,
+        prices: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
@@ -149,22 +204,24 @@ class FactorsAPI(BaseAPI):
         include_statistics: Include SE/t-stats/p-values for betas
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
         if model is not None:
-            params["model"] = model
+            _payload["model"] = model
         if period is not None:
-            params["period"] = period
+            _payload["period"] = period
         if cov_method is not None:
-            params["cov_method"] = cov_method
+            _payload["cov_method"] = cov_method
         if include_statistics is not None:
-            params["include_statistics"] = include_statistics
+            _payload["include_statistics"] = include_statistics
+        if prices is not None:
+            _payload["prices"] = prices
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call("factors.risk_model", params=params, options=options, context=context, response_format=response_format)
+            _payload["end_date"] = end_date
+        return self._call("factors.risk_model", params=_payload, options=options, context=context, response_format=response_format)
 
     def rolling_covariance(
         self,
@@ -192,22 +249,22 @@ class FactorsAPI(BaseAPI):
         annualize: Annualize covariance
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if model is not None:
-            params["model"] = model
+            _payload["model"] = model
         if period is not None:
-            params["period"] = period
+            _payload["period"] = period
         if cov_method is not None:
-            params["cov_method"] = cov_method
+            _payload["cov_method"] = cov_method
         if output is not None:
-            params["output"] = output
+            _payload["output"] = output
         if annualize is not None:
-            params["annualize"] = annualize
+            _payload["annualize"] = annualize
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call("factors.rolling_covariance", params=params, options=options, context=context, response_format=response_format)
+            _payload["end_date"] = end_date
+        return self._call("factors.rolling_covariance", params=_payload, options=options, context=context, response_format=response_format)
 
     def scenario(
         self,
@@ -216,6 +273,7 @@ class FactorsAPI(BaseAPI):
         identifiers: Optional[Union[str, List[str]]] = None,
         portfolio_id: Optional[str] = None,
         id: Optional[str] = None,
+        prices: Optional[str] = None,
         weights: Optional[Dict[str, Any]] = None,
         model: Optional[str] = "FF5",
         period: Optional[int] = 252,
@@ -239,37 +297,42 @@ class FactorsAPI(BaseAPI):
         period: Regression window
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = {}
-        params["scenarios"] = scenarios
+        _payload: Dict[str, Any] = {}
+        _payload["scenarios"] = scenarios
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
         if portfolio_id is not None:
-            params["portfolio_id"] = portfolio_id
+            _payload["portfolio_id"] = portfolio_id
         if id is not None:
-            params["id"] = id
+            _payload["id"] = id
+        if prices is not None:
+            _payload["prices"] = prices
         if weights is not None:
-            params["weights"] = weights
+            _payload["weights"] = weights
         if model is not None:
-            params["model"] = model
+            _payload["model"] = model
         if period is not None:
-            params["period"] = period
+            _payload["period"] = period
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call("factors.scenario", params=params, options=options, context=context, response_format=response_format)
+            _payload["end_date"] = end_date
+        return self._call("factors.scenario", params=_payload, options=options, context=context, response_format=response_format)
 
     def status(
         self,
         *,
+        model: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
         """Factor data status
 
         Get factor data freshness."""
-        params: Dict[str, Any] = {}
-        return self._call("factors.status", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        if model is not None:
+            _payload["model"] = model
+        return self._call("factors.status", params=_payload, options=options, context=context)
 
 
 
@@ -280,6 +343,7 @@ class AsyncFactorsAPI(AsyncBaseAPI):
         self,
         *,
         model: Optional[str] = "FF3",
+        frequency: Optional[str] = "daily",
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
@@ -290,16 +354,19 @@ class AsyncFactorsAPI(AsyncBaseAPI):
 
         Args:
         model: FF3|FF5|Carhart
+        frequency: Data frequency: daily|monthly
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if model is not None:
-            params["model"] = model
+            _payload["model"] = model
+        if frequency is not None:
+            _payload["frequency"] = frequency
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call("factors.get", params=params, options=options, context=context, response_format=response_format)
+            _payload["end_date"] = end_date
+        return await self._call("factors.get", params=_payload, options=options, context=context, response_format=response_format)
 
     async def list(
         self,
@@ -308,15 +375,29 @@ class AsyncFactorsAPI(AsyncBaseAPI):
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
         """List available factors"""
-        params: Dict[str, Any] = {}
-        return await self._call("factors.list", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        return await self._call("factors.list", params=_payload, options=options, context=context)
 
     async def loading(
         self,
         *,
+        annualize: Optional[str] = None,
+        benchmark: Optional[str] = None,
+        cov_method: Optional[str] = None,
+        force: Optional[str] = None,
+        frequency: Optional[str] = None,
+        id: Optional[str] = None,
+        identifiers: Optional[Union[str, List[str]]] = None,
+        include_statistics: Optional[bool] = None,
         model: Optional[str] = "FF3",
+        output: Optional[str] = None,
+        period: Optional[int] = None,
+        portfolio_id: Optional[str] = None,
+        prices: Optional[str] = None,
+        scenarios: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        weights: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -325,24 +406,58 @@ class AsyncFactorsAPI(AsyncBaseAPI):
 
         Alias for factors.get. Use factors.get instead.
 
+        .. deprecated:: 3.2.0
+            Use factors.get instead.
+
         Args:
         model: FF3|FF5|Carhart
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = {}
+        import warnings
+        warnings.warn("factors.loading is deprecated: Use factors.get instead.", DeprecationWarning, stacklevel=2)
+        _payload: Dict[str, Any] = {}
+        if annualize is not None:
+            _payload["annualize"] = annualize
+        if benchmark is not None:
+            _payload["benchmark"] = benchmark
+        if cov_method is not None:
+            _payload["cov_method"] = cov_method
+        if force is not None:
+            _payload["force"] = force
+        if frequency is not None:
+            _payload["frequency"] = frequency
+        if id is not None:
+            _payload["id"] = id
+        if identifiers is not None:
+            _payload["identifiers"] = identifiers
+        if include_statistics is not None:
+            _payload["include_statistics"] = include_statistics
         if model is not None:
-            params["model"] = model
+            _payload["model"] = model
+        if output is not None:
+            _payload["output"] = output
+        if period is not None:
+            _payload["period"] = period
+        if portfolio_id is not None:
+            _payload["portfolio_id"] = portfolio_id
+        if prices is not None:
+            _payload["prices"] = prices
+        if scenarios is not None:
+            _payload["scenarios"] = scenarios
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call("factors.loading", params=params, options=options, context=context, response_format=response_format)
+            _payload["end_date"] = end_date
+        if weights is not None:
+            _payload["weights"] = weights
+        return await self._call("factors.loading", params=_payload, options=options, context=context, response_format=response_format)
 
     async def portfolio_exposure(
         self,
         *,
         portfolio_id: Optional[str] = None,
         id: Optional[str] = None,
+        prices: Optional[str] = None,
         weights: Optional[Dict[str, Any]] = None,
         benchmark: Optional[str] = None,
         model: Optional[str] = "FF5",
@@ -366,24 +481,26 @@ class AsyncFactorsAPI(AsyncBaseAPI):
         period: Rolling window
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if portfolio_id is not None:
-            params["portfolio_id"] = portfolio_id
+            _payload["portfolio_id"] = portfolio_id
         if id is not None:
-            params["id"] = id
+            _payload["id"] = id
+        if prices is not None:
+            _payload["prices"] = prices
         if weights is not None:
-            params["weights"] = weights
+            _payload["weights"] = weights
         if benchmark is not None:
-            params["benchmark"] = benchmark
+            _payload["benchmark"] = benchmark
         if model is not None:
-            params["model"] = model
+            _payload["model"] = model
         if period is not None:
-            params["period"] = period
+            _payload["period"] = period
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call("factors.portfolio_exposure", params=params, options=options, context=context, response_format=response_format)
+            _payload["end_date"] = end_date
+        return await self._call("factors.portfolio_exposure", params=_payload, options=options, context=context, response_format=response_format)
 
     async def risk_model(
         self,
@@ -393,6 +510,7 @@ class AsyncFactorsAPI(AsyncBaseAPI):
         period: Optional[int] = 252,
         cov_method: Optional[str] = "sample",
         include_statistics: Optional[bool] = False,
+        prices: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
@@ -411,22 +529,24 @@ class AsyncFactorsAPI(AsyncBaseAPI):
         include_statistics: Include SE/t-stats/p-values for betas
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
         if model is not None:
-            params["model"] = model
+            _payload["model"] = model
         if period is not None:
-            params["period"] = period
+            _payload["period"] = period
         if cov_method is not None:
-            params["cov_method"] = cov_method
+            _payload["cov_method"] = cov_method
         if include_statistics is not None:
-            params["include_statistics"] = include_statistics
+            _payload["include_statistics"] = include_statistics
+        if prices is not None:
+            _payload["prices"] = prices
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call("factors.risk_model", params=params, options=options, context=context, response_format=response_format)
+            _payload["end_date"] = end_date
+        return await self._call("factors.risk_model", params=_payload, options=options, context=context, response_format=response_format)
 
     async def rolling_covariance(
         self,
@@ -454,22 +574,22 @@ class AsyncFactorsAPI(AsyncBaseAPI):
         annualize: Annualize covariance
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if model is not None:
-            params["model"] = model
+            _payload["model"] = model
         if period is not None:
-            params["period"] = period
+            _payload["period"] = period
         if cov_method is not None:
-            params["cov_method"] = cov_method
+            _payload["cov_method"] = cov_method
         if output is not None:
-            params["output"] = output
+            _payload["output"] = output
         if annualize is not None:
-            params["annualize"] = annualize
+            _payload["annualize"] = annualize
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call("factors.rolling_covariance", params=params, options=options, context=context, response_format=response_format)
+            _payload["end_date"] = end_date
+        return await self._call("factors.rolling_covariance", params=_payload, options=options, context=context, response_format=response_format)
 
     async def scenario(
         self,
@@ -478,6 +598,7 @@ class AsyncFactorsAPI(AsyncBaseAPI):
         identifiers: Optional[Union[str, List[str]]] = None,
         portfolio_id: Optional[str] = None,
         id: Optional[str] = None,
+        prices: Optional[str] = None,
         weights: Optional[Dict[str, Any]] = None,
         model: Optional[str] = "FF5",
         period: Optional[int] = 252,
@@ -501,36 +622,41 @@ class AsyncFactorsAPI(AsyncBaseAPI):
         period: Regression window
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = {}
-        params["scenarios"] = scenarios
+        _payload: Dict[str, Any] = {}
+        _payload["scenarios"] = scenarios
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
         if portfolio_id is not None:
-            params["portfolio_id"] = portfolio_id
+            _payload["portfolio_id"] = portfolio_id
         if id is not None:
-            params["id"] = id
+            _payload["id"] = id
+        if prices is not None:
+            _payload["prices"] = prices
         if weights is not None:
-            params["weights"] = weights
+            _payload["weights"] = weights
         if model is not None:
-            params["model"] = model
+            _payload["model"] = model
         if period is not None:
-            params["period"] = period
+            _payload["period"] = period
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call("factors.scenario", params=params, options=options, context=context, response_format=response_format)
+            _payload["end_date"] = end_date
+        return await self._call("factors.scenario", params=_payload, options=options, context=context, response_format=response_format)
 
     async def status(
         self,
         *,
+        model: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
         """Factor data status
 
         Get factor data freshness."""
-        params: Dict[str, Any] = {}
-        return await self._call("factors.status", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        if model is not None:
+            _payload["model"] = model
+        return await self._call("factors.status", params=_payload, options=options, context=context)
 
 

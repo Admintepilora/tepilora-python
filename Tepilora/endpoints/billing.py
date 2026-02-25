@@ -30,11 +30,11 @@ class BillingAPI(BaseAPI):
         Args:
         client_id: Client ID
         year: Filter by year"""
-        params: Dict[str, Any] = {}
-        params["client_id"] = client_id
+        _payload: Dict[str, Any] = {}
+        _payload["client_id"] = client_id
         if year is not None:
-            params["year"] = year
-        return self._call("billing.aggregate", params=params, options=options, context=context, response_format=response_format)
+            _payload["year"] = year
+        return self._call("billing.aggregate", params=_payload, options=options, context=context, response_format=response_format)
 
     def calculate(
         self,
@@ -61,22 +61,22 @@ class BillingAPI(BaseAPI):
         high_water_mark: High water mark
         period_start: Period start date
         period_end: Period end date"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if fee_schedule is not None:
-            params["fee_schedule"] = fee_schedule
+            _payload["fee_schedule"] = fee_schedule
         if aum is not None:
-            params["aum"] = aum
+            _payload["aum"] = aum
         if portfolio_return is not None:
-            params["portfolio_return"] = portfolio_return
+            _payload["portfolio_return"] = portfolio_return
         if benchmark_return is not None:
-            params["benchmark_return"] = benchmark_return
+            _payload["benchmark_return"] = benchmark_return
         if high_water_mark is not None:
-            params["high_water_mark"] = high_water_mark
+            _payload["high_water_mark"] = high_water_mark
         if period_start is not None:
-            params["period_start"] = period_start
+            _payload["period_start"] = period_start
         if period_end is not None:
-            params["period_end"] = period_end
-        return self._call("billing.calculate", params=params, options=options, context=context)
+            _payload["period_end"] = period_end
+        return self._call("billing.calculate", params=_payload, options=options, context=context)
 
     def record_create(
         self,
@@ -85,6 +85,9 @@ class BillingAPI(BaseAPI):
         fee_schedule_id: str,
         period_start: str,
         period_end: str,
+        aum_average: Optional[str] = None,
+        aum_end: Optional[str] = None,
+        aum_start: Optional[str] = None,
         aum: Optional[float] = None,
         portfolio_return: Optional[float] = None,
         benchmark_return: Optional[float] = None,
@@ -107,29 +110,38 @@ class BillingAPI(BaseAPI):
         high_water_mark: High water mark
         portfolio_id: Portfolio ID
         notes: Notes"""
-        params: Dict[str, Any] = {}
-        params["client_id"] = client_id
-        params["fee_schedule_id"] = fee_schedule_id
-        params["period_start"] = period_start
-        params["period_end"] = period_end
+        _payload: Dict[str, Any] = {}
+        _payload["client_id"] = client_id
+        _payload["fee_schedule_id"] = fee_schedule_id
+        _payload["period_start"] = period_start
+        _payload["period_end"] = period_end
+        if aum_average is not None:
+            _payload["aum_average"] = aum_average
+        if aum_end is not None:
+            _payload["aum_end"] = aum_end
+        if aum_start is not None:
+            _payload["aum_start"] = aum_start
         if aum is not None:
-            params["aum"] = aum
+            _payload["aum"] = aum
         if portfolio_return is not None:
-            params["portfolio_return"] = portfolio_return
+            _payload["portfolio_return"] = portfolio_return
         if benchmark_return is not None:
-            params["benchmark_return"] = benchmark_return
+            _payload["benchmark_return"] = benchmark_return
         if high_water_mark is not None:
-            params["high_water_mark"] = high_water_mark
+            _payload["high_water_mark"] = high_water_mark
         if portfolio_id is not None:
-            params["portfolio_id"] = portfolio_id
+            _payload["portfolio_id"] = portfolio_id
         if notes is not None:
-            params["notes"] = notes
-        return self._call("billing.record_create", params=params, options=options, context=context)
+            _payload["notes"] = notes
+        return self._call("billing.record_create", params=_payload, options=options, context=context)
 
     def record_list(
         self,
         *,
         client_id: Optional[str] = None,
+        offset: Optional[int] = None,
+        portfolio_id: Optional[str] = None,
+        status: Optional[str] = None,
         year: Optional[int] = None,
         limit: Optional[int] = 100,
         options: Optional[Dict[str, Any]] = None,
@@ -142,22 +154,26 @@ class BillingAPI(BaseAPI):
         client_id: Filter by client
         year: Filter by year
         limit: Maximum results"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if client_id is not None:
-            params["client_id"] = client_id
+            _payload["client_id"] = client_id
+        if offset is not None:
+            _payload["offset"] = offset
+        if portfolio_id is not None:
+            _payload["portfolio_id"] = portfolio_id
+        if status is not None:
+            _payload["status"] = status
         if year is not None:
-            params["year"] = year
+            _payload["year"] = year
         if limit is not None:
-            params["limit"] = limit
-        return self._call("billing.record_list", params=params, options=options, context=context, response_format=response_format)
+            _payload["limit"] = limit
+        return self._call("billing.record_list", params=_payload, options=options, context=context, response_format=response_format)
 
     def schedule_create(
         self,
         *,
         name: str,
         fee_type: str,
-        frequency: Optional[str] = "quarterly",
-        currency: Optional[str] = "EUR",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -165,17 +181,11 @@ class BillingAPI(BaseAPI):
 
         Args:
         name: Schedule name
-        fee_type: aum_percentage|flat|tiered|performance
-        frequency: monthly|quarterly|annually
-        currency: Currency"""
-        params: Dict[str, Any] = {}
-        params["name"] = name
-        params["fee_type"] = fee_type
-        if frequency is not None:
-            params["frequency"] = frequency
-        if currency is not None:
-            params["currency"] = currency
-        return self._call("billing.schedule_create", params=params, options=options, context=context)
+        fee_type: aum_percentage|flat|tiered|performance"""
+        _payload: Dict[str, Any] = {}
+        _payload["name"] = name
+        _payload["fee_type"] = fee_type
+        return self._call("billing.schedule_create", params=_payload, options=options, context=context)
 
     def schedule_delete(
         self,
@@ -188,9 +198,9 @@ class BillingAPI(BaseAPI):
 
         Args:
         id: Schedule ID"""
-        params: Dict[str, Any] = {}
-        params["id"] = id
-        return self._call("billing.schedule_delete", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["id"] = id
+        return self._call("billing.schedule_delete", params=_payload, options=options, context=context)
 
     def schedule_get(
         self,
@@ -205,12 +215,12 @@ class BillingAPI(BaseAPI):
         Args:
         id: Schedule ID
         name: Schedule name"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if id is not None:
-            params["id"] = id
+            _payload["id"] = id
         if name is not None:
-            params["name"] = name
-        return self._call("billing.schedule_get", params=params, options=options, context=context)
+            _payload["name"] = name
+        return self._call("billing.schedule_get", params=_payload, options=options, context=context)
 
     def schedule_list(
         self,
@@ -226,31 +236,27 @@ class BillingAPI(BaseAPI):
         Args:
         fee_type: Filter by fee type
         limit: Maximum results"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if fee_type is not None:
-            params["fee_type"] = fee_type
+            _payload["fee_type"] = fee_type
         if limit is not None:
-            params["limit"] = limit
-        return self._call("billing.schedule_list", params=params, options=options, context=context, response_format=response_format)
+            _payload["limit"] = limit
+        return self._call("billing.schedule_list", params=_payload, options=options, context=context, response_format=response_format)
 
     def schedule_update(
         self,
         *,
         id: str,
-        name: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
         """Update fee schedule
 
         Args:
-        id: Schedule ID
-        name: New name"""
-        params: Dict[str, Any] = {}
-        params["id"] = id
-        if name is not None:
-            params["name"] = name
-        return self._call("billing.schedule_update", params=params, options=options, context=context)
+        id: Schedule ID"""
+        _payload: Dict[str, Any] = {}
+        _payload["id"] = id
+        return self._call("billing.schedule_update", params=_payload, options=options, context=context)
 
     def simulate(
         self,
@@ -267,11 +273,11 @@ class BillingAPI(BaseAPI):
         Args:
         fee_schedule: Fee schedule
         scenarios: Scenarios to simulate"""
-        params: Dict[str, Any] = {}
-        params["fee_schedule"] = fee_schedule
+        _payload: Dict[str, Any] = {}
+        _payload["fee_schedule"] = fee_schedule
         if scenarios is not None:
-            params["scenarios"] = scenarios
-        return self._call("billing.simulate", params=params, options=options, context=context)
+            _payload["scenarios"] = scenarios
+        return self._call("billing.simulate", params=_payload, options=options, context=context)
 
 
 
@@ -294,11 +300,11 @@ class AsyncBillingAPI(AsyncBaseAPI):
         Args:
         client_id: Client ID
         year: Filter by year"""
-        params: Dict[str, Any] = {}
-        params["client_id"] = client_id
+        _payload: Dict[str, Any] = {}
+        _payload["client_id"] = client_id
         if year is not None:
-            params["year"] = year
-        return await self._call("billing.aggregate", params=params, options=options, context=context, response_format=response_format)
+            _payload["year"] = year
+        return await self._call("billing.aggregate", params=_payload, options=options, context=context, response_format=response_format)
 
     async def calculate(
         self,
@@ -325,22 +331,22 @@ class AsyncBillingAPI(AsyncBaseAPI):
         high_water_mark: High water mark
         period_start: Period start date
         period_end: Period end date"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if fee_schedule is not None:
-            params["fee_schedule"] = fee_schedule
+            _payload["fee_schedule"] = fee_schedule
         if aum is not None:
-            params["aum"] = aum
+            _payload["aum"] = aum
         if portfolio_return is not None:
-            params["portfolio_return"] = portfolio_return
+            _payload["portfolio_return"] = portfolio_return
         if benchmark_return is not None:
-            params["benchmark_return"] = benchmark_return
+            _payload["benchmark_return"] = benchmark_return
         if high_water_mark is not None:
-            params["high_water_mark"] = high_water_mark
+            _payload["high_water_mark"] = high_water_mark
         if period_start is not None:
-            params["period_start"] = period_start
+            _payload["period_start"] = period_start
         if period_end is not None:
-            params["period_end"] = period_end
-        return await self._call("billing.calculate", params=params, options=options, context=context)
+            _payload["period_end"] = period_end
+        return await self._call("billing.calculate", params=_payload, options=options, context=context)
 
     async def record_create(
         self,
@@ -349,6 +355,9 @@ class AsyncBillingAPI(AsyncBaseAPI):
         fee_schedule_id: str,
         period_start: str,
         period_end: str,
+        aum_average: Optional[str] = None,
+        aum_end: Optional[str] = None,
+        aum_start: Optional[str] = None,
         aum: Optional[float] = None,
         portfolio_return: Optional[float] = None,
         benchmark_return: Optional[float] = None,
@@ -371,29 +380,38 @@ class AsyncBillingAPI(AsyncBaseAPI):
         high_water_mark: High water mark
         portfolio_id: Portfolio ID
         notes: Notes"""
-        params: Dict[str, Any] = {}
-        params["client_id"] = client_id
-        params["fee_schedule_id"] = fee_schedule_id
-        params["period_start"] = period_start
-        params["period_end"] = period_end
+        _payload: Dict[str, Any] = {}
+        _payload["client_id"] = client_id
+        _payload["fee_schedule_id"] = fee_schedule_id
+        _payload["period_start"] = period_start
+        _payload["period_end"] = period_end
+        if aum_average is not None:
+            _payload["aum_average"] = aum_average
+        if aum_end is not None:
+            _payload["aum_end"] = aum_end
+        if aum_start is not None:
+            _payload["aum_start"] = aum_start
         if aum is not None:
-            params["aum"] = aum
+            _payload["aum"] = aum
         if portfolio_return is not None:
-            params["portfolio_return"] = portfolio_return
+            _payload["portfolio_return"] = portfolio_return
         if benchmark_return is not None:
-            params["benchmark_return"] = benchmark_return
+            _payload["benchmark_return"] = benchmark_return
         if high_water_mark is not None:
-            params["high_water_mark"] = high_water_mark
+            _payload["high_water_mark"] = high_water_mark
         if portfolio_id is not None:
-            params["portfolio_id"] = portfolio_id
+            _payload["portfolio_id"] = portfolio_id
         if notes is not None:
-            params["notes"] = notes
-        return await self._call("billing.record_create", params=params, options=options, context=context)
+            _payload["notes"] = notes
+        return await self._call("billing.record_create", params=_payload, options=options, context=context)
 
     async def record_list(
         self,
         *,
         client_id: Optional[str] = None,
+        offset: Optional[int] = None,
+        portfolio_id: Optional[str] = None,
+        status: Optional[str] = None,
         year: Optional[int] = None,
         limit: Optional[int] = 100,
         options: Optional[Dict[str, Any]] = None,
@@ -406,22 +424,26 @@ class AsyncBillingAPI(AsyncBaseAPI):
         client_id: Filter by client
         year: Filter by year
         limit: Maximum results"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if client_id is not None:
-            params["client_id"] = client_id
+            _payload["client_id"] = client_id
+        if offset is not None:
+            _payload["offset"] = offset
+        if portfolio_id is not None:
+            _payload["portfolio_id"] = portfolio_id
+        if status is not None:
+            _payload["status"] = status
         if year is not None:
-            params["year"] = year
+            _payload["year"] = year
         if limit is not None:
-            params["limit"] = limit
-        return await self._call("billing.record_list", params=params, options=options, context=context, response_format=response_format)
+            _payload["limit"] = limit
+        return await self._call("billing.record_list", params=_payload, options=options, context=context, response_format=response_format)
 
     async def schedule_create(
         self,
         *,
         name: str,
         fee_type: str,
-        frequency: Optional[str] = "quarterly",
-        currency: Optional[str] = "EUR",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -429,17 +451,11 @@ class AsyncBillingAPI(AsyncBaseAPI):
 
         Args:
         name: Schedule name
-        fee_type: aum_percentage|flat|tiered|performance
-        frequency: monthly|quarterly|annually
-        currency: Currency"""
-        params: Dict[str, Any] = {}
-        params["name"] = name
-        params["fee_type"] = fee_type
-        if frequency is not None:
-            params["frequency"] = frequency
-        if currency is not None:
-            params["currency"] = currency
-        return await self._call("billing.schedule_create", params=params, options=options, context=context)
+        fee_type: aum_percentage|flat|tiered|performance"""
+        _payload: Dict[str, Any] = {}
+        _payload["name"] = name
+        _payload["fee_type"] = fee_type
+        return await self._call("billing.schedule_create", params=_payload, options=options, context=context)
 
     async def schedule_delete(
         self,
@@ -452,9 +468,9 @@ class AsyncBillingAPI(AsyncBaseAPI):
 
         Args:
         id: Schedule ID"""
-        params: Dict[str, Any] = {}
-        params["id"] = id
-        return await self._call("billing.schedule_delete", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["id"] = id
+        return await self._call("billing.schedule_delete", params=_payload, options=options, context=context)
 
     async def schedule_get(
         self,
@@ -469,12 +485,12 @@ class AsyncBillingAPI(AsyncBaseAPI):
         Args:
         id: Schedule ID
         name: Schedule name"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if id is not None:
-            params["id"] = id
+            _payload["id"] = id
         if name is not None:
-            params["name"] = name
-        return await self._call("billing.schedule_get", params=params, options=options, context=context)
+            _payload["name"] = name
+        return await self._call("billing.schedule_get", params=_payload, options=options, context=context)
 
     async def schedule_list(
         self,
@@ -490,31 +506,27 @@ class AsyncBillingAPI(AsyncBaseAPI):
         Args:
         fee_type: Filter by fee type
         limit: Maximum results"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if fee_type is not None:
-            params["fee_type"] = fee_type
+            _payload["fee_type"] = fee_type
         if limit is not None:
-            params["limit"] = limit
-        return await self._call("billing.schedule_list", params=params, options=options, context=context, response_format=response_format)
+            _payload["limit"] = limit
+        return await self._call("billing.schedule_list", params=_payload, options=options, context=context, response_format=response_format)
 
     async def schedule_update(
         self,
         *,
         id: str,
-        name: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
         """Update fee schedule
 
         Args:
-        id: Schedule ID
-        name: New name"""
-        params: Dict[str, Any] = {}
-        params["id"] = id
-        if name is not None:
-            params["name"] = name
-        return await self._call("billing.schedule_update", params=params, options=options, context=context)
+        id: Schedule ID"""
+        _payload: Dict[str, Any] = {}
+        _payload["id"] = id
+        return await self._call("billing.schedule_update", params=_payload, options=options, context=context)
 
     async def simulate(
         self,
@@ -531,10 +543,10 @@ class AsyncBillingAPI(AsyncBaseAPI):
         Args:
         fee_schedule: Fee schedule
         scenarios: Scenarios to simulate"""
-        params: Dict[str, Any] = {}
-        params["fee_schedule"] = fee_schedule
+        _payload: Dict[str, Any] = {}
+        _payload["fee_schedule"] = fee_schedule
         if scenarios is not None:
-            params["scenarios"] = scenarios
-        return await self._call("billing.simulate", params=params, options=options, context=context)
+            _payload["scenarios"] = scenarios
+        return await self._call("billing.simulate", params=_payload, options=options, context=context)
 
 

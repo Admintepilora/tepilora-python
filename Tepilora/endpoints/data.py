@@ -18,6 +18,7 @@ class DataAPI(BaseAPI):
         self,
         *,
         identifier: str,
+        id: Optional[str] = None,
         fields: Optional[List[Any]] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
@@ -29,11 +30,13 @@ class DataAPI(BaseAPI):
         Args:
         identifier: TepiloraCode or ISIN
         fields: Fields to return"""
-        params: Dict[str, Any] = {}
-        params["identifier"] = identifier
+        _payload: Dict[str, Any] = {}
+        _payload["identifier"] = identifier
+        if id is not None:
+            _payload["id"] = id
         if fields is not None:
-            params["fields"] = fields
-        return self._call("data.security", params=params, options=options, context=context)
+            _payload["fields"] = fields
+        return self._call("data.security", params=_payload, options=options, context=context)
 
 
 
@@ -44,6 +47,7 @@ class AsyncDataAPI(AsyncBaseAPI):
         self,
         *,
         identifier: str,
+        id: Optional[str] = None,
         fields: Optional[List[Any]] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
@@ -55,10 +59,12 @@ class AsyncDataAPI(AsyncBaseAPI):
         Args:
         identifier: TepiloraCode or ISIN
         fields: Fields to return"""
-        params: Dict[str, Any] = {}
-        params["identifier"] = identifier
+        _payload: Dict[str, Any] = {}
+        _payload["identifier"] = identifier
+        if id is not None:
+            _payload["id"] = id
         if fields is not None:
-            params["fields"] = fields
-        return await self._call("data.security", params=params, options=options, context=context)
+            _payload["fields"] = fields
+        return await self._call("data.security", params=_payload, options=options, context=context)
 
 

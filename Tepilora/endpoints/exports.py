@@ -18,6 +18,8 @@ class ExportsAPI(BaseAPI):
         self,
         *,
         source: str,
+        export_format: Optional[str] = None,
+        params: Optional[Dict[str, Any]] = None,
         source_params: Optional[Dict[str, Any]] = None,
         format: Optional[str] = "json",
         filename: Optional[str] = None,
@@ -37,19 +39,23 @@ class ExportsAPI(BaseAPI):
         filename: Output filename
         include_metadata: Include metadata
         compression: Compression (for parquet)"""
-        params: Dict[str, Any] = {}
-        params["source"] = source
+        _payload: Dict[str, Any] = {}
+        _payload["source"] = source
+        if export_format is not None:
+            _payload["export_format"] = export_format
+        if params is not None:
+            _payload["params"] = params
         if source_params is not None:
-            params["source_params"] = source_params
+            _payload["source_params"] = source_params
         if format is not None:
-            params["format"] = format
+            _payload["format"] = format
         if filename is not None:
-            params["filename"] = filename
+            _payload["filename"] = filename
         if include_metadata is not None:
-            params["include_metadata"] = include_metadata
+            _payload["include_metadata"] = include_metadata
         if compression is not None:
-            params["compression"] = compression
-        return self._call("exports.export", params=params, options=options, context=context)
+            _payload["compression"] = compression
+        return self._call("exports.export", params=_payload, options=options, context=context)
 
     def formats(
         self,
@@ -60,8 +66,8 @@ class ExportsAPI(BaseAPI):
         """List formats
 
         List supported export formats."""
-        params: Dict[str, Any] = {}
-        return self._call("exports.formats", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        return self._call("exports.formats", params=_payload, options=options, context=context)
 
 
 
@@ -72,6 +78,8 @@ class AsyncExportsAPI(AsyncBaseAPI):
         self,
         *,
         source: str,
+        export_format: Optional[str] = None,
+        params: Optional[Dict[str, Any]] = None,
         source_params: Optional[Dict[str, Any]] = None,
         format: Optional[str] = "json",
         filename: Optional[str] = None,
@@ -91,19 +99,23 @@ class AsyncExportsAPI(AsyncBaseAPI):
         filename: Output filename
         include_metadata: Include metadata
         compression: Compression (for parquet)"""
-        params: Dict[str, Any] = {}
-        params["source"] = source
+        _payload: Dict[str, Any] = {}
+        _payload["source"] = source
+        if export_format is not None:
+            _payload["export_format"] = export_format
+        if params is not None:
+            _payload["params"] = params
         if source_params is not None:
-            params["source_params"] = source_params
+            _payload["source_params"] = source_params
         if format is not None:
-            params["format"] = format
+            _payload["format"] = format
         if filename is not None:
-            params["filename"] = filename
+            _payload["filename"] = filename
         if include_metadata is not None:
-            params["include_metadata"] = include_metadata
+            _payload["include_metadata"] = include_metadata
         if compression is not None:
-            params["compression"] = compression
-        return await self._call("exports.export", params=params, options=options, context=context)
+            _payload["compression"] = compression
+        return await self._call("exports.export", params=_payload, options=options, context=context)
 
     async def formats(
         self,
@@ -114,7 +126,7 @@ class AsyncExportsAPI(AsyncBaseAPI):
         """List formats
 
         List supported export formats."""
-        params: Dict[str, Any] = {}
-        return await self._call("exports.formats", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        return await self._call("exports.formats", params=_payload, options=options, context=context)
 
 

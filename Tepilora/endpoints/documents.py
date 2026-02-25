@@ -23,8 +23,8 @@ class DocumentsAPI(BaseAPI):
         """Get capabilities
 
         Get document processing capabilities."""
-        params: Dict[str, Any] = {}
-        return self._call("documents.capabilities", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        return self._call("documents.capabilities", params=_payload, options=options, context=context)
 
     def classify(
         self,
@@ -39,9 +39,9 @@ class DocumentsAPI(BaseAPI):
 
         Args:
         file_path: File path"""
-        params: Dict[str, Any] = {}
-        params["file_path"] = file_path
-        return self._call("documents.classify", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["file_path"] = file_path
+        return self._call("documents.classify", params=_payload, options=options, context=context)
 
     def parse(
         self,
@@ -64,17 +64,17 @@ class DocumentsAPI(BaseAPI):
         extraction_method: Extraction method
         use_ocr_fallback: Use OCR fallback
         include_raw_text: Include raw text in response"""
-        params: Dict[str, Any] = {}
-        params["file_path"] = file_path
+        _payload: Dict[str, Any] = {}
+        _payload["file_path"] = file_path
         if document_type is not None:
-            params["document_type"] = document_type
+            _payload["document_type"] = document_type
         if extraction_method is not None:
-            params["extraction_method"] = extraction_method
+            _payload["extraction_method"] = extraction_method
         if use_ocr_fallback is not None:
-            params["use_ocr_fallback"] = use_ocr_fallback
+            _payload["use_ocr_fallback"] = use_ocr_fallback
         if include_raw_text is not None:
-            params["include_raw_text"] = include_raw_text
-        return self._call("documents.parse", params=params, options=options, context=context)
+            _payload["include_raw_text"] = include_raw_text
+        return self._call("documents.parse", params=_payload, options=options, context=context)
 
     def types(
         self,
@@ -85,8 +85,8 @@ class DocumentsAPI(BaseAPI):
         """List document types
 
         List supported document types."""
-        params: Dict[str, Any] = {}
-        return self._call("documents.types", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        return self._call("documents.types", params=_payload, options=options, context=context)
 
 
 
@@ -102,8 +102,8 @@ class AsyncDocumentsAPI(AsyncBaseAPI):
         """Get capabilities
 
         Get document processing capabilities."""
-        params: Dict[str, Any] = {}
-        return await self._call("documents.capabilities", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        return await self._call("documents.capabilities", params=_payload, options=options, context=context)
 
     async def classify(
         self,
@@ -118,9 +118,9 @@ class AsyncDocumentsAPI(AsyncBaseAPI):
 
         Args:
         file_path: File path"""
-        params: Dict[str, Any] = {}
-        params["file_path"] = file_path
-        return await self._call("documents.classify", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["file_path"] = file_path
+        return await self._call("documents.classify", params=_payload, options=options, context=context)
 
     async def parse(
         self,
@@ -143,17 +143,17 @@ class AsyncDocumentsAPI(AsyncBaseAPI):
         extraction_method: Extraction method
         use_ocr_fallback: Use OCR fallback
         include_raw_text: Include raw text in response"""
-        params: Dict[str, Any] = {}
-        params["file_path"] = file_path
+        _payload: Dict[str, Any] = {}
+        _payload["file_path"] = file_path
         if document_type is not None:
-            params["document_type"] = document_type
+            _payload["document_type"] = document_type
         if extraction_method is not None:
-            params["extraction_method"] = extraction_method
+            _payload["extraction_method"] = extraction_method
         if use_ocr_fallback is not None:
-            params["use_ocr_fallback"] = use_ocr_fallback
+            _payload["use_ocr_fallback"] = use_ocr_fallback
         if include_raw_text is not None:
-            params["include_raw_text"] = include_raw_text
-        return await self._call("documents.parse", params=params, options=options, context=context)
+            _payload["include_raw_text"] = include_raw_text
+        return await self._call("documents.parse", params=_payload, options=options, context=context)
 
     async def types(
         self,
@@ -164,7 +164,7 @@ class AsyncDocumentsAPI(AsyncBaseAPI):
         """List document types
 
         List supported document types."""
-        params: Dict[str, Any] = {}
-        return await self._call("documents.types", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        return await self._call("documents.types", params=_payload, options=options, context=context)
 
 

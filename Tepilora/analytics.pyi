@@ -93,10 +93,15 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -106,11 +111,16 @@ class AnalyticsAPI:
         """Annualized returns
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -119,10 +129,16 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -132,11 +148,17 @@ class AnalyticsAPI:
         """Annualized volatility
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -145,10 +167,16 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -158,11 +186,17 @@ class AnalyticsAPI:
         """Average drawdown
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -171,10 +205,14 @@ class AnalyticsAPI:
         self,
         *,
         operations: List[Any],
+        currency: Optional[str] = None,
         identifiers: Optional[Union[str, List[str]]] = None,
         prices: Optional[Dict[str, Any]] = None,
+        prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        total_return: Optional[str] = None,
+        TR: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -185,10 +223,14 @@ class AnalyticsAPI:
 
         Args:
             operations: List of operations [{function, params}]
+            currency: 
             identifiers: List of TepiloraCodes
             prices: Shared prices data
+            prices_file: 
             start_date: Start date (YYYY-MM-DD)
             end_date: End date (YYYY-MM-DD)
+            total_return: 
+            TR: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -197,10 +239,17 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        n_periods: Optional[int] = 20,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -210,11 +259,18 @@ class AnalyticsAPI:
         """Best period return
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            n_periods: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -223,10 +279,19 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        rf: Optional[float] = 0.0,
+        rf_frequency: Optional[str] = "annual",
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -236,11 +301,20 @@ class AnalyticsAPI:
         """Burke ratio
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            rf: 
+            rf_frequency: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -249,10 +323,18 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -262,11 +344,19 @@ class AnalyticsAPI:
         """Up/down capture ratio
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            y: 
+            x: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -275,10 +365,16 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        base: Optional[float] = 100.0,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -288,11 +384,17 @@ class AnalyticsAPI:
         """Cumulative performance
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            base: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -301,10 +403,18 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -314,11 +424,19 @@ class AnalyticsAPI:
         """Downside capture
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            y: 
+            x: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -327,10 +445,18 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        MAR: Optional[float] = 0.0,
+        Annualized: Optional[Any] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -340,11 +466,19 @@ class AnalyticsAPI:
         """Downside deviation
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            MAR: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -353,10 +487,15 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -366,11 +505,16 @@ class AnalyticsAPI:
         """Drawdown series
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -379,10 +523,15 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -392,11 +541,16 @@ class AnalyticsAPI:
         """Drawdown duration
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -405,10 +559,19 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        p: Optional[int] = 1,
+        o: Optional[int] = 1,
+        q: Optional[int] = 1,
+        Annualized: Optional[Any] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -418,11 +581,20 @@ class AnalyticsAPI:
         """EGARCH volatility
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            p: 
+            o: 
+            q: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -433,8 +605,13 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        model: Optional[str] = "custom",
+        use_excess_returns: Optional[bool] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -444,11 +621,16 @@ class AnalyticsAPI:
         """Factor attribution
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            prices: 
+            prices_file: 
+            factors: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            model: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -459,9 +641,14 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        model: Optional[str] = "FF3",
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        model: Optional[str] = "custom",
+        annualize_alpha: Optional[bool] = True,
+        use_excess_returns: Optional[bool] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -471,12 +658,17 @@ class AnalyticsAPI:
         """Factor regression (FF3/FF5)
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            model: FF3|FF5|Carhart
+            identifiers: 
+            prices: 
+            prices_file: 
+            factors: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            model: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -485,10 +677,16 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -498,11 +696,17 @@ class AnalyticsAPI:
         """Gain/loss ratio
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -511,11 +715,18 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        horizon: Optional[int] = 10,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        horizon: Optional[int] = 5,
+        p: Optional[int] = 1,
+        q: Optional[int] = 1,
+        Annualized: Optional[Any] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -525,12 +736,19 @@ class AnalyticsAPI:
         """GARCH forecast
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            horizon: Forecast horizon
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            horizon: 
+            p: 
+            q: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -539,10 +757,18 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        p: Optional[int] = 1,
+        q: Optional[int] = 1,
+        Annualized: Optional[Any] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -552,11 +778,19 @@ class AnalyticsAPI:
         """GARCH volatility
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            p: 
+            q: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -565,10 +799,16 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -578,11 +818,17 @@ class AnalyticsAPI:
         """Hurst exponent
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -627,10 +873,15 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -640,11 +891,16 @@ class AnalyticsAPI:
         """Log returns
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -653,10 +909,16 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -666,11 +928,17 @@ class AnalyticsAPI:
         """Maximum drawdown
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -679,11 +947,16 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 21,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 20,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -693,12 +966,17 @@ class AnalyticsAPI:
         """Momentum indicator
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Lookback period
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -707,10 +985,15 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -720,11 +1003,16 @@ class AnalyticsAPI:
         """Monthly returns
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -733,10 +1021,16 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -746,11 +1040,17 @@ class AnalyticsAPI:
         """Monthly volatility
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -759,10 +1059,16 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         threshold: Optional[float] = 0.0,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
@@ -773,12 +1079,18 @@ class AnalyticsAPI:
         """Omega ratio
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            threshold: Return threshold
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            threshold: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -787,10 +1099,16 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -800,11 +1118,17 @@ class AnalyticsAPI:
         """Pain index
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -813,10 +1137,16 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -826,11 +1156,17 @@ class AnalyticsAPI:
         """Profit factor
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -839,11 +1175,16 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 21,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 20,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -853,12 +1194,17 @@ class AnalyticsAPI:
         """Rate of change
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Lookback period
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -867,10 +1213,18 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 20,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -880,11 +1234,19 @@ class AnalyticsAPI:
         """Relative strength
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            y: 
+            x: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -893,10 +1255,15 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -906,11 +1273,16 @@ class AnalyticsAPI:
         """Simple returns
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -919,12 +1291,21 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
+        Annualized: Optional[Any] = True,
         rf: Optional[float] = 0.0,
+        rf_frequency: Optional[str] = "annual",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -934,13 +1315,22 @@ class AnalyticsAPI:
         """Rolling alpha
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
-            rf: Risk-free rate
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            y: 
+            x: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -949,11 +1339,16 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 63,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         lag: Optional[int] = 1,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
@@ -964,13 +1359,18 @@ class AnalyticsAPI:
         """Rolling autocorrelation
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
-            lag: Autocorrelation lag
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            lag: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -979,11 +1379,18 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -993,12 +1400,19 @@ class AnalyticsAPI:
         """Rolling beta
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            y: 
+            x: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1007,11 +1421,18 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1021,12 +1442,19 @@ class AnalyticsAPI:
         """Rolling beta timing
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            y: 
+            x: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1035,11 +1463,16 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1049,12 +1482,17 @@ class AnalyticsAPI:
         """Rolling CAGR
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1063,11 +1501,17 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1077,12 +1521,18 @@ class AnalyticsAPI:
         """Rolling Calmar ratio
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1091,11 +1541,17 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 63,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        min_samples: Optional[int] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1105,12 +1561,18 @@ class AnalyticsAPI:
         """Rolling correlation
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            min_samples: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1119,11 +1581,18 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 63,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        min_samples: Optional[int] = None,
+        Annualized: Optional[bool] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1133,12 +1602,19 @@ class AnalyticsAPI:
         """Rolling covariance
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            min_samples: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1147,11 +1623,16 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         confidence: Optional[float] = 0.95,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
@@ -1162,13 +1643,18 @@ class AnalyticsAPI:
         """Rolling CVaR (Expected Shortfall)
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
-            confidence: Confidence level
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            confidence: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1177,11 +1663,18 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1191,12 +1684,19 @@ class AnalyticsAPI:
         """Rolling downside beta
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            y: 
+            x: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1207,10 +1707,16 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        model: Optional[str] = "FF3",
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        model: Optional[str] = "custom",
+        period: Optional[int] = 260,
+        Obs: Optional[Any] = "",
+        annualize_alpha: Optional[bool] = True,
+        use_excess_returns: Optional[bool] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1220,13 +1726,19 @@ class AnalyticsAPI:
         """Rolling factor regression
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            model: FF3|FF5|Carhart
-            period: Rolling window
+            identifiers: 
+            prices: 
+            prices_file: 
+            factors: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            model: 
+            period: 
+            Obs: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1235,11 +1747,19 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        p: Optional[int] = 1,
+        q: Optional[int] = 1,
+        Annualized: Optional[Any] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1249,12 +1769,20 @@ class AnalyticsAPI:
         """Rolling GARCH
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            p: 
+            q: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1263,11 +1791,19 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1277,12 +1813,20 @@ class AnalyticsAPI:
         """Rolling information ratio
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            y: 
+            x: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1291,11 +1835,17 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 63,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        excess: Optional[bool] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1305,12 +1855,18 @@ class AnalyticsAPI:
         """Rolling kurtosis
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            excess: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1319,11 +1875,18 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1333,12 +1896,19 @@ class AnalyticsAPI:
         """Rolling R-squared
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            y: 
+            x: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1347,11 +1917,21 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
+        Annualized: Optional[Any] = True,
+        rf: Optional[float] = 0.0,
+        rf_frequency: Optional[str] = "annual",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1361,12 +1941,22 @@ class AnalyticsAPI:
         """Rolling regression
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            y: 
+            x: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1375,11 +1965,18 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1389,12 +1986,19 @@ class AnalyticsAPI:
         """Rolling residuals
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            y: 
+            x: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1403,12 +2007,19 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         rf: Optional[float] = 0.0,
+        rf_frequency: Optional[str] = "annual",
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1418,13 +2029,20 @@ class AnalyticsAPI:
         """Rolling Sharpe ratio
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
-            rf: Risk-free rate
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            rf: 
+            rf_frequency: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1433,11 +2051,16 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 63,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1447,12 +2070,17 @@ class AnalyticsAPI:
         """Rolling skewness
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1461,12 +2089,18 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
-        rf: Optional[float] = 0.0,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        MAR: Optional[float] = 0.0,
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1476,13 +2110,19 @@ class AnalyticsAPI:
         """Rolling Sortino ratio
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
-            rf: Risk-free rate
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            MAR: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1491,12 +2131,21 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         rf: Optional[float] = 0.0,
+        rf_frequency: Optional[str] = "annual",
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1506,13 +2155,22 @@ class AnalyticsAPI:
         """Rolling Treynor ratio
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
-            rf: Risk-free rate
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            y: 
+            x: 
+            rf: 
+            rf_frequency: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1521,11 +2179,18 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1535,12 +2200,19 @@ class AnalyticsAPI:
         """Rolling upside beta
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            y: 
+            x: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1549,12 +2221,18 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         confidence: Optional[float] = 0.95,
+        method: Optional[str] = "historical",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1564,13 +2242,19 @@ class AnalyticsAPI:
         """Rolling Value at Risk
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
-            confidence: Confidence level
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            confidence: 
+            method: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1579,11 +2263,17 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 21,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1593,12 +2283,18 @@ class AnalyticsAPI:
         """Rolling variance
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1607,11 +2303,17 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 21,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1621,12 +2323,18 @@ class AnalyticsAPI:
         """Rolling volatility
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1635,10 +2343,18 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        threshold: Optional[float] = 0.0,
+        Annualized: Optional[Any] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1648,11 +2364,19 @@ class AnalyticsAPI:
         """Semi-deviation
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            threshold: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1661,10 +2385,18 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        threshold: Optional[float] = 0.0,
+        Annualized: Optional[Any] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1674,11 +2406,19 @@ class AnalyticsAPI:
         """Semi-variance
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            threshold: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1687,10 +2427,19 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        rf: Optional[float] = 0.0,
+        rf_frequency: Optional[str] = "annual",
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1700,11 +2449,20 @@ class AnalyticsAPI:
         """Sterling ratio
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            rf: 
+            rf_frequency: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1713,10 +2471,17 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        percentile: Optional[float] = 5.0,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1726,11 +2491,18 @@ class AnalyticsAPI:
         """Tail ratio
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            percentile: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1739,10 +2511,19 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1752,11 +2533,20 @@ class AnalyticsAPI:
         """Tracking error
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            y: 
+            x: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1765,10 +2555,18 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1778,11 +2576,19 @@ class AnalyticsAPI:
         """Tracking error volatility
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            y: 
+            x: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1791,10 +2597,16 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1804,11 +2616,17 @@ class AnalyticsAPI:
         """Ulcer index
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1817,10 +2635,18 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1830,11 +2656,19 @@ class AnalyticsAPI:
         """Upside capture
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            y: 
+            x: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1843,10 +2677,18 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        threshold: Optional[float] = 0.0,
+        Annualized: Optional[Any] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1856,11 +2698,19 @@ class AnalyticsAPI:
         """Upside deviation
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            threshold: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1869,10 +2719,16 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1882,11 +2738,17 @@ class AnalyticsAPI:
         """Win rate (% positive periods)
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1895,10 +2757,17 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        n_periods: Optional[int] = 20,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1908,11 +2777,18 @@ class AnalyticsAPI:
         """Worst period return
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            n_periods: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1935,10 +2811,15 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1948,11 +2829,16 @@ class AsyncAnalyticsAPI:
         """Annualized returns
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1961,10 +2847,16 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1974,11 +2866,17 @@ class AsyncAnalyticsAPI:
         """Annualized volatility
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1987,10 +2885,16 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2000,11 +2904,17 @@ class AsyncAnalyticsAPI:
         """Average drawdown
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2013,10 +2923,14 @@ class AsyncAnalyticsAPI:
         self,
         *,
         operations: List[Any],
+        currency: Optional[str] = None,
         identifiers: Optional[Union[str, List[str]]] = None,
         prices: Optional[Dict[str, Any]] = None,
+        prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        total_return: Optional[str] = None,
+        TR: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2027,10 +2941,14 @@ class AsyncAnalyticsAPI:
 
         Args:
             operations: List of operations [{function, params}]
+            currency: 
             identifiers: List of TepiloraCodes
             prices: Shared prices data
+            prices_file: 
             start_date: Start date (YYYY-MM-DD)
             end_date: End date (YYYY-MM-DD)
+            total_return: 
+            TR: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2039,10 +2957,17 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        n_periods: Optional[int] = 20,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2052,11 +2977,18 @@ class AsyncAnalyticsAPI:
         """Best period return
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            n_periods: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2065,10 +2997,19 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        rf: Optional[float] = 0.0,
+        rf_frequency: Optional[str] = "annual",
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2078,11 +3019,20 @@ class AsyncAnalyticsAPI:
         """Burke ratio
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            rf: 
+            rf_frequency: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2091,10 +3041,18 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2104,11 +3062,19 @@ class AsyncAnalyticsAPI:
         """Up/down capture ratio
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            y: 
+            x: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2117,10 +3083,16 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        base: Optional[float] = 100.0,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2130,11 +3102,17 @@ class AsyncAnalyticsAPI:
         """Cumulative performance
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            base: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2143,10 +3121,18 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2156,11 +3142,19 @@ class AsyncAnalyticsAPI:
         """Downside capture
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            y: 
+            x: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2169,10 +3163,18 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        MAR: Optional[float] = 0.0,
+        Annualized: Optional[Any] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2182,11 +3184,19 @@ class AsyncAnalyticsAPI:
         """Downside deviation
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            MAR: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2195,10 +3205,15 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2208,11 +3223,16 @@ class AsyncAnalyticsAPI:
         """Drawdown series
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2221,10 +3241,15 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2234,11 +3259,16 @@ class AsyncAnalyticsAPI:
         """Drawdown duration
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2247,10 +3277,19 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        p: Optional[int] = 1,
+        o: Optional[int] = 1,
+        q: Optional[int] = 1,
+        Annualized: Optional[Any] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2260,11 +3299,20 @@ class AsyncAnalyticsAPI:
         """EGARCH volatility
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            p: 
+            o: 
+            q: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2275,8 +3323,13 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        model: Optional[str] = "custom",
+        use_excess_returns: Optional[bool] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2286,11 +3339,16 @@ class AsyncAnalyticsAPI:
         """Factor attribution
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            prices: 
+            prices_file: 
+            factors: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            model: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2301,9 +3359,14 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        model: Optional[str] = "FF3",
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        model: Optional[str] = "custom",
+        annualize_alpha: Optional[bool] = True,
+        use_excess_returns: Optional[bool] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2313,12 +3376,17 @@ class AsyncAnalyticsAPI:
         """Factor regression (FF3/FF5)
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            model: FF3|FF5|Carhart
+            identifiers: 
+            prices: 
+            prices_file: 
+            factors: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            model: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2327,10 +3395,16 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2340,11 +3414,17 @@ class AsyncAnalyticsAPI:
         """Gain/loss ratio
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2353,11 +3433,18 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        horizon: Optional[int] = 10,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        horizon: Optional[int] = 5,
+        p: Optional[int] = 1,
+        q: Optional[int] = 1,
+        Annualized: Optional[Any] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2367,12 +3454,19 @@ class AsyncAnalyticsAPI:
         """GARCH forecast
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            horizon: Forecast horizon
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            horizon: 
+            p: 
+            q: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2381,10 +3475,18 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        p: Optional[int] = 1,
+        q: Optional[int] = 1,
+        Annualized: Optional[Any] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2394,11 +3496,19 @@ class AsyncAnalyticsAPI:
         """GARCH volatility
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            p: 
+            q: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2407,10 +3517,16 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2420,11 +3536,17 @@ class AsyncAnalyticsAPI:
         """Hurst exponent
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2469,10 +3591,15 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2482,11 +3609,16 @@ class AsyncAnalyticsAPI:
         """Log returns
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2495,10 +3627,16 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2508,11 +3646,17 @@ class AsyncAnalyticsAPI:
         """Maximum drawdown
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2521,11 +3665,16 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 21,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 20,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2535,12 +3684,17 @@ class AsyncAnalyticsAPI:
         """Momentum indicator
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Lookback period
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2549,10 +3703,15 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2562,11 +3721,16 @@ class AsyncAnalyticsAPI:
         """Monthly returns
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2575,10 +3739,16 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2588,11 +3758,17 @@ class AsyncAnalyticsAPI:
         """Monthly volatility
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2601,10 +3777,16 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         threshold: Optional[float] = 0.0,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
@@ -2615,12 +3797,18 @@ class AsyncAnalyticsAPI:
         """Omega ratio
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            threshold: Return threshold
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            threshold: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2629,10 +3817,16 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2642,11 +3836,17 @@ class AsyncAnalyticsAPI:
         """Pain index
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2655,10 +3855,16 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2668,11 +3874,17 @@ class AsyncAnalyticsAPI:
         """Profit factor
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2681,11 +3893,16 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 21,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 20,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2695,12 +3912,17 @@ class AsyncAnalyticsAPI:
         """Rate of change
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Lookback period
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2709,10 +3931,18 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 20,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2722,11 +3952,19 @@ class AsyncAnalyticsAPI:
         """Relative strength
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            y: 
+            x: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2735,10 +3973,15 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2748,11 +3991,16 @@ class AsyncAnalyticsAPI:
         """Simple returns
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2761,12 +4009,21 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
+        Annualized: Optional[Any] = True,
         rf: Optional[float] = 0.0,
+        rf_frequency: Optional[str] = "annual",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2776,13 +4033,22 @@ class AsyncAnalyticsAPI:
         """Rolling alpha
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
-            rf: Risk-free rate
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            y: 
+            x: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2791,11 +4057,16 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 63,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         lag: Optional[int] = 1,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
@@ -2806,13 +4077,18 @@ class AsyncAnalyticsAPI:
         """Rolling autocorrelation
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
-            lag: Autocorrelation lag
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            lag: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2821,11 +4097,18 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2835,12 +4118,19 @@ class AsyncAnalyticsAPI:
         """Rolling beta
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            y: 
+            x: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2849,11 +4139,18 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2863,12 +4160,19 @@ class AsyncAnalyticsAPI:
         """Rolling beta timing
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            y: 
+            x: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2877,11 +4181,16 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2891,12 +4200,17 @@ class AsyncAnalyticsAPI:
         """Rolling CAGR
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2905,11 +4219,17 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2919,12 +4239,18 @@ class AsyncAnalyticsAPI:
         """Rolling Calmar ratio
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2933,11 +4259,17 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 63,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        min_samples: Optional[int] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2947,12 +4279,18 @@ class AsyncAnalyticsAPI:
         """Rolling correlation
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            min_samples: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2961,11 +4299,18 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 63,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        min_samples: Optional[int] = None,
+        Annualized: Optional[bool] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2975,12 +4320,19 @@ class AsyncAnalyticsAPI:
         """Rolling covariance
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            min_samples: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2989,11 +4341,16 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         confidence: Optional[float] = 0.95,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
@@ -3004,13 +4361,18 @@ class AsyncAnalyticsAPI:
         """Rolling CVaR (Expected Shortfall)
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
-            confidence: Confidence level
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            confidence: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3019,11 +4381,18 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3033,12 +4402,19 @@ class AsyncAnalyticsAPI:
         """Rolling downside beta
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            y: 
+            x: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3049,10 +4425,16 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        model: Optional[str] = "FF3",
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        model: Optional[str] = "custom",
+        period: Optional[int] = 260,
+        Obs: Optional[Any] = "",
+        annualize_alpha: Optional[bool] = True,
+        use_excess_returns: Optional[bool] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3062,13 +4444,19 @@ class AsyncAnalyticsAPI:
         """Rolling factor regression
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            model: FF3|FF5|Carhart
-            period: Rolling window
+            identifiers: 
+            prices: 
+            prices_file: 
+            factors: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            model: 
+            period: 
+            Obs: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3077,11 +4465,19 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        p: Optional[int] = 1,
+        q: Optional[int] = 1,
+        Annualized: Optional[Any] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3091,12 +4487,20 @@ class AsyncAnalyticsAPI:
         """Rolling GARCH
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            p: 
+            q: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3105,11 +4509,19 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3119,12 +4531,20 @@ class AsyncAnalyticsAPI:
         """Rolling information ratio
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            y: 
+            x: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3133,11 +4553,17 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 63,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        excess: Optional[bool] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3147,12 +4573,18 @@ class AsyncAnalyticsAPI:
         """Rolling kurtosis
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            excess: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3161,11 +4593,18 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3175,12 +4614,19 @@ class AsyncAnalyticsAPI:
         """Rolling R-squared
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            y: 
+            x: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3189,11 +4635,21 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
+        Annualized: Optional[Any] = True,
+        rf: Optional[float] = 0.0,
+        rf_frequency: Optional[str] = "annual",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3203,12 +4659,22 @@ class AsyncAnalyticsAPI:
         """Rolling regression
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            y: 
+            x: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3217,11 +4683,18 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3231,12 +4704,19 @@ class AsyncAnalyticsAPI:
         """Rolling residuals
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            y: 
+            x: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3245,12 +4725,19 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         rf: Optional[float] = 0.0,
+        rf_frequency: Optional[str] = "annual",
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3260,13 +4747,20 @@ class AsyncAnalyticsAPI:
         """Rolling Sharpe ratio
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
-            rf: Risk-free rate
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            rf: 
+            rf_frequency: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3275,11 +4769,16 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 63,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3289,12 +4788,17 @@ class AsyncAnalyticsAPI:
         """Rolling skewness
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3303,12 +4807,18 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
-        rf: Optional[float] = 0.0,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        MAR: Optional[float] = 0.0,
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3318,13 +4828,19 @@ class AsyncAnalyticsAPI:
         """Rolling Sortino ratio
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
-            rf: Risk-free rate
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            MAR: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3333,12 +4849,21 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         rf: Optional[float] = 0.0,
+        rf_frequency: Optional[str] = "annual",
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3348,13 +4873,22 @@ class AsyncAnalyticsAPI:
         """Rolling Treynor ratio
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
-            rf: Risk-free rate
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            y: 
+            x: 
+            rf: 
+            rf_frequency: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3363,11 +4897,18 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3377,12 +4918,19 @@ class AsyncAnalyticsAPI:
         """Rolling upside beta
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            y: 
+            x: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3391,12 +4939,18 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         confidence: Optional[float] = 0.95,
+        method: Optional[str] = "historical",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3406,13 +4960,19 @@ class AsyncAnalyticsAPI:
         """Rolling Value at Risk
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
-            confidence: Confidence level
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            confidence: 
+            method: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3421,11 +4981,17 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 21,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3435,12 +5001,18 @@ class AsyncAnalyticsAPI:
         """Rolling variance
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3449,11 +5021,17 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 21,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3463,12 +5041,18 @@ class AsyncAnalyticsAPI:
         """Rolling volatility
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
-            period: Rolling window
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3477,10 +5061,18 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        threshold: Optional[float] = 0.0,
+        Annualized: Optional[Any] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3490,11 +5082,19 @@ class AsyncAnalyticsAPI:
         """Semi-deviation
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            threshold: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3503,10 +5103,18 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        threshold: Optional[float] = 0.0,
+        Annualized: Optional[Any] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3516,11 +5124,19 @@ class AsyncAnalyticsAPI:
         """Semi-variance
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            threshold: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3529,10 +5145,19 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        rf: Optional[float] = 0.0,
+        rf_frequency: Optional[str] = "annual",
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3542,11 +5167,20 @@ class AsyncAnalyticsAPI:
         """Sterling ratio
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            rf: 
+            rf_frequency: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3555,10 +5189,17 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        percentile: Optional[float] = 5.0,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3568,11 +5209,18 @@ class AsyncAnalyticsAPI:
         """Tail ratio
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            percentile: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3581,10 +5229,19 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3594,11 +5251,20 @@ class AsyncAnalyticsAPI:
         """Tracking error
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            y: 
+            x: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3607,10 +5273,18 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3620,11 +5294,19 @@ class AsyncAnalyticsAPI:
         """Tracking error volatility
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            y: 
+            x: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3633,10 +5315,16 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3646,11 +5334,17 @@ class AsyncAnalyticsAPI:
         """Ulcer index
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3659,10 +5353,18 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3672,11 +5374,19 @@ class AsyncAnalyticsAPI:
         """Upside capture
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            y: 
+            x: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3685,10 +5395,18 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        threshold: Optional[float] = 0.0,
+        Annualized: Optional[Any] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3698,11 +5416,19 @@ class AsyncAnalyticsAPI:
         """Upside deviation
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            threshold: 
+            Annualized: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3711,10 +5437,16 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3724,11 +5456,17 @@ class AsyncAnalyticsAPI:
         """Win rate (% positive periods)
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3737,10 +5475,17 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        n_periods: Optional[int] = 20,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3750,11 +5495,18 @@ class AsyncAnalyticsAPI:
         """Worst period return
 
         Args:
-            identifiers: List of TepiloraCodes
-            prices: User-provided prices (DataFrame or dict)
-            prices_file: Path to prices file
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            n_periods: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """

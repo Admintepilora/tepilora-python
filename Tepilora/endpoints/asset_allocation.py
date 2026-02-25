@@ -36,17 +36,17 @@ class AssetAllocationAPI(BaseAPI):
         end_date: End date (YYYY-MM-DD)
         rebalance_frequency: monthly|quarterly|annual|weekly
         return_method: twr|mwr|modified_dietz"""
-        params: Dict[str, Any] = {}
-        params["model"] = model
+        _payload: Dict[str, Any] = {}
+        _payload["model"] = model
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
+            _payload["end_date"] = end_date
         if rebalance_frequency is not None:
-            params["rebalance_frequency"] = rebalance_frequency
+            _payload["rebalance_frequency"] = rebalance_frequency
         if return_method is not None:
-            params["return_method"] = return_method
-        return self._call("asset_allocation.backtest", params=params, options=options, context=context, response_format=response_format)
+            _payload["return_method"] = return_method
+        return self._call("asset_allocation.backtest", params=_payload, options=options, context=context, response_format=response_format)
 
     def compare(
         self,
@@ -68,15 +68,15 @@ class AssetAllocationAPI(BaseAPI):
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)
         metrics: Metrics to include in comparison"""
-        params: Dict[str, Any] = {}
-        params["models"] = models
+        _payload: Dict[str, Any] = {}
+        _payload["models"] = models
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
+            _payload["end_date"] = end_date
         if metrics is not None:
-            params["metrics"] = metrics
-        return self._call("asset_allocation.compare", params=params, options=options, context=context, response_format=response_format)
+            _payload["metrics"] = metrics
+        return self._call("asset_allocation.compare", params=_payload, options=options, context=context, response_format=response_format)
 
     def decompose(
         self,
@@ -93,11 +93,11 @@ class AssetAllocationAPI(BaseAPI):
         Args:
         portfolio_id: Portfolio ID
         model: Optional model for class mapping"""
-        params: Dict[str, Any] = {}
-        params["portfolio_id"] = portfolio_id
+        _payload: Dict[str, Any] = {}
+        _payload["portfolio_id"] = portfolio_id
         if model is not None:
-            params["model"] = model
-        return self._call("asset_allocation.decompose", params=params, options=options, context=context)
+            _payload["model"] = model
+        return self._call("asset_allocation.decompose", params=_payload, options=options, context=context)
 
     def drift(
         self,
@@ -116,12 +116,12 @@ class AssetAllocationAPI(BaseAPI):
         model: Asset allocation model
         portfolio_id: Portfolio ID
         tolerance: Absolute drift threshold"""
-        params: Dict[str, Any] = {}
-        params["model"] = model
-        params["portfolio_id"] = portfolio_id
+        _payload: Dict[str, Any] = {}
+        _payload["model"] = model
+        _payload["portfolio_id"] = portfolio_id
         if tolerance is not None:
-            params["tolerance"] = tolerance
-        return self._call("asset_allocation.drift", params=params, options=options, context=context)
+            _payload["tolerance"] = tolerance
+        return self._call("asset_allocation.drift", params=_payload, options=options, context=context)
 
     def frontier(
         self,
@@ -147,19 +147,19 @@ class AssetAllocationAPI(BaseAPI):
         points: Number of frontier points
         cov_method: sample|ledoit_wolf|oas|ewma
         rf: Risk-free rate"""
-        params: Dict[str, Any] = {}
-        params["model"] = model
+        _payload: Dict[str, Any] = {}
+        _payload["model"] = model
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
+            _payload["end_date"] = end_date
         if points is not None:
-            params["points"] = points
+            _payload["points"] = points
         if cov_method is not None:
-            params["cov_method"] = cov_method
+            _payload["cov_method"] = cov_method
         if rf is not None:
-            params["rf"] = rf
-        return self._call("asset_allocation.frontier", params=params, options=options, context=context, response_format=response_format)
+            _payload["rf"] = rf
+        return self._call("asset_allocation.frontier", params=_payload, options=options, context=context, response_format=response_format)
 
     def optimize(
         self,
@@ -186,21 +186,21 @@ class AssetAllocationAPI(BaseAPI):
         target_return: Target return for target_return objective
         rf: Risk-free rate
         cov_method: sample|ledoit_wolf|oas|ewma"""
-        params: Dict[str, Any] = {}
-        params["model"] = model
+        _payload: Dict[str, Any] = {}
+        _payload["model"] = model
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
+            _payload["end_date"] = end_date
         if objective is not None:
-            params["objective"] = objective
+            _payload["objective"] = objective
         if target_return is not None:
-            params["target_return"] = target_return
+            _payload["target_return"] = target_return
         if rf is not None:
-            params["rf"] = rf
+            _payload["rf"] = rf
         if cov_method is not None:
-            params["cov_method"] = cov_method
-        return self._call("asset_allocation.optimize", params=params, options=options, context=context)
+            _payload["cov_method"] = cov_method
+        return self._call("asset_allocation.optimize", params=_payload, options=options, context=context)
 
     def risk_profile(
         self,
@@ -219,13 +219,13 @@ class AssetAllocationAPI(BaseAPI):
         risk_level: MiFID SRI risk level 1-7
         currency: Model currency
         include_proxies: Include suggested proxy TepiloraCodes"""
-        params: Dict[str, Any] = {}
-        params["risk_level"] = risk_level
+        _payload: Dict[str, Any] = {}
+        _payload["risk_level"] = risk_level
         if currency is not None:
-            params["currency"] = currency
+            _payload["currency"] = currency
         if include_proxies is not None:
-            params["include_proxies"] = include_proxies
-        return self._call("asset_allocation.risk_profile", params=params, options=options, context=context)
+            _payload["include_proxies"] = include_proxies
+        return self._call("asset_allocation.risk_profile", params=_payload, options=options, context=context)
 
     def stress(
         self,
@@ -244,13 +244,13 @@ class AssetAllocationAPI(BaseAPI):
         model: Asset allocation model
         scenarios: Scenario names or custom definitions; accepts list and dict custom shocks
         start_date: Start date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = {}
-        params["model"] = model
+        _payload: Dict[str, Any] = {}
+        _payload["model"] = model
         if scenarios is not None:
-            params["scenarios"] = scenarios
+            _payload["scenarios"] = scenarios
         if start_date is not None:
-            params["start_date"] = start_date
-        return self._call("asset_allocation.stress", params=params, options=options, context=context)
+            _payload["start_date"] = start_date
+        return self._call("asset_allocation.stress", params=_payload, options=options, context=context)
 
     def suggest_securities(
         self,
@@ -271,15 +271,15 @@ class AssetAllocationAPI(BaseAPI):
         class_name: Specific class name
         filters: Optional filters for securities.search
         limit: Max suggestions per class"""
-        params: Dict[str, Any] = {}
-        params["model"] = model
+        _payload: Dict[str, Any] = {}
+        _payload["model"] = model
         if class_name is not None:
-            params["class_name"] = class_name
+            _payload["class_name"] = class_name
         if filters is not None:
-            params["filters"] = filters
+            _payload["filters"] = filters
         if limit is not None:
-            params["limit"] = limit
-        return self._call("asset_allocation.suggest_securities", params=params, options=options, context=context)
+            _payload["limit"] = limit
+        return self._call("asset_allocation.suggest_securities", params=_payload, options=options, context=context)
 
     def validate(
         self,
@@ -294,9 +294,9 @@ class AssetAllocationAPI(BaseAPI):
 
         Args:
         model: Asset allocation model"""
-        params: Dict[str, Any] = {}
-        params["model"] = model
-        return self._call("asset_allocation.validate", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["model"] = model
+        return self._call("asset_allocation.validate", params=_payload, options=options, context=context)
 
 
 
@@ -325,17 +325,17 @@ class AsyncAssetAllocationAPI(AsyncBaseAPI):
         end_date: End date (YYYY-MM-DD)
         rebalance_frequency: monthly|quarterly|annual|weekly
         return_method: twr|mwr|modified_dietz"""
-        params: Dict[str, Any] = {}
-        params["model"] = model
+        _payload: Dict[str, Any] = {}
+        _payload["model"] = model
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
+            _payload["end_date"] = end_date
         if rebalance_frequency is not None:
-            params["rebalance_frequency"] = rebalance_frequency
+            _payload["rebalance_frequency"] = rebalance_frequency
         if return_method is not None:
-            params["return_method"] = return_method
-        return await self._call("asset_allocation.backtest", params=params, options=options, context=context, response_format=response_format)
+            _payload["return_method"] = return_method
+        return await self._call("asset_allocation.backtest", params=_payload, options=options, context=context, response_format=response_format)
 
     async def compare(
         self,
@@ -357,15 +357,15 @@ class AsyncAssetAllocationAPI(AsyncBaseAPI):
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)
         metrics: Metrics to include in comparison"""
-        params: Dict[str, Any] = {}
-        params["models"] = models
+        _payload: Dict[str, Any] = {}
+        _payload["models"] = models
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
+            _payload["end_date"] = end_date
         if metrics is not None:
-            params["metrics"] = metrics
-        return await self._call("asset_allocation.compare", params=params, options=options, context=context, response_format=response_format)
+            _payload["metrics"] = metrics
+        return await self._call("asset_allocation.compare", params=_payload, options=options, context=context, response_format=response_format)
 
     async def decompose(
         self,
@@ -382,11 +382,11 @@ class AsyncAssetAllocationAPI(AsyncBaseAPI):
         Args:
         portfolio_id: Portfolio ID
         model: Optional model for class mapping"""
-        params: Dict[str, Any] = {}
-        params["portfolio_id"] = portfolio_id
+        _payload: Dict[str, Any] = {}
+        _payload["portfolio_id"] = portfolio_id
         if model is not None:
-            params["model"] = model
-        return await self._call("asset_allocation.decompose", params=params, options=options, context=context)
+            _payload["model"] = model
+        return await self._call("asset_allocation.decompose", params=_payload, options=options, context=context)
 
     async def drift(
         self,
@@ -405,12 +405,12 @@ class AsyncAssetAllocationAPI(AsyncBaseAPI):
         model: Asset allocation model
         portfolio_id: Portfolio ID
         tolerance: Absolute drift threshold"""
-        params: Dict[str, Any] = {}
-        params["model"] = model
-        params["portfolio_id"] = portfolio_id
+        _payload: Dict[str, Any] = {}
+        _payload["model"] = model
+        _payload["portfolio_id"] = portfolio_id
         if tolerance is not None:
-            params["tolerance"] = tolerance
-        return await self._call("asset_allocation.drift", params=params, options=options, context=context)
+            _payload["tolerance"] = tolerance
+        return await self._call("asset_allocation.drift", params=_payload, options=options, context=context)
 
     async def frontier(
         self,
@@ -436,19 +436,19 @@ class AsyncAssetAllocationAPI(AsyncBaseAPI):
         points: Number of frontier points
         cov_method: sample|ledoit_wolf|oas|ewma
         rf: Risk-free rate"""
-        params: Dict[str, Any] = {}
-        params["model"] = model
+        _payload: Dict[str, Any] = {}
+        _payload["model"] = model
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
+            _payload["end_date"] = end_date
         if points is not None:
-            params["points"] = points
+            _payload["points"] = points
         if cov_method is not None:
-            params["cov_method"] = cov_method
+            _payload["cov_method"] = cov_method
         if rf is not None:
-            params["rf"] = rf
-        return await self._call("asset_allocation.frontier", params=params, options=options, context=context, response_format=response_format)
+            _payload["rf"] = rf
+        return await self._call("asset_allocation.frontier", params=_payload, options=options, context=context, response_format=response_format)
 
     async def optimize(
         self,
@@ -475,21 +475,21 @@ class AsyncAssetAllocationAPI(AsyncBaseAPI):
         target_return: Target return for target_return objective
         rf: Risk-free rate
         cov_method: sample|ledoit_wolf|oas|ewma"""
-        params: Dict[str, Any] = {}
-        params["model"] = model
+        _payload: Dict[str, Any] = {}
+        _payload["model"] = model
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
+            _payload["end_date"] = end_date
         if objective is not None:
-            params["objective"] = objective
+            _payload["objective"] = objective
         if target_return is not None:
-            params["target_return"] = target_return
+            _payload["target_return"] = target_return
         if rf is not None:
-            params["rf"] = rf
+            _payload["rf"] = rf
         if cov_method is not None:
-            params["cov_method"] = cov_method
-        return await self._call("asset_allocation.optimize", params=params, options=options, context=context)
+            _payload["cov_method"] = cov_method
+        return await self._call("asset_allocation.optimize", params=_payload, options=options, context=context)
 
     async def risk_profile(
         self,
@@ -508,13 +508,13 @@ class AsyncAssetAllocationAPI(AsyncBaseAPI):
         risk_level: MiFID SRI risk level 1-7
         currency: Model currency
         include_proxies: Include suggested proxy TepiloraCodes"""
-        params: Dict[str, Any] = {}
-        params["risk_level"] = risk_level
+        _payload: Dict[str, Any] = {}
+        _payload["risk_level"] = risk_level
         if currency is not None:
-            params["currency"] = currency
+            _payload["currency"] = currency
         if include_proxies is not None:
-            params["include_proxies"] = include_proxies
-        return await self._call("asset_allocation.risk_profile", params=params, options=options, context=context)
+            _payload["include_proxies"] = include_proxies
+        return await self._call("asset_allocation.risk_profile", params=_payload, options=options, context=context)
 
     async def stress(
         self,
@@ -533,13 +533,13 @@ class AsyncAssetAllocationAPI(AsyncBaseAPI):
         model: Asset allocation model
         scenarios: Scenario names or custom definitions; accepts list and dict custom shocks
         start_date: Start date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = {}
-        params["model"] = model
+        _payload: Dict[str, Any] = {}
+        _payload["model"] = model
         if scenarios is not None:
-            params["scenarios"] = scenarios
+            _payload["scenarios"] = scenarios
         if start_date is not None:
-            params["start_date"] = start_date
-        return await self._call("asset_allocation.stress", params=params, options=options, context=context)
+            _payload["start_date"] = start_date
+        return await self._call("asset_allocation.stress", params=_payload, options=options, context=context)
 
     async def suggest_securities(
         self,
@@ -560,15 +560,15 @@ class AsyncAssetAllocationAPI(AsyncBaseAPI):
         class_name: Specific class name
         filters: Optional filters for securities.search
         limit: Max suggestions per class"""
-        params: Dict[str, Any] = {}
-        params["model"] = model
+        _payload: Dict[str, Any] = {}
+        _payload["model"] = model
         if class_name is not None:
-            params["class_name"] = class_name
+            _payload["class_name"] = class_name
         if filters is not None:
-            params["filters"] = filters
+            _payload["filters"] = filters
         if limit is not None:
-            params["limit"] = limit
-        return await self._call("asset_allocation.suggest_securities", params=params, options=options, context=context)
+            _payload["limit"] = limit
+        return await self._call("asset_allocation.suggest_securities", params=_payload, options=options, context=context)
 
     async def validate(
         self,
@@ -583,8 +583,8 @@ class AsyncAssetAllocationAPI(AsyncBaseAPI):
 
         Args:
         model: Asset allocation model"""
-        params: Dict[str, Any] = {}
-        params["model"] = model
-        return await self._call("asset_allocation.validate", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["model"] = model
+        return await self._call("asset_allocation.validate", params=_payload, options=options, context=context)
 
 

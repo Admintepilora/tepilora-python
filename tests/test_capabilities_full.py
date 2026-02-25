@@ -2,13 +2,19 @@
 
 from Tepilora import capabilities, get_operation_info, list_namespaces, list_operations
 
+HIDDEN_CATEGORIES = {"audit"}
+
 
 def _schema():
     return capabilities(format="dict")
 
 
 def _operations(schema):
-    return {action: op for action, op in schema["operations"].items() if not op.get("internal")}
+    return {
+        action: op
+        for action, op in schema["operations"].items()
+        if not op.get("internal") and op["category"] not in HIDDEN_CATEGORIES
+    }
 
 
 def _group_by_namespace(ops):
@@ -27,15 +33,25 @@ def test_schema_and_helpers_are_consistent():
     # Validate stats and categories
     stats = schema.get("stats", {})
     namespaces = sorted({op["category"] for op in ops.values()})
-    assert stats.get("total_operations") == len(ops)
-    assert stats.get("categories") == len(namespaces)
-    assert sorted(schema.get("categories", [])) == namespaces
+    hidden_ops = sum(
+        len(schema["by_category"].get(cat, []))
+        for cat in HIDDEN_CATEGORIES
+    )
+    hidden_categories = [
+        cat for cat in HIDDEN_CATEGORIES
+        if schema["by_category"].get(cat)
+    ]
+    assert stats.get("total_operations") == len(ops) + hidden_ops
+    assert stats.get("categories") == len(namespaces) + len(hidden_categories)
+    assert sorted(schema.get("categories", [])) == sorted(namespaces + hidden_categories)
 
     # Validate per-namespace stats
     ops_by_category = stats.get("operations_by_category", {})
     grouped = _group_by_namespace(ops)
     for ns, ns_ops in grouped.items():
         assert ops_by_category.get(ns) == len(ns_ops)
+    for cat in HIDDEN_CATEGORIES:
+        assert ops_by_category.get(cat) == len(schema["by_category"].get(cat, []))
 
     # Helpers match schema
     assert list_namespaces() == namespaces

@@ -6,7 +6,7 @@ Regenerate with: python scripts/generate_sdk.py --category publications
 """
 from __future__ import annotations
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 from ._base import AsyncBaseAPI, BaseAPI
 
@@ -30,11 +30,11 @@ class PublicationsAPI(BaseAPI):
         Args:
         source_news_id: Source news ID
         limit: Maximum results"""
-        params: Dict[str, Any] = {}
-        params["source_news_id"] = source_news_id
+        _payload: Dict[str, Any] = {}
+        _payload["source_news_id"] = source_news_id
         if limit is not None:
-            params["limit"] = limit
-        return self._call("publications.by_source", params=params, options=options, context=context, response_format=response_format)
+            _payload["limit"] = limit
+        return self._call("publications.by_source", params=_payload, options=options, context=context, response_format=response_format)
 
     def details(
         self,
@@ -49,33 +49,35 @@ class PublicationsAPI(BaseAPI):
 
         Args:
         doc_id: Document ID"""
-        params: Dict[str, Any] = {}
-        params["doc_id"] = doc_id
-        return self._call("publications.details", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["doc_id"] = doc_id
+        return self._call("publications.details", params=_payload, options=options, context=context)
 
     def facets(
         self,
         *,
-        filters: Optional[Dict[str, Any]] = None,
+        fields: Optional[List[Any]] = None,
+        limit: Optional[int] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
         """Get publication facets
 
-        Available sources and types.
-
-        Args:
-        filters: Pre-filter"""
-        params: Dict[str, Any] = {}
-        if filters is not None:
-            params["filters"] = filters
-        return self._call("publications.facets", params=params, options=options, context=context)
+        Available sources and types."""
+        _payload: Dict[str, Any] = {}
+        if fields is not None:
+            _payload["fields"] = fields
+        if limit is not None:
+            _payload["limit"] = limit
+        return self._call("publications.facets", params=_payload, options=options, context=context)
 
     def latest(
         self,
         *,
+        language: Optional[str] = None,
         limit: Optional[int] = 20,
-        filters: Optional[Dict[str, Any]] = None,
+        platform: Optional[str] = None,
+        status: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -85,22 +87,26 @@ class PublicationsAPI(BaseAPI):
         Most recent publications.
 
         Args:
-        limit: Maximum results
-        filters: Source/type filters"""
-        params: Dict[str, Any] = {}
+        limit: Maximum results"""
+        _payload: Dict[str, Any] = {}
+        if language is not None:
+            _payload["language"] = language
         if limit is not None:
-            params["limit"] = limit
-        if filters is not None:
-            params["filters"] = filters
-        return self._call("publications.latest", params=params, options=options, context=context, response_format=response_format)
+            _payload["limit"] = limit
+        if platform is not None:
+            _payload["platform"] = platform
+        if status is not None:
+            _payload["status"] = status
+        return self._call("publications.latest", params=_payload, options=options, context=context, response_format=response_format)
 
     def search(
         self,
         *,
         query: str,
+        offset: Optional[int] = None,
+        order: Optional[str] = None,
         limit: Optional[int] = 20,
-        start_date: Optional[str] = None,
-        end_date: Optional[str] = None,
+        sort: Optional[str] = None,
         filters: Optional[Dict[str, Any]] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
@@ -113,20 +119,20 @@ class PublicationsAPI(BaseAPI):
         Args:
         query: Search query
         limit: Maximum results
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
         filters: Source/type filters"""
-        params: Dict[str, Any] = {}
-        params["query"] = query
+        _payload: Dict[str, Any] = {}
+        _payload["query"] = query
+        if offset is not None:
+            _payload["offset"] = offset
+        if order is not None:
+            _payload["order"] = order
         if limit is not None:
-            params["limit"] = limit
-        if start_date is not None:
-            params["start_date"] = start_date
-        if end_date is not None:
-            params["end_date"] = end_date
+            _payload["limit"] = limit
+        if sort is not None:
+            _payload["sort"] = sort
         if filters is not None:
-            params["filters"] = filters
-        return self._call("publications.search", params=params, options=options, context=context, response_format=response_format)
+            _payload["filters"] = filters
+        return self._call("publications.search", params=_payload, options=options, context=context, response_format=response_format)
 
 
 
@@ -149,11 +155,11 @@ class AsyncPublicationsAPI(AsyncBaseAPI):
         Args:
         source_news_id: Source news ID
         limit: Maximum results"""
-        params: Dict[str, Any] = {}
-        params["source_news_id"] = source_news_id
+        _payload: Dict[str, Any] = {}
+        _payload["source_news_id"] = source_news_id
         if limit is not None:
-            params["limit"] = limit
-        return await self._call("publications.by_source", params=params, options=options, context=context, response_format=response_format)
+            _payload["limit"] = limit
+        return await self._call("publications.by_source", params=_payload, options=options, context=context, response_format=response_format)
 
     async def details(
         self,
@@ -168,33 +174,35 @@ class AsyncPublicationsAPI(AsyncBaseAPI):
 
         Args:
         doc_id: Document ID"""
-        params: Dict[str, Any] = {}
-        params["doc_id"] = doc_id
-        return await self._call("publications.details", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["doc_id"] = doc_id
+        return await self._call("publications.details", params=_payload, options=options, context=context)
 
     async def facets(
         self,
         *,
-        filters: Optional[Dict[str, Any]] = None,
+        fields: Optional[List[Any]] = None,
+        limit: Optional[int] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
         """Get publication facets
 
-        Available sources and types.
-
-        Args:
-        filters: Pre-filter"""
-        params: Dict[str, Any] = {}
-        if filters is not None:
-            params["filters"] = filters
-        return await self._call("publications.facets", params=params, options=options, context=context)
+        Available sources and types."""
+        _payload: Dict[str, Any] = {}
+        if fields is not None:
+            _payload["fields"] = fields
+        if limit is not None:
+            _payload["limit"] = limit
+        return await self._call("publications.facets", params=_payload, options=options, context=context)
 
     async def latest(
         self,
         *,
+        language: Optional[str] = None,
         limit: Optional[int] = 20,
-        filters: Optional[Dict[str, Any]] = None,
+        platform: Optional[str] = None,
+        status: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -204,22 +212,26 @@ class AsyncPublicationsAPI(AsyncBaseAPI):
         Most recent publications.
 
         Args:
-        limit: Maximum results
-        filters: Source/type filters"""
-        params: Dict[str, Any] = {}
+        limit: Maximum results"""
+        _payload: Dict[str, Any] = {}
+        if language is not None:
+            _payload["language"] = language
         if limit is not None:
-            params["limit"] = limit
-        if filters is not None:
-            params["filters"] = filters
-        return await self._call("publications.latest", params=params, options=options, context=context, response_format=response_format)
+            _payload["limit"] = limit
+        if platform is not None:
+            _payload["platform"] = platform
+        if status is not None:
+            _payload["status"] = status
+        return await self._call("publications.latest", params=_payload, options=options, context=context, response_format=response_format)
 
     async def search(
         self,
         *,
         query: str,
+        offset: Optional[int] = None,
+        order: Optional[str] = None,
         limit: Optional[int] = 20,
-        start_date: Optional[str] = None,
-        end_date: Optional[str] = None,
+        sort: Optional[str] = None,
         filters: Optional[Dict[str, Any]] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
@@ -232,19 +244,19 @@ class AsyncPublicationsAPI(AsyncBaseAPI):
         Args:
         query: Search query
         limit: Maximum results
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
         filters: Source/type filters"""
-        params: Dict[str, Any] = {}
-        params["query"] = query
+        _payload: Dict[str, Any] = {}
+        _payload["query"] = query
+        if offset is not None:
+            _payload["offset"] = offset
+        if order is not None:
+            _payload["order"] = order
         if limit is not None:
-            params["limit"] = limit
-        if start_date is not None:
-            params["start_date"] = start_date
-        if end_date is not None:
-            params["end_date"] = end_date
+            _payload["limit"] = limit
+        if sort is not None:
+            _payload["sort"] = sort
         if filters is not None:
-            params["filters"] = filters
-        return await self._call("publications.search", params=params, options=options, context=context, response_format=response_format)
+            _payload["filters"] = filters
+        return await self._call("publications.search", params=_payload, options=options, context=context, response_format=response_format)
 
 

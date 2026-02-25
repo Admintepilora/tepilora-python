@@ -27,9 +27,9 @@ class EsgAPI(BaseAPI):
 
         Args:
         portfolios: List of portfolio weights dicts"""
-        params: Dict[str, Any] = {}
-        params["portfolios"] = portfolios
-        return self._call("esg.compare", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["portfolios"] = portfolios
+        return self._call("esg.compare", params=_payload, options=options, context=context)
 
     def get(
         self,
@@ -44,26 +44,31 @@ class EsgAPI(BaseAPI):
 
         Args:
         identifiers: List of TepiloraCodes"""
-        params: Dict[str, Any] = {}
-        params["identifiers"] = identifiers
-        return self._call("esg.get", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["identifiers"] = identifiers
+        return self._call("esg.get", params=_payload, options=options, context=context)
 
     def portfolio(
         self,
         *,
-        id: str,
+        portfolio_id: Optional[str] = None,
+        weights: Optional[Dict[str, Any]] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
         """Portfolio ESG
 
-        Calculate weighted ESG score for portfolio.
+        Calculate weighted ESG score for portfolio. Use portfolio_id for saved portfolio or weights for inline.
 
         Args:
-        id: Portfolio ID"""
-        params: Dict[str, Any] = {}
-        params["id"] = id
-        return self._call("esg.portfolio", params=params, options=options, context=context)
+        portfolio_id: Portfolio ID (for saved portfolios)
+        weights: Inline weights {TepiloraCode: float}"""
+        _payload: Dict[str, Any] = {}
+        if portfolio_id is not None:
+            _payload["portfolio_id"] = portfolio_id
+        if weights is not None:
+            _payload["weights"] = weights
+        return self._call("esg.portfolio", params=_payload, options=options, context=context)
 
     def scores(
         self,
@@ -76,11 +81,16 @@ class EsgAPI(BaseAPI):
 
         Alias for esg.get. Use esg.get instead.
 
+        .. deprecated:: 3.2.0
+            Use esg.get instead.
+
         Args:
         identifiers: List of TepiloraCodes"""
-        params: Dict[str, Any] = {}
-        params["identifiers"] = identifiers
-        return self._call("esg.scores", params=params, options=options, context=context)
+        import warnings
+        warnings.warn("esg.scores is deprecated: Use esg.get instead.", DeprecationWarning, stacklevel=2)
+        _payload: Dict[str, Any] = {}
+        _payload["identifiers"] = identifiers
+        return self._call("esg.scores", params=_payload, options=options, context=context)
 
     def screen(
         self,
@@ -89,7 +99,7 @@ class EsgAPI(BaseAPI):
         min_sri: Optional[int] = None,
         max_sri: Optional[int] = None,
         min_esg_score: Optional[float] = None,
-        sfdr_filter: Optional[str] = None,
+        sfdr_filter: Optional[List[Any]] = None,
         limit: Optional[int] = 100,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
@@ -104,22 +114,22 @@ class EsgAPI(BaseAPI):
         min_sri: Minimum SRI score
         max_sri: Maximum SRI score
         min_esg_score: Minimum ESG score
-        sfdr_filter: SFDR filter
+        sfdr_filter: SFDR article filter (list of articles, e.g. ['Article 8', 'Article 9'])
         limit: Maximum results"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if universe is not None:
-            params["universe"] = universe
+            _payload["universe"] = universe
         if min_sri is not None:
-            params["min_sri"] = min_sri
+            _payload["min_sri"] = min_sri
         if max_sri is not None:
-            params["max_sri"] = max_sri
+            _payload["max_sri"] = max_sri
         if min_esg_score is not None:
-            params["min_esg_score"] = min_esg_score
+            _payload["min_esg_score"] = min_esg_score
         if sfdr_filter is not None:
-            params["sfdr_filter"] = sfdr_filter
+            _payload["sfdr_filter"] = sfdr_filter
         if limit is not None:
-            params["limit"] = limit
-        return self._call("esg.screen", params=params, options=options, context=context, response_format=response_format)
+            _payload["limit"] = limit
+        return self._call("esg.screen", params=_payload, options=options, context=context, response_format=response_format)
 
     def summary(
         self,
@@ -134,10 +144,10 @@ class EsgAPI(BaseAPI):
 
         Args:
         identifiers: List of TepiloraCodes"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if identifiers is not None:
-            params["identifiers"] = identifiers
-        return self._call("esg.summary", params=params, options=options, context=context)
+            _payload["identifiers"] = identifiers
+        return self._call("esg.summary", params=_payload, options=options, context=context)
 
 
 
@@ -157,9 +167,9 @@ class AsyncEsgAPI(AsyncBaseAPI):
 
         Args:
         portfolios: List of portfolio weights dicts"""
-        params: Dict[str, Any] = {}
-        params["portfolios"] = portfolios
-        return await self._call("esg.compare", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["portfolios"] = portfolios
+        return await self._call("esg.compare", params=_payload, options=options, context=context)
 
     async def get(
         self,
@@ -174,26 +184,31 @@ class AsyncEsgAPI(AsyncBaseAPI):
 
         Args:
         identifiers: List of TepiloraCodes"""
-        params: Dict[str, Any] = {}
-        params["identifiers"] = identifiers
-        return await self._call("esg.get", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["identifiers"] = identifiers
+        return await self._call("esg.get", params=_payload, options=options, context=context)
 
     async def portfolio(
         self,
         *,
-        id: str,
+        portfolio_id: Optional[str] = None,
+        weights: Optional[Dict[str, Any]] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
         """Portfolio ESG
 
-        Calculate weighted ESG score for portfolio.
+        Calculate weighted ESG score for portfolio. Use portfolio_id for saved portfolio or weights for inline.
 
         Args:
-        id: Portfolio ID"""
-        params: Dict[str, Any] = {}
-        params["id"] = id
-        return await self._call("esg.portfolio", params=params, options=options, context=context)
+        portfolio_id: Portfolio ID (for saved portfolios)
+        weights: Inline weights {TepiloraCode: float}"""
+        _payload: Dict[str, Any] = {}
+        if portfolio_id is not None:
+            _payload["portfolio_id"] = portfolio_id
+        if weights is not None:
+            _payload["weights"] = weights
+        return await self._call("esg.portfolio", params=_payload, options=options, context=context)
 
     async def scores(
         self,
@@ -206,11 +221,16 @@ class AsyncEsgAPI(AsyncBaseAPI):
 
         Alias for esg.get. Use esg.get instead.
 
+        .. deprecated:: 3.2.0
+            Use esg.get instead.
+
         Args:
         identifiers: List of TepiloraCodes"""
-        params: Dict[str, Any] = {}
-        params["identifiers"] = identifiers
-        return await self._call("esg.scores", params=params, options=options, context=context)
+        import warnings
+        warnings.warn("esg.scores is deprecated: Use esg.get instead.", DeprecationWarning, stacklevel=2)
+        _payload: Dict[str, Any] = {}
+        _payload["identifiers"] = identifiers
+        return await self._call("esg.scores", params=_payload, options=options, context=context)
 
     async def screen(
         self,
@@ -219,7 +239,7 @@ class AsyncEsgAPI(AsyncBaseAPI):
         min_sri: Optional[int] = None,
         max_sri: Optional[int] = None,
         min_esg_score: Optional[float] = None,
-        sfdr_filter: Optional[str] = None,
+        sfdr_filter: Optional[List[Any]] = None,
         limit: Optional[int] = 100,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
@@ -234,22 +254,22 @@ class AsyncEsgAPI(AsyncBaseAPI):
         min_sri: Minimum SRI score
         max_sri: Maximum SRI score
         min_esg_score: Minimum ESG score
-        sfdr_filter: SFDR filter
+        sfdr_filter: SFDR article filter (list of articles, e.g. ['Article 8', 'Article 9'])
         limit: Maximum results"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if universe is not None:
-            params["universe"] = universe
+            _payload["universe"] = universe
         if min_sri is not None:
-            params["min_sri"] = min_sri
+            _payload["min_sri"] = min_sri
         if max_sri is not None:
-            params["max_sri"] = max_sri
+            _payload["max_sri"] = max_sri
         if min_esg_score is not None:
-            params["min_esg_score"] = min_esg_score
+            _payload["min_esg_score"] = min_esg_score
         if sfdr_filter is not None:
-            params["sfdr_filter"] = sfdr_filter
+            _payload["sfdr_filter"] = sfdr_filter
         if limit is not None:
-            params["limit"] = limit
-        return await self._call("esg.screen", params=params, options=options, context=context, response_format=response_format)
+            _payload["limit"] = limit
+        return await self._call("esg.screen", params=_payload, options=options, context=context, response_format=response_format)
 
     async def summary(
         self,
@@ -264,9 +284,9 @@ class AsyncEsgAPI(AsyncBaseAPI):
 
         Args:
         identifiers: List of TepiloraCodes"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if identifiers is not None:
-            params["identifiers"] = identifiers
-        return await self._call("esg.summary", params=params, options=options, context=context)
+            _payload["identifiers"] = identifiers
+        return await self._call("esg.summary", params=_payload, options=options, context=context)
 
 

@@ -16,10 +16,15 @@ class _AnalyticsMethodsMixin:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -27,35 +32,44 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Annualized returns
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Annualized returns"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call_analytics("annual_returns", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        return self._call_analytics("annual_returns", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def annual_volatility(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -63,35 +77,46 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Annualized volatility
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Annualized volatility"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call_analytics("annual_volatility", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if Annualized is not None and (not strict or Annualized != True):
+            _payload["Annualized"] = Annualized
+        return self._call_analytics("annual_volatility", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def average_drawdown(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -99,35 +124,44 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Average drawdown
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Average drawdown"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call_analytics("average_drawdown", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None:
+            _payload["period"] = period
+        return self._call_analytics("average_drawdown", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def batch(
         self,
         *,
         operations: List[Any],
+        currency: Optional[str] = None,
         identifiers: Optional[Union[str, List[str]]] = None,
         prices: Optional[Dict[str, Any]] = None,
+        prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        total_return: Optional[str] = None,
+        TR: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -145,26 +179,41 @@ class _AnalyticsMethodsMixin:
         prices: Shared prices data
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
-        params["operations"] = operations
+        _payload: Dict[str, Any] = dict(extra_params)
+        _payload["operations"] = operations
+        if currency is not None:
+            _payload["currency"] = currency
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
+        if prices_file is not None:
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call_analytics("batch", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if total_return is not None:
+            _payload["total_return"] = total_return
+        if TR is not None:
+            _payload["TR"] = TR
+        return self._call_analytics("batch", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def best_period(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        n_periods: Optional[int] = 20,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -172,35 +221,51 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Best period return
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Best period return"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call_analytics("best_period", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if n_periods is not None and (not strict or n_periods != 20):
+            _payload["n_periods"] = n_periods
+        return self._call_analytics("best_period", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def burke_ratio(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        rf: Optional[float] = 0.0,
+        rf_frequency: Optional[str] = "annual",
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -208,35 +273,54 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Burke ratio
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Burke ratio"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call_analytics("burke_ratio", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if rf is not None and (not strict or rf != 0.0):
+            _payload["rf"] = rf
+        if rf_frequency is not None and (not strict or rf_frequency != "annual"):
+            _payload["rf_frequency"] = rf_frequency
+        if Annualized is not None and (not strict or Annualized != True):
+            _payload["Annualized"] = Annualized
+        return self._call_analytics("burke_ratio", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def capture_ratio(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -244,35 +328,50 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Up/down capture ratio
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Up/down capture ratio"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call_analytics("capture_ratio", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if y is not None:
+            _payload["y"] = y
+        if x is not None:
+            _payload["x"] = x
+        return self._call_analytics("capture_ratio", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def cumulative_performance(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        base: Optional[float] = 100.0,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -280,35 +379,48 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Cumulative performance
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Cumulative performance"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call_analytics("cumulative_performance", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if base is not None and (not strict or base != 100.0):
+            _payload["base"] = base
+        return self._call_analytics("cumulative_performance", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def downside_capture(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -316,35 +428,52 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Downside capture
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Downside capture"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call_analytics("downside_capture", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if y is not None:
+            _payload["y"] = y
+        if x is not None:
+            _payload["x"] = x
+        return self._call_analytics("downside_capture", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def downside_deviation(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        MAR: Optional[float] = 0.0,
+        Annualized: Optional[Any] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -352,35 +481,49 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Downside deviation
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Downside deviation"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call_analytics("downside_deviation", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if MAR is not None and (not strict or MAR != 0.0):
+            _payload["MAR"] = MAR
+        if Annualized is not None and (not strict or Annualized != False):
+            _payload["Annualized"] = Annualized
+        return self._call_analytics("downside_deviation", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def drawdown(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -388,35 +531,43 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Drawdown series
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Drawdown series"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call_analytics("drawdown", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        return self._call_analytics("drawdown", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def drawdown_duration(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -424,35 +575,47 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Drawdown duration
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Drawdown duration"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call_analytics("drawdown_duration", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        return self._call_analytics("drawdown_duration", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def egarch_volatility(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        p: Optional[int] = 1,
+        o: Optional[int] = 1,
+        q: Optional[int] = 1,
+        Annualized: Optional[Any] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -460,26 +623,37 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """EGARCH volatility
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """EGARCH volatility"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call_analytics("egarch_volatility", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if p is not None and (not strict or p != 1):
+            _payload["p"] = p
+        if o is not None and (not strict or o != 1):
+            _payload["o"] = o
+        if q is not None and (not strict or q != 1):
+            _payload["q"] = q
+        if Annualized is not None and (not strict or Annualized != False):
+            _payload["Annualized"] = Annualized
+        return self._call_analytics("egarch_volatility", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def factor_attribution(
         self,
@@ -487,8 +661,13 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        model: Optional[str] = "custom",
+        use_excess_returns: Optional[bool] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -496,26 +675,29 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Factor attribution
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Factor attribution"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
+        if factors is not None:
+            _payload["factors"] = factors
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call_analytics("factor_attribution", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if model is not None and (not strict or model != "custom"):
+            _payload["model"] = model
+        if use_excess_returns is not None and (not strict or use_excess_returns != True):
+            _payload["use_excess_returns"] = use_excess_returns
+        return self._call_analytics("factor_attribution", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def factor_regression(
         self,
@@ -523,9 +705,14 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        model: Optional[str] = "FF3",
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        model: Optional[str] = "custom",
+        annualize_alpha: Optional[bool] = True,
+        use_excess_returns: Optional[bool] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -533,38 +720,46 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Factor regression (FF3/FF5)
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        model: FF3|FF5|Carhart"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Factor regression (FF3/FF5)"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
+        if factors is not None:
+            _payload["factors"] = factors
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if model is not None and (not strict or model != "FF3"):
-            params["model"] = model
-        return self._call_analytics("factor_regression", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if model is not None and (not strict or model != "custom"):
+            _payload["model"] = model
+        if annualize_alpha is not None and (not strict or annualize_alpha != True):
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None and (not strict or use_excess_returns != True):
+            _payload["use_excess_returns"] = use_excess_returns
+        return self._call_analytics("factor_regression", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def gain_loss_ratio(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -572,36 +767,48 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Gain/loss ratio
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Gain/loss ratio"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call_analytics("gain_loss_ratio", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        return self._call_analytics("gain_loss_ratio", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def garch_forecast(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        horizon: Optional[int] = 10,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        horizon: Optional[int] = 5,
+        p: Optional[int] = 1,
+        q: Optional[int] = 1,
+        Annualized: Optional[Any] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -609,38 +816,52 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """GARCH forecast
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        horizon: Forecast horizon"""
-        params: Dict[str, Any] = dict(extra_params)
+        """GARCH forecast"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if horizon is not None and (not strict or horizon != 10):
-            params["horizon"] = horizon
-        return self._call_analytics("garch_forecast", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if horizon is not None and (not strict or horizon != 5):
+            _payload["horizon"] = horizon
+        if p is not None and (not strict or p != 1):
+            _payload["p"] = p
+        if q is not None and (not strict or q != 1):
+            _payload["q"] = q
+        if Annualized is not None and (not strict or Annualized != False):
+            _payload["Annualized"] = Annualized
+        return self._call_analytics("garch_forecast", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def garch_volatility(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        p: Optional[int] = 1,
+        q: Optional[int] = 1,
+        Annualized: Optional[Any] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -648,35 +869,50 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """GARCH volatility
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """GARCH volatility"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call_analytics("garch_volatility", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if p is not None and (not strict or p != 1):
+            _payload["p"] = p
+        if q is not None and (not strict or q != 1):
+            _payload["q"] = q
+        if Annualized is not None and (not strict or Annualized != False):
+            _payload["Annualized"] = Annualized
+        return self._call_analytics("garch_volatility", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def hurst_exponent(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -684,26 +920,31 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Hurst exponent
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Hurst exponent"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call_analytics("hurst_exponent", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        return self._call_analytics("hurst_exponent", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def info(
         self,
@@ -722,9 +963,9 @@ class _AnalyticsMethodsMixin:
 
         Args:
         function: Function name"""
-        params: Dict[str, Any] = dict(extra_params)
-        params["function"] = function
-        return self._call_analytics("info", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+        _payload: Dict[str, Any] = dict(extra_params)
+        _payload["function"] = function
+        return self._call_analytics("info", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def list(
         self,
@@ -743,19 +984,24 @@ class _AnalyticsMethodsMixin:
 
         Args:
         category: Filter by category"""
-        params: Dict[str, Any] = dict(extra_params)
+        _payload: Dict[str, Any] = dict(extra_params)
         if category is not None:
-            params["category"] = category
-        return self._call_analytics("list", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["category"] = category
+        return self._call_analytics("list", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def log_returns(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -763,35 +1009,44 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Log returns
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Log returns"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call_analytics("log_returns", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        return self._call_analytics("log_returns", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def max_drawdown(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -799,36 +1054,46 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Maximum drawdown
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Maximum drawdown"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call_analytics("max_drawdown", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None:
+            _payload["period"] = period
+        return self._call_analytics("max_drawdown", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def momentum(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 21,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 20,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -836,38 +1101,45 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Momentum indicator
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Lookback period"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Momentum indicator"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 21):
-            params["period"] = period
-        return self._call_analytics("momentum", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 20):
+            _payload["period"] = period
+        return self._call_analytics("momentum", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def monthly_returns(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -875,35 +1147,44 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Monthly returns
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Monthly returns"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call_analytics("monthly_returns", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        return self._call_analytics("monthly_returns", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def monthly_volatility(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -911,35 +1192,46 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Monthly volatility
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Monthly volatility"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call_analytics("monthly_volatility", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if Annualized is not None and (not strict or Annualized != True):
+            _payload["Annualized"] = Annualized
+        return self._call_analytics("monthly_volatility", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def omega_ratio(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         threshold: Optional[float] = 0.0,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
@@ -948,38 +1240,48 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Omega ratio
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        threshold: Return threshold"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Omega ratio"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
         if threshold is not None and (not strict or threshold != 0.0):
-            params["threshold"] = threshold
-        return self._call_analytics("omega_ratio", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["threshold"] = threshold
+        return self._call_analytics("omega_ratio", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def pain_index(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -987,35 +1289,46 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Pain index
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Pain index"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call_analytics("pain_index", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        return self._call_analytics("pain_index", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def profit_factor(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1023,36 +1336,46 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Profit factor
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Profit factor"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call_analytics("profit_factor", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        return self._call_analytics("profit_factor", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rate_of_change(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 21,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 20,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1060,38 +1383,48 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rate of change
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Lookback period"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rate of change"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 21):
-            params["period"] = period
-        return self._call_analytics("rate_of_change", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 20):
+            _payload["period"] = period
+        return self._call_analytics("rate_of_change", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def relative_strength(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 20,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1099,35 +1432,49 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Relative strength
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Relative strength"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call_analytics("relative_strength", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 20):
+            _payload["period"] = period
+        if y is not None:
+            _payload["y"] = y
+        if x is not None:
+            _payload["x"] = x
+        return self._call_analytics("relative_strength", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def returns(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1135,37 +1482,49 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Simple returns
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Simple returns"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call_analytics("returns", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        return self._call_analytics("returns", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_alpha(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
+        Annualized: Optional[Any] = True,
         rf: Optional[float] = 0.0,
+        rf_frequency: Optional[str] = "annual",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1173,42 +1532,56 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling alpha
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window
-        rf: Risk-free rate"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling alpha"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 252):
-            params["period"] = period
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if y is not None:
+            _payload["y"] = y
+        if x is not None:
+            _payload["x"] = x
+        if Annualized is not None and (not strict or Annualized != True):
+            _payload["Annualized"] = Annualized
         if rf is not None and (not strict or rf != 0.0):
-            params["rf"] = rf
-        return self._call_analytics("rolling_alpha", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["rf"] = rf
+        if rf_frequency is not None and (not strict or rf_frequency != "annual"):
+            _payload["rf_frequency"] = rf_frequency
+        return self._call_analytics("rolling_alpha", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_autocorrelation(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 63,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         lag: Optional[int] = 1,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
@@ -1217,42 +1590,50 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling autocorrelation
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window
-        lag: Autocorrelation lag"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling autocorrelation"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 63):
-            params["period"] = period
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
         if lag is not None and (not strict or lag != 1):
-            params["lag"] = lag
-        return self._call_analytics("rolling_autocorrelation", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["lag"] = lag
+        return self._call_analytics("rolling_autocorrelation", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_beta(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1260,39 +1641,52 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling beta
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling beta"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 252):
-            params["period"] = period
-        return self._call_analytics("rolling_beta", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if y is not None:
+            _payload["y"] = y
+        if x is not None:
+            _payload["x"] = x
+        return self._call_analytics("rolling_beta", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_beta_timing(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1300,39 +1694,50 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling beta timing
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling beta timing"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 252):
-            params["period"] = period
-        return self._call_analytics("rolling_beta_timing", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if y is not None:
+            _payload["y"] = y
+        if x is not None:
+            _payload["x"] = x
+        return self._call_analytics("rolling_beta_timing", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_cagr(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1340,39 +1745,47 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling CAGR
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling CAGR"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 252):
-            params["period"] = period
-        return self._call_analytics("rolling_cagr", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        return self._call_analytics("rolling_cagr", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_calmar(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1380,39 +1793,49 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling Calmar ratio
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling Calmar ratio"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 252):
-            params["period"] = period
-        return self._call_analytics("rolling_calmar", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if Annualized is not None and (not strict or Annualized != True):
+            _payload["Annualized"] = Annualized
+        return self._call_analytics("rolling_calmar", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_correlation(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 63,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        min_samples: Optional[int] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1420,39 +1843,50 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling correlation
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling correlation"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 63):
-            params["period"] = period
-        return self._call_analytics("rolling_correlation", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        return self._call_analytics("rolling_correlation", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_covariance(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 63,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        min_samples: Optional[int] = None,
+        Annualized: Optional[bool] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1460,39 +1894,50 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling covariance
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling covariance"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 63):
-            params["period"] = period
-        return self._call_analytics("rolling_covariance", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if Annualized is not None and (not strict or Annualized != True):
+            _payload["Annualized"] = Annualized
+        return self._call_analytics("rolling_covariance", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_cvar(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         confidence: Optional[float] = 0.95,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
@@ -1501,42 +1946,50 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling CVaR (Expected Shortfall)
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window
-        confidence: Confidence level"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling CVaR (Expected Shortfall)"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 252):
-            params["period"] = period
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
         if confidence is not None and (not strict or confidence != 0.95):
-            params["confidence"] = confidence
-        return self._call_analytics("rolling_cvar", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["confidence"] = confidence
+        return self._call_analytics("rolling_cvar", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_downside_beta(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1544,29 +1997,35 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling downside beta
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling downside beta"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 252):
-            params["period"] = period
-        return self._call_analytics("rolling_downside_beta", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if y is not None:
+            _payload["y"] = y
+        if x is not None:
+            _payload["x"] = x
+        return self._call_analytics("rolling_downside_beta", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_factor_regression(
         self,
@@ -1574,10 +2033,16 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        model: Optional[str] = "FF3",
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        model: Optional[str] = "custom",
+        period: Optional[int] = 260,
+        Obs: Optional[Any] = "",
+        annualize_alpha: Optional[bool] = True,
+        use_excess_returns: Optional[bool] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1585,42 +2050,53 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling factor regression
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        model: FF3|FF5|Carhart
-        period: Rolling window"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling factor regression"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
+        if factors is not None:
+            _payload["factors"] = factors
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if model is not None and (not strict or model != "FF3"):
-            params["model"] = model
-        if period is not None and (not strict or period != 252):
-            params["period"] = period
-        return self._call_analytics("rolling_factor_regression", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if model is not None and (not strict or model != "custom"):
+            _payload["model"] = model
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if annualize_alpha is not None and (not strict or annualize_alpha != True):
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None and (not strict or use_excess_returns != True):
+            _payload["use_excess_returns"] = use_excess_returns
+        return self._call_analytics("rolling_factor_regression", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_garch(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        p: Optional[int] = 1,
+        q: Optional[int] = 1,
+        Annualized: Optional[Any] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1628,39 +2104,55 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling GARCH
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling GARCH"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 252):
-            params["period"] = period
-        return self._call_analytics("rolling_garch", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if p is not None and (not strict or p != 1):
+            _payload["p"] = p
+        if q is not None and (not strict or q != 1):
+            _payload["q"] = q
+        if Annualized is not None and (not strict or Annualized != False):
+            _payload["Annualized"] = Annualized
+        return self._call_analytics("rolling_garch", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_information_ratio(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1668,39 +2160,53 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling information ratio
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling information ratio"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 252):
-            params["period"] = period
-        return self._call_analytics("rolling_information_ratio", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if y is not None:
+            _payload["y"] = y
+        if x is not None:
+            _payload["x"] = x
+        if Annualized is not None and (not strict or Annualized != True):
+            _payload["Annualized"] = Annualized
+        return self._call_analytics("rolling_information_ratio", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_kurtosis(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 63,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        excess: Optional[bool] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1708,39 +2214,50 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling kurtosis
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling kurtosis"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 63):
-            params["period"] = period
-        return self._call_analytics("rolling_kurtosis", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if excess is not None and (not strict or excess != True):
+            _payload["excess"] = excess
+        return self._call_analytics("rolling_kurtosis", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_r_squared(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1748,39 +2265,55 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling R-squared
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling R-squared"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 252):
-            params["period"] = period
-        return self._call_analytics("rolling_r_squared", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if y is not None:
+            _payload["y"] = y
+        if x is not None:
+            _payload["x"] = x
+        return self._call_analytics("rolling_r_squared", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_regression(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
+        Annualized: Optional[Any] = True,
+        rf: Optional[float] = 0.0,
+        rf_frequency: Optional[str] = "annual",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1788,39 +2321,58 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling regression
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling regression"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 252):
-            params["period"] = period
-        return self._call_analytics("rolling_regression", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if y is not None:
+            _payload["y"] = y
+        if x is not None:
+            _payload["x"] = x
+        if Annualized is not None and (not strict or Annualized != True):
+            _payload["Annualized"] = Annualized
+        if rf is not None and (not strict or rf != 0.0):
+            _payload["rf"] = rf
+        if rf_frequency is not None and (not strict or rf_frequency != "annual"):
+            _payload["rf_frequency"] = rf_frequency
+        return self._call_analytics("rolling_regression", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_residuals(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1828,40 +2380,53 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling residuals
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling residuals"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 252):
-            params["period"] = period
-        return self._call_analytics("rolling_residuals", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if y is not None:
+            _payload["y"] = y
+        if x is not None:
+            _payload["x"] = x
+        return self._call_analytics("rolling_residuals", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_sharpe(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         rf: Optional[float] = 0.0,
+        rf_frequency: Optional[str] = "annual",
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1869,42 +2434,52 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling Sharpe ratio
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window
-        rf: Risk-free rate"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling Sharpe ratio"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 252):
-            params["period"] = period
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
         if rf is not None and (not strict or rf != 0.0):
-            params["rf"] = rf
-        return self._call_analytics("rolling_sharpe", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["rf"] = rf
+        if rf_frequency is not None and (not strict or rf_frequency != "annual"):
+            _payload["rf_frequency"] = rf_frequency
+        if Annualized is not None and (not strict or Annualized != True):
+            _payload["Annualized"] = Annualized
+        return self._call_analytics("rolling_sharpe", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_skewness(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 63,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1912,40 +2487,48 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling skewness
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling skewness"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 63):
-            params["period"] = period
-        return self._call_analytics("rolling_skewness", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        return self._call_analytics("rolling_skewness", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_sortino(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
-        rf: Optional[float] = 0.0,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        MAR: Optional[float] = 0.0,
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1953,43 +2536,55 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling Sortino ratio
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window
-        rf: Risk-free rate"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling Sortino ratio"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 252):
-            params["period"] = period
-        if rf is not None and (not strict or rf != 0.0):
-            params["rf"] = rf
-        return self._call_analytics("rolling_sortino", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if MAR is not None and (not strict or MAR != 0.0):
+            _payload["MAR"] = MAR
+        if Annualized is not None and (not strict or Annualized != True):
+            _payload["Annualized"] = Annualized
+        return self._call_analytics("rolling_sortino", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_treynor(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         rf: Optional[float] = 0.0,
+        rf_frequency: Optional[str] = "annual",
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1997,42 +2592,58 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling Treynor ratio
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window
-        rf: Risk-free rate"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling Treynor ratio"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 252):
-            params["period"] = period
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if y is not None:
+            _payload["y"] = y
+        if x is not None:
+            _payload["x"] = x
         if rf is not None and (not strict or rf != 0.0):
-            params["rf"] = rf
-        return self._call_analytics("rolling_treynor", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["rf"] = rf
+        if rf_frequency is not None and (not strict or rf_frequency != "annual"):
+            _payload["rf_frequency"] = rf_frequency
+        if Annualized is not None and (not strict or Annualized != True):
+            _payload["Annualized"] = Annualized
+        return self._call_analytics("rolling_treynor", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_upside_beta(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2040,40 +2651,52 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling upside beta
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling upside beta"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 252):
-            params["period"] = period
-        return self._call_analytics("rolling_upside_beta", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if y is not None:
+            _payload["y"] = y
+        if x is not None:
+            _payload["x"] = x
+        return self._call_analytics("rolling_upside_beta", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_var(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         confidence: Optional[float] = 0.95,
+        method: Optional[str] = "historical",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2081,42 +2704,51 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling Value at Risk
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window
-        confidence: Confidence level"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling Value at Risk"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 252):
-            params["period"] = period
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
         if confidence is not None and (not strict or confidence != 0.95):
-            params["confidence"] = confidence
-        return self._call_analytics("rolling_var", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["confidence"] = confidence
+        if method is not None and (not strict or method != "historical"):
+            _payload["method"] = method
+        return self._call_analytics("rolling_var", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_variance(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 21,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2124,39 +2756,49 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling variance
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling variance"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 21):
-            params["period"] = period
-        return self._call_analytics("rolling_variance", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if Annualized is not None and (not strict or Annualized != True):
+            _payload["Annualized"] = Annualized
+        return self._call_analytics("rolling_variance", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_volatility(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 21,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2164,38 +2806,50 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling volatility
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling volatility"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 21):
-            params["period"] = period
-        return self._call_analytics("rolling_volatility", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if Annualized is not None and (not strict or Annualized != True):
+            _payload["Annualized"] = Annualized
+        return self._call_analytics("rolling_volatility", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def semi_deviation(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        threshold: Optional[float] = 0.0,
+        Annualized: Optional[Any] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2203,35 +2857,52 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Semi-deviation
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Semi-deviation"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call_analytics("semi_deviation", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if threshold is not None and (not strict or threshold != 0.0):
+            _payload["threshold"] = threshold
+        if Annualized is not None and (not strict or Annualized != False):
+            _payload["Annualized"] = Annualized
+        return self._call_analytics("semi_deviation", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def semi_variance(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        threshold: Optional[float] = 0.0,
+        Annualized: Optional[Any] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2239,35 +2910,53 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Semi-variance
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Semi-variance"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call_analytics("semi_variance", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if threshold is not None and (not strict or threshold != 0.0):
+            _payload["threshold"] = threshold
+        if Annualized is not None and (not strict or Annualized != False):
+            _payload["Annualized"] = Annualized
+        return self._call_analytics("semi_variance", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def sterling_ratio(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        rf: Optional[float] = 0.0,
+        rf_frequency: Optional[str] = "annual",
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2275,35 +2964,53 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Sterling ratio
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Sterling ratio"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call_analytics("sterling_ratio", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if rf is not None and (not strict or rf != 0.0):
+            _payload["rf"] = rf
+        if rf_frequency is not None and (not strict or rf_frequency != "annual"):
+            _payload["rf_frequency"] = rf_frequency
+        if Annualized is not None and (not strict or Annualized != True):
+            _payload["Annualized"] = Annualized
+        return self._call_analytics("sterling_ratio", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def tail_ratio(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        percentile: Optional[float] = 5.0,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2311,35 +3018,51 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Tail ratio
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Tail ratio"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call_analytics("tail_ratio", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if percentile is not None and (not strict or percentile != 5.0):
+            _payload["percentile"] = percentile
+        return self._call_analytics("tail_ratio", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def tracking_error(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2347,35 +3070,54 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Tracking error
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Tracking error"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call_analytics("tracking_error", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if y is not None:
+            _payload["y"] = y
+        if x is not None:
+            _payload["x"] = x
+        if Annualized is not None and (not strict or Annualized != True):
+            _payload["Annualized"] = Annualized
+        return self._call_analytics("tracking_error", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def tracking_error_volatility(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2383,35 +3125,50 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Tracking error volatility
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Tracking error volatility"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call_analytics("tracking_error_volatility", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if y is not None:
+            _payload["y"] = y
+        if x is not None:
+            _payload["x"] = x
+        return self._call_analytics("tracking_error_volatility", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def ulcer_index(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2419,35 +3176,48 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Ulcer index
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Ulcer index"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call_analytics("ulcer_index", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        return self._call_analytics("ulcer_index", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def upside_capture(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2455,35 +3225,52 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Upside capture
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Upside capture"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call_analytics("upside_capture", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if y is not None:
+            _payload["y"] = y
+        if x is not None:
+            _payload["x"] = x
+        return self._call_analytics("upside_capture", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def upside_deviation(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        threshold: Optional[float] = 0.0,
+        Annualized: Optional[Any] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2491,35 +3278,50 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Upside deviation
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Upside deviation"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call_analytics("upside_deviation", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if threshold is not None and (not strict or threshold != 0.0):
+            _payload["threshold"] = threshold
+        if Annualized is not None and (not strict or Annualized != False):
+            _payload["Annualized"] = Annualized
+        return self._call_analytics("upside_deviation", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def win_rate(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2527,35 +3329,47 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Win rate (% positive periods)
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Win rate (% positive periods)"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call_analytics("win_rate", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        return self._call_analytics("win_rate", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def worst_period(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        n_periods: Optional[int] = 20,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2563,26 +3377,33 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Worst period return
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Worst period return"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call_analytics("worst_period", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if n_periods is not None and (not strict or n_periods != 20):
+            _payload["n_periods"] = n_periods
+        return self._call_analytics("worst_period", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
 
 
@@ -2593,10 +3414,15 @@ class _AsyncAnalyticsMethodsMixin:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2604,35 +3430,44 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Annualized returns
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Annualized returns"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call_analytics("annual_returns", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        return await self._call_analytics("annual_returns", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def annual_volatility(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2640,35 +3475,46 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Annualized volatility
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Annualized volatility"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call_analytics("annual_volatility", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if Annualized is not None and (not strict or Annualized != True):
+            _payload["Annualized"] = Annualized
+        return await self._call_analytics("annual_volatility", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def average_drawdown(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2676,35 +3522,44 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Average drawdown
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Average drawdown"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call_analytics("average_drawdown", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None:
+            _payload["period"] = period
+        return await self._call_analytics("average_drawdown", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def batch(
         self,
         *,
         operations: List[Any],
+        currency: Optional[str] = None,
         identifiers: Optional[Union[str, List[str]]] = None,
         prices: Optional[Dict[str, Any]] = None,
+        prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        total_return: Optional[str] = None,
+        TR: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2722,26 +3577,41 @@ class _AsyncAnalyticsMethodsMixin:
         prices: Shared prices data
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
-        params["operations"] = operations
+        _payload: Dict[str, Any] = dict(extra_params)
+        _payload["operations"] = operations
+        if currency is not None:
+            _payload["currency"] = currency
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
+        if prices_file is not None:
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call_analytics("batch", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if total_return is not None:
+            _payload["total_return"] = total_return
+        if TR is not None:
+            _payload["TR"] = TR
+        return await self._call_analytics("batch", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def best_period(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        n_periods: Optional[int] = 20,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2749,35 +3619,51 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Best period return
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Best period return"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call_analytics("best_period", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if n_periods is not None and (not strict or n_periods != 20):
+            _payload["n_periods"] = n_periods
+        return await self._call_analytics("best_period", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def burke_ratio(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        rf: Optional[float] = 0.0,
+        rf_frequency: Optional[str] = "annual",
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2785,35 +3671,54 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Burke ratio
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Burke ratio"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call_analytics("burke_ratio", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if rf is not None and (not strict or rf != 0.0):
+            _payload["rf"] = rf
+        if rf_frequency is not None and (not strict or rf_frequency != "annual"):
+            _payload["rf_frequency"] = rf_frequency
+        if Annualized is not None and (not strict or Annualized != True):
+            _payload["Annualized"] = Annualized
+        return await self._call_analytics("burke_ratio", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def capture_ratio(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2821,35 +3726,50 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Up/down capture ratio
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Up/down capture ratio"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call_analytics("capture_ratio", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if y is not None:
+            _payload["y"] = y
+        if x is not None:
+            _payload["x"] = x
+        return await self._call_analytics("capture_ratio", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def cumulative_performance(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        base: Optional[float] = 100.0,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2857,35 +3777,48 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Cumulative performance
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Cumulative performance"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call_analytics("cumulative_performance", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if base is not None and (not strict or base != 100.0):
+            _payload["base"] = base
+        return await self._call_analytics("cumulative_performance", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def downside_capture(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2893,35 +3826,52 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Downside capture
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Downside capture"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call_analytics("downside_capture", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if y is not None:
+            _payload["y"] = y
+        if x is not None:
+            _payload["x"] = x
+        return await self._call_analytics("downside_capture", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def downside_deviation(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        MAR: Optional[float] = 0.0,
+        Annualized: Optional[Any] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2929,35 +3879,49 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Downside deviation
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Downside deviation"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call_analytics("downside_deviation", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if MAR is not None and (not strict or MAR != 0.0):
+            _payload["MAR"] = MAR
+        if Annualized is not None and (not strict or Annualized != False):
+            _payload["Annualized"] = Annualized
+        return await self._call_analytics("downside_deviation", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def drawdown(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2965,35 +3929,43 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Drawdown series
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Drawdown series"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call_analytics("drawdown", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        return await self._call_analytics("drawdown", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def drawdown_duration(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3001,35 +3973,47 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Drawdown duration
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Drawdown duration"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call_analytics("drawdown_duration", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        return await self._call_analytics("drawdown_duration", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def egarch_volatility(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        p: Optional[int] = 1,
+        o: Optional[int] = 1,
+        q: Optional[int] = 1,
+        Annualized: Optional[Any] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3037,26 +4021,37 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """EGARCH volatility
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """EGARCH volatility"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call_analytics("egarch_volatility", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if p is not None and (not strict or p != 1):
+            _payload["p"] = p
+        if o is not None and (not strict or o != 1):
+            _payload["o"] = o
+        if q is not None and (not strict or q != 1):
+            _payload["q"] = q
+        if Annualized is not None and (not strict or Annualized != False):
+            _payload["Annualized"] = Annualized
+        return await self._call_analytics("egarch_volatility", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def factor_attribution(
         self,
@@ -3064,8 +4059,13 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        model: Optional[str] = "custom",
+        use_excess_returns: Optional[bool] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3073,26 +4073,29 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Factor attribution
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Factor attribution"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
+        if factors is not None:
+            _payload["factors"] = factors
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call_analytics("factor_attribution", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if model is not None and (not strict or model != "custom"):
+            _payload["model"] = model
+        if use_excess_returns is not None and (not strict or use_excess_returns != True):
+            _payload["use_excess_returns"] = use_excess_returns
+        return await self._call_analytics("factor_attribution", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def factor_regression(
         self,
@@ -3100,9 +4103,14 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        model: Optional[str] = "FF3",
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        model: Optional[str] = "custom",
+        annualize_alpha: Optional[bool] = True,
+        use_excess_returns: Optional[bool] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3110,38 +4118,46 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Factor regression (FF3/FF5)
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        model: FF3|FF5|Carhart"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Factor regression (FF3/FF5)"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
+        if factors is not None:
+            _payload["factors"] = factors
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if model is not None and (not strict or model != "FF3"):
-            params["model"] = model
-        return await self._call_analytics("factor_regression", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if model is not None and (not strict or model != "custom"):
+            _payload["model"] = model
+        if annualize_alpha is not None and (not strict or annualize_alpha != True):
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None and (not strict or use_excess_returns != True):
+            _payload["use_excess_returns"] = use_excess_returns
+        return await self._call_analytics("factor_regression", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def gain_loss_ratio(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3149,36 +4165,48 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Gain/loss ratio
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Gain/loss ratio"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call_analytics("gain_loss_ratio", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        return await self._call_analytics("gain_loss_ratio", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def garch_forecast(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        horizon: Optional[int] = 10,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        horizon: Optional[int] = 5,
+        p: Optional[int] = 1,
+        q: Optional[int] = 1,
+        Annualized: Optional[Any] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3186,38 +4214,52 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """GARCH forecast
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        horizon: Forecast horizon"""
-        params: Dict[str, Any] = dict(extra_params)
+        """GARCH forecast"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if horizon is not None and (not strict or horizon != 10):
-            params["horizon"] = horizon
-        return await self._call_analytics("garch_forecast", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if horizon is not None and (not strict or horizon != 5):
+            _payload["horizon"] = horizon
+        if p is not None and (not strict or p != 1):
+            _payload["p"] = p
+        if q is not None and (not strict or q != 1):
+            _payload["q"] = q
+        if Annualized is not None and (not strict or Annualized != False):
+            _payload["Annualized"] = Annualized
+        return await self._call_analytics("garch_forecast", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def garch_volatility(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        p: Optional[int] = 1,
+        q: Optional[int] = 1,
+        Annualized: Optional[Any] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3225,35 +4267,50 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """GARCH volatility
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """GARCH volatility"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call_analytics("garch_volatility", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if p is not None and (not strict or p != 1):
+            _payload["p"] = p
+        if q is not None and (not strict or q != 1):
+            _payload["q"] = q
+        if Annualized is not None and (not strict or Annualized != False):
+            _payload["Annualized"] = Annualized
+        return await self._call_analytics("garch_volatility", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def hurst_exponent(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3261,26 +4318,31 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Hurst exponent
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Hurst exponent"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call_analytics("hurst_exponent", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        return await self._call_analytics("hurst_exponent", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def info(
         self,
@@ -3299,9 +4361,9 @@ class _AsyncAnalyticsMethodsMixin:
 
         Args:
         function: Function name"""
-        params: Dict[str, Any] = dict(extra_params)
-        params["function"] = function
-        return await self._call_analytics("info", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+        _payload: Dict[str, Any] = dict(extra_params)
+        _payload["function"] = function
+        return await self._call_analytics("info", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def list(
         self,
@@ -3320,19 +4382,24 @@ class _AsyncAnalyticsMethodsMixin:
 
         Args:
         category: Filter by category"""
-        params: Dict[str, Any] = dict(extra_params)
+        _payload: Dict[str, Any] = dict(extra_params)
         if category is not None:
-            params["category"] = category
-        return await self._call_analytics("list", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["category"] = category
+        return await self._call_analytics("list", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def log_returns(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3340,35 +4407,44 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Log returns
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Log returns"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call_analytics("log_returns", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        return await self._call_analytics("log_returns", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def max_drawdown(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3376,36 +4452,46 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Maximum drawdown
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Maximum drawdown"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call_analytics("max_drawdown", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None:
+            _payload["period"] = period
+        return await self._call_analytics("max_drawdown", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def momentum(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 21,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 20,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3413,38 +4499,45 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Momentum indicator
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Lookback period"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Momentum indicator"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 21):
-            params["period"] = period
-        return await self._call_analytics("momentum", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 20):
+            _payload["period"] = period
+        return await self._call_analytics("momentum", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def monthly_returns(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3452,35 +4545,44 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Monthly returns
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Monthly returns"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call_analytics("monthly_returns", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        return await self._call_analytics("monthly_returns", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def monthly_volatility(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3488,35 +4590,46 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Monthly volatility
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Monthly volatility"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call_analytics("monthly_volatility", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if Annualized is not None and (not strict or Annualized != True):
+            _payload["Annualized"] = Annualized
+        return await self._call_analytics("monthly_volatility", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def omega_ratio(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         threshold: Optional[float] = 0.0,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
@@ -3525,38 +4638,48 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Omega ratio
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        threshold: Return threshold"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Omega ratio"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
         if threshold is not None and (not strict or threshold != 0.0):
-            params["threshold"] = threshold
-        return await self._call_analytics("omega_ratio", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["threshold"] = threshold
+        return await self._call_analytics("omega_ratio", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def pain_index(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3564,35 +4687,46 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Pain index
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Pain index"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call_analytics("pain_index", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        return await self._call_analytics("pain_index", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def profit_factor(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3600,36 +4734,46 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Profit factor
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Profit factor"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call_analytics("profit_factor", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        return await self._call_analytics("profit_factor", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rate_of_change(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 21,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 20,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3637,38 +4781,48 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rate of change
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Lookback period"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rate of change"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 21):
-            params["period"] = period
-        return await self._call_analytics("rate_of_change", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 20):
+            _payload["period"] = period
+        return await self._call_analytics("rate_of_change", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def relative_strength(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 20,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3676,35 +4830,49 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Relative strength
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Relative strength"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call_analytics("relative_strength", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 20):
+            _payload["period"] = period
+        if y is not None:
+            _payload["y"] = y
+        if x is not None:
+            _payload["x"] = x
+        return await self._call_analytics("relative_strength", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def returns(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3712,37 +4880,49 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Simple returns
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Simple returns"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call_analytics("returns", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        return await self._call_analytics("returns", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_alpha(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
+        Annualized: Optional[Any] = True,
         rf: Optional[float] = 0.0,
+        rf_frequency: Optional[str] = "annual",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3750,42 +4930,56 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling alpha
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window
-        rf: Risk-free rate"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling alpha"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 252):
-            params["period"] = period
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if y is not None:
+            _payload["y"] = y
+        if x is not None:
+            _payload["x"] = x
+        if Annualized is not None and (not strict or Annualized != True):
+            _payload["Annualized"] = Annualized
         if rf is not None and (not strict or rf != 0.0):
-            params["rf"] = rf
-        return await self._call_analytics("rolling_alpha", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["rf"] = rf
+        if rf_frequency is not None and (not strict or rf_frequency != "annual"):
+            _payload["rf_frequency"] = rf_frequency
+        return await self._call_analytics("rolling_alpha", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_autocorrelation(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 63,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         lag: Optional[int] = 1,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
@@ -3794,42 +4988,50 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling autocorrelation
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window
-        lag: Autocorrelation lag"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling autocorrelation"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 63):
-            params["period"] = period
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
         if lag is not None and (not strict or lag != 1):
-            params["lag"] = lag
-        return await self._call_analytics("rolling_autocorrelation", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["lag"] = lag
+        return await self._call_analytics("rolling_autocorrelation", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_beta(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3837,39 +5039,52 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling beta
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling beta"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 252):
-            params["period"] = period
-        return await self._call_analytics("rolling_beta", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if y is not None:
+            _payload["y"] = y
+        if x is not None:
+            _payload["x"] = x
+        return await self._call_analytics("rolling_beta", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_beta_timing(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3877,39 +5092,50 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling beta timing
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling beta timing"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 252):
-            params["period"] = period
-        return await self._call_analytics("rolling_beta_timing", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if y is not None:
+            _payload["y"] = y
+        if x is not None:
+            _payload["x"] = x
+        return await self._call_analytics("rolling_beta_timing", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_cagr(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3917,39 +5143,47 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling CAGR
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling CAGR"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 252):
-            params["period"] = period
-        return await self._call_analytics("rolling_cagr", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        return await self._call_analytics("rolling_cagr", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_calmar(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3957,39 +5191,49 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling Calmar ratio
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling Calmar ratio"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 252):
-            params["period"] = period
-        return await self._call_analytics("rolling_calmar", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if Annualized is not None and (not strict or Annualized != True):
+            _payload["Annualized"] = Annualized
+        return await self._call_analytics("rolling_calmar", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_correlation(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 63,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        min_samples: Optional[int] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3997,39 +5241,50 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling correlation
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling correlation"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 63):
-            params["period"] = period
-        return await self._call_analytics("rolling_correlation", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        return await self._call_analytics("rolling_correlation", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_covariance(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 63,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        min_samples: Optional[int] = None,
+        Annualized: Optional[bool] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4037,39 +5292,50 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling covariance
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling covariance"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 63):
-            params["period"] = period
-        return await self._call_analytics("rolling_covariance", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if Annualized is not None and (not strict or Annualized != True):
+            _payload["Annualized"] = Annualized
+        return await self._call_analytics("rolling_covariance", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_cvar(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         confidence: Optional[float] = 0.95,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
@@ -4078,42 +5344,50 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling CVaR (Expected Shortfall)
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window
-        confidence: Confidence level"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling CVaR (Expected Shortfall)"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 252):
-            params["period"] = period
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
         if confidence is not None and (not strict or confidence != 0.95):
-            params["confidence"] = confidence
-        return await self._call_analytics("rolling_cvar", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["confidence"] = confidence
+        return await self._call_analytics("rolling_cvar", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_downside_beta(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4121,29 +5395,35 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling downside beta
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling downside beta"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 252):
-            params["period"] = period
-        return await self._call_analytics("rolling_downside_beta", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if y is not None:
+            _payload["y"] = y
+        if x is not None:
+            _payload["x"] = x
+        return await self._call_analytics("rolling_downside_beta", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_factor_regression(
         self,
@@ -4151,10 +5431,16 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        model: Optional[str] = "FF3",
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        model: Optional[str] = "custom",
+        period: Optional[int] = 260,
+        Obs: Optional[Any] = "",
+        annualize_alpha: Optional[bool] = True,
+        use_excess_returns: Optional[bool] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4162,42 +5448,53 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling factor regression
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        model: FF3|FF5|Carhart
-        period: Rolling window"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling factor regression"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
+        if factors is not None:
+            _payload["factors"] = factors
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if model is not None and (not strict or model != "FF3"):
-            params["model"] = model
-        if period is not None and (not strict or period != 252):
-            params["period"] = period
-        return await self._call_analytics("rolling_factor_regression", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if model is not None and (not strict or model != "custom"):
+            _payload["model"] = model
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if annualize_alpha is not None and (not strict or annualize_alpha != True):
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None and (not strict or use_excess_returns != True):
+            _payload["use_excess_returns"] = use_excess_returns
+        return await self._call_analytics("rolling_factor_regression", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_garch(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        p: Optional[int] = 1,
+        q: Optional[int] = 1,
+        Annualized: Optional[Any] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4205,39 +5502,55 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling GARCH
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling GARCH"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 252):
-            params["period"] = period
-        return await self._call_analytics("rolling_garch", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if p is not None and (not strict or p != 1):
+            _payload["p"] = p
+        if q is not None and (not strict or q != 1):
+            _payload["q"] = q
+        if Annualized is not None and (not strict or Annualized != False):
+            _payload["Annualized"] = Annualized
+        return await self._call_analytics("rolling_garch", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_information_ratio(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4245,39 +5558,53 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling information ratio
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling information ratio"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 252):
-            params["period"] = period
-        return await self._call_analytics("rolling_information_ratio", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if y is not None:
+            _payload["y"] = y
+        if x is not None:
+            _payload["x"] = x
+        if Annualized is not None and (not strict or Annualized != True):
+            _payload["Annualized"] = Annualized
+        return await self._call_analytics("rolling_information_ratio", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_kurtosis(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 63,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        excess: Optional[bool] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4285,39 +5612,50 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling kurtosis
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling kurtosis"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 63):
-            params["period"] = period
-        return await self._call_analytics("rolling_kurtosis", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if excess is not None and (not strict or excess != True):
+            _payload["excess"] = excess
+        return await self._call_analytics("rolling_kurtosis", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_r_squared(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4325,39 +5663,55 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling R-squared
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling R-squared"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 252):
-            params["period"] = period
-        return await self._call_analytics("rolling_r_squared", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if y is not None:
+            _payload["y"] = y
+        if x is not None:
+            _payload["x"] = x
+        return await self._call_analytics("rolling_r_squared", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_regression(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
+        Annualized: Optional[Any] = True,
+        rf: Optional[float] = 0.0,
+        rf_frequency: Optional[str] = "annual",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4365,39 +5719,58 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling regression
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling regression"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 252):
-            params["period"] = period
-        return await self._call_analytics("rolling_regression", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if y is not None:
+            _payload["y"] = y
+        if x is not None:
+            _payload["x"] = x
+        if Annualized is not None and (not strict or Annualized != True):
+            _payload["Annualized"] = Annualized
+        if rf is not None and (not strict or rf != 0.0):
+            _payload["rf"] = rf
+        if rf_frequency is not None and (not strict or rf_frequency != "annual"):
+            _payload["rf_frequency"] = rf_frequency
+        return await self._call_analytics("rolling_regression", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_residuals(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4405,40 +5778,53 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling residuals
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling residuals"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 252):
-            params["period"] = period
-        return await self._call_analytics("rolling_residuals", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if y is not None:
+            _payload["y"] = y
+        if x is not None:
+            _payload["x"] = x
+        return await self._call_analytics("rolling_residuals", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_sharpe(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         rf: Optional[float] = 0.0,
+        rf_frequency: Optional[str] = "annual",
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4446,42 +5832,52 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling Sharpe ratio
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window
-        rf: Risk-free rate"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling Sharpe ratio"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 252):
-            params["period"] = period
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
         if rf is not None and (not strict or rf != 0.0):
-            params["rf"] = rf
-        return await self._call_analytics("rolling_sharpe", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["rf"] = rf
+        if rf_frequency is not None and (not strict or rf_frequency != "annual"):
+            _payload["rf_frequency"] = rf_frequency
+        if Annualized is not None and (not strict or Annualized != True):
+            _payload["Annualized"] = Annualized
+        return await self._call_analytics("rolling_sharpe", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_skewness(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 63,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4489,40 +5885,48 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling skewness
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling skewness"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 63):
-            params["period"] = period
-        return await self._call_analytics("rolling_skewness", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        return await self._call_analytics("rolling_skewness", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_sortino(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
-        rf: Optional[float] = 0.0,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        MAR: Optional[float] = 0.0,
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4530,43 +5934,55 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling Sortino ratio
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window
-        rf: Risk-free rate"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling Sortino ratio"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 252):
-            params["period"] = period
-        if rf is not None and (not strict or rf != 0.0):
-            params["rf"] = rf
-        return await self._call_analytics("rolling_sortino", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if MAR is not None and (not strict or MAR != 0.0):
+            _payload["MAR"] = MAR
+        if Annualized is not None and (not strict or Annualized != True):
+            _payload["Annualized"] = Annualized
+        return await self._call_analytics("rolling_sortino", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_treynor(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         rf: Optional[float] = 0.0,
+        rf_frequency: Optional[str] = "annual",
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4574,42 +5990,58 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling Treynor ratio
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window
-        rf: Risk-free rate"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling Treynor ratio"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 252):
-            params["period"] = period
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if y is not None:
+            _payload["y"] = y
+        if x is not None:
+            _payload["x"] = x
         if rf is not None and (not strict or rf != 0.0):
-            params["rf"] = rf
-        return await self._call_analytics("rolling_treynor", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["rf"] = rf
+        if rf_frequency is not None and (not strict or rf_frequency != "annual"):
+            _payload["rf_frequency"] = rf_frequency
+        if Annualized is not None and (not strict or Annualized != True):
+            _payload["Annualized"] = Annualized
+        return await self._call_analytics("rolling_treynor", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_upside_beta(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4617,40 +6049,52 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling upside beta
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling upside beta"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 252):
-            params["period"] = period
-        return await self._call_analytics("rolling_upside_beta", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if y is not None:
+            _payload["y"] = y
+        if x is not None:
+            _payload["x"] = x
+        return await self._call_analytics("rolling_upside_beta", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_var(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 252,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         confidence: Optional[float] = 0.95,
+        method: Optional[str] = "historical",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4658,42 +6102,51 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling Value at Risk
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window
-        confidence: Confidence level"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling Value at Risk"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 252):
-            params["period"] = period
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
         if confidence is not None and (not strict or confidence != 0.95):
-            params["confidence"] = confidence
-        return await self._call_analytics("rolling_var", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["confidence"] = confidence
+        if method is not None and (not strict or method != "historical"):
+            _payload["method"] = method
+        return await self._call_analytics("rolling_var", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_variance(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 21,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4701,39 +6154,49 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling variance
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling variance"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 21):
-            params["period"] = period
-        return await self._call_analytics("rolling_variance", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if Annualized is not None and (not strict or Annualized != True):
+            _payload["Annualized"] = Annualized
+        return await self._call_analytics("rolling_variance", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_volatility(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        period: Optional[int] = 21,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4741,38 +6204,50 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling volatility
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        period: Rolling window"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Rolling volatility"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        if period is not None and (not strict or period != 21):
-            params["period"] = period
-        return await self._call_analytics("rolling_volatility", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if Annualized is not None and (not strict or Annualized != True):
+            _payload["Annualized"] = Annualized
+        return await self._call_analytics("rolling_volatility", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def semi_deviation(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        threshold: Optional[float] = 0.0,
+        Annualized: Optional[Any] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4780,35 +6255,52 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Semi-deviation
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Semi-deviation"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call_analytics("semi_deviation", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if threshold is not None and (not strict or threshold != 0.0):
+            _payload["threshold"] = threshold
+        if Annualized is not None and (not strict or Annualized != False):
+            _payload["Annualized"] = Annualized
+        return await self._call_analytics("semi_deviation", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def semi_variance(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        threshold: Optional[float] = 0.0,
+        Annualized: Optional[Any] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4816,35 +6308,53 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Semi-variance
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Semi-variance"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call_analytics("semi_variance", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if threshold is not None and (not strict or threshold != 0.0):
+            _payload["threshold"] = threshold
+        if Annualized is not None and (not strict or Annualized != False):
+            _payload["Annualized"] = Annualized
+        return await self._call_analytics("semi_variance", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def sterling_ratio(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        rf: Optional[float] = 0.0,
+        rf_frequency: Optional[str] = "annual",
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4852,35 +6362,53 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Sterling ratio
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Sterling ratio"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call_analytics("sterling_ratio", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if rf is not None and (not strict or rf != 0.0):
+            _payload["rf"] = rf
+        if rf_frequency is not None and (not strict or rf_frequency != "annual"):
+            _payload["rf_frequency"] = rf_frequency
+        if Annualized is not None and (not strict or Annualized != True):
+            _payload["Annualized"] = Annualized
+        return await self._call_analytics("sterling_ratio", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def tail_ratio(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        percentile: Optional[float] = 5.0,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4888,35 +6416,51 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Tail ratio
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Tail ratio"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call_analytics("tail_ratio", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if percentile is not None and (not strict or percentile != 5.0):
+            _payload["percentile"] = percentile
+        return await self._call_analytics("tail_ratio", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def tracking_error(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
+        Annualized: Optional[Any] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4924,35 +6468,54 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Tracking error
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Tracking error"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call_analytics("tracking_error", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if y is not None:
+            _payload["y"] = y
+        if x is not None:
+            _payload["x"] = x
+        if Annualized is not None and (not strict or Annualized != True):
+            _payload["Annualized"] = Annualized
+        return await self._call_analytics("tracking_error", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def tracking_error_volatility(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4960,35 +6523,50 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Tracking error volatility
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Tracking error volatility"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call_analytics("tracking_error_volatility", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if y is not None:
+            _payload["y"] = y
+        if x is not None:
+            _payload["x"] = x
+        return await self._call_analytics("tracking_error_volatility", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def ulcer_index(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4996,35 +6574,48 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Ulcer index
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Ulcer index"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call_analytics("ulcer_index", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        return await self._call_analytics("ulcer_index", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def upside_capture(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        y: Optional[str] = None,
+        x: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -5032,35 +6623,52 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Upside capture
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Upside capture"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call_analytics("upside_capture", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if y is not None:
+            _payload["y"] = y
+        if x is not None:
+            _payload["x"] = x
+        return await self._call_analytics("upside_capture", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def upside_deviation(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        threshold: Optional[float] = 0.0,
+        Annualized: Optional[Any] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -5068,35 +6676,50 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Upside deviation
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Upside deviation"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call_analytics("upside_deviation", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if threshold is not None and (not strict or threshold != 0.0):
+            _payload["threshold"] = threshold
+        if Annualized is not None and (not strict or Annualized != False):
+            _payload["Annualized"] = Annualized
+        return await self._call_analytics("upside_deviation", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def win_rate(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -5104,35 +6727,47 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Win rate (% positive periods)
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Win rate (% positive periods)"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call_analytics("win_rate", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        return await self._call_analytics("win_rate", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def worst_period(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
         prices: Optional[Dict[str, Any]] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        TR: Optional[bool] = False,
+        currency: Optional[str] = None,
+        Obs: Optional[Any] = "",
+        period: Optional[int] = 260,
+        n_periods: Optional[int] = 20,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -5140,25 +6775,32 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Worst period return
-
-        Args:
-        identifiers: List of TepiloraCodes
-        prices: User-provided prices (DataFrame or dict)
-        prices_file: Path to prices file
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = dict(extra_params)
+        """Worst period return"""
+        _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if prices_file is not None:
-            params["prices_file"] = prices_file
+            _payload["prices_file"] = prices_file
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call_analytics("worst_period", params, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
+            _payload["end_date"] = end_date
+        if TR is not None and (not strict or TR != False):
+            _payload["TR"] = TR
+        if currency is not None:
+            _payload["currency"] = currency
+        if Obs is not None and (not strict or Obs != ""):
+            _payload["Obs"] = Obs
+        if period is not None and (not strict or period != 260):
+            _payload["period"] = period
+        if n_periods is not None and (not strict or n_periods != 20):
+            _payload["n_periods"] = n_periods
+        return await self._call_analytics("worst_period", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
 

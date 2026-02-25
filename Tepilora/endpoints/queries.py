@@ -33,13 +33,13 @@ class QueriesAPI(BaseAPI):
         category: Query category
         new_name: New query name
         description: New description"""
-        params: Dict[str, Any] = {}
-        params["name"] = name
-        params["category"] = category
-        params["new_name"] = new_name
+        _payload: Dict[str, Any] = {}
+        _payload["name"] = name
+        _payload["category"] = category
+        _payload["new_name"] = new_name
         if description is not None:
-            params["description"] = description
-        return self._call("queries.copy", params=params, options=options, context=context)
+            _payload["description"] = description
+        return self._call("queries.copy", params=_payload, options=options, context=context)
 
     def delete(
         self,
@@ -56,10 +56,10 @@ class QueriesAPI(BaseAPI):
         Args:
         name: Query name
         category: Query category"""
-        params: Dict[str, Any] = {}
-        params["name"] = name
-        params["category"] = category
-        return self._call("queries.delete", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["name"] = name
+        _payload["category"] = category
+        return self._call("queries.delete", params=_payload, options=options, context=context)
 
     def edit(
         self,
@@ -86,20 +86,20 @@ class QueriesAPI(BaseAPI):
         expression: New expression
         description: New description
         tags: New tags"""
-        params: Dict[str, Any] = {}
-        params["name"] = name
-        params["category"] = category
+        _payload: Dict[str, Any] = {}
+        _payload["name"] = name
+        _payload["category"] = category
         if definition is not None:
-            params["definition"] = definition
+            _payload["definition"] = definition
         if items is not None:
-            params["items"] = items
+            _payload["items"] = items
         if expression is not None:
-            params["expression"] = expression
+            _payload["expression"] = expression
         if description is not None:
-            params["description"] = description
+            _payload["description"] = description
         if tags is not None:
-            params["tags"] = tags
-        return self._call("queries.edit", params=params, options=options, context=context)
+            _payload["tags"] = tags
+        return self._call("queries.edit", params=_payload, options=options, context=context)
 
     def execute(
         self,
@@ -123,18 +123,18 @@ class QueriesAPI(BaseAPI):
         name: Query name
         category: Query category
         output_path: Output file path"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if id is not None:
-            params["id"] = id
+            _payload["id"] = id
         if query_id is not None:
-            params["query_id"] = query_id
+            _payload["query_id"] = query_id
         if name is not None:
-            params["name"] = name
+            _payload["name"] = name
         if category is not None:
-            params["category"] = category
+            _payload["category"] = category
         if output_path is not None:
-            params["output_path"] = output_path
-        return self._call("queries.execute", params=params, options=options, context=context, response_format=response_format)
+            _payload["output_path"] = output_path
+        return self._call("queries.execute", params=_payload, options=options, context=context, response_format=response_format)
 
     def get(
         self,
@@ -151,10 +151,10 @@ class QueriesAPI(BaseAPI):
         Args:
         name: Query name
         category: Query category"""
-        params: Dict[str, Any] = {}
-        params["name"] = name
-        params["category"] = category
-        return self._call("queries.get", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["name"] = name
+        _payload["category"] = category
+        return self._call("queries.get", params=_payload, options=options, context=context)
 
     def list(
         self,
@@ -162,6 +162,11 @@ class QueriesAPI(BaseAPI):
         category: Optional[str] = None,
         limit: Optional[int] = 100,
         offset: Optional[int] = 0,
+        order: Optional[str] = None,
+        search: Optional[str] = None,
+        sort: Optional[str] = None,
+        tags: Optional[str] = None,
+        type_: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -173,20 +178,36 @@ class QueriesAPI(BaseAPI):
         category: Filter by category
         limit: Maximum results
         offset: Pagination offset"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if category is not None:
-            params["category"] = category
+            _payload["category"] = category
         if limit is not None:
-            params["limit"] = limit
+            _payload["limit"] = limit
         if offset is not None:
-            params["offset"] = offset
-        return self._call("queries.list", params=params, options=options, context=context)
+            _payload["offset"] = offset
+        if order is not None:
+            _payload["order"] = order
+        if search is not None:
+            _payload["search"] = search
+        if sort is not None:
+            _payload["sort"] = sort
+        if tags is not None:
+            _payload["tags"] = tags
+        if type_ is not None:
+            _payload["type"] = type_
+        return self._call("queries.list", params=_payload, options=options, context=context)
 
     def preview(
         self,
         *,
-        query: Dict[str, Any],
+        action: Optional[str] = None,
+        category: Optional[str] = None,
+        definition: Optional[str] = None,
+        expression: Optional[str] = None,
+        items: Optional[str] = None,
+        params: Optional[Dict[str, Any]] = None,
         limit: Optional[int] = 10,
+        type_: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -196,13 +217,25 @@ class QueriesAPI(BaseAPI):
         Preview query without saving.
 
         Args:
-        query: Query definition
         limit: Maximum results"""
-        params: Dict[str, Any] = {}
-        params["query"] = query
+        _payload: Dict[str, Any] = {}
+        if action is not None:
+            _payload["action"] = action
+        if category is not None:
+            _payload["category"] = category
+        if definition is not None:
+            _payload["definition"] = definition
+        if expression is not None:
+            _payload["expression"] = expression
+        if items is not None:
+            _payload["items"] = items
+        if params is not None:
+            _payload["params"] = params
         if limit is not None:
-            params["limit"] = limit
-        return self._call("queries.preview", params=params, options=options, context=context, response_format=response_format)
+            _payload["limit"] = limit
+        if type_ is not None:
+            _payload["type"] = type_
+        return self._call("queries.preview", params=_payload, options=options, context=context, response_format=response_format)
 
     def save(
         self,
@@ -233,24 +266,24 @@ class QueriesAPI(BaseAPI):
         expression: Expression (for expression type)
         description: Description
         tags: Tags"""
-        params: Dict[str, Any] = {}
-        params["name"] = name
-        params["category"] = category
+        _payload: Dict[str, Any] = {}
+        _payload["name"] = name
+        _payload["category"] = category
         if type_ is not None:
-            params["type"] = type_
+            _payload["type"] = type_
         if visibility is not None:
-            params["visibility"] = visibility
+            _payload["visibility"] = visibility
         if definition is not None:
-            params["definition"] = definition
+            _payload["definition"] = definition
         if items is not None:
-            params["items"] = items
+            _payload["items"] = items
         if expression is not None:
-            params["expression"] = expression
+            _payload["expression"] = expression
         if description is not None:
-            params["description"] = description
+            _payload["description"] = description
         if tags is not None:
-            params["tags"] = tags
-        return self._call("queries.save", params=params, options=options, context=context)
+            _payload["tags"] = tags
+        return self._call("queries.save", params=_payload, options=options, context=context)
 
 
 
@@ -276,13 +309,13 @@ class AsyncQueriesAPI(AsyncBaseAPI):
         category: Query category
         new_name: New query name
         description: New description"""
-        params: Dict[str, Any] = {}
-        params["name"] = name
-        params["category"] = category
-        params["new_name"] = new_name
+        _payload: Dict[str, Any] = {}
+        _payload["name"] = name
+        _payload["category"] = category
+        _payload["new_name"] = new_name
         if description is not None:
-            params["description"] = description
-        return await self._call("queries.copy", params=params, options=options, context=context)
+            _payload["description"] = description
+        return await self._call("queries.copy", params=_payload, options=options, context=context)
 
     async def delete(
         self,
@@ -299,10 +332,10 @@ class AsyncQueriesAPI(AsyncBaseAPI):
         Args:
         name: Query name
         category: Query category"""
-        params: Dict[str, Any] = {}
-        params["name"] = name
-        params["category"] = category
-        return await self._call("queries.delete", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["name"] = name
+        _payload["category"] = category
+        return await self._call("queries.delete", params=_payload, options=options, context=context)
 
     async def edit(
         self,
@@ -329,20 +362,20 @@ class AsyncQueriesAPI(AsyncBaseAPI):
         expression: New expression
         description: New description
         tags: New tags"""
-        params: Dict[str, Any] = {}
-        params["name"] = name
-        params["category"] = category
+        _payload: Dict[str, Any] = {}
+        _payload["name"] = name
+        _payload["category"] = category
         if definition is not None:
-            params["definition"] = definition
+            _payload["definition"] = definition
         if items is not None:
-            params["items"] = items
+            _payload["items"] = items
         if expression is not None:
-            params["expression"] = expression
+            _payload["expression"] = expression
         if description is not None:
-            params["description"] = description
+            _payload["description"] = description
         if tags is not None:
-            params["tags"] = tags
-        return await self._call("queries.edit", params=params, options=options, context=context)
+            _payload["tags"] = tags
+        return await self._call("queries.edit", params=_payload, options=options, context=context)
 
     async def execute(
         self,
@@ -366,18 +399,18 @@ class AsyncQueriesAPI(AsyncBaseAPI):
         name: Query name
         category: Query category
         output_path: Output file path"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if id is not None:
-            params["id"] = id
+            _payload["id"] = id
         if query_id is not None:
-            params["query_id"] = query_id
+            _payload["query_id"] = query_id
         if name is not None:
-            params["name"] = name
+            _payload["name"] = name
         if category is not None:
-            params["category"] = category
+            _payload["category"] = category
         if output_path is not None:
-            params["output_path"] = output_path
-        return await self._call("queries.execute", params=params, options=options, context=context, response_format=response_format)
+            _payload["output_path"] = output_path
+        return await self._call("queries.execute", params=_payload, options=options, context=context, response_format=response_format)
 
     async def get(
         self,
@@ -394,10 +427,10 @@ class AsyncQueriesAPI(AsyncBaseAPI):
         Args:
         name: Query name
         category: Query category"""
-        params: Dict[str, Any] = {}
-        params["name"] = name
-        params["category"] = category
-        return await self._call("queries.get", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["name"] = name
+        _payload["category"] = category
+        return await self._call("queries.get", params=_payload, options=options, context=context)
 
     async def list(
         self,
@@ -405,6 +438,11 @@ class AsyncQueriesAPI(AsyncBaseAPI):
         category: Optional[str] = None,
         limit: Optional[int] = 100,
         offset: Optional[int] = 0,
+        order: Optional[str] = None,
+        search: Optional[str] = None,
+        sort: Optional[str] = None,
+        tags: Optional[str] = None,
+        type_: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -416,20 +454,36 @@ class AsyncQueriesAPI(AsyncBaseAPI):
         category: Filter by category
         limit: Maximum results
         offset: Pagination offset"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if category is not None:
-            params["category"] = category
+            _payload["category"] = category
         if limit is not None:
-            params["limit"] = limit
+            _payload["limit"] = limit
         if offset is not None:
-            params["offset"] = offset
-        return await self._call("queries.list", params=params, options=options, context=context)
+            _payload["offset"] = offset
+        if order is not None:
+            _payload["order"] = order
+        if search is not None:
+            _payload["search"] = search
+        if sort is not None:
+            _payload["sort"] = sort
+        if tags is not None:
+            _payload["tags"] = tags
+        if type_ is not None:
+            _payload["type"] = type_
+        return await self._call("queries.list", params=_payload, options=options, context=context)
 
     async def preview(
         self,
         *,
-        query: Dict[str, Any],
+        action: Optional[str] = None,
+        category: Optional[str] = None,
+        definition: Optional[str] = None,
+        expression: Optional[str] = None,
+        items: Optional[str] = None,
+        params: Optional[Dict[str, Any]] = None,
         limit: Optional[int] = 10,
+        type_: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -439,13 +493,25 @@ class AsyncQueriesAPI(AsyncBaseAPI):
         Preview query without saving.
 
         Args:
-        query: Query definition
         limit: Maximum results"""
-        params: Dict[str, Any] = {}
-        params["query"] = query
+        _payload: Dict[str, Any] = {}
+        if action is not None:
+            _payload["action"] = action
+        if category is not None:
+            _payload["category"] = category
+        if definition is not None:
+            _payload["definition"] = definition
+        if expression is not None:
+            _payload["expression"] = expression
+        if items is not None:
+            _payload["items"] = items
+        if params is not None:
+            _payload["params"] = params
         if limit is not None:
-            params["limit"] = limit
-        return await self._call("queries.preview", params=params, options=options, context=context, response_format=response_format)
+            _payload["limit"] = limit
+        if type_ is not None:
+            _payload["type"] = type_
+        return await self._call("queries.preview", params=_payload, options=options, context=context, response_format=response_format)
 
     async def save(
         self,
@@ -476,23 +542,23 @@ class AsyncQueriesAPI(AsyncBaseAPI):
         expression: Expression (for expression type)
         description: Description
         tags: Tags"""
-        params: Dict[str, Any] = {}
-        params["name"] = name
-        params["category"] = category
+        _payload: Dict[str, Any] = {}
+        _payload["name"] = name
+        _payload["category"] = category
         if type_ is not None:
-            params["type"] = type_
+            _payload["type"] = type_
         if visibility is not None:
-            params["visibility"] = visibility
+            _payload["visibility"] = visibility
         if definition is not None:
-            params["definition"] = definition
+            _payload["definition"] = definition
         if items is not None:
-            params["items"] = items
+            _payload["items"] = items
         if expression is not None:
-            params["expression"] = expression
+            _payload["expression"] = expression
         if description is not None:
-            params["description"] = description
+            _payload["description"] = description
         if tags is not None:
-            params["tags"] = tags
-        return await self._call("queries.save", params=params, options=options, context=context)
+            _payload["tags"] = tags
+        return await self._call("queries.save", params=_payload, options=options, context=context)
 
 

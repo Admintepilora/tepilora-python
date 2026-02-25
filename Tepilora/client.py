@@ -301,48 +301,62 @@ class TepiloraClient:
             )
             self._owns_client = True
 
+        # --- AUTO-GENERATED NAMESPACE IMPORTS START ---
         from .endpoints import (
-            NewsAPI, PublicationsAPI, QueriesAPI, SearchAPI, SecuritiesAPI,
-            PortfolioAPI, MacroAPI, AlertsAPI,
-            StocksAPI, BondsAPI, OptionsAPI, EsgAPI, FactorsAPI, FhAPI, DataAPI,
-            ClientsAPI, ProfilingAPI, BillingAPI, DocumentsAPI, AlternativesAPI,
-            AssetAllocationAPI, ExportsAPI,
+            AlertsAPI,
+            AlternativesAPI,
+            AssetAllocationAPI,
+            BillingAPI,
+            BondsAPI,
+            ClientsAPI,
+            DataAPI,
+            DocumentsAPI,
+            EsgAPI,
+            ExportsAPI,
+            FactorsAPI,
+            FhAPI,
+            MacroAPI,
+            NewsAPI,
+            OptionsAPI,
+            PortfolioAPI,
+            ProfilingAPI,
+            PublicationsAPI,
+            QueriesAPI,
+            SearchAPI,
+            SecuritiesAPI,
+            StocksAPI,
+            WorkflowsAPI,
         )
         from .analytics import AnalyticsAPI
+        # --- AUTO-GENERATED NAMESPACE IMPORTS END ---
 
-        # Existing namespaces
-        self.securities = SecuritiesAPI(self)
-        self.news = NewsAPI(self)
-        self.publications = PublicationsAPI(self)
-        self.queries = QueriesAPI(self)
-        self.search = SearchAPI(self)
-        self.analytics = AnalyticsAPI(self)
-
-        # High priority namespaces
-        self.portfolio = PortfolioAPI(self)
-        self.macro = MacroAPI(self)
+        # --- AUTO-GENERATED NAMESPACE REGISTRATIONS START ---
         self.alerts = AlertsAPI(self)
-        self.realtime = RealtimeAPI(self)
-
-        # Medium priority namespaces
-        self.stocks = StocksAPI(self)
+        self.alternatives = AlternativesAPI(self)
+        self.analytics = AnalyticsAPI(self)
+        self.asset_allocation = AssetAllocationAPI(self)
+        self.billing = BillingAPI(self)
         self.bonds = BondsAPI(self)
-        self.options = OptionsAPI(self)
+        self.clients = ClientsAPI(self)
+        self.data = DataAPI(self)
+        self.documents = DocumentsAPI(self)
         self.esg = EsgAPI(self)
+        self.exports = ExportsAPI(self)
         self.factors = FactorsAPI(self)
         self.fh = FhAPI(self)
-        self.data = DataAPI(self)
-
-        # Low priority namespaces (B2B/enterprise)
-        self.clients = ClientsAPI(self)
+        self.macro = MacroAPI(self)
+        self.news = NewsAPI(self)
+        self.options = OptionsAPI(self)
+        self.portfolio = PortfolioAPI(self)
         self.profiling = ProfilingAPI(self)
-        self.billing = BillingAPI(self)
-        self.documents = DocumentsAPI(self)
-        self.alternatives = AlternativesAPI(self)
-
-        # Cross-module
-        self.asset_allocation = AssetAllocationAPI(self)
-        self.exports = ExportsAPI(self)
+        self.publications = PublicationsAPI(self)
+        self.queries = QueriesAPI(self)
+        self.realtime = RealtimeAPI(self)
+        self.search = SearchAPI(self)
+        self.securities = SecuritiesAPI(self)
+        self.stocks = StocksAPI(self)
+        self.workflows = WorkflowsAPI(self)
+        # --- AUTO-GENERATED NAMESPACE REGISTRATIONS END ---
 
     def close(self) -> None:
         if self._owns_client:
@@ -608,48 +622,62 @@ class AsyncTepiloraClient:
             )
             self._owns_client = True
 
+        # --- AUTO-GENERATED NAMESPACE IMPORTS START ---
         from .endpoints import (
-            AsyncNewsAPI, AsyncPublicationsAPI, AsyncQueriesAPI, AsyncSearchAPI, AsyncSecuritiesAPI,
-            AsyncPortfolioAPI, AsyncMacroAPI, AsyncAlertsAPI,
-            AsyncStocksAPI, AsyncBondsAPI, AsyncOptionsAPI, AsyncEsgAPI, AsyncFactorsAPI, AsyncFhAPI, AsyncDataAPI,
-            AsyncClientsAPI, AsyncProfilingAPI, AsyncBillingAPI, AsyncDocumentsAPI, AsyncAlternativesAPI,
-            AsyncAssetAllocationAPI, AsyncExportsAPI,
+            AsyncAlertsAPI,
+            AsyncAlternativesAPI,
+            AsyncAssetAllocationAPI,
+            AsyncBillingAPI,
+            AsyncBondsAPI,
+            AsyncClientsAPI,
+            AsyncDataAPI,
+            AsyncDocumentsAPI,
+            AsyncEsgAPI,
+            AsyncExportsAPI,
+            AsyncFactorsAPI,
+            AsyncFhAPI,
+            AsyncMacroAPI,
+            AsyncNewsAPI,
+            AsyncOptionsAPI,
+            AsyncPortfolioAPI,
+            AsyncProfilingAPI,
+            AsyncPublicationsAPI,
+            AsyncQueriesAPI,
+            AsyncSearchAPI,
+            AsyncSecuritiesAPI,
+            AsyncStocksAPI,
+            AsyncWorkflowsAPI,
         )
         from .analytics import AsyncAnalyticsAPI
+        # --- AUTO-GENERATED NAMESPACE IMPORTS END ---
 
-        # Existing namespaces
-        self.securities = AsyncSecuritiesAPI(self)
-        self.news = AsyncNewsAPI(self)
-        self.publications = AsyncPublicationsAPI(self)
-        self.queries = AsyncQueriesAPI(self)
-        self.search = AsyncSearchAPI(self)
-        self.analytics = AsyncAnalyticsAPI(self)
-
-        # High priority namespaces
-        self.portfolio = AsyncPortfolioAPI(self)
-        self.macro = AsyncMacroAPI(self)
+        # --- AUTO-GENERATED NAMESPACE REGISTRATIONS START ---
         self.alerts = AsyncAlertsAPI(self)
-        self.realtime = AsyncRealtimeAPI(self)
-
-        # Medium priority namespaces
-        self.stocks = AsyncStocksAPI(self)
+        self.alternatives = AsyncAlternativesAPI(self)
+        self.analytics = AsyncAnalyticsAPI(self)
+        self.asset_allocation = AsyncAssetAllocationAPI(self)
+        self.billing = AsyncBillingAPI(self)
         self.bonds = AsyncBondsAPI(self)
-        self.options = AsyncOptionsAPI(self)
+        self.clients = AsyncClientsAPI(self)
+        self.data = AsyncDataAPI(self)
+        self.documents = AsyncDocumentsAPI(self)
         self.esg = AsyncEsgAPI(self)
+        self.exports = AsyncExportsAPI(self)
         self.factors = AsyncFactorsAPI(self)
         self.fh = AsyncFhAPI(self)
-        self.data = AsyncDataAPI(self)
-
-        # Low priority namespaces (B2B/enterprise)
-        self.clients = AsyncClientsAPI(self)
+        self.macro = AsyncMacroAPI(self)
+        self.news = AsyncNewsAPI(self)
+        self.options = AsyncOptionsAPI(self)
+        self.portfolio = AsyncPortfolioAPI(self)
         self.profiling = AsyncProfilingAPI(self)
-        self.billing = AsyncBillingAPI(self)
-        self.documents = AsyncDocumentsAPI(self)
-        self.alternatives = AsyncAlternativesAPI(self)
-
-        # Cross-module
-        self.asset_allocation = AsyncAssetAllocationAPI(self)
-        self.exports = AsyncExportsAPI(self)
+        self.publications = AsyncPublicationsAPI(self)
+        self.queries = AsyncQueriesAPI(self)
+        self.realtime = AsyncRealtimeAPI(self)
+        self.search = AsyncSearchAPI(self)
+        self.securities = AsyncSecuritiesAPI(self)
+        self.stocks = AsyncStocksAPI(self)
+        self.workflows = AsyncWorkflowsAPI(self)
+        # --- AUTO-GENERATED NAMESPACE REGISTRATIONS END ---
 
     async def aclose(self) -> None:
         if self._owns_client:

@@ -18,6 +18,9 @@ class AlertsAPI(BaseAPI):
         self,
         *,
         event_id: str,
+        ack: Optional[str] = None,
+        id: Optional[str] = None,
+        note: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -25,17 +28,29 @@ class AlertsAPI(BaseAPI):
 
         Args:
         event_id: Event ID"""
-        params: Dict[str, Any] = {}
-        params["event_id"] = event_id
-        return self._call("alerts.ack", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["event_id"] = event_id
+        if ack is not None:
+            _payload["ack"] = ack
+        if id is not None:
+            _payload["id"] = id
+        if note is not None:
+            _payload["note"] = note
+        return self._call("alerts.ack", params=_payload, options=options, context=context)
 
     def create(
         self,
         *,
         name: str,
-        condition: Dict[str, Any],
-        action: Optional[Dict[str, Any]] = None,
+        config: Optional[Dict[str, Any]] = None,
+        cooldown_seconds: Optional[str] = None,
+        delivery: Optional[str] = None,
+        description: Optional[str] = None,
         enabled: Optional[bool] = True,
+        rule_type: Optional[str] = None,
+        severity: Optional[str] = None,
+        type_: Optional[str] = None,
+        visibility: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -43,22 +58,36 @@ class AlertsAPI(BaseAPI):
 
         Args:
         name: Alert name
-        condition: Alert condition
-        action: Alert action (webhook, email)
         enabled: Enable alert"""
-        params: Dict[str, Any] = {}
-        params["name"] = name
-        params["condition"] = condition
-        if action is not None:
-            params["action"] = action
+        _payload: Dict[str, Any] = {}
+        _payload["name"] = name
+        if config is not None:
+            _payload["config"] = config
+        if cooldown_seconds is not None:
+            _payload["cooldown_seconds"] = cooldown_seconds
+        if delivery is not None:
+            _payload["delivery"] = delivery
+        if description is not None:
+            _payload["description"] = description
         if enabled is not None:
-            params["enabled"] = enabled
-        return self._call("alerts.create", params=params, options=options, context=context)
+            _payload["enabled"] = enabled
+        if rule_type is not None:
+            _payload["rule_type"] = rule_type
+        if severity is not None:
+            _payload["severity"] = severity
+        if type_ is not None:
+            _payload["type"] = type_
+        if visibility is not None:
+            _payload["visibility"] = visibility
+        return self._call("alerts.create", params=_payload, options=options, context=context)
 
     def delete(
         self,
         *,
         rule_id: str,
+        delete_events: Optional[str] = None,
+        id: Optional[str] = None,
+        name: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -66,14 +95,23 @@ class AlertsAPI(BaseAPI):
 
         Args:
         rule_id: Rule ID"""
-        params: Dict[str, Any] = {}
-        params["rule_id"] = rule_id
-        return self._call("alerts.delete", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["rule_id"] = rule_id
+        if delete_events is not None:
+            _payload["delete_events"] = delete_events
+        if id is not None:
+            _payload["id"] = id
+        if name is not None:
+            _payload["name"] = name
+        return self._call("alerts.delete", params=_payload, options=options, context=context)
 
     def evaluate(
         self,
         *,
         rule_id: str,
+        id: Optional[str] = None,
+        name: Optional[str] = None,
+        update_stats: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -83,14 +121,22 @@ class AlertsAPI(BaseAPI):
 
         Args:
         rule_id: Rule ID"""
-        params: Dict[str, Any] = {}
-        params["rule_id"] = rule_id
-        return self._call("alerts.evaluate", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["rule_id"] = rule_id
+        if id is not None:
+            _payload["id"] = id
+        if name is not None:
+            _payload["name"] = name
+        if update_stats is not None:
+            _payload["update_stats"] = update_stats
+        return self._call("alerts.evaluate", params=_payload, options=options, context=context)
 
     def get(
         self,
         *,
         rule_id: str,
+        id: Optional[str] = None,
+        name: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -98,15 +144,23 @@ class AlertsAPI(BaseAPI):
 
         Args:
         rule_id: Rule ID"""
-        params: Dict[str, Any] = {}
-        params["rule_id"] = rule_id
-        return self._call("alerts.get", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["rule_id"] = rule_id
+        if id is not None:
+            _payload["id"] = id
+        if name is not None:
+            _payload["name"] = name
+        return self._call("alerts.get", params=_payload, options=options, context=context)
 
     def history(
         self,
         *,
+        ack: Optional[str] = None,
+        id: Optional[str] = None,
+        offset: Optional[int] = None,
         rule_id: Optional[str] = None,
         limit: Optional[int] = 100,
+        status: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -118,18 +172,32 @@ class AlertsAPI(BaseAPI):
         Args:
         rule_id: Filter by rule
         limit: Maximum results"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
+        if ack is not None:
+            _payload["ack"] = ack
+        if id is not None:
+            _payload["id"] = id
+        if offset is not None:
+            _payload["offset"] = offset
         if rule_id is not None:
-            params["rule_id"] = rule_id
+            _payload["rule_id"] = rule_id
         if limit is not None:
-            params["limit"] = limit
-        return self._call("alerts.history", params=params, options=options, context=context, response_format=response_format)
+            _payload["limit"] = limit
+        if status is not None:
+            _payload["status"] = status
+        return self._call("alerts.history", params=_payload, options=options, context=context, response_format=response_format)
 
     def list(
         self,
         *,
         enabled: Optional[bool] = None,
         limit: Optional[int] = 100,
+        offset: Optional[int] = None,
+        order: Optional[str] = None,
+        rule_type: Optional[str] = None,
+        search: Optional[str] = None,
+        sort: Optional[str] = None,
+        type_: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -139,33 +207,76 @@ class AlertsAPI(BaseAPI):
         Args:
         enabled: Filter by enabled
         limit: Maximum results"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if enabled is not None:
-            params["enabled"] = enabled
+            _payload["enabled"] = enabled
         if limit is not None:
-            params["limit"] = limit
-        return self._call("alerts.list", params=params, options=options, context=context, response_format=response_format)
+            _payload["limit"] = limit
+        if offset is not None:
+            _payload["offset"] = offset
+        if order is not None:
+            _payload["order"] = order
+        if rule_type is not None:
+            _payload["rule_type"] = rule_type
+        if search is not None:
+            _payload["search"] = search
+        if sort is not None:
+            _payload["sort"] = sort
+        if type_ is not None:
+            _payload["type"] = type_
+        return self._call("alerts.list", params=_payload, options=options, context=context, response_format=response_format)
 
     def run(
         self,
         *,
+        dry_run: Optional[str] = None,
+        force: Optional[str] = None,
+        id: Optional[str] = None,
+        limit: Optional[int] = None,
+        name: Optional[str] = None,
+        rule_id: Optional[str] = None,
+        rule_type: Optional[str] = None,
+        type_: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
         """Run all alerts
 
         Evaluate all enabled alerts."""
-        params: Dict[str, Any] = {}
-        return self._call("alerts.run", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        if dry_run is not None:
+            _payload["dry_run"] = dry_run
+        if force is not None:
+            _payload["force"] = force
+        if id is not None:
+            _payload["id"] = id
+        if limit is not None:
+            _payload["limit"] = limit
+        if name is not None:
+            _payload["name"] = name
+        if rule_id is not None:
+            _payload["rule_id"] = rule_id
+        if rule_type is not None:
+            _payload["rule_type"] = rule_type
+        if type_ is not None:
+            _payload["type"] = type_
+        return self._call("alerts.run", params=_payload, options=options, context=context)
 
     def update(
         self,
         *,
         rule_id: str,
+        config: Optional[Dict[str, Any]] = None,
+        cooldown_seconds: Optional[str] = None,
+        delivery: Optional[str] = None,
+        description: Optional[str] = None,
+        id: Optional[str] = None,
+        new_name: Optional[str] = None,
         name: Optional[str] = None,
-        condition: Optional[Dict[str, Any]] = None,
-        action: Optional[Dict[str, Any]] = None,
         enabled: Optional[bool] = None,
+        rule_type: Optional[str] = None,
+        severity: Optional[str] = None,
+        type_: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -174,20 +285,32 @@ class AlertsAPI(BaseAPI):
         Args:
         rule_id: Rule ID
         name: New name
-        condition: New condition
-        action: New action
         enabled: Enable/disable"""
-        params: Dict[str, Any] = {}
-        params["rule_id"] = rule_id
+        _payload: Dict[str, Any] = {}
+        _payload["rule_id"] = rule_id
+        if config is not None:
+            _payload["config"] = config
+        if cooldown_seconds is not None:
+            _payload["cooldown_seconds"] = cooldown_seconds
+        if delivery is not None:
+            _payload["delivery"] = delivery
+        if description is not None:
+            _payload["description"] = description
+        if id is not None:
+            _payload["id"] = id
+        if new_name is not None:
+            _payload["new_name"] = new_name
         if name is not None:
-            params["name"] = name
-        if condition is not None:
-            params["condition"] = condition
-        if action is not None:
-            params["action"] = action
+            _payload["name"] = name
         if enabled is not None:
-            params["enabled"] = enabled
-        return self._call("alerts.update", params=params, options=options, context=context)
+            _payload["enabled"] = enabled
+        if rule_type is not None:
+            _payload["rule_type"] = rule_type
+        if severity is not None:
+            _payload["severity"] = severity
+        if type_ is not None:
+            _payload["type"] = type_
+        return self._call("alerts.update", params=_payload, options=options, context=context)
 
 
 
@@ -198,6 +321,9 @@ class AsyncAlertsAPI(AsyncBaseAPI):
         self,
         *,
         event_id: str,
+        ack: Optional[str] = None,
+        id: Optional[str] = None,
+        note: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -205,17 +331,29 @@ class AsyncAlertsAPI(AsyncBaseAPI):
 
         Args:
         event_id: Event ID"""
-        params: Dict[str, Any] = {}
-        params["event_id"] = event_id
-        return await self._call("alerts.ack", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["event_id"] = event_id
+        if ack is not None:
+            _payload["ack"] = ack
+        if id is not None:
+            _payload["id"] = id
+        if note is not None:
+            _payload["note"] = note
+        return await self._call("alerts.ack", params=_payload, options=options, context=context)
 
     async def create(
         self,
         *,
         name: str,
-        condition: Dict[str, Any],
-        action: Optional[Dict[str, Any]] = None,
+        config: Optional[Dict[str, Any]] = None,
+        cooldown_seconds: Optional[str] = None,
+        delivery: Optional[str] = None,
+        description: Optional[str] = None,
         enabled: Optional[bool] = True,
+        rule_type: Optional[str] = None,
+        severity: Optional[str] = None,
+        type_: Optional[str] = None,
+        visibility: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -223,22 +361,36 @@ class AsyncAlertsAPI(AsyncBaseAPI):
 
         Args:
         name: Alert name
-        condition: Alert condition
-        action: Alert action (webhook, email)
         enabled: Enable alert"""
-        params: Dict[str, Any] = {}
-        params["name"] = name
-        params["condition"] = condition
-        if action is not None:
-            params["action"] = action
+        _payload: Dict[str, Any] = {}
+        _payload["name"] = name
+        if config is not None:
+            _payload["config"] = config
+        if cooldown_seconds is not None:
+            _payload["cooldown_seconds"] = cooldown_seconds
+        if delivery is not None:
+            _payload["delivery"] = delivery
+        if description is not None:
+            _payload["description"] = description
         if enabled is not None:
-            params["enabled"] = enabled
-        return await self._call("alerts.create", params=params, options=options, context=context)
+            _payload["enabled"] = enabled
+        if rule_type is not None:
+            _payload["rule_type"] = rule_type
+        if severity is not None:
+            _payload["severity"] = severity
+        if type_ is not None:
+            _payload["type"] = type_
+        if visibility is not None:
+            _payload["visibility"] = visibility
+        return await self._call("alerts.create", params=_payload, options=options, context=context)
 
     async def delete(
         self,
         *,
         rule_id: str,
+        delete_events: Optional[str] = None,
+        id: Optional[str] = None,
+        name: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -246,14 +398,23 @@ class AsyncAlertsAPI(AsyncBaseAPI):
 
         Args:
         rule_id: Rule ID"""
-        params: Dict[str, Any] = {}
-        params["rule_id"] = rule_id
-        return await self._call("alerts.delete", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["rule_id"] = rule_id
+        if delete_events is not None:
+            _payload["delete_events"] = delete_events
+        if id is not None:
+            _payload["id"] = id
+        if name is not None:
+            _payload["name"] = name
+        return await self._call("alerts.delete", params=_payload, options=options, context=context)
 
     async def evaluate(
         self,
         *,
         rule_id: str,
+        id: Optional[str] = None,
+        name: Optional[str] = None,
+        update_stats: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -263,14 +424,22 @@ class AsyncAlertsAPI(AsyncBaseAPI):
 
         Args:
         rule_id: Rule ID"""
-        params: Dict[str, Any] = {}
-        params["rule_id"] = rule_id
-        return await self._call("alerts.evaluate", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["rule_id"] = rule_id
+        if id is not None:
+            _payload["id"] = id
+        if name is not None:
+            _payload["name"] = name
+        if update_stats is not None:
+            _payload["update_stats"] = update_stats
+        return await self._call("alerts.evaluate", params=_payload, options=options, context=context)
 
     async def get(
         self,
         *,
         rule_id: str,
+        id: Optional[str] = None,
+        name: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -278,15 +447,23 @@ class AsyncAlertsAPI(AsyncBaseAPI):
 
         Args:
         rule_id: Rule ID"""
-        params: Dict[str, Any] = {}
-        params["rule_id"] = rule_id
-        return await self._call("alerts.get", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["rule_id"] = rule_id
+        if id is not None:
+            _payload["id"] = id
+        if name is not None:
+            _payload["name"] = name
+        return await self._call("alerts.get", params=_payload, options=options, context=context)
 
     async def history(
         self,
         *,
+        ack: Optional[str] = None,
+        id: Optional[str] = None,
+        offset: Optional[int] = None,
         rule_id: Optional[str] = None,
         limit: Optional[int] = 100,
+        status: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -298,18 +475,32 @@ class AsyncAlertsAPI(AsyncBaseAPI):
         Args:
         rule_id: Filter by rule
         limit: Maximum results"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
+        if ack is not None:
+            _payload["ack"] = ack
+        if id is not None:
+            _payload["id"] = id
+        if offset is not None:
+            _payload["offset"] = offset
         if rule_id is not None:
-            params["rule_id"] = rule_id
+            _payload["rule_id"] = rule_id
         if limit is not None:
-            params["limit"] = limit
-        return await self._call("alerts.history", params=params, options=options, context=context, response_format=response_format)
+            _payload["limit"] = limit
+        if status is not None:
+            _payload["status"] = status
+        return await self._call("alerts.history", params=_payload, options=options, context=context, response_format=response_format)
 
     async def list(
         self,
         *,
         enabled: Optional[bool] = None,
         limit: Optional[int] = 100,
+        offset: Optional[int] = None,
+        order: Optional[str] = None,
+        rule_type: Optional[str] = None,
+        search: Optional[str] = None,
+        sort: Optional[str] = None,
+        type_: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -319,33 +510,76 @@ class AsyncAlertsAPI(AsyncBaseAPI):
         Args:
         enabled: Filter by enabled
         limit: Maximum results"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if enabled is not None:
-            params["enabled"] = enabled
+            _payload["enabled"] = enabled
         if limit is not None:
-            params["limit"] = limit
-        return await self._call("alerts.list", params=params, options=options, context=context, response_format=response_format)
+            _payload["limit"] = limit
+        if offset is not None:
+            _payload["offset"] = offset
+        if order is not None:
+            _payload["order"] = order
+        if rule_type is not None:
+            _payload["rule_type"] = rule_type
+        if search is not None:
+            _payload["search"] = search
+        if sort is not None:
+            _payload["sort"] = sort
+        if type_ is not None:
+            _payload["type"] = type_
+        return await self._call("alerts.list", params=_payload, options=options, context=context, response_format=response_format)
 
     async def run(
         self,
         *,
+        dry_run: Optional[str] = None,
+        force: Optional[str] = None,
+        id: Optional[str] = None,
+        limit: Optional[int] = None,
+        name: Optional[str] = None,
+        rule_id: Optional[str] = None,
+        rule_type: Optional[str] = None,
+        type_: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
         """Run all alerts
 
         Evaluate all enabled alerts."""
-        params: Dict[str, Any] = {}
-        return await self._call("alerts.run", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        if dry_run is not None:
+            _payload["dry_run"] = dry_run
+        if force is not None:
+            _payload["force"] = force
+        if id is not None:
+            _payload["id"] = id
+        if limit is not None:
+            _payload["limit"] = limit
+        if name is not None:
+            _payload["name"] = name
+        if rule_id is not None:
+            _payload["rule_id"] = rule_id
+        if rule_type is not None:
+            _payload["rule_type"] = rule_type
+        if type_ is not None:
+            _payload["type"] = type_
+        return await self._call("alerts.run", params=_payload, options=options, context=context)
 
     async def update(
         self,
         *,
         rule_id: str,
+        config: Optional[Dict[str, Any]] = None,
+        cooldown_seconds: Optional[str] = None,
+        delivery: Optional[str] = None,
+        description: Optional[str] = None,
+        id: Optional[str] = None,
+        new_name: Optional[str] = None,
         name: Optional[str] = None,
-        condition: Optional[Dict[str, Any]] = None,
-        action: Optional[Dict[str, Any]] = None,
         enabled: Optional[bool] = None,
+        rule_type: Optional[str] = None,
+        severity: Optional[str] = None,
+        type_: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -354,19 +588,31 @@ class AsyncAlertsAPI(AsyncBaseAPI):
         Args:
         rule_id: Rule ID
         name: New name
-        condition: New condition
-        action: New action
         enabled: Enable/disable"""
-        params: Dict[str, Any] = {}
-        params["rule_id"] = rule_id
+        _payload: Dict[str, Any] = {}
+        _payload["rule_id"] = rule_id
+        if config is not None:
+            _payload["config"] = config
+        if cooldown_seconds is not None:
+            _payload["cooldown_seconds"] = cooldown_seconds
+        if delivery is not None:
+            _payload["delivery"] = delivery
+        if description is not None:
+            _payload["description"] = description
+        if id is not None:
+            _payload["id"] = id
+        if new_name is not None:
+            _payload["new_name"] = new_name
         if name is not None:
-            params["name"] = name
-        if condition is not None:
-            params["condition"] = condition
-        if action is not None:
-            params["action"] = action
+            _payload["name"] = name
         if enabled is not None:
-            params["enabled"] = enabled
-        return await self._call("alerts.update", params=params, options=options, context=context)
+            _payload["enabled"] = enabled
+        if rule_type is not None:
+            _payload["rule_type"] = rule_type
+        if severity is not None:
+            _payload["severity"] = severity
+        if type_ is not None:
+            _payload["type"] = type_
+        return await self._call("alerts.update", params=_payload, options=options, context=context)
 
 

@@ -6,7 +6,7 @@ Regenerate with: python scripts/generate_sdk.py --category macro
 """
 from __future__ import annotations
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional, Union
 
 from ._base import AsyncBaseAPI, BaseAPI
 
@@ -18,7 +18,9 @@ class MacroAPI(BaseAPI):
         self,
         *,
         country: Optional[str] = None,
+        end_date: Optional[str] = None,
         from_date: Optional[str] = None,
+        start_date: Optional[str] = None,
         to_date: Optional[str] = None,
         limit: Optional[int] = 100,
         options: Optional[Dict[str, Any]] = None,
@@ -34,16 +36,20 @@ class MacroAPI(BaseAPI):
         from_date: From date
         to_date: To date
         limit: Maximum results"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if country is not None:
-            params["country"] = country
+            _payload["country"] = country
+        if end_date is not None:
+            _payload["end_date"] = end_date
         if from_date is not None:
-            params["from_date"] = from_date
+            _payload["from_date"] = from_date
+        if start_date is not None:
+            _payload["start_date"] = start_date
         if to_date is not None:
-            params["to_date"] = to_date
+            _payload["to_date"] = to_date
         if limit is not None:
-            params["limit"] = limit
-        return self._call("macro.calendar", params=params, options=options, context=context, response_format=response_format)
+            _payload["limit"] = limit
+        return self._call("macro.calendar", params=_payload, options=options, context=context, response_format=response_format)
 
     def countries(
         self,
@@ -55,13 +61,15 @@ class MacroAPI(BaseAPI):
         """List countries
 
         List available countries."""
-        params: Dict[str, Any] = {}
-        return self._call("macro.countries", params=params, options=options, context=context, response_format=response_format)
+        _payload: Dict[str, Any] = {}
+        return self._call("macro.countries", params=_payload, options=options, context=context, response_format=response_format)
 
     def history(
         self,
         *,
         identifier: str,
+        identifiers: Optional[Union[str, List[str]]] = None,
+        indicator: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         limit: Optional[int] = 1000,
@@ -78,15 +86,19 @@ class MacroAPI(BaseAPI):
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)
         limit: Maximum results"""
-        params: Dict[str, Any] = {}
-        params["identifier"] = identifier
+        _payload: Dict[str, Any] = {}
+        _payload["identifier"] = identifier
+        if identifiers is not None:
+            _payload["identifiers"] = identifiers
+        if indicator is not None:
+            _payload["indicator"] = indicator
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
+            _payload["end_date"] = end_date
         if limit is not None:
-            params["limit"] = limit
-        return self._call("macro.history", params=params, options=options, context=context, response_format=response_format)
+            _payload["limit"] = limit
+        return self._call("macro.history", params=_payload, options=options, context=context, response_format=response_format)
 
     def indicators(
         self,
@@ -106,20 +118,22 @@ class MacroAPI(BaseAPI):
         country: Filter by country
         macro_area: Filter by area
         limit: Maximum results"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if country is not None:
-            params["country"] = country
+            _payload["country"] = country
         if macro_area is not None:
-            params["macro_area"] = macro_area
+            _payload["macro_area"] = macro_area
         if limit is not None:
-            params["limit"] = limit
-        return self._call("macro.indicators", params=params, options=options, context=context, response_format=response_format)
+            _payload["limit"] = limit
+        return self._call("macro.indicators", params=_payload, options=options, context=context, response_format=response_format)
 
     def latest(
         self,
         *,
         identifier: Optional[str] = None,
         country: Optional[str] = None,
+        identifiers: Optional[Union[str, List[str]]] = None,
+        indicator: Optional[str] = None,
         limit: Optional[int] = 50,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
@@ -133,14 +147,18 @@ class MacroAPI(BaseAPI):
         identifier: TepiloraCode or ISIN
         country: Filter by country
         limit: Maximum results"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if identifier is not None:
-            params["identifier"] = identifier
+            _payload["identifier"] = identifier
         if country is not None:
-            params["country"] = country
+            _payload["country"] = country
+        if identifiers is not None:
+            _payload["identifiers"] = identifiers
+        if indicator is not None:
+            _payload["indicator"] = indicator
         if limit is not None:
-            params["limit"] = limit
-        return self._call("macro.latest", params=params, options=options, context=context, response_format=response_format)
+            _payload["limit"] = limit
+        return self._call("macro.latest", params=_payload, options=options, context=context, response_format=response_format)
 
     def search(
         self,
@@ -160,13 +178,13 @@ class MacroAPI(BaseAPI):
         query: Search query
         country: Filter by country
         limit: Maximum results"""
-        params: Dict[str, Any] = {}
-        params["query"] = query
+        _payload: Dict[str, Any] = {}
+        _payload["query"] = query
         if country is not None:
-            params["country"] = country
+            _payload["country"] = country
         if limit is not None:
-            params["limit"] = limit
-        return self._call("macro.search", params=params, options=options, context=context, response_format=response_format)
+            _payload["limit"] = limit
+        return self._call("macro.search", params=_payload, options=options, context=context, response_format=response_format)
 
 
 
@@ -177,7 +195,9 @@ class AsyncMacroAPI(AsyncBaseAPI):
         self,
         *,
         country: Optional[str] = None,
+        end_date: Optional[str] = None,
         from_date: Optional[str] = None,
+        start_date: Optional[str] = None,
         to_date: Optional[str] = None,
         limit: Optional[int] = 100,
         options: Optional[Dict[str, Any]] = None,
@@ -193,16 +213,20 @@ class AsyncMacroAPI(AsyncBaseAPI):
         from_date: From date
         to_date: To date
         limit: Maximum results"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if country is not None:
-            params["country"] = country
+            _payload["country"] = country
+        if end_date is not None:
+            _payload["end_date"] = end_date
         if from_date is not None:
-            params["from_date"] = from_date
+            _payload["from_date"] = from_date
+        if start_date is not None:
+            _payload["start_date"] = start_date
         if to_date is not None:
-            params["to_date"] = to_date
+            _payload["to_date"] = to_date
         if limit is not None:
-            params["limit"] = limit
-        return await self._call("macro.calendar", params=params, options=options, context=context, response_format=response_format)
+            _payload["limit"] = limit
+        return await self._call("macro.calendar", params=_payload, options=options, context=context, response_format=response_format)
 
     async def countries(
         self,
@@ -214,13 +238,15 @@ class AsyncMacroAPI(AsyncBaseAPI):
         """List countries
 
         List available countries."""
-        params: Dict[str, Any] = {}
-        return await self._call("macro.countries", params=params, options=options, context=context, response_format=response_format)
+        _payload: Dict[str, Any] = {}
+        return await self._call("macro.countries", params=_payload, options=options, context=context, response_format=response_format)
 
     async def history(
         self,
         *,
         identifier: str,
+        identifiers: Optional[Union[str, List[str]]] = None,
+        indicator: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         limit: Optional[int] = 1000,
@@ -237,15 +263,19 @@ class AsyncMacroAPI(AsyncBaseAPI):
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)
         limit: Maximum results"""
-        params: Dict[str, Any] = {}
-        params["identifier"] = identifier
+        _payload: Dict[str, Any] = {}
+        _payload["identifier"] = identifier
+        if identifiers is not None:
+            _payload["identifiers"] = identifiers
+        if indicator is not None:
+            _payload["indicator"] = indicator
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
+            _payload["end_date"] = end_date
         if limit is not None:
-            params["limit"] = limit
-        return await self._call("macro.history", params=params, options=options, context=context, response_format=response_format)
+            _payload["limit"] = limit
+        return await self._call("macro.history", params=_payload, options=options, context=context, response_format=response_format)
 
     async def indicators(
         self,
@@ -265,20 +295,22 @@ class AsyncMacroAPI(AsyncBaseAPI):
         country: Filter by country
         macro_area: Filter by area
         limit: Maximum results"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if country is not None:
-            params["country"] = country
+            _payload["country"] = country
         if macro_area is not None:
-            params["macro_area"] = macro_area
+            _payload["macro_area"] = macro_area
         if limit is not None:
-            params["limit"] = limit
-        return await self._call("macro.indicators", params=params, options=options, context=context, response_format=response_format)
+            _payload["limit"] = limit
+        return await self._call("macro.indicators", params=_payload, options=options, context=context, response_format=response_format)
 
     async def latest(
         self,
         *,
         identifier: Optional[str] = None,
         country: Optional[str] = None,
+        identifiers: Optional[Union[str, List[str]]] = None,
+        indicator: Optional[str] = None,
         limit: Optional[int] = 50,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
@@ -292,14 +324,18 @@ class AsyncMacroAPI(AsyncBaseAPI):
         identifier: TepiloraCode or ISIN
         country: Filter by country
         limit: Maximum results"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if identifier is not None:
-            params["identifier"] = identifier
+            _payload["identifier"] = identifier
         if country is not None:
-            params["country"] = country
+            _payload["country"] = country
+        if identifiers is not None:
+            _payload["identifiers"] = identifiers
+        if indicator is not None:
+            _payload["indicator"] = indicator
         if limit is not None:
-            params["limit"] = limit
-        return await self._call("macro.latest", params=params, options=options, context=context, response_format=response_format)
+            _payload["limit"] = limit
+        return await self._call("macro.latest", params=_payload, options=options, context=context, response_format=response_format)
 
     async def search(
         self,
@@ -319,12 +355,12 @@ class AsyncMacroAPI(AsyncBaseAPI):
         query: Search query
         country: Filter by country
         limit: Maximum results"""
-        params: Dict[str, Any] = {}
-        params["query"] = query
+        _payload: Dict[str, Any] = {}
+        _payload["query"] = query
         if country is not None:
-            params["country"] = country
+            _payload["country"] = country
         if limit is not None:
-            params["limit"] = limit
-        return await self._call("macro.search", params=params, options=options, context=context, response_format=response_format)
+            _payload["limit"] = limit
+        return await self._call("macro.search", params=_payload, options=options, context=context, response_format=response_format)
 
 

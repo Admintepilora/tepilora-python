@@ -27,33 +27,38 @@ class NewsAPI(BaseAPI):
 
         Args:
         url: Article URL"""
-        params: Dict[str, Any] = {}
-        params["url"] = url
-        return self._call("news.details", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["url"] = url
+        return self._call("news.details", params=_payload, options=options, context=context)
 
     def facets(
         self,
         *,
-        filters: Optional[Dict[str, Any]] = None,
+        fields: Optional[List[Any]] = None,
+        force_refresh: Optional[bool] = None,
+        limit: Optional[int] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
         """Get news facets
 
-        Available sources and topics.
-
-        Args:
-        filters: Pre-filter"""
-        params: Dict[str, Any] = {}
-        if filters is not None:
-            params["filters"] = filters
-        return self._call("news.facets", params=params, options=options, context=context)
+        Available sources and topics."""
+        _payload: Dict[str, Any] = {}
+        if fields is not None:
+            _payload["fields"] = fields
+        if force_refresh is not None:
+            _payload["force_refresh"] = force_refresh
+        if limit is not None:
+            _payload["limit"] = limit
+        return self._call("news.facets", params=_payload, options=options, context=context)
 
     def latest(
         self,
         *,
         limit: Optional[int] = 20,
-        filters: Optional[Dict[str, Any]] = None,
+        search_key: Optional[str] = None,
+        searchKey: Optional[str] = None,
+        source: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -63,23 +68,37 @@ class NewsAPI(BaseAPI):
         Most recent articles.
 
         Args:
-        limit: Maximum results
-        filters: Source/topic filters"""
-        params: Dict[str, Any] = {}
+        limit: Maximum results"""
+        _payload: Dict[str, Any] = {}
         if limit is not None:
-            params["limit"] = limit
-        if filters is not None:
-            params["filters"] = filters
-        return self._call("news.latest", params=params, options=options, context=context, response_format=response_format)
+            _payload["limit"] = limit
+        if search_key is not None:
+            _payload["search_key"] = search_key
+        if searchKey is not None:
+            _payload["searchKey"] = searchKey
+        if source is not None:
+            _payload["source"] = source
+        return self._call("news.latest", params=_payload, options=options, context=context, response_format=response_format)
 
     def search(
         self,
         *,
         query: str,
+        endDate: Optional[str] = None,
+        exclude_topics: Optional[bool] = None,
+        excludeTopics: Optional[str] = None,
+        from_date: Optional[str] = None,
+        fromDate: Optional[str] = None,
+        offset: Optional[int] = None,
+        order: Optional[str] = None,
         limit: Optional[int] = 20,
+        sort: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         filters: Optional[Dict[str, Any]] = None,
+        startDate: Optional[str] = None,
+        to_date: Optional[str] = None,
+        toDate: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -94,17 +113,39 @@ class NewsAPI(BaseAPI):
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)
         filters: Source/topic filters"""
-        params: Dict[str, Any] = {}
-        params["query"] = query
+        _payload: Dict[str, Any] = {}
+        _payload["query"] = query
+        if endDate is not None:
+            _payload["endDate"] = endDate
+        if exclude_topics is not None:
+            _payload["exclude_topics"] = exclude_topics
+        if excludeTopics is not None:
+            _payload["excludeTopics"] = excludeTopics
+        if from_date is not None:
+            _payload["from_date"] = from_date
+        if fromDate is not None:
+            _payload["fromDate"] = fromDate
+        if offset is not None:
+            _payload["offset"] = offset
+        if order is not None:
+            _payload["order"] = order
         if limit is not None:
-            params["limit"] = limit
+            _payload["limit"] = limit
+        if sort is not None:
+            _payload["sort"] = sort
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
+            _payload["end_date"] = end_date
         if filters is not None:
-            params["filters"] = filters
-        return self._call("news.search", params=params, options=options, context=context, response_format=response_format)
+            _payload["filters"] = filters
+        if startDate is not None:
+            _payload["startDate"] = startDate
+        if to_date is not None:
+            _payload["to_date"] = to_date
+        if toDate is not None:
+            _payload["toDate"] = toDate
+        return self._call("news.search", params=_payload, options=options, context=context, response_format=response_format)
 
     def trending(
         self,
@@ -126,16 +167,16 @@ class NewsAPI(BaseAPI):
         term_type: all|entity|keyword
         finance_only: Finance terms only
         min_velocity: Minimum velocity threshold"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if limit is not None:
-            params["limit"] = limit
+            _payload["limit"] = limit
         if term_type is not None:
-            params["term_type"] = term_type
+            _payload["term_type"] = term_type
         if finance_only is not None:
-            params["finance_only"] = finance_only
+            _payload["finance_only"] = finance_only
         if min_velocity is not None:
-            params["min_velocity"] = min_velocity
-        return self._call("news.trending", params=params, options=options, context=context, response_format=response_format)
+            _payload["min_velocity"] = min_velocity
+        return self._call("news.trending", params=_payload, options=options, context=context, response_format=response_format)
 
     def trending_compare(
         self,
@@ -155,18 +196,19 @@ class NewsAPI(BaseAPI):
         terms: Terms to compare
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = {}
-        params["terms"] = terms
+        _payload: Dict[str, Any] = {}
+        _payload["terms"] = terms
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call("news.trending_compare", params=params, options=options, context=context, response_format=response_format)
+            _payload["end_date"] = end_date
+        return self._call("news.trending_compare", params=_payload, options=options, context=context, response_format=response_format)
 
     def trending_history(
         self,
         *,
         term: str,
+        limit: Optional[int] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
@@ -181,13 +223,15 @@ class NewsAPI(BaseAPI):
         term: Term to track
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = {}
-        params["term"] = term
+        _payload: Dict[str, Any] = {}
+        _payload["term"] = term
+        if limit is not None:
+            _payload["limit"] = limit
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call("news.trending_history", params=params, options=options, context=context, response_format=response_format)
+            _payload["end_date"] = end_date
+        return self._call("news.trending_history", params=_payload, options=options, context=context, response_format=response_format)
 
 
 
@@ -207,33 +251,38 @@ class AsyncNewsAPI(AsyncBaseAPI):
 
         Args:
         url: Article URL"""
-        params: Dict[str, Any] = {}
-        params["url"] = url
-        return await self._call("news.details", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["url"] = url
+        return await self._call("news.details", params=_payload, options=options, context=context)
 
     async def facets(
         self,
         *,
-        filters: Optional[Dict[str, Any]] = None,
+        fields: Optional[List[Any]] = None,
+        force_refresh: Optional[bool] = None,
+        limit: Optional[int] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
         """Get news facets
 
-        Available sources and topics.
-
-        Args:
-        filters: Pre-filter"""
-        params: Dict[str, Any] = {}
-        if filters is not None:
-            params["filters"] = filters
-        return await self._call("news.facets", params=params, options=options, context=context)
+        Available sources and topics."""
+        _payload: Dict[str, Any] = {}
+        if fields is not None:
+            _payload["fields"] = fields
+        if force_refresh is not None:
+            _payload["force_refresh"] = force_refresh
+        if limit is not None:
+            _payload["limit"] = limit
+        return await self._call("news.facets", params=_payload, options=options, context=context)
 
     async def latest(
         self,
         *,
         limit: Optional[int] = 20,
-        filters: Optional[Dict[str, Any]] = None,
+        search_key: Optional[str] = None,
+        searchKey: Optional[str] = None,
+        source: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -243,23 +292,37 @@ class AsyncNewsAPI(AsyncBaseAPI):
         Most recent articles.
 
         Args:
-        limit: Maximum results
-        filters: Source/topic filters"""
-        params: Dict[str, Any] = {}
+        limit: Maximum results"""
+        _payload: Dict[str, Any] = {}
         if limit is not None:
-            params["limit"] = limit
-        if filters is not None:
-            params["filters"] = filters
-        return await self._call("news.latest", params=params, options=options, context=context, response_format=response_format)
+            _payload["limit"] = limit
+        if search_key is not None:
+            _payload["search_key"] = search_key
+        if searchKey is not None:
+            _payload["searchKey"] = searchKey
+        if source is not None:
+            _payload["source"] = source
+        return await self._call("news.latest", params=_payload, options=options, context=context, response_format=response_format)
 
     async def search(
         self,
         *,
         query: str,
+        endDate: Optional[str] = None,
+        exclude_topics: Optional[bool] = None,
+        excludeTopics: Optional[str] = None,
+        from_date: Optional[str] = None,
+        fromDate: Optional[str] = None,
+        offset: Optional[int] = None,
+        order: Optional[str] = None,
         limit: Optional[int] = 20,
+        sort: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         filters: Optional[Dict[str, Any]] = None,
+        startDate: Optional[str] = None,
+        to_date: Optional[str] = None,
+        toDate: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -274,17 +337,39 @@ class AsyncNewsAPI(AsyncBaseAPI):
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)
         filters: Source/topic filters"""
-        params: Dict[str, Any] = {}
-        params["query"] = query
+        _payload: Dict[str, Any] = {}
+        _payload["query"] = query
+        if endDate is not None:
+            _payload["endDate"] = endDate
+        if exclude_topics is not None:
+            _payload["exclude_topics"] = exclude_topics
+        if excludeTopics is not None:
+            _payload["excludeTopics"] = excludeTopics
+        if from_date is not None:
+            _payload["from_date"] = from_date
+        if fromDate is not None:
+            _payload["fromDate"] = fromDate
+        if offset is not None:
+            _payload["offset"] = offset
+        if order is not None:
+            _payload["order"] = order
         if limit is not None:
-            params["limit"] = limit
+            _payload["limit"] = limit
+        if sort is not None:
+            _payload["sort"] = sort
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
+            _payload["end_date"] = end_date
         if filters is not None:
-            params["filters"] = filters
-        return await self._call("news.search", params=params, options=options, context=context, response_format=response_format)
+            _payload["filters"] = filters
+        if startDate is not None:
+            _payload["startDate"] = startDate
+        if to_date is not None:
+            _payload["to_date"] = to_date
+        if toDate is not None:
+            _payload["toDate"] = toDate
+        return await self._call("news.search", params=_payload, options=options, context=context, response_format=response_format)
 
     async def trending(
         self,
@@ -306,16 +391,16 @@ class AsyncNewsAPI(AsyncBaseAPI):
         term_type: all|entity|keyword
         finance_only: Finance terms only
         min_velocity: Minimum velocity threshold"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if limit is not None:
-            params["limit"] = limit
+            _payload["limit"] = limit
         if term_type is not None:
-            params["term_type"] = term_type
+            _payload["term_type"] = term_type
         if finance_only is not None:
-            params["finance_only"] = finance_only
+            _payload["finance_only"] = finance_only
         if min_velocity is not None:
-            params["min_velocity"] = min_velocity
-        return await self._call("news.trending", params=params, options=options, context=context, response_format=response_format)
+            _payload["min_velocity"] = min_velocity
+        return await self._call("news.trending", params=_payload, options=options, context=context, response_format=response_format)
 
     async def trending_compare(
         self,
@@ -335,18 +420,19 @@ class AsyncNewsAPI(AsyncBaseAPI):
         terms: Terms to compare
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = {}
-        params["terms"] = terms
+        _payload: Dict[str, Any] = {}
+        _payload["terms"] = terms
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call("news.trending_compare", params=params, options=options, context=context, response_format=response_format)
+            _payload["end_date"] = end_date
+        return await self._call("news.trending_compare", params=_payload, options=options, context=context, response_format=response_format)
 
     async def trending_history(
         self,
         *,
         term: str,
+        limit: Optional[int] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
@@ -361,12 +447,14 @@ class AsyncNewsAPI(AsyncBaseAPI):
         term: Term to track
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = {}
-        params["term"] = term
+        _payload: Dict[str, Any] = {}
+        _payload["term"] = term
+        if limit is not None:
+            _payload["limit"] = limit
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call("news.trending_history", params=params, options=options, context=context, response_format=response_format)
+            _payload["end_date"] = end_date
+        return await self._call("news.trending_history", params=_payload, options=options, context=context, response_format=response_format)
 
 

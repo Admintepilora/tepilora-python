@@ -6,7 +6,7 @@ Regenerate with: python scripts/generate_sdk.py --category portfolio
 """
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 from ._base import AsyncBaseAPI, BaseAPI
 
@@ -17,9 +17,12 @@ class PortfolioAPI(BaseAPI):
     def attribution(
         self,
         *,
-        id: str,
+        benchmark_weights: Optional[str] = None,
+        currency: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        total_return: Optional[str] = None,
+        user_prices: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -29,23 +32,34 @@ class PortfolioAPI(BaseAPI):
         Brinson attribution analysis.
 
         Args:
-        id: Portfolio ID
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = {}
-        params["id"] = id
+        _payload: Dict[str, Any] = {}
+        if benchmark_weights is not None:
+            _payload["benchmark_weights"] = benchmark_weights
+        if currency is not None:
+            _payload["currency"] = currency
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call("portfolio.attribution", params=params, options=options, context=context, response_format=response_format)
+            _payload["end_date"] = end_date
+        if total_return is not None:
+            _payload["total_return"] = total_return
+        if user_prices is not None:
+            _payload["user_prices"] = user_prices
+        return self._call("portfolio.attribution", params=_payload, options=options, context=context, response_format=response_format)
 
     def compare(
         self,
         *,
         portfolios: List[Any],
+        currency: Optional[str] = None,
+        exposure_dimensions: Optional[str] = None,
+        include_exposure: Optional[bool] = None,
+        metrics: Optional[List[Any]] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        total_return: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -58,20 +72,36 @@ class PortfolioAPI(BaseAPI):
         portfolios: List of portfolio definitions (id or weights)
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = {}
-        params["portfolios"] = portfolios
+        _payload: Dict[str, Any] = {}
+        _payload["portfolios"] = portfolios
+        if currency is not None:
+            _payload["currency"] = currency
+        if exposure_dimensions is not None:
+            _payload["exposure_dimensions"] = exposure_dimensions
+        if include_exposure is not None:
+            _payload["include_exposure"] = include_exposure
+        if metrics is not None:
+            _payload["metrics"] = metrics
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call("portfolio.compare", params=params, options=options, context=context, response_format=response_format)
+            _payload["end_date"] = end_date
+        if total_return is not None:
+            _payload["total_return"] = total_return
+        return self._call("portfolio.compare", params=_payload, options=options, context=context, response_format=response_format)
 
     def contribution(
         self,
         *,
         id: str,
+        components: Optional[str] = None,
+        currency: Optional[str] = None,
+        drifting: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        total_return: Optional[str] = None,
+        user_prices: Optional[str] = None,
+        weights: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -84,43 +114,70 @@ class PortfolioAPI(BaseAPI):
         id: Portfolio ID
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = {}
-        params["id"] = id
+        _payload: Dict[str, Any] = {}
+        _payload["id"] = id
+        if components is not None:
+            _payload["components"] = components
+        if currency is not None:
+            _payload["currency"] = currency
+        if drifting is not None:
+            _payload["drifting"] = drifting
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call("portfolio.contribution", params=params, options=options, context=context, response_format=response_format)
+            _payload["end_date"] = end_date
+        if total_return is not None:
+            _payload["total_return"] = total_return
+        if user_prices is not None:
+            _payload["user_prices"] = user_prices
+        if weights is not None:
+            _payload["weights"] = weights
+        return self._call("portfolio.contribution", params=_payload, options=options, context=context, response_format=response_format)
 
     def costs(
         self,
         *,
-        id: str,
+        portfolio_value: Optional[str] = None,
+        weights: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
         """Portfolio costs
 
-        TER and trading costs analysis.
-
-        Args:
-        id: Portfolio ID"""
-        params: Dict[str, Any] = {}
-        params["id"] = id
-        return self._call("portfolio.costs", params=params, options=options, context=context, response_format=response_format)
+        TER and trading costs analysis."""
+        _payload: Dict[str, Any] = {}
+        if portfolio_value is not None:
+            _payload["portfolio_value"] = portfolio_value
+        if weights is not None:
+            _payload["weights"] = weights
+        return self._call("portfolio.costs", params=_payload, options=options, context=context, response_format=response_format)
 
     def create(
         self,
         *,
         name: str,
         input_type: str,
-        portfolio_type: Optional[str] = "Real",
+        allow_negative_cash: Optional[bool] = None,
+        allow_short: Optional[bool] = None,
+        auto_cash: Optional[str] = None,
+        base_currency: Optional[str] = None,
+        components: Optional[str] = None,
+        currency: Optional[str] = None,
+        holdings: Optional[str] = None,
+        initial_cash: Optional[str] = None,
+        initial_weights: Optional[str] = None,
+        trades: Optional[str] = None,
+        values: Optional[str] = None,
         weights: Optional[Dict[str, Any]] = None,
         start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        type_: Optional[str] = "Real",
+        input_data: Optional[Dict[str, Any]] = None,
         benchmark: Optional[str] = None,
         description: Optional[str] = "",
         settings: Optional[Dict[str, Any]] = None,
+        visibility: Optional[str] = "private",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -131,28 +188,59 @@ class PortfolioAPI(BaseAPI):
         Args:
         name: Portfolio name
         input_type: fixed_weights|drifting_weights|holdings|values|trades
-        portfolio_type: Real|Suggested|Simulation|Backtest|Model
-        weights: Portfolio weights (Dict[TepiloraCode, float])
-        start_date: Start date (YYYY-MM-DD). Required for fixed_weights
+        weights: Portfolio weights {TepiloraCode: float}. Required for fixed_weights
+        start_date: Start date (YYYY-MM-DD)
+        end_date: End date (YYYY-MM-DD)
+        type_: Real|Suggested|Simulation|Backtest|Model
+        input_data: Input data (alternative to flat params). Format depends on input_type: holdings=[{date,positions}], trades=[{date,type,security,quantity,price}], values=[{date,security,value}]
         benchmark: Benchmark TepiloraCode
         description: Description
-        settings: Portfolio settings"""
-        params: Dict[str, Any] = {}
-        params["name"] = name
-        params["input_type"] = input_type
-        if portfolio_type is not None:
-            params["portfolio_type"] = portfolio_type
+        settings: Portfolio settings
+        visibility: private|shared"""
+        _payload: Dict[str, Any] = {}
+        _payload["name"] = name
+        _payload["input_type"] = input_type
+        if allow_negative_cash is not None:
+            _payload["allow_negative_cash"] = allow_negative_cash
+        if allow_short is not None:
+            _payload["allow_short"] = allow_short
+        if auto_cash is not None:
+            _payload["auto_cash"] = auto_cash
+        if base_currency is not None:
+            _payload["base_currency"] = base_currency
+        if components is not None:
+            _payload["components"] = components
+        if currency is not None:
+            _payload["currency"] = currency
+        if holdings is not None:
+            _payload["holdings"] = holdings
+        if initial_cash is not None:
+            _payload["initial_cash"] = initial_cash
+        if initial_weights is not None:
+            _payload["initial_weights"] = initial_weights
+        if trades is not None:
+            _payload["trades"] = trades
+        if values is not None:
+            _payload["values"] = values
         if weights is not None:
-            params["weights"] = weights
+            _payload["weights"] = weights
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
+        if end_date is not None:
+            _payload["end_date"] = end_date
+        if type_ is not None:
+            _payload["type"] = type_
+        if input_data is not None:
+            _payload["input_data"] = input_data
         if benchmark is not None:
-            params["benchmark"] = benchmark
+            _payload["benchmark"] = benchmark
         if description is not None:
-            params["description"] = description
+            _payload["description"] = description
         if settings is not None:
-            params["settings"] = settings
-        return self._call("portfolio.create", params=params, options=options, context=context)
+            _payload["settings"] = settings
+        if visibility is not None:
+            _payload["visibility"] = visibility
+        return self._call("portfolio.create", params=_payload, options=options, context=context)
 
     def delete(
         self,
@@ -167,32 +255,52 @@ class PortfolioAPI(BaseAPI):
 
         Args:
         id: Portfolio ID"""
-        params: Dict[str, Any] = {}
-        params["id"] = id
-        return self._call("portfolio.delete", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["id"] = id
+        return self._call("portfolio.delete", params=_payload, options=options, context=context)
 
     def drift(
         self,
         *,
-        id: str,
+        compare_rebalanced: Optional[str] = None,
+        currency: Optional[str] = None,
+        end_date: Optional[str] = None,
+        start_date: Optional[str] = None,
+        target_weights: Optional[str] = None,
+        threshold: Optional[str] = None,
+        total_return: Optional[str] = None,
+        user_prices: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
         """Portfolio drift
 
-        Weight drift from target.
-
-        Args:
-        id: Portfolio ID"""
-        params: Dict[str, Any] = {}
-        params["id"] = id
-        return self._call("portfolio.drift", params=params, options=options, context=context, response_format=response_format)
+        Weight drift from target."""
+        _payload: Dict[str, Any] = {}
+        if compare_rebalanced is not None:
+            _payload["compare_rebalanced"] = compare_rebalanced
+        if currency is not None:
+            _payload["currency"] = currency
+        if end_date is not None:
+            _payload["end_date"] = end_date
+        if start_date is not None:
+            _payload["start_date"] = start_date
+        if target_weights is not None:
+            _payload["target_weights"] = target_weights
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if total_return is not None:
+            _payload["total_return"] = total_return
+        if user_prices is not None:
+            _payload["user_prices"] = user_prices
+        return self._call("portfolio.drift", params=_payload, options=options, context=context, response_format=response_format)
 
     def exposure(
         self,
         *,
-        id: str,
+        date: Optional[str] = None,
+        dimensions: Optional[str] = None,
         dimension: Optional[str] = "sector",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
@@ -203,13 +311,15 @@ class PortfolioAPI(BaseAPI):
         Exposure by sector, country, currency, etc.
 
         Args:
-        id: Portfolio ID
         dimension: sector|country|currency|asset_class"""
-        params: Dict[str, Any] = {}
-        params["id"] = id
+        _payload: Dict[str, Any] = {}
+        if date is not None:
+            _payload["date"] = date
+        if dimensions is not None:
+            _payload["dimensions"] = dimensions
         if dimension is not None:
-            params["dimension"] = dimension
-        return self._call("portfolio.exposure", params=params, options=options, context=context, response_format=response_format)
+            _payload["dimension"] = dimension
+        return self._call("portfolio.exposure", params=_payload, options=options, context=context, response_format=response_format)
 
     def get(
         self,
@@ -224,16 +334,18 @@ class PortfolioAPI(BaseAPI):
 
         Args:
         id: Portfolio ID"""
-        params: Dict[str, Any] = {}
-        params["id"] = id
-        return self._call("portfolio.get", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["id"] = id
+        return self._call("portfolio.get", params=_payload, options=options, context=context)
 
     def list(
         self,
         *,
-        portfolio_type: Optional[str] = None,
+        type_: Optional[str] = None,
         input_type: Optional[str] = None,
         search: Optional[str] = None,
+        sort: Optional[str] = "createdAt",
+        order: Optional[str] = "desc",
         limit: Optional[int] = 50,
         offset: Optional[int] = 0,
         include_shared: Optional[bool] = True,
@@ -245,61 +357,91 @@ class PortfolioAPI(BaseAPI):
         List user's portfolios.
 
         Args:
-        portfolio_type: Filter by type
+        type_: Filter by type
         input_type: Filter by input type
         search: Search in name
+        sort: Sort field
+        order: Sort order: asc|desc
         limit: Maximum results
         offset: Pagination offset
         include_shared: Include shared portfolios"""
-        params: Dict[str, Any] = {}
-        if portfolio_type is not None:
-            params["portfolio_type"] = portfolio_type
+        _payload: Dict[str, Any] = {}
+        if type_ is not None:
+            _payload["type"] = type_
         if input_type is not None:
-            params["input_type"] = input_type
+            _payload["input_type"] = input_type
         if search is not None:
-            params["search"] = search
+            _payload["search"] = search
+        if sort is not None:
+            _payload["sort"] = sort
+        if order is not None:
+            _payload["order"] = order
         if limit is not None:
-            params["limit"] = limit
+            _payload["limit"] = limit
         if offset is not None:
-            params["offset"] = offset
+            _payload["offset"] = offset
         if include_shared is not None:
-            params["include_shared"] = include_shared
-        return self._call("portfolio.list", params=params, options=options, context=context)
+            _payload["include_shared"] = include_shared
+        return self._call("portfolio.list", params=_payload, options=options, context=context)
 
     def optimize(
         self,
         *,
-        id: str,
-        objective: Optional[str] = "max_sharpe",
-        constraints: Optional[Dict[str, Any]] = None,
+        identifiers: Optional[Union[str, List[str]]] = None,
+        poll_interval: Optional[str] = None,
+        securities_metadata: Optional[str] = None,
         settings: Optional[Dict[str, Any]] = None,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        total_return: Optional[bool] = False,
+        currency: Optional[str] = None,
+        timeout: Optional[int] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
         """Optimize portfolio
 
-        Portfolio optimization (Julia backend).
+        Portfolio optimization (Julia backend). Pass identifiers for inline mode or id for saved portfolio.
 
         Args:
-        id: Portfolio ID
-        objective: Optimization objective
-        constraints: Constraints
-        settings: Optimizer settings"""
-        params: Dict[str, Any] = {}
-        params["id"] = id
-        if objective is not None:
-            params["objective"] = objective
-        if constraints is not None:
-            params["constraints"] = constraints
+        identifiers: TepiloraCodes (for inline mode)
+        settings: Optimizer settings (solver_mode, constraints, etc.)
+        start_date: Start date (YYYY-MM-DD)
+        end_date: End date (YYYY-MM-DD)
+        total_return: Use total return prices
+        currency: Base currency
+        timeout: Optimization timeout (seconds)"""
+        _payload: Dict[str, Any] = {}
+        if identifiers is not None:
+            _payload["identifiers"] = identifiers
+        if poll_interval is not None:
+            _payload["poll_interval"] = poll_interval
+        if securities_metadata is not None:
+            _payload["securities_metadata"] = securities_metadata
         if settings is not None:
-            params["settings"] = settings
-        return self._call("portfolio.optimize", params=params, options=options, context=context)
+            _payload["settings"] = settings
+        if start_date is not None:
+            _payload["start_date"] = start_date
+        if end_date is not None:
+            _payload["end_date"] = end_date
+        if total_return is not None:
+            _payload["total_return"] = total_return
+        if currency is not None:
+            _payload["currency"] = currency
+        if timeout is not None:
+            _payload["timeout"] = timeout
+        return self._call("portfolio.optimize", params=_payload, options=options, context=context)
 
     def rebalance(
         self,
         *,
-        id: str,
+        costs: Optional[str] = None,
+        current_weights: Optional[str] = None,
+        min_trade_value: Optional[str] = None,
+        portfolio_value: Optional[str] = None,
+        strategy: Optional[str] = None,
         target_weights: Optional[Dict[str, Any]] = None,
+        threshold: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -309,21 +451,57 @@ class PortfolioAPI(BaseAPI):
         Calculate rebalancing trades.
 
         Args:
-        id: Portfolio ID
         target_weights: Target weights"""
-        params: Dict[str, Any] = {}
-        params["id"] = id
+        _payload: Dict[str, Any] = {}
+        if costs is not None:
+            _payload["costs"] = costs
+        if current_weights is not None:
+            _payload["current_weights"] = current_weights
+        if min_trade_value is not None:
+            _payload["min_trade_value"] = min_trade_value
+        if portfolio_value is not None:
+            _payload["portfolio_value"] = portfolio_value
+        if strategy is not None:
+            _payload["strategy"] = strategy
         if target_weights is not None:
-            params["target_weights"] = target_weights
-        return self._call("portfolio.rebalance", params=params, options=options, context=context, response_format=response_format)
+            _payload["target_weights"] = target_weights
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        return self._call("portfolio.rebalance", params=_payload, options=options, context=context, response_format=response_format)
 
     def returns(
         self,
         *,
         id: str,
+        allow_negative_cash: Optional[bool] = None,
+        allow_short: Optional[bool] = None,
+        auto_cash: Optional[str] = None,
+        base_currency: Optional[str] = None,
+        borrow_cost: Optional[str] = None,
+        borrow_spread_annual: Optional[str] = None,
+        cash_yield: Optional[str] = None,
+        components: Optional[str] = None,
+        currency: Optional[str] = None,
+        drifting: Optional[str] = None,
+        holdings: Optional[str] = None,
+        initial_value: Optional[str] = None,
+        max_stale_days: Optional[str] = None,
+        Obs: Optional[str] = None,
+        price_fill: Optional[str] = None,
+        rebalance_dates: Optional[str] = None,
+        rebalance_effective: Optional[str] = None,
+        rebalance_frequency: Optional[str] = None,
+        rebalance_on: Optional[str] = None,
+        settings: Optional[Dict[str, Any]] = None,
+        stale_policy: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         return_method: Optional[str] = "twr",
+        total_return: Optional[str] = None,
+        trades: Optional[str] = None,
+        user_prices: Optional[str] = None,
+        values: Optional[str] = None,
+        weights: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -337,15 +515,67 @@ class PortfolioAPI(BaseAPI):
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)
         return_method: twr|mwr|modified_dietz"""
-        params: Dict[str, Any] = {}
-        params["id"] = id
+        _payload: Dict[str, Any] = {}
+        _payload["id"] = id
+        if allow_negative_cash is not None:
+            _payload["allow_negative_cash"] = allow_negative_cash
+        if allow_short is not None:
+            _payload["allow_short"] = allow_short
+        if auto_cash is not None:
+            _payload["auto_cash"] = auto_cash
+        if base_currency is not None:
+            _payload["base_currency"] = base_currency
+        if borrow_cost is not None:
+            _payload["borrow_cost"] = borrow_cost
+        if borrow_spread_annual is not None:
+            _payload["borrow_spread_annual"] = borrow_spread_annual
+        if cash_yield is not None:
+            _payload["cash_yield"] = cash_yield
+        if components is not None:
+            _payload["components"] = components
+        if currency is not None:
+            _payload["currency"] = currency
+        if drifting is not None:
+            _payload["drifting"] = drifting
+        if holdings is not None:
+            _payload["holdings"] = holdings
+        if initial_value is not None:
+            _payload["initial_value"] = initial_value
+        if max_stale_days is not None:
+            _payload["max_stale_days"] = max_stale_days
+        if Obs is not None:
+            _payload["Obs"] = Obs
+        if price_fill is not None:
+            _payload["price_fill"] = price_fill
+        if rebalance_dates is not None:
+            _payload["rebalance_dates"] = rebalance_dates
+        if rebalance_effective is not None:
+            _payload["rebalance_effective"] = rebalance_effective
+        if rebalance_frequency is not None:
+            _payload["rebalance_frequency"] = rebalance_frequency
+        if rebalance_on is not None:
+            _payload["rebalance_on"] = rebalance_on
+        if settings is not None:
+            _payload["settings"] = settings
+        if stale_policy is not None:
+            _payload["stale_policy"] = stale_policy
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
+            _payload["end_date"] = end_date
         if return_method is not None:
-            params["return_method"] = return_method
-        return self._call("portfolio.returns", params=params, options=options, context=context, response_format=response_format)
+            _payload["return_method"] = return_method
+        if total_return is not None:
+            _payload["total_return"] = total_return
+        if trades is not None:
+            _payload["trades"] = trades
+        if user_prices is not None:
+            _payload["user_prices"] = user_prices
+        if values is not None:
+            _payload["values"] = values
+        if weights is not None:
+            _payload["weights"] = weights
+        return self._call("portfolio.returns", params=_payload, options=options, context=context, response_format=response_format)
 
     def share(
         self,
@@ -364,12 +594,12 @@ class PortfolioAPI(BaseAPI):
         id: Portfolio ID
         target_apikey: Target user apikey
         permission: read|write"""
-        params: Dict[str, Any] = {}
-        params["id"] = id
-        params["target_apikey"] = target_apikey
+        _payload: Dict[str, Any] = {}
+        _payload["id"] = id
+        _payload["target_apikey"] = target_apikey
         if permission is not None:
-            params["permission"] = permission
-        return self._call("portfolio.share", params=params, options=options, context=context)
+            _payload["permission"] = permission
+        return self._call("portfolio.share", params=_payload, options=options, context=context)
 
     def shares(
         self,
@@ -384,15 +614,24 @@ class PortfolioAPI(BaseAPI):
 
         Args:
         id: Portfolio ID"""
-        params: Dict[str, Any] = {}
-        params["id"] = id
-        return self._call("portfolio.shares", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["id"] = id
+        return self._call("portfolio.shares", params=_payload, options=options, context=context)
 
     def stress(
         self,
         *,
         id: str,
+        asset_class: Optional[str] = None,
+        mode: Optional[str] = None,
+        portfolio_value: Optional[str] = None,
+        scenario: Optional[str] = None,
+        scenario_name: Optional[str] = None,
         scenarios: Optional[List[Any]] = None,
+        shock_range: Optional[str] = None,
+        shocks: Optional[str] = None,
+        steps: Optional[str] = None,
+        weights: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -403,18 +642,44 @@ class PortfolioAPI(BaseAPI):
         Args:
         id: Portfolio ID
         scenarios: Custom scenarios"""
-        params: Dict[str, Any] = {}
-        params["id"] = id
+        _payload: Dict[str, Any] = {}
+        _payload["id"] = id
+        if asset_class is not None:
+            _payload["asset_class"] = asset_class
+        if mode is not None:
+            _payload["mode"] = mode
+        if portfolio_value is not None:
+            _payload["portfolio_value"] = portfolio_value
+        if scenario is not None:
+            _payload["scenario"] = scenario
+        if scenario_name is not None:
+            _payload["scenario_name"] = scenario_name
         if scenarios is not None:
-            params["scenarios"] = scenarios
-        return self._call("portfolio.stress", params=params, options=options, context=context)
+            _payload["scenarios"] = scenarios
+        if shock_range is not None:
+            _payload["shock_range"] = shock_range
+        if shocks is not None:
+            _payload["shocks"] = shocks
+        if steps is not None:
+            _payload["steps"] = steps
+        if weights is not None:
+            _payload["weights"] = weights
+        return self._call("portfolio.stress", params=_payload, options=options, context=context)
 
     def tearsheet(
         self,
         *,
         id: str,
+        benchmark_id: Optional[str] = None,
+        benchmark_name: Optional[str] = None,
+        benchmark_weights: Optional[str] = None,
+        currency: Optional[str] = None,
+        name: Optional[str] = None,
+        output_path: Optional[str] = None,
+        risk_free_rate: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        total_return: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -426,13 +691,29 @@ class PortfolioAPI(BaseAPI):
         id: Portfolio ID
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = {}
-        params["id"] = id
+        _payload: Dict[str, Any] = {}
+        _payload["id"] = id
+        if benchmark_id is not None:
+            _payload["benchmark_id"] = benchmark_id
+        if benchmark_name is not None:
+            _payload["benchmark_name"] = benchmark_name
+        if benchmark_weights is not None:
+            _payload["benchmark_weights"] = benchmark_weights
+        if currency is not None:
+            _payload["currency"] = currency
+        if name is not None:
+            _payload["name"] = name
+        if output_path is not None:
+            _payload["output_path"] = output_path
+        if risk_free_rate is not None:
+            _payload["risk_free_rate"] = risk_free_rate
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call("portfolio.tearsheet", params=params, options=options, context=context)
+            _payload["end_date"] = end_date
+        if total_return is not None:
+            _payload["total_return"] = total_return
+        return self._call("portfolio.tearsheet", params=_payload, options=options, context=context)
 
     def unshare(
         self,
@@ -449,10 +730,10 @@ class PortfolioAPI(BaseAPI):
         Args:
         id: Portfolio ID
         target_apikey: User to remove"""
-        params: Dict[str, Any] = {}
-        params["id"] = id
-        params["target_apikey"] = target_apikey
-        return self._call("portfolio.unshare", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["id"] = id
+        _payload["target_apikey"] = target_apikey
+        return self._call("portfolio.unshare", params=_payload, options=options, context=context)
 
     def update(
         self,
@@ -477,19 +758,19 @@ class PortfolioAPI(BaseAPI):
         benchmark: New benchmark
         description: New description
         settings: New settings"""
-        params: Dict[str, Any] = {}
-        params["id"] = id
+        _payload: Dict[str, Any] = {}
+        _payload["id"] = id
         if name is not None:
-            params["name"] = name
+            _payload["name"] = name
         if input_data is not None:
-            params["input_data"] = input_data
+            _payload["input_data"] = input_data
         if benchmark is not None:
-            params["benchmark"] = benchmark
+            _payload["benchmark"] = benchmark
         if description is not None:
-            params["description"] = description
+            _payload["description"] = description
         if settings is not None:
-            params["settings"] = settings
-        return self._call("portfolio.update", params=params, options=options, context=context)
+            _payload["settings"] = settings
+        return self._call("portfolio.update", params=_payload, options=options, context=context)
 
 
 
@@ -499,9 +780,12 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
     async def attribution(
         self,
         *,
-        id: str,
+        benchmark_weights: Optional[str] = None,
+        currency: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        total_return: Optional[str] = None,
+        user_prices: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -511,23 +795,34 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         Brinson attribution analysis.
 
         Args:
-        id: Portfolio ID
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = {}
-        params["id"] = id
+        _payload: Dict[str, Any] = {}
+        if benchmark_weights is not None:
+            _payload["benchmark_weights"] = benchmark_weights
+        if currency is not None:
+            _payload["currency"] = currency
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call("portfolio.attribution", params=params, options=options, context=context, response_format=response_format)
+            _payload["end_date"] = end_date
+        if total_return is not None:
+            _payload["total_return"] = total_return
+        if user_prices is not None:
+            _payload["user_prices"] = user_prices
+        return await self._call("portfolio.attribution", params=_payload, options=options, context=context, response_format=response_format)
 
     async def compare(
         self,
         *,
         portfolios: List[Any],
+        currency: Optional[str] = None,
+        exposure_dimensions: Optional[str] = None,
+        include_exposure: Optional[bool] = None,
+        metrics: Optional[List[Any]] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        total_return: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -540,20 +835,36 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         portfolios: List of portfolio definitions (id or weights)
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = {}
-        params["portfolios"] = portfolios
+        _payload: Dict[str, Any] = {}
+        _payload["portfolios"] = portfolios
+        if currency is not None:
+            _payload["currency"] = currency
+        if exposure_dimensions is not None:
+            _payload["exposure_dimensions"] = exposure_dimensions
+        if include_exposure is not None:
+            _payload["include_exposure"] = include_exposure
+        if metrics is not None:
+            _payload["metrics"] = metrics
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call("portfolio.compare", params=params, options=options, context=context, response_format=response_format)
+            _payload["end_date"] = end_date
+        if total_return is not None:
+            _payload["total_return"] = total_return
+        return await self._call("portfolio.compare", params=_payload, options=options, context=context, response_format=response_format)
 
     async def contribution(
         self,
         *,
         id: str,
+        components: Optional[str] = None,
+        currency: Optional[str] = None,
+        drifting: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        total_return: Optional[str] = None,
+        user_prices: Optional[str] = None,
+        weights: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -566,43 +877,70 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         id: Portfolio ID
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = {}
-        params["id"] = id
+        _payload: Dict[str, Any] = {}
+        _payload["id"] = id
+        if components is not None:
+            _payload["components"] = components
+        if currency is not None:
+            _payload["currency"] = currency
+        if drifting is not None:
+            _payload["drifting"] = drifting
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call("portfolio.contribution", params=params, options=options, context=context, response_format=response_format)
+            _payload["end_date"] = end_date
+        if total_return is not None:
+            _payload["total_return"] = total_return
+        if user_prices is not None:
+            _payload["user_prices"] = user_prices
+        if weights is not None:
+            _payload["weights"] = weights
+        return await self._call("portfolio.contribution", params=_payload, options=options, context=context, response_format=response_format)
 
     async def costs(
         self,
         *,
-        id: str,
+        portfolio_value: Optional[str] = None,
+        weights: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
         """Portfolio costs
 
-        TER and trading costs analysis.
-
-        Args:
-        id: Portfolio ID"""
-        params: Dict[str, Any] = {}
-        params["id"] = id
-        return await self._call("portfolio.costs", params=params, options=options, context=context, response_format=response_format)
+        TER and trading costs analysis."""
+        _payload: Dict[str, Any] = {}
+        if portfolio_value is not None:
+            _payload["portfolio_value"] = portfolio_value
+        if weights is not None:
+            _payload["weights"] = weights
+        return await self._call("portfolio.costs", params=_payload, options=options, context=context, response_format=response_format)
 
     async def create(
         self,
         *,
         name: str,
         input_type: str,
-        portfolio_type: Optional[str] = "Real",
+        allow_negative_cash: Optional[bool] = None,
+        allow_short: Optional[bool] = None,
+        auto_cash: Optional[str] = None,
+        base_currency: Optional[str] = None,
+        components: Optional[str] = None,
+        currency: Optional[str] = None,
+        holdings: Optional[str] = None,
+        initial_cash: Optional[str] = None,
+        initial_weights: Optional[str] = None,
+        trades: Optional[str] = None,
+        values: Optional[str] = None,
         weights: Optional[Dict[str, Any]] = None,
         start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        type_: Optional[str] = "Real",
+        input_data: Optional[Dict[str, Any]] = None,
         benchmark: Optional[str] = None,
         description: Optional[str] = "",
         settings: Optional[Dict[str, Any]] = None,
+        visibility: Optional[str] = "private",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -613,28 +951,59 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         Args:
         name: Portfolio name
         input_type: fixed_weights|drifting_weights|holdings|values|trades
-        portfolio_type: Real|Suggested|Simulation|Backtest|Model
-        weights: Portfolio weights (Dict[TepiloraCode, float])
-        start_date: Start date (YYYY-MM-DD). Required for fixed_weights
+        weights: Portfolio weights {TepiloraCode: float}. Required for fixed_weights
+        start_date: Start date (YYYY-MM-DD)
+        end_date: End date (YYYY-MM-DD)
+        type_: Real|Suggested|Simulation|Backtest|Model
+        input_data: Input data (alternative to flat params). Format depends on input_type: holdings=[{date,positions}], trades=[{date,type,security,quantity,price}], values=[{date,security,value}]
         benchmark: Benchmark TepiloraCode
         description: Description
-        settings: Portfolio settings"""
-        params: Dict[str, Any] = {}
-        params["name"] = name
-        params["input_type"] = input_type
-        if portfolio_type is not None:
-            params["portfolio_type"] = portfolio_type
+        settings: Portfolio settings
+        visibility: private|shared"""
+        _payload: Dict[str, Any] = {}
+        _payload["name"] = name
+        _payload["input_type"] = input_type
+        if allow_negative_cash is not None:
+            _payload["allow_negative_cash"] = allow_negative_cash
+        if allow_short is not None:
+            _payload["allow_short"] = allow_short
+        if auto_cash is not None:
+            _payload["auto_cash"] = auto_cash
+        if base_currency is not None:
+            _payload["base_currency"] = base_currency
+        if components is not None:
+            _payload["components"] = components
+        if currency is not None:
+            _payload["currency"] = currency
+        if holdings is not None:
+            _payload["holdings"] = holdings
+        if initial_cash is not None:
+            _payload["initial_cash"] = initial_cash
+        if initial_weights is not None:
+            _payload["initial_weights"] = initial_weights
+        if trades is not None:
+            _payload["trades"] = trades
+        if values is not None:
+            _payload["values"] = values
         if weights is not None:
-            params["weights"] = weights
+            _payload["weights"] = weights
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
+        if end_date is not None:
+            _payload["end_date"] = end_date
+        if type_ is not None:
+            _payload["type"] = type_
+        if input_data is not None:
+            _payload["input_data"] = input_data
         if benchmark is not None:
-            params["benchmark"] = benchmark
+            _payload["benchmark"] = benchmark
         if description is not None:
-            params["description"] = description
+            _payload["description"] = description
         if settings is not None:
-            params["settings"] = settings
-        return await self._call("portfolio.create", params=params, options=options, context=context)
+            _payload["settings"] = settings
+        if visibility is not None:
+            _payload["visibility"] = visibility
+        return await self._call("portfolio.create", params=_payload, options=options, context=context)
 
     async def delete(
         self,
@@ -649,32 +1018,52 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
 
         Args:
         id: Portfolio ID"""
-        params: Dict[str, Any] = {}
-        params["id"] = id
-        return await self._call("portfolio.delete", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["id"] = id
+        return await self._call("portfolio.delete", params=_payload, options=options, context=context)
 
     async def drift(
         self,
         *,
-        id: str,
+        compare_rebalanced: Optional[str] = None,
+        currency: Optional[str] = None,
+        end_date: Optional[str] = None,
+        start_date: Optional[str] = None,
+        target_weights: Optional[str] = None,
+        threshold: Optional[str] = None,
+        total_return: Optional[str] = None,
+        user_prices: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
         """Portfolio drift
 
-        Weight drift from target.
-
-        Args:
-        id: Portfolio ID"""
-        params: Dict[str, Any] = {}
-        params["id"] = id
-        return await self._call("portfolio.drift", params=params, options=options, context=context, response_format=response_format)
+        Weight drift from target."""
+        _payload: Dict[str, Any] = {}
+        if compare_rebalanced is not None:
+            _payload["compare_rebalanced"] = compare_rebalanced
+        if currency is not None:
+            _payload["currency"] = currency
+        if end_date is not None:
+            _payload["end_date"] = end_date
+        if start_date is not None:
+            _payload["start_date"] = start_date
+        if target_weights is not None:
+            _payload["target_weights"] = target_weights
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if total_return is not None:
+            _payload["total_return"] = total_return
+        if user_prices is not None:
+            _payload["user_prices"] = user_prices
+        return await self._call("portfolio.drift", params=_payload, options=options, context=context, response_format=response_format)
 
     async def exposure(
         self,
         *,
-        id: str,
+        date: Optional[str] = None,
+        dimensions: Optional[str] = None,
         dimension: Optional[str] = "sector",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
@@ -685,13 +1074,15 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         Exposure by sector, country, currency, etc.
 
         Args:
-        id: Portfolio ID
         dimension: sector|country|currency|asset_class"""
-        params: Dict[str, Any] = {}
-        params["id"] = id
+        _payload: Dict[str, Any] = {}
+        if date is not None:
+            _payload["date"] = date
+        if dimensions is not None:
+            _payload["dimensions"] = dimensions
         if dimension is not None:
-            params["dimension"] = dimension
-        return await self._call("portfolio.exposure", params=params, options=options, context=context, response_format=response_format)
+            _payload["dimension"] = dimension
+        return await self._call("portfolio.exposure", params=_payload, options=options, context=context, response_format=response_format)
 
     async def get(
         self,
@@ -706,16 +1097,18 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
 
         Args:
         id: Portfolio ID"""
-        params: Dict[str, Any] = {}
-        params["id"] = id
-        return await self._call("portfolio.get", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["id"] = id
+        return await self._call("portfolio.get", params=_payload, options=options, context=context)
 
     async def list(
         self,
         *,
-        portfolio_type: Optional[str] = None,
+        type_: Optional[str] = None,
         input_type: Optional[str] = None,
         search: Optional[str] = None,
+        sort: Optional[str] = "createdAt",
+        order: Optional[str] = "desc",
         limit: Optional[int] = 50,
         offset: Optional[int] = 0,
         include_shared: Optional[bool] = True,
@@ -727,61 +1120,91 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         List user's portfolios.
 
         Args:
-        portfolio_type: Filter by type
+        type_: Filter by type
         input_type: Filter by input type
         search: Search in name
+        sort: Sort field
+        order: Sort order: asc|desc
         limit: Maximum results
         offset: Pagination offset
         include_shared: Include shared portfolios"""
-        params: Dict[str, Any] = {}
-        if portfolio_type is not None:
-            params["portfolio_type"] = portfolio_type
+        _payload: Dict[str, Any] = {}
+        if type_ is not None:
+            _payload["type"] = type_
         if input_type is not None:
-            params["input_type"] = input_type
+            _payload["input_type"] = input_type
         if search is not None:
-            params["search"] = search
+            _payload["search"] = search
+        if sort is not None:
+            _payload["sort"] = sort
+        if order is not None:
+            _payload["order"] = order
         if limit is not None:
-            params["limit"] = limit
+            _payload["limit"] = limit
         if offset is not None:
-            params["offset"] = offset
+            _payload["offset"] = offset
         if include_shared is not None:
-            params["include_shared"] = include_shared
-        return await self._call("portfolio.list", params=params, options=options, context=context)
+            _payload["include_shared"] = include_shared
+        return await self._call("portfolio.list", params=_payload, options=options, context=context)
 
     async def optimize(
         self,
         *,
-        id: str,
-        objective: Optional[str] = "max_sharpe",
-        constraints: Optional[Dict[str, Any]] = None,
+        identifiers: Optional[Union[str, List[str]]] = None,
+        poll_interval: Optional[str] = None,
+        securities_metadata: Optional[str] = None,
         settings: Optional[Dict[str, Any]] = None,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        total_return: Optional[bool] = False,
+        currency: Optional[str] = None,
+        timeout: Optional[int] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
         """Optimize portfolio
 
-        Portfolio optimization (Julia backend).
+        Portfolio optimization (Julia backend). Pass identifiers for inline mode or id for saved portfolio.
 
         Args:
-        id: Portfolio ID
-        objective: Optimization objective
-        constraints: Constraints
-        settings: Optimizer settings"""
-        params: Dict[str, Any] = {}
-        params["id"] = id
-        if objective is not None:
-            params["objective"] = objective
-        if constraints is not None:
-            params["constraints"] = constraints
+        identifiers: TepiloraCodes (for inline mode)
+        settings: Optimizer settings (solver_mode, constraints, etc.)
+        start_date: Start date (YYYY-MM-DD)
+        end_date: End date (YYYY-MM-DD)
+        total_return: Use total return prices
+        currency: Base currency
+        timeout: Optimization timeout (seconds)"""
+        _payload: Dict[str, Any] = {}
+        if identifiers is not None:
+            _payload["identifiers"] = identifiers
+        if poll_interval is not None:
+            _payload["poll_interval"] = poll_interval
+        if securities_metadata is not None:
+            _payload["securities_metadata"] = securities_metadata
         if settings is not None:
-            params["settings"] = settings
-        return await self._call("portfolio.optimize", params=params, options=options, context=context)
+            _payload["settings"] = settings
+        if start_date is not None:
+            _payload["start_date"] = start_date
+        if end_date is not None:
+            _payload["end_date"] = end_date
+        if total_return is not None:
+            _payload["total_return"] = total_return
+        if currency is not None:
+            _payload["currency"] = currency
+        if timeout is not None:
+            _payload["timeout"] = timeout
+        return await self._call("portfolio.optimize", params=_payload, options=options, context=context)
 
     async def rebalance(
         self,
         *,
-        id: str,
+        costs: Optional[str] = None,
+        current_weights: Optional[str] = None,
+        min_trade_value: Optional[str] = None,
+        portfolio_value: Optional[str] = None,
+        strategy: Optional[str] = None,
         target_weights: Optional[Dict[str, Any]] = None,
+        threshold: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -791,21 +1214,57 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         Calculate rebalancing trades.
 
         Args:
-        id: Portfolio ID
         target_weights: Target weights"""
-        params: Dict[str, Any] = {}
-        params["id"] = id
+        _payload: Dict[str, Any] = {}
+        if costs is not None:
+            _payload["costs"] = costs
+        if current_weights is not None:
+            _payload["current_weights"] = current_weights
+        if min_trade_value is not None:
+            _payload["min_trade_value"] = min_trade_value
+        if portfolio_value is not None:
+            _payload["portfolio_value"] = portfolio_value
+        if strategy is not None:
+            _payload["strategy"] = strategy
         if target_weights is not None:
-            params["target_weights"] = target_weights
-        return await self._call("portfolio.rebalance", params=params, options=options, context=context, response_format=response_format)
+            _payload["target_weights"] = target_weights
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        return await self._call("portfolio.rebalance", params=_payload, options=options, context=context, response_format=response_format)
 
     async def returns(
         self,
         *,
         id: str,
+        allow_negative_cash: Optional[bool] = None,
+        allow_short: Optional[bool] = None,
+        auto_cash: Optional[str] = None,
+        base_currency: Optional[str] = None,
+        borrow_cost: Optional[str] = None,
+        borrow_spread_annual: Optional[str] = None,
+        cash_yield: Optional[str] = None,
+        components: Optional[str] = None,
+        currency: Optional[str] = None,
+        drifting: Optional[str] = None,
+        holdings: Optional[str] = None,
+        initial_value: Optional[str] = None,
+        max_stale_days: Optional[str] = None,
+        Obs: Optional[str] = None,
+        price_fill: Optional[str] = None,
+        rebalance_dates: Optional[str] = None,
+        rebalance_effective: Optional[str] = None,
+        rebalance_frequency: Optional[str] = None,
+        rebalance_on: Optional[str] = None,
+        settings: Optional[Dict[str, Any]] = None,
+        stale_policy: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         return_method: Optional[str] = "twr",
+        total_return: Optional[str] = None,
+        trades: Optional[str] = None,
+        user_prices: Optional[str] = None,
+        values: Optional[str] = None,
+        weights: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -819,15 +1278,67 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)
         return_method: twr|mwr|modified_dietz"""
-        params: Dict[str, Any] = {}
-        params["id"] = id
+        _payload: Dict[str, Any] = {}
+        _payload["id"] = id
+        if allow_negative_cash is not None:
+            _payload["allow_negative_cash"] = allow_negative_cash
+        if allow_short is not None:
+            _payload["allow_short"] = allow_short
+        if auto_cash is not None:
+            _payload["auto_cash"] = auto_cash
+        if base_currency is not None:
+            _payload["base_currency"] = base_currency
+        if borrow_cost is not None:
+            _payload["borrow_cost"] = borrow_cost
+        if borrow_spread_annual is not None:
+            _payload["borrow_spread_annual"] = borrow_spread_annual
+        if cash_yield is not None:
+            _payload["cash_yield"] = cash_yield
+        if components is not None:
+            _payload["components"] = components
+        if currency is not None:
+            _payload["currency"] = currency
+        if drifting is not None:
+            _payload["drifting"] = drifting
+        if holdings is not None:
+            _payload["holdings"] = holdings
+        if initial_value is not None:
+            _payload["initial_value"] = initial_value
+        if max_stale_days is not None:
+            _payload["max_stale_days"] = max_stale_days
+        if Obs is not None:
+            _payload["Obs"] = Obs
+        if price_fill is not None:
+            _payload["price_fill"] = price_fill
+        if rebalance_dates is not None:
+            _payload["rebalance_dates"] = rebalance_dates
+        if rebalance_effective is not None:
+            _payload["rebalance_effective"] = rebalance_effective
+        if rebalance_frequency is not None:
+            _payload["rebalance_frequency"] = rebalance_frequency
+        if rebalance_on is not None:
+            _payload["rebalance_on"] = rebalance_on
+        if settings is not None:
+            _payload["settings"] = settings
+        if stale_policy is not None:
+            _payload["stale_policy"] = stale_policy
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
+            _payload["end_date"] = end_date
         if return_method is not None:
-            params["return_method"] = return_method
-        return await self._call("portfolio.returns", params=params, options=options, context=context, response_format=response_format)
+            _payload["return_method"] = return_method
+        if total_return is not None:
+            _payload["total_return"] = total_return
+        if trades is not None:
+            _payload["trades"] = trades
+        if user_prices is not None:
+            _payload["user_prices"] = user_prices
+        if values is not None:
+            _payload["values"] = values
+        if weights is not None:
+            _payload["weights"] = weights
+        return await self._call("portfolio.returns", params=_payload, options=options, context=context, response_format=response_format)
 
     async def share(
         self,
@@ -846,12 +1357,12 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         id: Portfolio ID
         target_apikey: Target user apikey
         permission: read|write"""
-        params: Dict[str, Any] = {}
-        params["id"] = id
-        params["target_apikey"] = target_apikey
+        _payload: Dict[str, Any] = {}
+        _payload["id"] = id
+        _payload["target_apikey"] = target_apikey
         if permission is not None:
-            params["permission"] = permission
-        return await self._call("portfolio.share", params=params, options=options, context=context)
+            _payload["permission"] = permission
+        return await self._call("portfolio.share", params=_payload, options=options, context=context)
 
     async def shares(
         self,
@@ -866,15 +1377,24 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
 
         Args:
         id: Portfolio ID"""
-        params: Dict[str, Any] = {}
-        params["id"] = id
-        return await self._call("portfolio.shares", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["id"] = id
+        return await self._call("portfolio.shares", params=_payload, options=options, context=context)
 
     async def stress(
         self,
         *,
         id: str,
+        asset_class: Optional[str] = None,
+        mode: Optional[str] = None,
+        portfolio_value: Optional[str] = None,
+        scenario: Optional[str] = None,
+        scenario_name: Optional[str] = None,
         scenarios: Optional[List[Any]] = None,
+        shock_range: Optional[str] = None,
+        shocks: Optional[str] = None,
+        steps: Optional[str] = None,
+        weights: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -885,18 +1405,44 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         Args:
         id: Portfolio ID
         scenarios: Custom scenarios"""
-        params: Dict[str, Any] = {}
-        params["id"] = id
+        _payload: Dict[str, Any] = {}
+        _payload["id"] = id
+        if asset_class is not None:
+            _payload["asset_class"] = asset_class
+        if mode is not None:
+            _payload["mode"] = mode
+        if portfolio_value is not None:
+            _payload["portfolio_value"] = portfolio_value
+        if scenario is not None:
+            _payload["scenario"] = scenario
+        if scenario_name is not None:
+            _payload["scenario_name"] = scenario_name
         if scenarios is not None:
-            params["scenarios"] = scenarios
-        return await self._call("portfolio.stress", params=params, options=options, context=context)
+            _payload["scenarios"] = scenarios
+        if shock_range is not None:
+            _payload["shock_range"] = shock_range
+        if shocks is not None:
+            _payload["shocks"] = shocks
+        if steps is not None:
+            _payload["steps"] = steps
+        if weights is not None:
+            _payload["weights"] = weights
+        return await self._call("portfolio.stress", params=_payload, options=options, context=context)
 
     async def tearsheet(
         self,
         *,
         id: str,
+        benchmark_id: Optional[str] = None,
+        benchmark_name: Optional[str] = None,
+        benchmark_weights: Optional[str] = None,
+        currency: Optional[str] = None,
+        name: Optional[str] = None,
+        output_path: Optional[str] = None,
+        risk_free_rate: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        total_return: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -908,13 +1454,29 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         id: Portfolio ID
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = {}
-        params["id"] = id
+        _payload: Dict[str, Any] = {}
+        _payload["id"] = id
+        if benchmark_id is not None:
+            _payload["benchmark_id"] = benchmark_id
+        if benchmark_name is not None:
+            _payload["benchmark_name"] = benchmark_name
+        if benchmark_weights is not None:
+            _payload["benchmark_weights"] = benchmark_weights
+        if currency is not None:
+            _payload["currency"] = currency
+        if name is not None:
+            _payload["name"] = name
+        if output_path is not None:
+            _payload["output_path"] = output_path
+        if risk_free_rate is not None:
+            _payload["risk_free_rate"] = risk_free_rate
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call("portfolio.tearsheet", params=params, options=options, context=context)
+            _payload["end_date"] = end_date
+        if total_return is not None:
+            _payload["total_return"] = total_return
+        return await self._call("portfolio.tearsheet", params=_payload, options=options, context=context)
 
     async def unshare(
         self,
@@ -931,10 +1493,10 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         Args:
         id: Portfolio ID
         target_apikey: User to remove"""
-        params: Dict[str, Any] = {}
-        params["id"] = id
-        params["target_apikey"] = target_apikey
-        return await self._call("portfolio.unshare", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["id"] = id
+        _payload["target_apikey"] = target_apikey
+        return await self._call("portfolio.unshare", params=_payload, options=options, context=context)
 
     async def update(
         self,
@@ -959,18 +1521,18 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         benchmark: New benchmark
         description: New description
         settings: New settings"""
-        params: Dict[str, Any] = {}
-        params["id"] = id
+        _payload: Dict[str, Any] = {}
+        _payload["id"] = id
         if name is not None:
-            params["name"] = name
+            _payload["name"] = name
         if input_data is not None:
-            params["input_data"] = input_data
+            _payload["input_data"] = input_data
         if benchmark is not None:
-            params["benchmark"] = benchmark
+            _payload["benchmark"] = benchmark
         if description is not None:
-            params["description"] = description
+            _payload["description"] = description
         if settings is not None:
-            params["settings"] = settings
-        return await self._call("portfolio.update", params=params, options=options, context=context)
+            _payload["settings"] = settings
+        return await self._call("portfolio.update", params=_payload, options=options, context=context)
 
 

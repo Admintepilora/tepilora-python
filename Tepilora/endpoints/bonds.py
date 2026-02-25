@@ -37,41 +37,45 @@ class BondsAPI(BaseAPI):
         maturity_date: Maturity date YYYY-MM-DD. Auto-populated from metadata if missing
         frequency: Coupon frequency (1,2,4,12). Auto-populated from metadata if missing
         day_count: Day count convention. Auto-populated from metadata if missing"""
-        params: Dict[str, Any] = {}
-        params["identifier"] = identifier
+        _payload: Dict[str, Any] = {}
+        _payload["identifier"] = identifier
         if face_value is not None:
-            params["face_value"] = face_value
+            _payload["face_value"] = face_value
         if coupon_rate is not None:
-            params["coupon_rate"] = coupon_rate
+            _payload["coupon_rate"] = coupon_rate
         if maturity_date is not None:
-            params["maturity_date"] = maturity_date
+            _payload["maturity_date"] = maturity_date
         if frequency is not None:
-            params["frequency"] = frequency
+            _payload["frequency"] = frequency
         if day_count is not None:
-            params["day_count"] = day_count
-        return self._call("bonds.analyze", params=params, options=options, context=context)
+            _payload["day_count"] = day_count
+        return self._call("bonds.analyze", params=_payload, options=options, context=context)
 
     def curve(
         self,
         *,
         currency: Optional[str] = "EUR",
+        country: Optional[str] = None,
         date: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
         """Yield curve
 
-        Get yield curve data.
+        Get yield curve data. Currency auto-maps to country (EUR→Germany, USD→US, GBP→UK) unless country is specified.
 
         Args:
         currency: Currency
+        country: Override country (e.g. Italy for EUR)
         date: As of date"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if currency is not None:
-            params["currency"] = currency
+            _payload["currency"] = currency
+        if country is not None:
+            _payload["country"] = country
         if date is not None:
-            params["date"] = date
-        return self._call("bonds.curve", params=params, options=options, context=context)
+            _payload["date"] = date
+        return self._call("bonds.curve", params=_payload, options=options, context=context)
 
     def ladder(
         self,
@@ -93,16 +97,16 @@ class BondsAPI(BaseAPI):
         target_maturities: Target maturity years
         investment_amount: Total investment amount
         rungs: Number of rungs"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
         if target_maturities is not None:
-            params["target_maturities"] = target_maturities
+            _payload["target_maturities"] = target_maturities
         if investment_amount is not None:
-            params["investment_amount"] = investment_amount
+            _payload["investment_amount"] = investment_amount
         if rungs is not None:
-            params["rungs"] = rungs
-        return self._call("bonds.ladder", params=params, options=options, context=context, response_format=response_format)
+            _payload["rungs"] = rungs
+        return self._call("bonds.ladder", params=_payload, options=options, context=context, response_format=response_format)
 
     def lookup(
         self,
@@ -120,12 +124,12 @@ class BondsAPI(BaseAPI):
         Args:
         identifier: Single bond identifier
         identifiers: Multiple bond identifiers"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if identifier is not None:
-            params["identifier"] = identifier
+            _payload["identifier"] = identifier
         if identifiers is not None:
-            params["identifiers"] = identifiers
-        return self._call("bonds.lookup", params=params, options=options, context=context, response_format=response_format)
+            _payload["identifiers"] = identifiers
+        return self._call("bonds.lookup", params=_payload, options=options, context=context, response_format=response_format)
 
     def maturity_profile(
         self,
@@ -143,28 +147,23 @@ class BondsAPI(BaseAPI):
         Args:
         identifiers: Bond identifiers
         weights: Portfolio weights"""
-        params: Dict[str, Any] = {}
-        params["identifiers"] = identifiers
+        _payload: Dict[str, Any] = {}
+        _payload["identifiers"] = identifiers
         if weights is not None:
-            params["weights"] = weights
-        return self._call("bonds.maturity_profile", params=params, options=options, context=context, response_format=response_format)
+            _payload["weights"] = weights
+        return self._call("bonds.maturity_profile", params=_payload, options=options, context=context, response_format=response_format)
 
     def metrics(
         self,
         *,
-        identifier: str,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Bond metrics
+        """Bond metrics reference
 
-        Duration, convexity, etc.
-
-        Args:
-        identifier: TepiloraCode or ISIN"""
-        params: Dict[str, Any] = {}
-        params["identifier"] = identifier
-        return self._call("bonds.metrics", params=params, options=options, context=context)
+        Available bond metric definitions and classifications."""
+        _payload: Dict[str, Any] = {}
+        return self._call("bonds.metrics", params=_payload, options=options, context=context)
 
     def portfolio(
         self,
@@ -184,14 +183,14 @@ class BondsAPI(BaseAPI):
         identifiers: List of TepiloraCodes
         weights: Portfolio weights (list of floats, same order as identifiers)
         include_duration: Include duration analysis"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
         if weights is not None:
-            params["weights"] = weights
+            _payload["weights"] = weights
         if include_duration is not None:
-            params["include_duration"] = include_duration
-        return self._call("bonds.portfolio", params=params, options=options, context=context, response_format=response_format)
+            _payload["include_duration"] = include_duration
+        return self._call("bonds.portfolio", params=_payload, options=options, context=context, response_format=response_format)
 
     def screen(
         self,
@@ -213,16 +212,16 @@ class BondsAPI(BaseAPI):
         universe: Universe filter (e.g. TepiloraBondType, TepiloraBondIssuer)
         rank_by: Metric to rank by (ytm, duration, etc.)
         limit: Max results (default: all)"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if criteria is not None:
-            params["criteria"] = criteria
+            _payload["criteria"] = criteria
         if universe is not None:
-            params["universe"] = universe
+            _payload["universe"] = universe
         if rank_by is not None:
-            params["rank_by"] = rank_by
+            _payload["rank_by"] = rank_by
         if limit is not None:
-            params["limit"] = limit
-        return self._call("bonds.screen", params=params, options=options, context=context, response_format=response_format)
+            _payload["limit"] = limit
+        return self._call("bonds.screen", params=_payload, options=options, context=context, response_format=response_format)
 
     def spread(
         self,
@@ -240,11 +239,11 @@ class BondsAPI(BaseAPI):
         Args:
         identifiers: List of TepiloraCodes
         benchmark: Benchmark bond identifier"""
-        params: Dict[str, Any] = {}
-        params["identifiers"] = identifiers
+        _payload: Dict[str, Any] = {}
+        _payload["identifiers"] = identifiers
         if benchmark is not None:
-            params["benchmark"] = benchmark
-        return self._call("bonds.spread", params=params, options=options, context=context, response_format=response_format)
+            _payload["benchmark"] = benchmark
+        return self._call("bonds.spread", params=_payload, options=options, context=context, response_format=response_format)
 
 
 
@@ -274,41 +273,45 @@ class AsyncBondsAPI(AsyncBaseAPI):
         maturity_date: Maturity date YYYY-MM-DD. Auto-populated from metadata if missing
         frequency: Coupon frequency (1,2,4,12). Auto-populated from metadata if missing
         day_count: Day count convention. Auto-populated from metadata if missing"""
-        params: Dict[str, Any] = {}
-        params["identifier"] = identifier
+        _payload: Dict[str, Any] = {}
+        _payload["identifier"] = identifier
         if face_value is not None:
-            params["face_value"] = face_value
+            _payload["face_value"] = face_value
         if coupon_rate is not None:
-            params["coupon_rate"] = coupon_rate
+            _payload["coupon_rate"] = coupon_rate
         if maturity_date is not None:
-            params["maturity_date"] = maturity_date
+            _payload["maturity_date"] = maturity_date
         if frequency is not None:
-            params["frequency"] = frequency
+            _payload["frequency"] = frequency
         if day_count is not None:
-            params["day_count"] = day_count
-        return await self._call("bonds.analyze", params=params, options=options, context=context)
+            _payload["day_count"] = day_count
+        return await self._call("bonds.analyze", params=_payload, options=options, context=context)
 
     async def curve(
         self,
         *,
         currency: Optional[str] = "EUR",
+        country: Optional[str] = None,
         date: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
         """Yield curve
 
-        Get yield curve data.
+        Get yield curve data. Currency auto-maps to country (EUR→Germany, USD→US, GBP→UK) unless country is specified.
 
         Args:
         currency: Currency
+        country: Override country (e.g. Italy for EUR)
         date: As of date"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if currency is not None:
-            params["currency"] = currency
+            _payload["currency"] = currency
+        if country is not None:
+            _payload["country"] = country
         if date is not None:
-            params["date"] = date
-        return await self._call("bonds.curve", params=params, options=options, context=context)
+            _payload["date"] = date
+        return await self._call("bonds.curve", params=_payload, options=options, context=context)
 
     async def ladder(
         self,
@@ -330,16 +333,16 @@ class AsyncBondsAPI(AsyncBaseAPI):
         target_maturities: Target maturity years
         investment_amount: Total investment amount
         rungs: Number of rungs"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
         if target_maturities is not None:
-            params["target_maturities"] = target_maturities
+            _payload["target_maturities"] = target_maturities
         if investment_amount is not None:
-            params["investment_amount"] = investment_amount
+            _payload["investment_amount"] = investment_amount
         if rungs is not None:
-            params["rungs"] = rungs
-        return await self._call("bonds.ladder", params=params, options=options, context=context, response_format=response_format)
+            _payload["rungs"] = rungs
+        return await self._call("bonds.ladder", params=_payload, options=options, context=context, response_format=response_format)
 
     async def lookup(
         self,
@@ -357,12 +360,12 @@ class AsyncBondsAPI(AsyncBaseAPI):
         Args:
         identifier: Single bond identifier
         identifiers: Multiple bond identifiers"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if identifier is not None:
-            params["identifier"] = identifier
+            _payload["identifier"] = identifier
         if identifiers is not None:
-            params["identifiers"] = identifiers
-        return await self._call("bonds.lookup", params=params, options=options, context=context, response_format=response_format)
+            _payload["identifiers"] = identifiers
+        return await self._call("bonds.lookup", params=_payload, options=options, context=context, response_format=response_format)
 
     async def maturity_profile(
         self,
@@ -380,28 +383,23 @@ class AsyncBondsAPI(AsyncBaseAPI):
         Args:
         identifiers: Bond identifiers
         weights: Portfolio weights"""
-        params: Dict[str, Any] = {}
-        params["identifiers"] = identifiers
+        _payload: Dict[str, Any] = {}
+        _payload["identifiers"] = identifiers
         if weights is not None:
-            params["weights"] = weights
-        return await self._call("bonds.maturity_profile", params=params, options=options, context=context, response_format=response_format)
+            _payload["weights"] = weights
+        return await self._call("bonds.maturity_profile", params=_payload, options=options, context=context, response_format=response_format)
 
     async def metrics(
         self,
         *,
-        identifier: str,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Bond metrics
+        """Bond metrics reference
 
-        Duration, convexity, etc.
-
-        Args:
-        identifier: TepiloraCode or ISIN"""
-        params: Dict[str, Any] = {}
-        params["identifier"] = identifier
-        return await self._call("bonds.metrics", params=params, options=options, context=context)
+        Available bond metric definitions and classifications."""
+        _payload: Dict[str, Any] = {}
+        return await self._call("bonds.metrics", params=_payload, options=options, context=context)
 
     async def portfolio(
         self,
@@ -421,14 +419,14 @@ class AsyncBondsAPI(AsyncBaseAPI):
         identifiers: List of TepiloraCodes
         weights: Portfolio weights (list of floats, same order as identifiers)
         include_duration: Include duration analysis"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if identifiers is not None:
-            params["identifiers"] = identifiers
+            _payload["identifiers"] = identifiers
         if weights is not None:
-            params["weights"] = weights
+            _payload["weights"] = weights
         if include_duration is not None:
-            params["include_duration"] = include_duration
-        return await self._call("bonds.portfolio", params=params, options=options, context=context, response_format=response_format)
+            _payload["include_duration"] = include_duration
+        return await self._call("bonds.portfolio", params=_payload, options=options, context=context, response_format=response_format)
 
     async def screen(
         self,
@@ -450,16 +448,16 @@ class AsyncBondsAPI(AsyncBaseAPI):
         universe: Universe filter (e.g. TepiloraBondType, TepiloraBondIssuer)
         rank_by: Metric to rank by (ytm, duration, etc.)
         limit: Max results (default: all)"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
         if criteria is not None:
-            params["criteria"] = criteria
+            _payload["criteria"] = criteria
         if universe is not None:
-            params["universe"] = universe
+            _payload["universe"] = universe
         if rank_by is not None:
-            params["rank_by"] = rank_by
+            _payload["rank_by"] = rank_by
         if limit is not None:
-            params["limit"] = limit
-        return await self._call("bonds.screen", params=params, options=options, context=context, response_format=response_format)
+            _payload["limit"] = limit
+        return await self._call("bonds.screen", params=_payload, options=options, context=context, response_format=response_format)
 
     async def spread(
         self,
@@ -477,10 +475,10 @@ class AsyncBondsAPI(AsyncBaseAPI):
         Args:
         identifiers: List of TepiloraCodes
         benchmark: Benchmark bond identifier"""
-        params: Dict[str, Any] = {}
-        params["identifiers"] = identifiers
+        _payload: Dict[str, Any] = {}
+        _payload["identifiers"] = identifiers
         if benchmark is not None:
-            params["benchmark"] = benchmark
-        return await self._call("bonds.spread", params=params, options=options, context=context, response_format=response_format)
+            _payload["benchmark"] = benchmark
+        return await self._call("bonds.spread", params=_payload, options=options, context=context, response_format=response_format)
 
 

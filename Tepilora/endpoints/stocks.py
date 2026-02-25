@@ -30,11 +30,11 @@ class StocksAPI(BaseAPI):
         Args:
         identifiers: List of TepiloraCodes
         metrics: Metrics to compare"""
-        params: Dict[str, Any] = {}
-        params["identifiers"] = identifiers
+        _payload: Dict[str, Any] = {}
+        _payload["identifiers"] = identifiers
         if metrics is not None:
-            params["metrics"] = metrics
-        return self._call("stocks.compare", params=params, options=options, context=context, response_format=response_format)
+            _payload["metrics"] = metrics
+        return self._call("stocks.compare", params=_payload, options=options, context=context, response_format=response_format)
 
     def dividends(
         self,
@@ -50,9 +50,9 @@ class StocksAPI(BaseAPI):
 
         Args:
         identifier: TepiloraCode or ISIN"""
-        params: Dict[str, Any] = {}
-        params["identifier"] = identifier
-        return self._call("stocks.dividends", params=params, options=options, context=context, response_format=response_format)
+        _payload: Dict[str, Any] = {}
+        _payload["identifier"] = identifier
+        return self._call("stocks.dividends", params=_payload, options=options, context=context, response_format=response_format)
 
     def indicators(
         self,
@@ -63,16 +63,16 @@ class StocksAPI(BaseAPI):
         """List indicators
 
         List available technical indicators."""
-        params: Dict[str, Any] = {}
-        return self._call("stocks.indicators", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        return self._call("stocks.indicators", params=_payload, options=options, context=context)
 
     def momentum(
         self,
         *,
         identifier: Optional[str] = None,
+        lookback_periods: Optional[str] = None,
         prices: Optional[Dict[str, Any]] = None,
         start_date: Optional[str] = None,
-        end_date: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -84,24 +84,25 @@ class StocksAPI(BaseAPI):
         Args:
         identifier: TepiloraCode or ISIN
         prices: User-provided prices
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = {}
+        start_date: Start date (YYYY-MM-DD)"""
+        _payload: Dict[str, Any] = {}
         if identifier is not None:
-            params["identifier"] = identifier
+            _payload["identifier"] = identifier
+        if lookback_periods is not None:
+            _payload["lookback_periods"] = lookback_periods
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if start_date is not None:
-            params["start_date"] = start_date
-        if end_date is not None:
-            params["end_date"] = end_date
-        return self._call("stocks.momentum", params=params, options=options, context=context, response_format=response_format)
+            _payload["start_date"] = start_date
+        return self._call("stocks.momentum", params=_payload, options=options, context=context, response_format=response_format)
 
     def peers(
         self,
         *,
         identifier: str,
         limit: Optional[int] = 20,
+        metrics: Optional[List[Any]] = None,
+        start_date: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -113,15 +114,21 @@ class StocksAPI(BaseAPI):
         Args:
         identifier: TepiloraCode or ISIN
         limit: Maximum results"""
-        params: Dict[str, Any] = {}
-        params["identifier"] = identifier
+        _payload: Dict[str, Any] = {}
+        _payload["identifier"] = identifier
         if limit is not None:
-            params["limit"] = limit
-        return self._call("stocks.peers", params=params, options=options, context=context, response_format=response_format)
+            _payload["limit"] = limit
+        if metrics is not None:
+            _payload["metrics"] = metrics
+        if start_date is not None:
+            _payload["start_date"] = start_date
+        return self._call("stocks.peers", params=_payload, options=options, context=context, response_format=response_format)
 
     def screen(
         self,
         *,
+        rank_by: Optional[str] = None,
+        start_date: Optional[str] = None,
         universe: Optional[Dict[str, Any]] = None,
         criteria: Optional[Dict[str, Any]] = None,
         limit: Optional[int] = 50,
@@ -137,21 +144,27 @@ class StocksAPI(BaseAPI):
         universe: Universe filters
         criteria: Screening criteria
         limit: Maximum results"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
+        if rank_by is not None:
+            _payload["rank_by"] = rank_by
+        if start_date is not None:
+            _payload["start_date"] = start_date
         if universe is not None:
-            params["universe"] = universe
+            _payload["universe"] = universe
         if criteria is not None:
-            params["criteria"] = criteria
+            _payload["criteria"] = criteria
         if limit is not None:
-            params["limit"] = limit
-        return self._call("stocks.screen", params=params, options=options, context=context, response_format=response_format)
+            _payload["limit"] = limit
+        return self._call("stocks.screen", params=_payload, options=options, context=context, response_format=response_format)
 
     def signals(
         self,
         *,
         identifier: Optional[str] = None,
         prices: Optional[Dict[str, Any]] = None,
-        strategy: Optional[str] = None,
+        strategies: Optional[List[Any]] = None,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -163,22 +176,36 @@ class StocksAPI(BaseAPI):
         Args:
         identifier: TepiloraCode or ISIN
         prices: User-provided prices
-        strategy: Signal strategy"""
-        params: Dict[str, Any] = {}
+        strategies: Signal strategies to apply
+        start_date: Start date (YYYY-MM-DD)
+        end_date: End date (YYYY-MM-DD)"""
+        _payload: Dict[str, Any] = {}
         if identifier is not None:
-            params["identifier"] = identifier
+            _payload["identifier"] = identifier
         if prices is not None:
-            params["prices"] = prices
-        if strategy is not None:
-            params["strategy"] = strategy
-        return self._call("stocks.signals", params=params, options=options, context=context, response_format=response_format)
+            _payload["prices"] = prices
+        if strategies is not None:
+            _payload["strategies"] = strategies
+        if start_date is not None:
+            _payload["start_date"] = start_date
+        if end_date is not None:
+            _payload["end_date"] = end_date
+        return self._call("stocks.signals", params=_payload, options=options, context=context, response_format=response_format)
 
     def technicals(
         self,
         *,
+        bb_period: Optional[str] = None,
+        bb_std: Optional[str] = None,
+        ema_periods: Optional[str] = None,
         identifier: Optional[str] = None,
+        macd_fast: Optional[str] = None,
+        macd_signal: Optional[str] = None,
+        macd_slow: Optional[str] = None,
         prices: Optional[Dict[str, Any]] = None,
         indicators: Optional[List[Any]] = None,
+        rsi_period: Optional[str] = None,
+        sma_periods: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
@@ -195,18 +222,34 @@ class StocksAPI(BaseAPI):
         indicators: Indicators to calculate
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
+        if bb_period is not None:
+            _payload["bb_period"] = bb_period
+        if bb_std is not None:
+            _payload["bb_std"] = bb_std
+        if ema_periods is not None:
+            _payload["ema_periods"] = ema_periods
         if identifier is not None:
-            params["identifier"] = identifier
+            _payload["identifier"] = identifier
+        if macd_fast is not None:
+            _payload["macd_fast"] = macd_fast
+        if macd_signal is not None:
+            _payload["macd_signal"] = macd_signal
+        if macd_slow is not None:
+            _payload["macd_slow"] = macd_slow
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if indicators is not None:
-            params["indicators"] = indicators
+            _payload["indicators"] = indicators
+        if rsi_period is not None:
+            _payload["rsi_period"] = rsi_period
+        if sma_periods is not None:
+            _payload["sma_periods"] = sma_periods
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return self._call("stocks.technicals", params=params, options=options, context=context, response_format=response_format)
+            _payload["end_date"] = end_date
+        return self._call("stocks.technicals", params=_payload, options=options, context=context, response_format=response_format)
 
     def valuation(
         self,
@@ -222,9 +265,9 @@ class StocksAPI(BaseAPI):
 
         Args:
         identifier: TepiloraCode or ISIN"""
-        params: Dict[str, Any] = {}
-        params["identifier"] = identifier
-        return self._call("stocks.valuation", params=params, options=options, context=context, response_format=response_format)
+        _payload: Dict[str, Any] = {}
+        _payload["identifier"] = identifier
+        return self._call("stocks.valuation", params=_payload, options=options, context=context, response_format=response_format)
 
 
 
@@ -247,11 +290,11 @@ class AsyncStocksAPI(AsyncBaseAPI):
         Args:
         identifiers: List of TepiloraCodes
         metrics: Metrics to compare"""
-        params: Dict[str, Any] = {}
-        params["identifiers"] = identifiers
+        _payload: Dict[str, Any] = {}
+        _payload["identifiers"] = identifiers
         if metrics is not None:
-            params["metrics"] = metrics
-        return await self._call("stocks.compare", params=params, options=options, context=context, response_format=response_format)
+            _payload["metrics"] = metrics
+        return await self._call("stocks.compare", params=_payload, options=options, context=context, response_format=response_format)
 
     async def dividends(
         self,
@@ -267,9 +310,9 @@ class AsyncStocksAPI(AsyncBaseAPI):
 
         Args:
         identifier: TepiloraCode or ISIN"""
-        params: Dict[str, Any] = {}
-        params["identifier"] = identifier
-        return await self._call("stocks.dividends", params=params, options=options, context=context, response_format=response_format)
+        _payload: Dict[str, Any] = {}
+        _payload["identifier"] = identifier
+        return await self._call("stocks.dividends", params=_payload, options=options, context=context, response_format=response_format)
 
     async def indicators(
         self,
@@ -280,16 +323,16 @@ class AsyncStocksAPI(AsyncBaseAPI):
         """List indicators
 
         List available technical indicators."""
-        params: Dict[str, Any] = {}
-        return await self._call("stocks.indicators", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        return await self._call("stocks.indicators", params=_payload, options=options, context=context)
 
     async def momentum(
         self,
         *,
         identifier: Optional[str] = None,
+        lookback_periods: Optional[str] = None,
         prices: Optional[Dict[str, Any]] = None,
         start_date: Optional[str] = None,
-        end_date: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -301,24 +344,25 @@ class AsyncStocksAPI(AsyncBaseAPI):
         Args:
         identifier: TepiloraCode or ISIN
         prices: User-provided prices
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = {}
+        start_date: Start date (YYYY-MM-DD)"""
+        _payload: Dict[str, Any] = {}
         if identifier is not None:
-            params["identifier"] = identifier
+            _payload["identifier"] = identifier
+        if lookback_periods is not None:
+            _payload["lookback_periods"] = lookback_periods
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if start_date is not None:
-            params["start_date"] = start_date
-        if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call("stocks.momentum", params=params, options=options, context=context, response_format=response_format)
+            _payload["start_date"] = start_date
+        return await self._call("stocks.momentum", params=_payload, options=options, context=context, response_format=response_format)
 
     async def peers(
         self,
         *,
         identifier: str,
         limit: Optional[int] = 20,
+        metrics: Optional[List[Any]] = None,
+        start_date: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -330,15 +374,21 @@ class AsyncStocksAPI(AsyncBaseAPI):
         Args:
         identifier: TepiloraCode or ISIN
         limit: Maximum results"""
-        params: Dict[str, Any] = {}
-        params["identifier"] = identifier
+        _payload: Dict[str, Any] = {}
+        _payload["identifier"] = identifier
         if limit is not None:
-            params["limit"] = limit
-        return await self._call("stocks.peers", params=params, options=options, context=context, response_format=response_format)
+            _payload["limit"] = limit
+        if metrics is not None:
+            _payload["metrics"] = metrics
+        if start_date is not None:
+            _payload["start_date"] = start_date
+        return await self._call("stocks.peers", params=_payload, options=options, context=context, response_format=response_format)
 
     async def screen(
         self,
         *,
+        rank_by: Optional[str] = None,
+        start_date: Optional[str] = None,
         universe: Optional[Dict[str, Any]] = None,
         criteria: Optional[Dict[str, Any]] = None,
         limit: Optional[int] = 50,
@@ -354,21 +404,27 @@ class AsyncStocksAPI(AsyncBaseAPI):
         universe: Universe filters
         criteria: Screening criteria
         limit: Maximum results"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
+        if rank_by is not None:
+            _payload["rank_by"] = rank_by
+        if start_date is not None:
+            _payload["start_date"] = start_date
         if universe is not None:
-            params["universe"] = universe
+            _payload["universe"] = universe
         if criteria is not None:
-            params["criteria"] = criteria
+            _payload["criteria"] = criteria
         if limit is not None:
-            params["limit"] = limit
-        return await self._call("stocks.screen", params=params, options=options, context=context, response_format=response_format)
+            _payload["limit"] = limit
+        return await self._call("stocks.screen", params=_payload, options=options, context=context, response_format=response_format)
 
     async def signals(
         self,
         *,
         identifier: Optional[str] = None,
         prices: Optional[Dict[str, Any]] = None,
-        strategy: Optional[str] = None,
+        strategies: Optional[List[Any]] = None,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -380,22 +436,36 @@ class AsyncStocksAPI(AsyncBaseAPI):
         Args:
         identifier: TepiloraCode or ISIN
         prices: User-provided prices
-        strategy: Signal strategy"""
-        params: Dict[str, Any] = {}
+        strategies: Signal strategies to apply
+        start_date: Start date (YYYY-MM-DD)
+        end_date: End date (YYYY-MM-DD)"""
+        _payload: Dict[str, Any] = {}
         if identifier is not None:
-            params["identifier"] = identifier
+            _payload["identifier"] = identifier
         if prices is not None:
-            params["prices"] = prices
-        if strategy is not None:
-            params["strategy"] = strategy
-        return await self._call("stocks.signals", params=params, options=options, context=context, response_format=response_format)
+            _payload["prices"] = prices
+        if strategies is not None:
+            _payload["strategies"] = strategies
+        if start_date is not None:
+            _payload["start_date"] = start_date
+        if end_date is not None:
+            _payload["end_date"] = end_date
+        return await self._call("stocks.signals", params=_payload, options=options, context=context, response_format=response_format)
 
     async def technicals(
         self,
         *,
+        bb_period: Optional[str] = None,
+        bb_std: Optional[str] = None,
+        ema_periods: Optional[str] = None,
         identifier: Optional[str] = None,
+        macd_fast: Optional[str] = None,
+        macd_signal: Optional[str] = None,
+        macd_slow: Optional[str] = None,
         prices: Optional[Dict[str, Any]] = None,
         indicators: Optional[List[Any]] = None,
+        rsi_period: Optional[str] = None,
+        sma_periods: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
@@ -412,18 +482,34 @@ class AsyncStocksAPI(AsyncBaseAPI):
         indicators: Indicators to calculate
         start_date: Start date (YYYY-MM-DD)
         end_date: End date (YYYY-MM-DD)"""
-        params: Dict[str, Any] = {}
+        _payload: Dict[str, Any] = {}
+        if bb_period is not None:
+            _payload["bb_period"] = bb_period
+        if bb_std is not None:
+            _payload["bb_std"] = bb_std
+        if ema_periods is not None:
+            _payload["ema_periods"] = ema_periods
         if identifier is not None:
-            params["identifier"] = identifier
+            _payload["identifier"] = identifier
+        if macd_fast is not None:
+            _payload["macd_fast"] = macd_fast
+        if macd_signal is not None:
+            _payload["macd_signal"] = macd_signal
+        if macd_slow is not None:
+            _payload["macd_slow"] = macd_slow
         if prices is not None:
-            params["prices"] = prices
+            _payload["prices"] = prices
         if indicators is not None:
-            params["indicators"] = indicators
+            _payload["indicators"] = indicators
+        if rsi_period is not None:
+            _payload["rsi_period"] = rsi_period
+        if sma_periods is not None:
+            _payload["sma_periods"] = sma_periods
         if start_date is not None:
-            params["start_date"] = start_date
+            _payload["start_date"] = start_date
         if end_date is not None:
-            params["end_date"] = end_date
-        return await self._call("stocks.technicals", params=params, options=options, context=context, response_format=response_format)
+            _payload["end_date"] = end_date
+        return await self._call("stocks.technicals", params=_payload, options=options, context=context, response_format=response_format)
 
     async def valuation(
         self,
@@ -439,8 +525,8 @@ class AsyncStocksAPI(AsyncBaseAPI):
 
         Args:
         identifier: TepiloraCode or ISIN"""
-        params: Dict[str, Any] = {}
-        params["identifier"] = identifier
-        return await self._call("stocks.valuation", params=params, options=options, context=context, response_format=response_format)
+        _payload: Dict[str, Any] = {}
+        _payload["identifier"] = identifier
+        return await self._call("stocks.valuation", params=_payload, options=options, context=context, response_format=response_format)
 
 

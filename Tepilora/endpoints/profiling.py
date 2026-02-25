@@ -6,7 +6,7 @@ Regenerate with: python scripts/generate_sdk.py --category profiling
 """
 from __future__ import annotations
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional, Union
 
 from ._base import AsyncBaseAPI, BaseAPI
 
@@ -18,6 +18,8 @@ class ProfilingAPI(BaseAPI):
         self,
         *,
         profile_id: str,
+        client_id: Optional[str] = None,
+        id: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -25,15 +27,20 @@ class ProfilingAPI(BaseAPI):
 
         Args:
         profile_id: Profile ID"""
-        params: Dict[str, Any] = {}
-        params["profile_id"] = profile_id
-        return self._call("profiling.archive", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["profile_id"] = profile_id
+        if client_id is not None:
+            _payload["client_id"] = client_id
+        if id is not None:
+            _payload["id"] = id
+        return self._call("profiling.archive", params=_payload, options=options, context=context)
 
     def check_suitability(
         self,
         *,
         client_id: str,
-        id: str,
+        identifiers: Optional[Union[str, List[str]]] = None,
+        portfolio_id: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -42,17 +49,20 @@ class ProfilingAPI(BaseAPI):
         Check if portfolio is suitable for client profile.
 
         Args:
-        client_id: Client ID
-        id: Portfolio ID"""
-        params: Dict[str, Any] = {}
-        params["client_id"] = client_id
-        params["id"] = id
-        return self._call("profiling.check_suitability", params=params, options=options, context=context)
+        client_id: Client ID"""
+        _payload: Dict[str, Any] = {}
+        _payload["client_id"] = client_id
+        if identifiers is not None:
+            _payload["identifiers"] = identifiers
+        if portfolio_id is not None:
+            _payload["portfolio_id"] = portfolio_id
+        return self._call("profiling.check_suitability", params=_payload, options=options, context=context)
 
     def convert_answers(
         self,
         *,
         answers: Dict[str, Any],
+        language: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -62,27 +72,35 @@ class ProfilingAPI(BaseAPI):
 
         Args:
         answers: Questionnaire answers"""
-        params: Dict[str, Any] = {}
-        params["answers"] = answers
-        return self._call("profiling.convert_answers", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["answers"] = answers
+        if language is not None:
+            _payload["language"] = language
+        return self._call("profiling.convert_answers", params=_payload, options=options, context=context)
 
     def create_profile(
         self,
         *,
         client_id: str,
-        answers: Dict[str, Any],
+        classification: Optional[str] = None,
+        questionnaire: Optional[str] = None,
+        visibility: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
         """Create client profile
 
         Args:
-        client_id: Client ID
-        answers: Questionnaire answers"""
-        params: Dict[str, Any] = {}
-        params["client_id"] = client_id
-        params["answers"] = answers
-        return self._call("profiling.create_profile", params=params, options=options, context=context)
+        client_id: Client ID"""
+        _payload: Dict[str, Any] = {}
+        _payload["client_id"] = client_id
+        if classification is not None:
+            _payload["classification"] = classification
+        if questionnaire is not None:
+            _payload["questionnaire"] = questionnaire
+        if visibility is not None:
+            _payload["visibility"] = visibility
+        return self._call("profiling.create_profile", params=_payload, options=options, context=context)
 
     def get_current(
         self,
@@ -97,14 +115,17 @@ class ProfilingAPI(BaseAPI):
 
         Args:
         client_id: Client ID"""
-        params: Dict[str, Any] = {}
-        params["client_id"] = client_id
-        return self._call("profiling.get_current", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["client_id"] = client_id
+        return self._call("profiling.get_current", params=_payload, options=options, context=context)
 
     def get_profile(
         self,
         *,
         profile_id: str,
+        client_id: Optional[str] = None,
+        id: Optional[str] = None,
+        version: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -112,15 +133,24 @@ class ProfilingAPI(BaseAPI):
 
         Args:
         profile_id: Profile ID"""
-        params: Dict[str, Any] = {}
-        params["profile_id"] = profile_id
-        return self._call("profiling.get_profile", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["profile_id"] = profile_id
+        if client_id is not None:
+            _payload["client_id"] = client_id
+        if id is not None:
+            _payload["id"] = id
+        if version is not None:
+            _payload["version"] = version
+        return self._call("profiling.get_profile", params=_payload, options=options, context=context)
 
     def list(
         self,
         *,
         client_id: str,
-        include_archived: Optional[bool] = False,
+        current_only: Optional[str] = None,
+        limit: Optional[int] = None,
+        offset: Optional[int] = None,
+        status: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -129,50 +159,55 @@ class ProfilingAPI(BaseAPI):
         List all profiles for a client.
 
         Args:
-        client_id: Client ID
-        include_archived: Include archived"""
-        params: Dict[str, Any] = {}
-        params["client_id"] = client_id
-        if include_archived is not None:
-            params["include_archived"] = include_archived
-        return self._call("profiling.list", params=params, options=options, context=context)
+        client_id: Client ID"""
+        _payload: Dict[str, Any] = {}
+        _payload["client_id"] = client_id
+        if current_only is not None:
+            _payload["current_only"] = current_only
+        if limit is not None:
+            _payload["limit"] = limit
+        if offset is not None:
+            _payload["offset"] = offset
+        if status is not None:
+            _payload["status"] = status
+        return self._call("profiling.list", params=_payload, options=options, context=context)
 
     def questionnaire(
         self,
         *,
-        version: Optional[str] = "latest",
+        flat: Optional[str] = None,
+        language: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
         """Get MiFID questionnaire
 
-        Get questionnaire template.
-
-        Args:
-        version: Questionnaire version"""
-        params: Dict[str, Any] = {}
-        if version is not None:
-            params["version"] = version
-        return self._call("profiling.questionnaire", params=params, options=options, context=context)
+        Get questionnaire template."""
+        _payload: Dict[str, Any] = {}
+        if flat is not None:
+            _payload["flat"] = flat
+        if language is not None:
+            _payload["language"] = language
+        return self._call("profiling.questionnaire", params=_payload, options=options, context=context)
 
     def update(
         self,
         *,
-        profile_id: str,
-        answers: Optional[Dict[str, Any]] = None,
+        classification: Optional[str] = None,
+        client_id: Optional[str] = None,
+        questionnaire: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Update profile
-
-        Args:
-        profile_id: Profile ID
-        answers: New answers"""
-        params: Dict[str, Any] = {}
-        params["profile_id"] = profile_id
-        if answers is not None:
-            params["answers"] = answers
-        return self._call("profiling.update", params=params, options=options, context=context)
+        """Update profile"""
+        _payload: Dict[str, Any] = {}
+        if classification is not None:
+            _payload["classification"] = classification
+        if client_id is not None:
+            _payload["client_id"] = client_id
+        if questionnaire is not None:
+            _payload["questionnaire"] = questionnaire
+        return self._call("profiling.update", params=_payload, options=options, context=context)
 
     def validate_answers(
         self,
@@ -187,9 +222,9 @@ class ProfilingAPI(BaseAPI):
 
         Args:
         answers: Questionnaire answers"""
-        params: Dict[str, Any] = {}
-        params["answers"] = answers
-        return self._call("profiling.validate_answers", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["answers"] = answers
+        return self._call("profiling.validate_answers", params=_payload, options=options, context=context)
 
 
 
@@ -200,6 +235,8 @@ class AsyncProfilingAPI(AsyncBaseAPI):
         self,
         *,
         profile_id: str,
+        client_id: Optional[str] = None,
+        id: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -207,15 +244,20 @@ class AsyncProfilingAPI(AsyncBaseAPI):
 
         Args:
         profile_id: Profile ID"""
-        params: Dict[str, Any] = {}
-        params["profile_id"] = profile_id
-        return await self._call("profiling.archive", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["profile_id"] = profile_id
+        if client_id is not None:
+            _payload["client_id"] = client_id
+        if id is not None:
+            _payload["id"] = id
+        return await self._call("profiling.archive", params=_payload, options=options, context=context)
 
     async def check_suitability(
         self,
         *,
         client_id: str,
-        id: str,
+        identifiers: Optional[Union[str, List[str]]] = None,
+        portfolio_id: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -224,17 +266,20 @@ class AsyncProfilingAPI(AsyncBaseAPI):
         Check if portfolio is suitable for client profile.
 
         Args:
-        client_id: Client ID
-        id: Portfolio ID"""
-        params: Dict[str, Any] = {}
-        params["client_id"] = client_id
-        params["id"] = id
-        return await self._call("profiling.check_suitability", params=params, options=options, context=context)
+        client_id: Client ID"""
+        _payload: Dict[str, Any] = {}
+        _payload["client_id"] = client_id
+        if identifiers is not None:
+            _payload["identifiers"] = identifiers
+        if portfolio_id is not None:
+            _payload["portfolio_id"] = portfolio_id
+        return await self._call("profiling.check_suitability", params=_payload, options=options, context=context)
 
     async def convert_answers(
         self,
         *,
         answers: Dict[str, Any],
+        language: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -244,27 +289,35 @@ class AsyncProfilingAPI(AsyncBaseAPI):
 
         Args:
         answers: Questionnaire answers"""
-        params: Dict[str, Any] = {}
-        params["answers"] = answers
-        return await self._call("profiling.convert_answers", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["answers"] = answers
+        if language is not None:
+            _payload["language"] = language
+        return await self._call("profiling.convert_answers", params=_payload, options=options, context=context)
 
     async def create_profile(
         self,
         *,
         client_id: str,
-        answers: Dict[str, Any],
+        classification: Optional[str] = None,
+        questionnaire: Optional[str] = None,
+        visibility: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
         """Create client profile
 
         Args:
-        client_id: Client ID
-        answers: Questionnaire answers"""
-        params: Dict[str, Any] = {}
-        params["client_id"] = client_id
-        params["answers"] = answers
-        return await self._call("profiling.create_profile", params=params, options=options, context=context)
+        client_id: Client ID"""
+        _payload: Dict[str, Any] = {}
+        _payload["client_id"] = client_id
+        if classification is not None:
+            _payload["classification"] = classification
+        if questionnaire is not None:
+            _payload["questionnaire"] = questionnaire
+        if visibility is not None:
+            _payload["visibility"] = visibility
+        return await self._call("profiling.create_profile", params=_payload, options=options, context=context)
 
     async def get_current(
         self,
@@ -279,14 +332,17 @@ class AsyncProfilingAPI(AsyncBaseAPI):
 
         Args:
         client_id: Client ID"""
-        params: Dict[str, Any] = {}
-        params["client_id"] = client_id
-        return await self._call("profiling.get_current", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["client_id"] = client_id
+        return await self._call("profiling.get_current", params=_payload, options=options, context=context)
 
     async def get_profile(
         self,
         *,
         profile_id: str,
+        client_id: Optional[str] = None,
+        id: Optional[str] = None,
+        version: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -294,15 +350,24 @@ class AsyncProfilingAPI(AsyncBaseAPI):
 
         Args:
         profile_id: Profile ID"""
-        params: Dict[str, Any] = {}
-        params["profile_id"] = profile_id
-        return await self._call("profiling.get_profile", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["profile_id"] = profile_id
+        if client_id is not None:
+            _payload["client_id"] = client_id
+        if id is not None:
+            _payload["id"] = id
+        if version is not None:
+            _payload["version"] = version
+        return await self._call("profiling.get_profile", params=_payload, options=options, context=context)
 
     async def list(
         self,
         *,
         client_id: str,
-        include_archived: Optional[bool] = False,
+        current_only: Optional[str] = None,
+        limit: Optional[int] = None,
+        offset: Optional[int] = None,
+        status: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -311,50 +376,55 @@ class AsyncProfilingAPI(AsyncBaseAPI):
         List all profiles for a client.
 
         Args:
-        client_id: Client ID
-        include_archived: Include archived"""
-        params: Dict[str, Any] = {}
-        params["client_id"] = client_id
-        if include_archived is not None:
-            params["include_archived"] = include_archived
-        return await self._call("profiling.list", params=params, options=options, context=context)
+        client_id: Client ID"""
+        _payload: Dict[str, Any] = {}
+        _payload["client_id"] = client_id
+        if current_only is not None:
+            _payload["current_only"] = current_only
+        if limit is not None:
+            _payload["limit"] = limit
+        if offset is not None:
+            _payload["offset"] = offset
+        if status is not None:
+            _payload["status"] = status
+        return await self._call("profiling.list", params=_payload, options=options, context=context)
 
     async def questionnaire(
         self,
         *,
-        version: Optional[str] = "latest",
+        flat: Optional[str] = None,
+        language: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
         """Get MiFID questionnaire
 
-        Get questionnaire template.
-
-        Args:
-        version: Questionnaire version"""
-        params: Dict[str, Any] = {}
-        if version is not None:
-            params["version"] = version
-        return await self._call("profiling.questionnaire", params=params, options=options, context=context)
+        Get questionnaire template."""
+        _payload: Dict[str, Any] = {}
+        if flat is not None:
+            _payload["flat"] = flat
+        if language is not None:
+            _payload["language"] = language
+        return await self._call("profiling.questionnaire", params=_payload, options=options, context=context)
 
     async def update(
         self,
         *,
-        profile_id: str,
-        answers: Optional[Dict[str, Any]] = None,
+        classification: Optional[str] = None,
+        client_id: Optional[str] = None,
+        questionnaire: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Update profile
-
-        Args:
-        profile_id: Profile ID
-        answers: New answers"""
-        params: Dict[str, Any] = {}
-        params["profile_id"] = profile_id
-        if answers is not None:
-            params["answers"] = answers
-        return await self._call("profiling.update", params=params, options=options, context=context)
+        """Update profile"""
+        _payload: Dict[str, Any] = {}
+        if classification is not None:
+            _payload["classification"] = classification
+        if client_id is not None:
+            _payload["client_id"] = client_id
+        if questionnaire is not None:
+            _payload["questionnaire"] = questionnaire
+        return await self._call("profiling.update", params=_payload, options=options, context=context)
 
     async def validate_answers(
         self,
@@ -369,8 +439,8 @@ class AsyncProfilingAPI(AsyncBaseAPI):
 
         Args:
         answers: Questionnaire answers"""
-        params: Dict[str, Any] = {}
-        params["answers"] = answers
-        return await self._call("profiling.validate_answers", params=params, options=options, context=context)
+        _payload: Dict[str, Any] = {}
+        _payload["answers"] = answers
+        return await self._call("profiling.validate_answers", params=_payload, options=options, context=context)
 
 

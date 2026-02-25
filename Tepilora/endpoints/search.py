@@ -18,7 +18,9 @@ class SearchAPI(BaseAPI):
         self,
         *,
         query: str,
+        include_recent: Optional[bool] = None,
         limit: Optional[int] = 20,
+        types: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -29,11 +31,15 @@ class SearchAPI(BaseAPI):
         Args:
         query: Search query
         limit: Maximum results"""
-        params: Dict[str, Any] = {}
-        params["query"] = query
+        _payload: Dict[str, Any] = {}
+        _payload["query"] = query
+        if include_recent is not None:
+            _payload["include_recent"] = include_recent
         if limit is not None:
-            params["limit"] = limit
-        return self._call("search.global", params=params, options=options, context=context)
+            _payload["limit"] = limit
+        if types is not None:
+            _payload["types"] = types
+        return self._call("search.global", params=_payload, options=options, context=context)
 
 
 
@@ -44,7 +50,9 @@ class AsyncSearchAPI(AsyncBaseAPI):
         self,
         *,
         query: str,
+        include_recent: Optional[bool] = None,
         limit: Optional[int] = 20,
+        types: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -55,10 +63,14 @@ class AsyncSearchAPI(AsyncBaseAPI):
         Args:
         query: Search query
         limit: Maximum results"""
-        params: Dict[str, Any] = {}
-        params["query"] = query
+        _payload: Dict[str, Any] = {}
+        _payload["query"] = query
+        if include_recent is not None:
+            _payload["include_recent"] = include_recent
         if limit is not None:
-            params["limit"] = limit
-        return await self._call("search.global", params=params, options=options, context=context)
+            _payload["limit"] = limit
+        if types is not None:
+            _payload["types"] = types
+        return await self._call("search.global", params=_payload, options=options, context=context)
 
 
