@@ -47,6 +47,8 @@ def test_schema_json_matches_embedded():
     from Tepilora._schema import SCHEMA
 
     schema_path = Path(__file__).parent.parent / "schema" / "registry.json"
+    if not schema_path.exists():
+        pytest.skip("schema/registry.json not available (installed from wheel)")
     with open(schema_path, "r", encoding="utf-8") as f:
         json_schema = json.load(f)
     assert SCHEMA["version"] == json_schema["version"]
