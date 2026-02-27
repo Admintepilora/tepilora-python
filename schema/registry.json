@@ -1,5 +1,5 @@
 {
-  "version": "3.6.0",
+  "version": "3.6.1",
   "generated_by": "export_schema",
   "categories": [
     "alerts",
@@ -11538,6 +11538,12 @@
       "methodology_doc": "",
       "params": [
         {
+          "name": "output_format",
+          "type": "string",
+          "required": false,
+          "description": "Output format (alias for export_format)"
+        },
+        {
           "name": "export_format",
           "type": "string",
           "required": false,
@@ -11592,6 +11598,7 @@
         "source"
       ],
       "optional_params": [
+        "output_format",
         "export_format",
         "params",
         "source_params",

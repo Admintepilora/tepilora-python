@@ -18,6 +18,7 @@ class ExportsAPI(BaseAPI):
         self,
         *,
         source: str,
+        output_format: Optional[str] = None,
         export_format: Optional[str] = None,
         params: Optional[Dict[str, Any]] = None,
         source_params: Optional[Dict[str, Any]] = None,
@@ -34,6 +35,7 @@ class ExportsAPI(BaseAPI):
 
         Args:
         source: Source action (e.g., 'securities.search')
+        output_format: Output format (alias for export_format)
         source_params: Parameters for source action
         format: json|csv|xlsx|parquet
         filename: Output filename
@@ -41,6 +43,8 @@ class ExportsAPI(BaseAPI):
         compression: Compression (for parquet)"""
         _payload: Dict[str, Any] = {}
         _payload["source"] = source
+        if output_format is not None:
+            _payload["output_format"] = output_format
         if export_format is not None:
             _payload["export_format"] = export_format
         if params is not None:
@@ -78,6 +82,7 @@ class AsyncExportsAPI(AsyncBaseAPI):
         self,
         *,
         source: str,
+        output_format: Optional[str] = None,
         export_format: Optional[str] = None,
         params: Optional[Dict[str, Any]] = None,
         source_params: Optional[Dict[str, Any]] = None,
@@ -94,6 +99,7 @@ class AsyncExportsAPI(AsyncBaseAPI):
 
         Args:
         source: Source action (e.g., 'securities.search')
+        output_format: Output format (alias for export_format)
         source_params: Parameters for source action
         format: json|csv|xlsx|parquet
         filename: Output filename
@@ -101,6 +107,8 @@ class AsyncExportsAPI(AsyncBaseAPI):
         compression: Compression (for parquet)"""
         _payload: Dict[str, Any] = {}
         _payload["source"] = source
+        if output_format is not None:
+            _payload["output_format"] = output_format
         if export_format is not None:
             _payload["export_format"] = export_format
         if params is not None:

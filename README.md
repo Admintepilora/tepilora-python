@@ -2,7 +2,7 @@
 
 Python SDK (sync + async) for Tepilora API v3.
 
-**236 operations** across **25 namespaces**, auto-generated from the registry.
+**244 operations** across **26 namespaces**, auto-generated from the registry.
 
 ## Install
 
@@ -58,10 +58,10 @@ asyncio.run(main())
 | `alerts` | 9 | Alert rules CRUD, evaluate, history |
 | `macro` | 6 | Economic indicators, calendar |
 | `stocks` | 9 | Technicals, screening, peers, signals |
-| `bonds` | 7 | Analyze, screen, ladder, curve, spread |
-| `options` | 6 | Pricing, Greeks, IV, strategies |
-| `esg` | 5 | ESG scores, screening, comparison |
-| `factors` | 3 | Fama-French, momentum, factor loading |
+| `bonds` | 9 | Analyze, screen, ladder, curve, spread, lookup |
+| `options` | 7 | Pricing, Greeks, IV, strategies |
+| `esg` | 6 | ESG scores, screening, comparison |
+| `factors` | 8 | Fama-French, momentum, factor loading |
 | `fh` | 7 | Fundamentals history, financials |
 | `clients` | 8 | B2B client management |
 | `profiling` | 10 | MiFID questionnaires, suitability |
@@ -72,6 +72,9 @@ asyncio.run(main())
 | `search` | 1 | Global search |
 | `data` | 1 | Raw data access |
 | `exports` | 2 | Data export to file formats |
+| `asset_allocation` | 10 | Strategic asset allocation, model portfolios |
+| `realtime` | 5 | Real-time market data, streaming |
+| `workflows` | 2 | Cross-module workflows |
 
 ## Examples by Namespace
 
@@ -105,7 +108,8 @@ facets = client.securities.facets(fields=["Currency", "TepiloraType", "Country"]
 portfolio = client.portfolio.create(
     name="My Portfolio",
     input_type="fixed_weights",
-    input_data={"IE00B4L5Y983EURXMIL": 0.6, "FR0010655712EURXPAR": 0.4}
+    weights={"IE00B4L5Y983EURXMIL": 0.6, "FR0010655712EURXPAR": 0.4},
+    start_date="2024-01-01"
 )
 
 # Get returns
@@ -116,13 +120,21 @@ returns = client.portfolio.returns(
 )
 
 # Performance attribution
-attribution = client.portfolio.attribution(id=portfolio["id"])
+attribution = client.portfolio.attribution(
+    id=portfolio["portfolio"]["id"],
+    benchmark_weights={"IE00B4L5Y983EURXMIL": 0.5, "FR0010655712EURXPAR": 0.5},
+    start_date="2024-01-01",
+    end_date="2024-12-31"
+)
 
 # Optimize
 optimized = client.portfolio.optimize(
-    id=portfolio["id"],
-    objective="max_sharpe",
-    constraints={"max_weight": 0.3}
+    identifiers=["IE00B4L5Y983EURXMIL", "FR0010655712EURXPAR"],
+    settings={
+        "solver_mode": "risk_parity",
+        "constraints": {"single_position_limit": 0.30}
+    },
+    start_date="2024-01-01"
 )
 ```
 
@@ -175,29 +187,18 @@ pubs = client.publications.search(query="market outlook", limit=10)
 ### Alerts
 
 ```python
-# Create alert
-alert = client.alerts.create(
-    name="Price Alert",
-    condition={"type": "price_change", "threshold": 5.0},
-    action={"type": "webhook", "url": "https://..."}
-)
-
 # List alerts
 alerts = client.alerts.list(enabled=True)
 
-# Evaluate manually
-result = client.alerts.evaluate(rule_id=alert["id"])
+# Evaluate an alert manually
+result = client.alerts.evaluate(rule_id="your_rule_id")
 ```
 
 ### Bonds
 
 ```python
-# Analyze bond
-analysis = client.bonds.analyze(
-    identifier="XS1234567890",
-    price=98.5,
-    settlement_date="2024-02-01"
-)
+# Analyze bond (use full TepiloraCode, not plain ISIN)
+analysis = client.bonds.analyze(identifier="DE000A2NBZ21EURXFRA")
 
 # Screen bonds
 bonds = client.bonds.screen(
@@ -261,5 +262,5 @@ except TepiloraAPIError as e:
 
 ```python
 import Tepilora
-print(Tepilora.__version__)  # 0.3.2
+print(Tepilora.__version__)  # 0.4.0
 ```
