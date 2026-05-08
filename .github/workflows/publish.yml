@@ -11,7 +11,88 @@ permissions:
   id-token: write
 
 jobs:
+  gate-ci-status:
+    name: Gate CI status
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve publish target SHA
+        id: target
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          TARGET_SHA=""
+          if [[ "${GITHUB_REF_TYPE:-}" == "tag" && -n "${GITHUB_REF_NAME:-}" ]]; then
+            git fetch --force --tags origin "refs/tags/${GITHUB_REF_NAME}:refs/tags/${GITHUB_REF_NAME}" || true
+            TARGET_SHA="$(git rev-list -n 1 "${GITHUB_REF_NAME}" 2>/dev/null || true)"
+          fi
+
+          if [[ -z "${TARGET_SHA}" ]]; then
+            TARGET_SHA="${GITHUB_SHA}"
+          fi
+
+          echo "sha=${TARGET_SHA}" >> "${GITHUB_OUTPUT}"
+          echo "Publishing target SHA: ${TARGET_SHA}"
+
+      - name: Require successful CI on target SHA
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ steps.target.outputs.sha }}
+          CI_WORKFLOW_ID: "232001328"
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          gh api \
+            -H "Accept: application/vnd.github+json" \
+            "/repos/${GITHUB_REPOSITORY}/actions/workflows/${CI_WORKFLOW_ID}/runs?head_sha=${TARGET_SHA}&per_page=20" \
+            > /tmp/ci-runs.json
+
+          python3 - <<'PY'
+          import json
+          import os
+          import sys
+
+          target_sha = os.environ["TARGET_SHA"]
+          workflow_id = os.environ["CI_WORKFLOW_ID"]
+
+          with open("/tmp/ci-runs.json", "r", encoding="utf-8") as handle:
+              payload = json.load(handle)
+
+          runs = payload.get("workflow_runs", [])
+          if not runs:
+              status = "missing"
+              print(f"BLOCKED: CI workflow on {target_sha} is {status}. Publish refused.")
+              print(f"Workflow: CI ({workflow_id})")
+              sys.exit(1)
+
+          run = runs[0]
+          run_status = run.get("status") or "unknown"
+          conclusion = run.get("conclusion")
+          status = conclusion if run_status == "completed" else run_status
+          run_url = run.get("html_url", "")
+
+          if status == "success":
+              print(f"CI workflow on {target_sha} is success. Publish allowed.")
+              print(f"Workflow: CI ({workflow_id})")
+              print(f"Run: {run_url}")
+              sys.exit(0)
+
+          print(f"BLOCKED: CI workflow on {target_sha} is {status}. Publish refused.")
+          print(f"Workflow: CI ({workflow_id})")
+          print(f"Run: {run_url}")
+          sys.exit(1)
+          PY
+
   build-and-publish:
+    needs: gate-ci-status
     if: github.repository == 'Admintepilora/tepilora-python'
     runs-on: ubuntu-latest
     steps:
