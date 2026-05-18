@@ -23,13 +23,9 @@ class BillingAPI(BaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Aggregate fees
+        """Aggregate billing data for revenue reporting and analytics
 
-        Aggregate fees for a client.
-
-        Args:
-        client_id: Client ID
-        year: Filter by year"""
+        Computes aggregate billing statistics for a single client: total fees, record count, breakdown by fee type, by billing period, and by portfolio. Used by the Dashboard billing summary and by advisor fee reporting."""
         _payload: Dict[str, Any] = {}
         _payload["client_id"] = client_id
         if year is not None:
@@ -39,7 +35,7 @@ class BillingAPI(BaseAPI):
     def calculate(
         self,
         *,
-        fee_schedule: Optional[Dict[str, Any]] = None,
+        fee_schedule: Dict[str, Any],
         aum: Optional[float] = None,
         portfolio_return: Optional[float] = None,
         benchmark_return: Optional[float] = None,
@@ -49,21 +45,11 @@ class BillingAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Calculate fee
+        """Calculate fees for a given AUM using a fee schedule
 
-        Calculate fee based on schedule.
-
-        Args:
-        fee_schedule: Fee schedule (inline dict or ID/name string)
-        aum: Assets under management
-        portfolio_return: Portfolio return
-        benchmark_return: Benchmark return
-        high_water_mark: High water mark
-        period_start: Period start date
-        period_end: Period end date"""
+        Computes the fee amount for a given Assets Under Management (AUM) value using a referenced fee schedule. Supports tiered fee structures (breakpoints), flat fees, percentage-based fees, and performance fees with high-water mark. Accepts a fee_schedule ID (auto-resolves from FeeSchedules MongoDB collection) or inline fee parameters. Returns fee amount, effective rate, tier breakdown, and annualized cost. Used by the Dashboard fee calculator and by portfolio cost analysis."""
         _payload: Dict[str, Any] = {}
-        if fee_schedule is not None:
-            _payload["fee_schedule"] = fee_schedule
+        _payload["fee_schedule"] = fee_schedule
         if aum is not None:
             _payload["aum"] = aum
         if portfolio_return is not None:
@@ -83,11 +69,11 @@ class BillingAPI(BaseAPI):
         *,
         client_id: str,
         fee_schedule_id: str,
-        period_start: str,
-        period_end: str,
-        aum_average: Optional[str] = None,
-        aum_end: Optional[str] = None,
-        aum_start: Optional[str] = None,
+        period_start: Optional[str] = None,
+        period_end: Optional[str] = None,
+        aum_start: Optional[float] = None,
+        aum_end: Optional[float] = None,
+        aum_average: Optional[float] = None,
         aum: Optional[float] = None,
         portfolio_return: Optional[float] = None,
         benchmark_return: Optional[float] = None,
@@ -97,30 +83,22 @@ class BillingAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Create billing record
+        """Create a billing record (invoice/charge) for a client
 
-        Args:
-        client_id: Client ID
-        fee_schedule_id: Fee schedule ID
-        period_start: Period start date
-        period_end: Period end date
-        aum: AUM
-        portfolio_return: Portfolio return
-        benchmark_return: Benchmark return
-        high_water_mark: High water mark
-        portfolio_id: Portfolio ID
-        notes: Notes"""
+        Records a billing event in the BillingRecords MongoDB collection: the fee amount charged, the fee schedule used, the AUM at calculation time, the billing period, and the client/portfolio reference. Used by automated billing cycles and by the Dashboard manual billing."""
         _payload: Dict[str, Any] = {}
         _payload["client_id"] = client_id
         _payload["fee_schedule_id"] = fee_schedule_id
-        _payload["period_start"] = period_start
-        _payload["period_end"] = period_end
-        if aum_average is not None:
-            _payload["aum_average"] = aum_average
-        if aum_end is not None:
-            _payload["aum_end"] = aum_end
+        if period_start is not None:
+            _payload["period_start"] = period_start
+        if period_end is not None:
+            _payload["period_end"] = period_end
         if aum_start is not None:
             _payload["aum_start"] = aum_start
+        if aum_end is not None:
+            _payload["aum_end"] = aum_end
+        if aum_average is not None:
+            _payload["aum_average"] = aum_average
         if aum is not None:
             _payload["aum"] = aum
         if portfolio_return is not None:
@@ -139,26 +117,21 @@ class BillingAPI(BaseAPI):
         self,
         *,
         client_id: Optional[str] = None,
-        offset: Optional[int] = None,
         portfolio_id: Optional[str] = None,
         status: Optional[str] = None,
         year: Optional[int] = None,
         limit: Optional[int] = 100,
+        offset: Optional[int] = 0,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """List billing records
+        """List billing records with filters for client, period, and status
 
-        Args:
-        client_id: Filter by client
-        year: Filter by year
-        limit: Maximum results"""
+        Returns billing records filterable by client, portfolio, date range, and status (pending/paid/cancelled). Used by the Dashboard billing history and by financial reporting workflows."""
         _payload: Dict[str, Any] = {}
         if client_id is not None:
             _payload["client_id"] = client_id
-        if offset is not None:
-            _payload["offset"] = offset
         if portfolio_id is not None:
             _payload["portfolio_id"] = portfolio_id
         if status is not None:
@@ -167,6 +140,8 @@ class BillingAPI(BaseAPI):
             _payload["year"] = year
         if limit is not None:
             _payload["limit"] = limit
+        if offset is not None:
+            _payload["offset"] = offset
         return self._call("billing.record_list", params=_payload, options=options, context=context, response_format=response_format)
 
     def schedule_create(
@@ -174,17 +149,72 @@ class BillingAPI(BaseAPI):
         *,
         name: str,
         fee_type: str,
+        description: Optional[str] = None,
+        frequency: Optional[str] = None,
+        currency: Optional[str] = None,
+        aum_rate: Optional[float] = None,
+        rate: Optional[float] = None,
+        aum_calculation_method: Optional[str] = None,
+        minimum_fee: Optional[float] = None,
+        maximum_fee: Optional[float] = None,
+        flat_amount: Optional[float] = None,
+        amount: Optional[float] = None,
+        tiers: Optional[List[Any]] = None,
+        tiered_method: Optional[str] = None,
+        performance_rate: Optional[float] = None,
+        performance_method: Optional[str] = None,
+        hurdle_rate: Optional[float] = None,
+        benchmark_code: Optional[str] = None,
+        crystallization_frequency: Optional[str] = None,
+        effective_date: Optional[str] = None,
+        end_date: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Create fee schedule
+        """Create a new fee schedule definition
 
-        Args:
-        name: Schedule name
-        fee_type: aum_percentage|flat|tiered|performance"""
+        Creates a fee schedule in the FeeSchedules MongoDB collection. Defines the fee structure: type (flat, tiered, percentage, performance), breakpoints, rates, billing frequency (monthly/quarterly/annually), and high-water mark rules. Used by the Dashboard fee schedule builder."""
         _payload: Dict[str, Any] = {}
         _payload["name"] = name
         _payload["fee_type"] = fee_type
+        if description is not None:
+            _payload["description"] = description
+        if frequency is not None:
+            _payload["frequency"] = frequency
+        if currency is not None:
+            _payload["currency"] = currency
+        if aum_rate is not None:
+            _payload["aum_rate"] = aum_rate
+        if rate is not None:
+            _payload["rate"] = rate
+        if aum_calculation_method is not None:
+            _payload["aum_calculation_method"] = aum_calculation_method
+        if minimum_fee is not None:
+            _payload["minimum_fee"] = minimum_fee
+        if maximum_fee is not None:
+            _payload["maximum_fee"] = maximum_fee
+        if flat_amount is not None:
+            _payload["flat_amount"] = flat_amount
+        if amount is not None:
+            _payload["amount"] = amount
+        if tiers is not None:
+            _payload["tiers"] = tiers
+        if tiered_method is not None:
+            _payload["tiered_method"] = tiered_method
+        if performance_rate is not None:
+            _payload["performance_rate"] = performance_rate
+        if performance_method is not None:
+            _payload["performance_method"] = performance_method
+        if hurdle_rate is not None:
+            _payload["hurdle_rate"] = hurdle_rate
+        if benchmark_code is not None:
+            _payload["benchmark_code"] = benchmark_code
+        if crystallization_frequency is not None:
+            _payload["crystallization_frequency"] = crystallization_frequency
+        if effective_date is not None:
+            _payload["effective_date"] = effective_date
+        if end_date is not None:
+            _payload["end_date"] = end_date
         return self._call("billing.schedule_create", params=_payload, options=options, context=context)
 
     def schedule_delete(
@@ -194,10 +224,9 @@ class BillingAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Delete fee schedule
+        """Delete a fee schedule
 
-        Args:
-        id: Schedule ID"""
+        Removes a fee schedule from the FeeSchedules collection. Fails if the schedule is currently linked to active billing records. Used by the Dashboard fee schedule management."""
         _payload: Dict[str, Any] = {}
         _payload["id"] = id
         return self._call("billing.schedule_delete", params=_payload, options=options, context=context)
@@ -210,11 +239,9 @@ class BillingAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get fee schedule
+        """Get full details of a fee schedule
 
-        Args:
-        id: Schedule ID
-        name: Schedule name"""
+        Returns the complete fee schedule definition with all tiers, rates, and configuration. Used by the Dashboard fee schedule detail view."""
         _payload: Dict[str, Any] = {}
         if id is not None:
             _payload["id"] = id
@@ -226,16 +253,14 @@ class BillingAPI(BaseAPI):
         self,
         *,
         fee_type: Optional[str] = None,
-        limit: Optional[int] = 100,
+        limit: Optional[int] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """List fee schedules
+        """List all fee schedules for the current user
 
-        Args:
-        fee_type: Filter by fee type
-        limit: Maximum results"""
+        Returns all fee schedule definitions. Each entry shows name, type, summary rate, and linked client count. Used by the Dashboard fee schedules management page."""
         _payload: Dict[str, Any] = {}
         if fee_type is not None:
             _payload["fee_type"] = fee_type
@@ -247,15 +272,65 @@ class BillingAPI(BaseAPI):
         self,
         *,
         id: str,
+        name: Optional[str] = None,
+        description: Optional[str] = None,
+        frequency: Optional[str] = None,
+        currency: Optional[str] = None,
+        aum_rate: Optional[float] = None,
+        aum_calculation_method: Optional[str] = None,
+        minimum_fee: Optional[float] = None,
+        maximum_fee: Optional[float] = None,
+        flat_amount: Optional[float] = None,
+        tiers: Optional[List[Any]] = None,
+        tiered_method: Optional[str] = None,
+        performance_rate: Optional[float] = None,
+        performance_method: Optional[str] = None,
+        hurdle_rate: Optional[float] = None,
+        benchmark_code: Optional[str] = None,
+        effective_date: Optional[str] = None,
+        end_date: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Update fee schedule
+        """Update a fee schedule definition
 
-        Args:
-        id: Schedule ID"""
+        Modifies an existing fee schedule. Can update rates, tiers, billing frequency, and metadata. Creates an audit trail entry."""
         _payload: Dict[str, Any] = {}
         _payload["id"] = id
+        if name is not None:
+            _payload["name"] = name
+        if description is not None:
+            _payload["description"] = description
+        if frequency is not None:
+            _payload["frequency"] = frequency
+        if currency is not None:
+            _payload["currency"] = currency
+        if aum_rate is not None:
+            _payload["aum_rate"] = aum_rate
+        if aum_calculation_method is not None:
+            _payload["aum_calculation_method"] = aum_calculation_method
+        if minimum_fee is not None:
+            _payload["minimum_fee"] = minimum_fee
+        if maximum_fee is not None:
+            _payload["maximum_fee"] = maximum_fee
+        if flat_amount is not None:
+            _payload["flat_amount"] = flat_amount
+        if tiers is not None:
+            _payload["tiers"] = tiers
+        if tiered_method is not None:
+            _payload["tiered_method"] = tiered_method
+        if performance_rate is not None:
+            _payload["performance_rate"] = performance_rate
+        if performance_method is not None:
+            _payload["performance_method"] = performance_method
+        if hurdle_rate is not None:
+            _payload["hurdle_rate"] = hurdle_rate
+        if benchmark_code is not None:
+            _payload["benchmark_code"] = benchmark_code
+        if effective_date is not None:
+            _payload["effective_date"] = effective_date
+        if end_date is not None:
+            _payload["end_date"] = end_date
         return self._call("billing.schedule_update", params=_payload, options=options, context=context)
 
     def simulate(
@@ -266,13 +341,9 @@ class BillingAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Simulate fees
+        """Simulate fee impact on portfolio returns over a period
 
-        Simulate fees for different scenarios.
-
-        Args:
-        fee_schedule: Fee schedule
-        scenarios: Scenarios to simulate"""
+        Projects the cumulative impact of fees on portfolio returns over a specified period. Compares gross vs. net returns, showing the fee drag on performance. Supports multiple fee structures for comparison. Used by the Dashboard fee impact simulator and by advisor workflows comparing fee proposals."""
         _payload: Dict[str, Any] = {}
         _payload["fee_schedule"] = fee_schedule
         if scenarios is not None:
@@ -293,13 +364,9 @@ class AsyncBillingAPI(AsyncBaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Aggregate fees
+        """Aggregate billing data for revenue reporting and analytics
 
-        Aggregate fees for a client.
-
-        Args:
-        client_id: Client ID
-        year: Filter by year"""
+        Computes aggregate billing statistics for a single client: total fees, record count, breakdown by fee type, by billing period, and by portfolio. Used by the Dashboard billing summary and by advisor fee reporting."""
         _payload: Dict[str, Any] = {}
         _payload["client_id"] = client_id
         if year is not None:
@@ -309,7 +376,7 @@ class AsyncBillingAPI(AsyncBaseAPI):
     async def calculate(
         self,
         *,
-        fee_schedule: Optional[Dict[str, Any]] = None,
+        fee_schedule: Dict[str, Any],
         aum: Optional[float] = None,
         portfolio_return: Optional[float] = None,
         benchmark_return: Optional[float] = None,
@@ -319,21 +386,11 @@ class AsyncBillingAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Calculate fee
+        """Calculate fees for a given AUM using a fee schedule
 
-        Calculate fee based on schedule.
-
-        Args:
-        fee_schedule: Fee schedule (inline dict or ID/name string)
-        aum: Assets under management
-        portfolio_return: Portfolio return
-        benchmark_return: Benchmark return
-        high_water_mark: High water mark
-        period_start: Period start date
-        period_end: Period end date"""
+        Computes the fee amount for a given Assets Under Management (AUM) value using a referenced fee schedule. Supports tiered fee structures (breakpoints), flat fees, percentage-based fees, and performance fees with high-water mark. Accepts a fee_schedule ID (auto-resolves from FeeSchedules MongoDB collection) or inline fee parameters. Returns fee amount, effective rate, tier breakdown, and annualized cost. Used by the Dashboard fee calculator and by portfolio cost analysis."""
         _payload: Dict[str, Any] = {}
-        if fee_schedule is not None:
-            _payload["fee_schedule"] = fee_schedule
+        _payload["fee_schedule"] = fee_schedule
         if aum is not None:
             _payload["aum"] = aum
         if portfolio_return is not None:
@@ -353,11 +410,11 @@ class AsyncBillingAPI(AsyncBaseAPI):
         *,
         client_id: str,
         fee_schedule_id: str,
-        period_start: str,
-        period_end: str,
-        aum_average: Optional[str] = None,
-        aum_end: Optional[str] = None,
-        aum_start: Optional[str] = None,
+        period_start: Optional[str] = None,
+        period_end: Optional[str] = None,
+        aum_start: Optional[float] = None,
+        aum_end: Optional[float] = None,
+        aum_average: Optional[float] = None,
         aum: Optional[float] = None,
         portfolio_return: Optional[float] = None,
         benchmark_return: Optional[float] = None,
@@ -367,30 +424,22 @@ class AsyncBillingAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Create billing record
+        """Create a billing record (invoice/charge) for a client
 
-        Args:
-        client_id: Client ID
-        fee_schedule_id: Fee schedule ID
-        period_start: Period start date
-        period_end: Period end date
-        aum: AUM
-        portfolio_return: Portfolio return
-        benchmark_return: Benchmark return
-        high_water_mark: High water mark
-        portfolio_id: Portfolio ID
-        notes: Notes"""
+        Records a billing event in the BillingRecords MongoDB collection: the fee amount charged, the fee schedule used, the AUM at calculation time, the billing period, and the client/portfolio reference. Used by automated billing cycles and by the Dashboard manual billing."""
         _payload: Dict[str, Any] = {}
         _payload["client_id"] = client_id
         _payload["fee_schedule_id"] = fee_schedule_id
-        _payload["period_start"] = period_start
-        _payload["period_end"] = period_end
-        if aum_average is not None:
-            _payload["aum_average"] = aum_average
-        if aum_end is not None:
-            _payload["aum_end"] = aum_end
+        if period_start is not None:
+            _payload["period_start"] = period_start
+        if period_end is not None:
+            _payload["period_end"] = period_end
         if aum_start is not None:
             _payload["aum_start"] = aum_start
+        if aum_end is not None:
+            _payload["aum_end"] = aum_end
+        if aum_average is not None:
+            _payload["aum_average"] = aum_average
         if aum is not None:
             _payload["aum"] = aum
         if portfolio_return is not None:
@@ -409,26 +458,21 @@ class AsyncBillingAPI(AsyncBaseAPI):
         self,
         *,
         client_id: Optional[str] = None,
-        offset: Optional[int] = None,
         portfolio_id: Optional[str] = None,
         status: Optional[str] = None,
         year: Optional[int] = None,
         limit: Optional[int] = 100,
+        offset: Optional[int] = 0,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """List billing records
+        """List billing records with filters for client, period, and status
 
-        Args:
-        client_id: Filter by client
-        year: Filter by year
-        limit: Maximum results"""
+        Returns billing records filterable by client, portfolio, date range, and status (pending/paid/cancelled). Used by the Dashboard billing history and by financial reporting workflows."""
         _payload: Dict[str, Any] = {}
         if client_id is not None:
             _payload["client_id"] = client_id
-        if offset is not None:
-            _payload["offset"] = offset
         if portfolio_id is not None:
             _payload["portfolio_id"] = portfolio_id
         if status is not None:
@@ -437,6 +481,8 @@ class AsyncBillingAPI(AsyncBaseAPI):
             _payload["year"] = year
         if limit is not None:
             _payload["limit"] = limit
+        if offset is not None:
+            _payload["offset"] = offset
         return await self._call("billing.record_list", params=_payload, options=options, context=context, response_format=response_format)
 
     async def schedule_create(
@@ -444,17 +490,72 @@ class AsyncBillingAPI(AsyncBaseAPI):
         *,
         name: str,
         fee_type: str,
+        description: Optional[str] = None,
+        frequency: Optional[str] = None,
+        currency: Optional[str] = None,
+        aum_rate: Optional[float] = None,
+        rate: Optional[float] = None,
+        aum_calculation_method: Optional[str] = None,
+        minimum_fee: Optional[float] = None,
+        maximum_fee: Optional[float] = None,
+        flat_amount: Optional[float] = None,
+        amount: Optional[float] = None,
+        tiers: Optional[List[Any]] = None,
+        tiered_method: Optional[str] = None,
+        performance_rate: Optional[float] = None,
+        performance_method: Optional[str] = None,
+        hurdle_rate: Optional[float] = None,
+        benchmark_code: Optional[str] = None,
+        crystallization_frequency: Optional[str] = None,
+        effective_date: Optional[str] = None,
+        end_date: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Create fee schedule
+        """Create a new fee schedule definition
 
-        Args:
-        name: Schedule name
-        fee_type: aum_percentage|flat|tiered|performance"""
+        Creates a fee schedule in the FeeSchedules MongoDB collection. Defines the fee structure: type (flat, tiered, percentage, performance), breakpoints, rates, billing frequency (monthly/quarterly/annually), and high-water mark rules. Used by the Dashboard fee schedule builder."""
         _payload: Dict[str, Any] = {}
         _payload["name"] = name
         _payload["fee_type"] = fee_type
+        if description is not None:
+            _payload["description"] = description
+        if frequency is not None:
+            _payload["frequency"] = frequency
+        if currency is not None:
+            _payload["currency"] = currency
+        if aum_rate is not None:
+            _payload["aum_rate"] = aum_rate
+        if rate is not None:
+            _payload["rate"] = rate
+        if aum_calculation_method is not None:
+            _payload["aum_calculation_method"] = aum_calculation_method
+        if minimum_fee is not None:
+            _payload["minimum_fee"] = minimum_fee
+        if maximum_fee is not None:
+            _payload["maximum_fee"] = maximum_fee
+        if flat_amount is not None:
+            _payload["flat_amount"] = flat_amount
+        if amount is not None:
+            _payload["amount"] = amount
+        if tiers is not None:
+            _payload["tiers"] = tiers
+        if tiered_method is not None:
+            _payload["tiered_method"] = tiered_method
+        if performance_rate is not None:
+            _payload["performance_rate"] = performance_rate
+        if performance_method is not None:
+            _payload["performance_method"] = performance_method
+        if hurdle_rate is not None:
+            _payload["hurdle_rate"] = hurdle_rate
+        if benchmark_code is not None:
+            _payload["benchmark_code"] = benchmark_code
+        if crystallization_frequency is not None:
+            _payload["crystallization_frequency"] = crystallization_frequency
+        if effective_date is not None:
+            _payload["effective_date"] = effective_date
+        if end_date is not None:
+            _payload["end_date"] = end_date
         return await self._call("billing.schedule_create", params=_payload, options=options, context=context)
 
     async def schedule_delete(
@@ -464,10 +565,9 @@ class AsyncBillingAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Delete fee schedule
+        """Delete a fee schedule
 
-        Args:
-        id: Schedule ID"""
+        Removes a fee schedule from the FeeSchedules collection. Fails if the schedule is currently linked to active billing records. Used by the Dashboard fee schedule management."""
         _payload: Dict[str, Any] = {}
         _payload["id"] = id
         return await self._call("billing.schedule_delete", params=_payload, options=options, context=context)
@@ -480,11 +580,9 @@ class AsyncBillingAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get fee schedule
+        """Get full details of a fee schedule
 
-        Args:
-        id: Schedule ID
-        name: Schedule name"""
+        Returns the complete fee schedule definition with all tiers, rates, and configuration. Used by the Dashboard fee schedule detail view."""
         _payload: Dict[str, Any] = {}
         if id is not None:
             _payload["id"] = id
@@ -496,16 +594,14 @@ class AsyncBillingAPI(AsyncBaseAPI):
         self,
         *,
         fee_type: Optional[str] = None,
-        limit: Optional[int] = 100,
+        limit: Optional[int] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """List fee schedules
+        """List all fee schedules for the current user
 
-        Args:
-        fee_type: Filter by fee type
-        limit: Maximum results"""
+        Returns all fee schedule definitions. Each entry shows name, type, summary rate, and linked client count. Used by the Dashboard fee schedules management page."""
         _payload: Dict[str, Any] = {}
         if fee_type is not None:
             _payload["fee_type"] = fee_type
@@ -517,15 +613,65 @@ class AsyncBillingAPI(AsyncBaseAPI):
         self,
         *,
         id: str,
+        name: Optional[str] = None,
+        description: Optional[str] = None,
+        frequency: Optional[str] = None,
+        currency: Optional[str] = None,
+        aum_rate: Optional[float] = None,
+        aum_calculation_method: Optional[str] = None,
+        minimum_fee: Optional[float] = None,
+        maximum_fee: Optional[float] = None,
+        flat_amount: Optional[float] = None,
+        tiers: Optional[List[Any]] = None,
+        tiered_method: Optional[str] = None,
+        performance_rate: Optional[float] = None,
+        performance_method: Optional[str] = None,
+        hurdle_rate: Optional[float] = None,
+        benchmark_code: Optional[str] = None,
+        effective_date: Optional[str] = None,
+        end_date: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Update fee schedule
+        """Update a fee schedule definition
 
-        Args:
-        id: Schedule ID"""
+        Modifies an existing fee schedule. Can update rates, tiers, billing frequency, and metadata. Creates an audit trail entry."""
         _payload: Dict[str, Any] = {}
         _payload["id"] = id
+        if name is not None:
+            _payload["name"] = name
+        if description is not None:
+            _payload["description"] = description
+        if frequency is not None:
+            _payload["frequency"] = frequency
+        if currency is not None:
+            _payload["currency"] = currency
+        if aum_rate is not None:
+            _payload["aum_rate"] = aum_rate
+        if aum_calculation_method is not None:
+            _payload["aum_calculation_method"] = aum_calculation_method
+        if minimum_fee is not None:
+            _payload["minimum_fee"] = minimum_fee
+        if maximum_fee is not None:
+            _payload["maximum_fee"] = maximum_fee
+        if flat_amount is not None:
+            _payload["flat_amount"] = flat_amount
+        if tiers is not None:
+            _payload["tiers"] = tiers
+        if tiered_method is not None:
+            _payload["tiered_method"] = tiered_method
+        if performance_rate is not None:
+            _payload["performance_rate"] = performance_rate
+        if performance_method is not None:
+            _payload["performance_method"] = performance_method
+        if hurdle_rate is not None:
+            _payload["hurdle_rate"] = hurdle_rate
+        if benchmark_code is not None:
+            _payload["benchmark_code"] = benchmark_code
+        if effective_date is not None:
+            _payload["effective_date"] = effective_date
+        if end_date is not None:
+            _payload["end_date"] = end_date
         return await self._call("billing.schedule_update", params=_payload, options=options, context=context)
 
     async def simulate(
@@ -536,13 +682,9 @@ class AsyncBillingAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Simulate fees
+        """Simulate fee impact on portfolio returns over a period
 
-        Simulate fees for different scenarios.
-
-        Args:
-        fee_schedule: Fee schedule
-        scenarios: Scenarios to simulate"""
+        Projects the cumulative impact of fees on portfolio returns over a specified period. Compares gross vs. net returns, showing the fee drag on performance. Supports multiple fee structures for comparison. Used by the Dashboard fee impact simulator and by advisor workflows comparing fee proposals."""
         _payload: Dict[str, Any] = {}
         _payload["fee_schedule"] = fee_schedule
         if scenarios is not None:

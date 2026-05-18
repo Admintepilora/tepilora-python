@@ -95,95 +95,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        options: Optional[Dict[str, Any]] = None,
-        context: Optional[Dict[str, Any]] = None,
-        response_format: Optional[str] = None,
-        as_table: Optional[str] = None,
-        strict: bool = False,
-    ) -> Any:
-        """Annualized returns
-
-        Args:
-            identifiers: 
-            query: 
-            filter: 
-            prices: 
-            prices_file: 
-            start_date: 
-            end_date: 
-            TR: 
-            currency: 
-            Obs: 
-            as_table: Return as 'pandas', 'polars', or 'pyarrow'
-            strict: Validate params against schema
-        """
-        ...
-    def annual_volatility(
-        self,
-        *,
-        identifiers: Optional[Union[str, List[str]]] = None,
-        query: Optional[str] = None,
-        filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
-        prices_file: Optional[str] = None,
-        start_date: Optional[str] = None,
-        end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
-        currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        Annualized: Optional[Any] = True,
-        options: Optional[Dict[str, Any]] = None,
-        context: Optional[Dict[str, Any]] = None,
-        response_format: Optional[str] = None,
-        as_table: Optional[str] = None,
-        strict: bool = False,
-    ) -> Any:
-        """Annualized volatility
-
-        Args:
-            identifiers: 
-            query: 
-            filter: 
-            prices: 
-            prices_file: 
-            start_date: 
-            end_date: 
-            TR: 
-            currency: 
-            Obs: 
-            Annualized: 
-            as_table: Return as 'pandas', 'polars', or 'pyarrow'
-            strict: Validate params against schema
-        """
-        ...
-    def average_drawdown(
-        self,
-        *,
-        identifiers: Optional[Union[str, List[str]]] = None,
-        query: Optional[str] = None,
-        filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
-        prices_file: Optional[str] = None,
-        start_date: Optional[str] = None,
-        end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
-        currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
+        Obs: Optional[str] = None,
         period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Average drawdown
+        """Calculate calendar year returns
 
         Args:
             identifiers: 
@@ -197,6 +146,197 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
+            as_table: Return as 'pandas', 'polars', or 'pyarrow'
+            strict: Validate params against schema
+        """
+        ...
+    def annual_volatility(
+        self,
+        *,
+        identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
+        prices_file: Optional[str] = None,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        TR: Optional[bool] = None,
+        currency: Optional[str] = None,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+        response_format: Optional[str] = None,
+        as_table: Optional[str] = None,
+        strict: bool = False,
+    ) -> Any:
+        """Calculate annualized volatility from the full price history
+
+        Args:
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
+            as_table: Return as 'pandas', 'polars', or 'pyarrow'
+            strict: Validate params against schema
+        """
+        ...
+    def average_drawdown(
+        self,
+        *,
+        identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
+        prices_file: Optional[str] = None,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        TR: Optional[bool] = None,
+        currency: Optional[str] = None,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+        response_format: Optional[str] = None,
+        as_table: Optional[str] = None,
+        strict: bool = False,
+    ) -> Any:
+        """Calculate the average of all drawdown events
+
+        Args:
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -207,28 +347,28 @@ class AnalyticsAPI:
         operations: List[Any],
         currency: Optional[str] = None,
         identifiers: Optional[Union[str, List[str]]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        total_return: Optional[str] = None,
-        TR: Optional[str] = None,
+        total_return: Optional[bool] = None,
+        TR: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Batch analytics
+        """Execute multiple analytics functions in a single call with shared price data
 
         Args:
-            operations: List of operations [{function, params}]
+            operations: 
             currency: 
-            identifiers: List of TepiloraCodes
-            prices: Shared prices data
+            identifiers: 
+            prices: 
             prices_file: 
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            start_date: 
+            end_date: 
             total_return: 
             TR: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
@@ -241,22 +381,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        n_periods: Optional[int] = 20,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Best period return
+        """Find the best single-period return in the history
 
         Args:
             identifiers: 
@@ -270,7 +432,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
             n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -281,24 +465,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        rf: Optional[float] = 0.0,
-        rf_frequency: Optional[str] = "annual",
-        Annualized: Optional[Any] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Burke ratio
+        """Calculate the Burke ratio (return adjusted for drawdown volatility)
 
         Args:
             identifiers: 
@@ -312,9 +516,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
             rf: 
             rf_frequency: 
-            Annualized: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -325,23 +549,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Up/down capture ratio
+        """Calculate combined up/down capture ratio
 
         Args:
             identifiers: 
@@ -355,8 +600,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            y: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
             x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -367,21 +633,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        base: Optional[float] = 100.0,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Cumulative performance
+        """Calculate cumulative return series (growth of initial investment)
 
         Args:
             identifiers: 
@@ -394,7 +683,30 @@ class AnalyticsAPI:
             TR: 
             currency: 
             Obs: 
+            period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
             base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -405,23 +717,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Downside capture
+        """Calculate downside capture ratio vs benchmark
 
         Args:
             identifiers: 
@@ -435,8 +768,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            y: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
             x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -447,23 +801,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        MAR: Optional[float] = 0.0,
-        Annualized: Optional[Any] = False,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Downside deviation
+        """Calculate downside deviation below a minimum acceptable return (MAR)
 
         Args:
             identifiers: 
@@ -477,8 +852,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            MAR: 
             Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -489,20 +885,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Drawdown series
+        """Calculate the drawdown series (peak-to-trough decline at each point)
 
         Args:
             identifiers: 
@@ -515,6 +935,30 @@ class AnalyticsAPI:
             TR: 
             currency: 
             Obs: 
+            period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -525,20 +969,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Drawdown duration
+        """Calculate the duration statistics of drawdown events
 
         Args:
             identifiers: 
@@ -551,6 +1019,30 @@ class AnalyticsAPI:
             TR: 
             currency: 
             Obs: 
+            period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -561,24 +1053,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        p: Optional[int] = 1,
-        o: Optional[int] = 1,
-        q: Optional[int] = 1,
-        Annualized: Optional[Any] = False,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """EGARCH volatility
+        """Estimate asymmetric volatility using EGARCH model
 
         Args:
             identifiers: 
@@ -591,10 +1103,30 @@ class AnalyticsAPI:
             TR: 
             currency: 
             Obs: 
+            period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
             p: 
             o: 
             q: 
-            Annualized: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -603,33 +1135,81 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
-        factors: Optional[Dict[str, Any]] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        model: Optional[str] = "custom",
-        use_excess_returns: Optional[bool] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Factor attribution
+        """Decompose returns into factor contributions
 
         Args:
             identifiers: 
+            query: 
+            filter: 
             prices: 
             prices_file: 
-            factors: 
             start_date: 
             end_date: 
             TR: 
             currency: 
+            Obs: 
+            period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
             model: 
+            factors: 
+            annualize_alpha: 
             use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
@@ -639,34 +1219,80 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
-        factors: Optional[Dict[str, Any]] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        model: Optional[str] = "custom",
-        annualize_alpha: Optional[bool] = True,
-        use_excess_returns: Optional[bool] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Factor regression (FF3/FF5)
+        """Run Fama-French factor regression (FF3 or FF5) on security returns
 
         Args:
             identifiers: 
+            query: 
+            filter: 
             prices: 
             prices_file: 
-            factors: 
             start_date: 
             end_date: 
             TR: 
             currency: 
+            Obs: 
+            period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
             model: 
+            factors: 
             annualize_alpha: 
             use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
@@ -679,21 +1305,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Gain/loss ratio
+        """Calculate the average gain to average loss ratio
 
         Args:
             identifiers: 
@@ -707,6 +1356,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -717,105 +1389,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        horizon: Optional[int] = 5,
-        p: Optional[int] = 1,
-        q: Optional[int] = 1,
-        Annualized: Optional[Any] = False,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """GARCH forecast
-
-        Args:
-            identifiers: 
-            query: 
-            filter: 
-            prices: 
-            prices_file: 
-            start_date: 
-            end_date: 
-            TR: 
-            currency: 
-            horizon: 
-            p: 
-            q: 
-            Annualized: 
-            as_table: Return as 'pandas', 'polars', or 'pyarrow'
-            strict: Validate params against schema
-        """
-        ...
-    def garch_volatility(
-        self,
-        *,
-        identifiers: Optional[Union[str, List[str]]] = None,
-        query: Optional[str] = None,
-        filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
-        prices_file: Optional[str] = None,
-        start_date: Optional[str] = None,
-        end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
-        currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        p: Optional[int] = 1,
-        q: Optional[int] = 1,
-        Annualized: Optional[Any] = False,
-        options: Optional[Dict[str, Any]] = None,
-        context: Optional[Dict[str, Any]] = None,
-        response_format: Optional[str] = None,
-        as_table: Optional[str] = None,
-        strict: bool = False,
-    ) -> Any:
-        """GARCH volatility
-
-        Args:
-            identifiers: 
-            query: 
-            filter: 
-            prices: 
-            prices_file: 
-            start_date: 
-            end_date: 
-            TR: 
-            currency: 
-            Obs: 
-            p: 
-            q: 
-            Annualized: 
-            as_table: Return as 'pandas', 'polars', or 'pyarrow'
-            strict: Validate params against schema
-        """
-        ...
-    def hurst_exponent(
-        self,
-        *,
-        identifiers: Optional[Union[str, List[str]]] = None,
-        query: Optional[str] = None,
-        filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
-        prices_file: Optional[str] = None,
-        start_date: Optional[str] = None,
-        end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
-        currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        options: Optional[Dict[str, Any]] = None,
-        context: Optional[Dict[str, Any]] = None,
-        response_format: Optional[str] = None,
-        as_table: Optional[str] = None,
-        strict: bool = False,
-    ) -> Any:
-        """Hurst exponent
+        """Forecast future volatility using a fitted GARCH model
 
         Args:
             identifiers: 
@@ -829,6 +1440,197 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
+            as_table: Return as 'pandas', 'polars', or 'pyarrow'
+            strict: Validate params against schema
+        """
+        ...
+    def garch_volatility(
+        self,
+        *,
+        identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
+        prices_file: Optional[str] = None,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        TR: Optional[bool] = None,
+        currency: Optional[str] = None,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+        response_format: Optional[str] = None,
+        as_table: Optional[str] = None,
+        strict: bool = False,
+    ) -> Any:
+        """Estimate time-varying volatility using GARCH(1,1) model
+
+        Args:
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
+            as_table: Return as 'pandas', 'polars', or 'pyarrow'
+            strict: Validate params against schema
+        """
+        ...
+    def hurst_exponent(
+        self,
+        *,
+        identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
+        prices_file: Optional[str] = None,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        TR: Optional[bool] = None,
+        currency: Optional[str] = None,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+        response_format: Optional[str] = None,
+        as_table: Optional[str] = None,
+        strict: bool = False,
+    ) -> Any:
+        """Calculate the Hurst exponent (trend persistence measure)
+
+        Args:
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -843,10 +1645,10 @@ class AnalyticsAPI:
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Get function info
+        """Get detailed documentation for a specific analytics function
 
         Args:
-            function: Function name
+            function: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -861,10 +1663,10 @@ class AnalyticsAPI:
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """List analytics functions
+        """List all available analytics functions with categories
 
         Args:
-            category: Filter by category
+            category: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -875,20 +1677,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Log returns
+        """Calculate daily logarithmic returns from price series
 
         Args:
             identifiers: 
@@ -901,6 +1727,30 @@ class AnalyticsAPI:
             TR: 
             currency: 
             Obs: 
+            period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -911,21 +1761,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
+        Obs: Optional[str] = None,
         period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Maximum drawdown
+        """Calculate the maximum drawdown (worst peak-to-trough decline)
 
         Args:
             identifiers: 
@@ -939,6 +1812,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -949,21 +1845,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 20,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Momentum indicator
+        """Calculate price momentum over multiple lookback periods
 
         Args:
             identifiers: 
@@ -977,6 +1896,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -987,20 +1929,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Monthly returns
+        """Aggregate daily returns into monthly return table
 
         Args:
             identifiers: 
@@ -1013,6 +1979,30 @@ class AnalyticsAPI:
             TR: 
             currency: 
             Obs: 
+            period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1023,21 +2013,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        Annualized: Optional[Any] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Monthly volatility
+        """Calculate volatility from monthly returns
 
         Args:
             identifiers: 
@@ -1050,7 +2063,30 @@ class AnalyticsAPI:
             TR: 
             currency: 
             Obs: 
+            period: 
             Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1061,22 +2097,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        threshold: Optional[float] = 0.0,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Omega ratio
+        """Calculate the Omega ratio (probability-weighted gain/loss ratio)
 
         Args:
             identifiers: 
@@ -1090,7 +2148,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
             threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1101,21 +2181,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Pain index
+        """Calculate the Pain Index (average drawdown depth)
 
         Args:
             identifiers: 
@@ -1129,6 +2232,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1139,21 +2265,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Profit factor
+        """Calculate the profit factor (gross gains / gross losses)
 
         Args:
             identifiers: 
@@ -1167,6 +2316,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1177,21 +2349,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 20,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rate of change
+        """Calculate the Rate of Change (ROC) indicator
 
         Args:
             identifiers: 
@@ -1205,6 +2400,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1215,23 +2433,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 20,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Relative strength
+        """Calculate relative strength of a security vs benchmark over time
 
         Args:
             identifiers: 
@@ -1245,8 +2484,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            y: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
             x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1257,20 +2517,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Simple returns
+        """Calculate daily simple returns from price series
 
         Args:
             identifiers: 
@@ -1283,6 +2567,30 @@ class AnalyticsAPI:
             TR: 
             currency: 
             Obs: 
+            period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1293,26 +2601,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
-        Annualized: Optional[Any] = True,
-        rf: Optional[float] = 0.0,
-        rf_frequency: Optional[str] = "annual",
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling alpha
+        """Calculate rolling Jensen's alpha (excess return vs benchmark)
 
         Args:
             identifiers: 
@@ -1326,11 +2652,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            y: 
-            x: 
             Annualized: 
             rf: 
             rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1341,22 +2685,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        lag: Optional[int] = 1,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling autocorrelation
+        """Calculate rolling autocorrelation of returns
 
         Args:
             identifiers: 
@@ -1370,7 +2736,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
             lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1381,23 +2769,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling beta
+        """Calculate rolling beta (market sensitivity)
 
         Args:
             identifiers: 
@@ -1411,8 +2820,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            y: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
             x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1423,23 +2853,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling beta timing
+        """Calculate rolling market timing coefficient (Treynor-Mazuy)
 
         Args:
             identifiers: 
@@ -1453,8 +2904,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            y: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
             x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1465,21 +2937,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling CAGR
+        """Calculate rolling Compound Annual Growth Rate
 
         Args:
             identifiers: 
@@ -1493,6 +2988,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1503,22 +3021,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        Annualized: Optional[Any] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling Calmar ratio
+        """Calculate rolling Calmar ratio (return over max drawdown)
 
         Args:
             identifiers: 
@@ -1533,6 +3073,28 @@ class AnalyticsAPI:
             Obs: 
             period: 
             Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1543,22 +3105,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
         min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling correlation
+        """Calculate rolling pairwise correlation matrix between securities
 
         Args:
             identifiers: 
@@ -1572,7 +3156,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
             min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1583,23 +3189,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
         min_samples: Optional[int] = None,
-        Annualized: Optional[bool] = True,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling covariance
+        """Calculate rolling pairwise covariance matrix between securities
 
         Args:
             identifiers: 
@@ -1613,8 +3240,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            min_samples: 
             Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1625,22 +3273,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        confidence: Optional[float] = 0.95,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling CVaR (Expected Shortfall)
+        """Calculate rolling Conditional VaR (Expected Shortfall)
 
         Args:
             identifiers: 
@@ -1654,7 +3324,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
             confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1665,23 +3357,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling downside beta
+        """Calculate rolling downside beta (sensitivity during down markets)
 
         Args:
             identifiers: 
@@ -1695,8 +3408,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            y: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
             x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1705,38 +3439,80 @@ class AnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
-        factors: Optional[Dict[str, Any]] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        model: Optional[str] = "custom",
-        period: Optional[int] = 260,
-        Obs: Optional[Any] = "",
-        annualize_alpha: Optional[bool] = True,
-        use_excess_returns: Optional[bool] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling factor regression
+        """Run rolling Fama-French factor regression over time
 
         Args:
             identifiers: 
+            query: 
+            filter: 
             prices: 
             prices_file: 
-            factors: 
             start_date: 
             end_date: 
             TR: 
             currency: 
-            model: 
-            period: 
             Obs: 
+            period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
             annualize_alpha: 
             use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
@@ -1749,24 +3525,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        p: Optional[int] = 1,
-        q: Optional[int] = 1,
-        Annualized: Optional[Any] = False,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling GARCH
+        """Calculate rolling GARCH volatility estimates over time
 
         Args:
             identifiers: 
@@ -1780,9 +3576,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            p: 
-            q: 
             Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1793,24 +3609,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
-        Annualized: Optional[Any] = True,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling information ratio
+        """Calculate rolling Information Ratio (alpha per unit of tracking error)
 
         Args:
             identifiers: 
@@ -1824,9 +3660,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            y: 
-            x: 
             Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1837,22 +3693,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        excess: Optional[bool] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling kurtosis
+        """Calculate rolling kurtosis of returns (fat-tail measure)
 
         Args:
             identifiers: 
@@ -1866,7 +3744,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
             excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1877,23 +3777,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling R-squared
+        """Calculate rolling R-squared (proportion of variance explained by benchmark)
 
         Args:
             identifiers: 
@@ -1907,8 +3828,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            y: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
             x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1919,26 +3861,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
-        Annualized: Optional[Any] = True,
-        rf: Optional[float] = 0.0,
-        rf_frequency: Optional[str] = "annual",
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling regression
+        """Run full rolling OLS regression with all statistics
 
         Args:
             identifiers: 
@@ -1952,11 +3912,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            y: 
-            x: 
             Annualized: 
             rf: 
             rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -1967,23 +3945,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling residuals
+        """Calculate rolling regression residuals (unexplained returns)
 
         Args:
             identifiers: 
@@ -1997,8 +3996,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            y: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
             x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2009,24 +4029,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        rf: Optional[float] = 0.0,
-        rf_frequency: Optional[str] = "annual",
-        Annualized: Optional[Any] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling Sharpe ratio
+        """Calculate rolling Sharpe ratio (risk-adjusted return)
 
         Args:
             identifiers: 
@@ -2040,9 +4080,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
             rf: 
             rf_frequency: 
-            Annualized: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2053,21 +4113,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling skewness
+        """Calculate rolling skewness of returns
 
         Args:
             identifiers: 
@@ -2081,6 +4164,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2091,23 +4197,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        MAR: Optional[float] = 0.0,
-        Annualized: Optional[Any] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling Sortino ratio
+        """Calculate rolling Sortino ratio (downside risk-adjusted return)
 
         Args:
             identifiers: 
@@ -2121,8 +4248,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            MAR: 
             Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2133,26 +4281,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
-        rf: Optional[float] = 0.0,
-        rf_frequency: Optional[str] = "annual",
-        Annualized: Optional[Any] = True,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling Treynor ratio
+        """Calculate rolling Treynor ratio (excess return per unit of beta)
 
         Args:
             identifiers: 
@@ -2166,11 +4332,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            y: 
-            x: 
+            Annualized: 
             rf: 
             rf_frequency: 
-            Annualized: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2181,23 +4365,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling upside beta
+        """Calculate rolling upside beta (sensitivity during up markets)
 
         Args:
             identifiers: 
@@ -2211,8 +4416,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            y: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
             x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2223,23 +4449,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        confidence: Optional[float] = 0.95,
-        method: Optional[str] = "historical",
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling Value at Risk
+        """Calculate rolling Value at Risk (VaR)
 
         Args:
             identifiers: 
@@ -2253,8 +4500,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
             confidence: 
             method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2265,22 +4533,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        Annualized: Optional[Any] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling variance
+        """Calculate rolling variance of returns
 
         Args:
             identifiers: 
@@ -2295,6 +4585,28 @@ class AnalyticsAPI:
             Obs: 
             period: 
             Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2305,22 +4617,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        Annualized: Optional[Any] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling volatility
+        """Calculate rolling annualized volatility (standard deviation of returns)
 
         Args:
             identifiers: 
@@ -2335,6 +4669,28 @@ class AnalyticsAPI:
             Obs: 
             period: 
             Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2345,23 +4701,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        threshold: Optional[float] = 0.0,
-        Annualized: Optional[Any] = False,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Semi-deviation
+        """Calculate semi-deviation (standard deviation of negative returns)
 
         Args:
             identifiers: 
@@ -2375,8 +4752,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            threshold: 
             Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2387,23 +4785,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        threshold: Optional[float] = 0.0,
-        Annualized: Optional[Any] = False,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Semi-variance
+        """Calculate semi-variance (variance of negative returns only)
 
         Args:
             identifiers: 
@@ -2417,8 +4836,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            threshold: 
             Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2429,24 +4869,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        rf: Optional[float] = 0.0,
-        rf_frequency: Optional[str] = "annual",
-        Annualized: Optional[Any] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Sterling ratio
+        """Calculate the Sterling ratio (excess return over average drawdown)
 
         Args:
             identifiers: 
@@ -2460,9 +4920,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
             rf: 
             rf_frequency: 
-            Annualized: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2473,22 +4953,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        percentile: Optional[float] = 5.0,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Tail ratio
+        """Calculate the tail ratio (right tail vs left tail of return distribution)
 
         Args:
             identifiers: 
@@ -2502,7 +5004,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
             percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2513,24 +5037,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
-        Annualized: Optional[Any] = True,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Tracking error
+        """Calculate tracking error (volatility of return difference vs benchmark)
 
         Args:
             identifiers: 
@@ -2544,9 +5088,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            y: 
-            x: 
             Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2557,23 +5121,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Tracking error volatility
+        """Calculate tracking error decomposed into systematic and specific components
 
         Args:
             identifiers: 
@@ -2587,8 +5172,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            y: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
             x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2599,21 +5205,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Ulcer index
+        """Calculate the Ulcer Index (depth and duration weighted drawdown measure)
 
         Args:
             identifiers: 
@@ -2627,6 +5256,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2637,23 +5289,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Upside capture
+        """Calculate upside capture ratio vs benchmark
 
         Args:
             identifiers: 
@@ -2667,8 +5340,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            y: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
             x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2679,23 +5373,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        threshold: Optional[float] = 0.0,
-        Annualized: Optional[Any] = False,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Upside deviation
+        """Calculate upside deviation above a threshold
 
         Args:
             identifiers: 
@@ -2709,8 +5424,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            threshold: 
             Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2721,21 +5457,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Win rate (% positive periods)
+        """Calculate the percentage of positive return periods (win rate)
 
         Args:
             identifiers: 
@@ -2749,6 +5508,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2759,22 +5541,44 @@ class AnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        n_periods: Optional[int] = 20,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Worst period return
+        """Find the worst single-period return in the history
 
         Args:
             identifiers: 
@@ -2788,7 +5592,29 @@ class AnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
             n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2813,95 +5639,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        options: Optional[Dict[str, Any]] = None,
-        context: Optional[Dict[str, Any]] = None,
-        response_format: Optional[str] = None,
-        as_table: Optional[str] = None,
-        strict: bool = False,
-    ) -> Any:
-        """Annualized returns
-
-        Args:
-            identifiers: 
-            query: 
-            filter: 
-            prices: 
-            prices_file: 
-            start_date: 
-            end_date: 
-            TR: 
-            currency: 
-            Obs: 
-            as_table: Return as 'pandas', 'polars', or 'pyarrow'
-            strict: Validate params against schema
-        """
-        ...
-    async def annual_volatility(
-        self,
-        *,
-        identifiers: Optional[Union[str, List[str]]] = None,
-        query: Optional[str] = None,
-        filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
-        prices_file: Optional[str] = None,
-        start_date: Optional[str] = None,
-        end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
-        currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        Annualized: Optional[Any] = True,
-        options: Optional[Dict[str, Any]] = None,
-        context: Optional[Dict[str, Any]] = None,
-        response_format: Optional[str] = None,
-        as_table: Optional[str] = None,
-        strict: bool = False,
-    ) -> Any:
-        """Annualized volatility
-
-        Args:
-            identifiers: 
-            query: 
-            filter: 
-            prices: 
-            prices_file: 
-            start_date: 
-            end_date: 
-            TR: 
-            currency: 
-            Obs: 
-            Annualized: 
-            as_table: Return as 'pandas', 'polars', or 'pyarrow'
-            strict: Validate params against schema
-        """
-        ...
-    async def average_drawdown(
-        self,
-        *,
-        identifiers: Optional[Union[str, List[str]]] = None,
-        query: Optional[str] = None,
-        filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
-        prices_file: Optional[str] = None,
-        start_date: Optional[str] = None,
-        end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
-        currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
+        Obs: Optional[str] = None,
         period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Average drawdown
+        """Calculate calendar year returns
 
         Args:
             identifiers: 
@@ -2915,6 +5690,197 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
+            as_table: Return as 'pandas', 'polars', or 'pyarrow'
+            strict: Validate params against schema
+        """
+        ...
+    async def annual_volatility(
+        self,
+        *,
+        identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
+        prices_file: Optional[str] = None,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        TR: Optional[bool] = None,
+        currency: Optional[str] = None,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+        response_format: Optional[str] = None,
+        as_table: Optional[str] = None,
+        strict: bool = False,
+    ) -> Any:
+        """Calculate annualized volatility from the full price history
+
+        Args:
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
+            as_table: Return as 'pandas', 'polars', or 'pyarrow'
+            strict: Validate params against schema
+        """
+        ...
+    async def average_drawdown(
+        self,
+        *,
+        identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
+        prices_file: Optional[str] = None,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        TR: Optional[bool] = None,
+        currency: Optional[str] = None,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+        response_format: Optional[str] = None,
+        as_table: Optional[str] = None,
+        strict: bool = False,
+    ) -> Any:
+        """Calculate the average of all drawdown events
+
+        Args:
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2925,28 +5891,28 @@ class AsyncAnalyticsAPI:
         operations: List[Any],
         currency: Optional[str] = None,
         identifiers: Optional[Union[str, List[str]]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        total_return: Optional[str] = None,
-        TR: Optional[str] = None,
+        total_return: Optional[bool] = None,
+        TR: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Batch analytics
+        """Execute multiple analytics functions in a single call with shared price data
 
         Args:
-            operations: List of operations [{function, params}]
+            operations: 
             currency: 
-            identifiers: List of TepiloraCodes
-            prices: Shared prices data
+            identifiers: 
+            prices: 
             prices_file: 
-            start_date: Start date (YYYY-MM-DD)
-            end_date: End date (YYYY-MM-DD)
+            start_date: 
+            end_date: 
             total_return: 
             TR: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
@@ -2959,22 +5925,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        n_periods: Optional[int] = 20,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Best period return
+        """Find the best single-period return in the history
 
         Args:
             identifiers: 
@@ -2988,7 +5976,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
             n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -2999,24 +6009,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        rf: Optional[float] = 0.0,
-        rf_frequency: Optional[str] = "annual",
-        Annualized: Optional[Any] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Burke ratio
+        """Calculate the Burke ratio (return adjusted for drawdown volatility)
 
         Args:
             identifiers: 
@@ -3030,9 +6060,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
             rf: 
             rf_frequency: 
-            Annualized: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3043,23 +6093,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Up/down capture ratio
+        """Calculate combined up/down capture ratio
 
         Args:
             identifiers: 
@@ -3073,8 +6144,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            y: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
             x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3085,21 +6177,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        base: Optional[float] = 100.0,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Cumulative performance
+        """Calculate cumulative return series (growth of initial investment)
 
         Args:
             identifiers: 
@@ -3112,7 +6227,30 @@ class AsyncAnalyticsAPI:
             TR: 
             currency: 
             Obs: 
+            period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
             base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3123,23 +6261,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Downside capture
+        """Calculate downside capture ratio vs benchmark
 
         Args:
             identifiers: 
@@ -3153,8 +6312,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            y: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
             x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3165,23 +6345,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        MAR: Optional[float] = 0.0,
-        Annualized: Optional[Any] = False,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Downside deviation
+        """Calculate downside deviation below a minimum acceptable return (MAR)
 
         Args:
             identifiers: 
@@ -3195,8 +6396,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            MAR: 
             Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3207,20 +6429,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Drawdown series
+        """Calculate the drawdown series (peak-to-trough decline at each point)
 
         Args:
             identifiers: 
@@ -3233,6 +6479,30 @@ class AsyncAnalyticsAPI:
             TR: 
             currency: 
             Obs: 
+            period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3243,20 +6513,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Drawdown duration
+        """Calculate the duration statistics of drawdown events
 
         Args:
             identifiers: 
@@ -3269,6 +6563,30 @@ class AsyncAnalyticsAPI:
             TR: 
             currency: 
             Obs: 
+            period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3279,24 +6597,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        p: Optional[int] = 1,
-        o: Optional[int] = 1,
-        q: Optional[int] = 1,
-        Annualized: Optional[Any] = False,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """EGARCH volatility
+        """Estimate asymmetric volatility using EGARCH model
 
         Args:
             identifiers: 
@@ -3309,10 +6647,30 @@ class AsyncAnalyticsAPI:
             TR: 
             currency: 
             Obs: 
+            period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
             p: 
             o: 
             q: 
-            Annualized: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3321,33 +6679,81 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
-        factors: Optional[Dict[str, Any]] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        model: Optional[str] = "custom",
-        use_excess_returns: Optional[bool] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Factor attribution
+        """Decompose returns into factor contributions
 
         Args:
             identifiers: 
+            query: 
+            filter: 
             prices: 
             prices_file: 
-            factors: 
             start_date: 
             end_date: 
             TR: 
             currency: 
+            Obs: 
+            period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
             model: 
+            factors: 
+            annualize_alpha: 
             use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
@@ -3357,34 +6763,80 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
-        factors: Optional[Dict[str, Any]] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        model: Optional[str] = "custom",
-        annualize_alpha: Optional[bool] = True,
-        use_excess_returns: Optional[bool] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Factor regression (FF3/FF5)
+        """Run Fama-French factor regression (FF3 or FF5) on security returns
 
         Args:
             identifiers: 
+            query: 
+            filter: 
             prices: 
             prices_file: 
-            factors: 
             start_date: 
             end_date: 
             TR: 
             currency: 
+            Obs: 
+            period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
             model: 
+            factors: 
             annualize_alpha: 
             use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
@@ -3397,21 +6849,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Gain/loss ratio
+        """Calculate the average gain to average loss ratio
 
         Args:
             identifiers: 
@@ -3425,6 +6900,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3435,105 +6933,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        horizon: Optional[int] = 5,
-        p: Optional[int] = 1,
-        q: Optional[int] = 1,
-        Annualized: Optional[Any] = False,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """GARCH forecast
-
-        Args:
-            identifiers: 
-            query: 
-            filter: 
-            prices: 
-            prices_file: 
-            start_date: 
-            end_date: 
-            TR: 
-            currency: 
-            horizon: 
-            p: 
-            q: 
-            Annualized: 
-            as_table: Return as 'pandas', 'polars', or 'pyarrow'
-            strict: Validate params against schema
-        """
-        ...
-    async def garch_volatility(
-        self,
-        *,
-        identifiers: Optional[Union[str, List[str]]] = None,
-        query: Optional[str] = None,
-        filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
-        prices_file: Optional[str] = None,
-        start_date: Optional[str] = None,
-        end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
-        currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        p: Optional[int] = 1,
-        q: Optional[int] = 1,
-        Annualized: Optional[Any] = False,
-        options: Optional[Dict[str, Any]] = None,
-        context: Optional[Dict[str, Any]] = None,
-        response_format: Optional[str] = None,
-        as_table: Optional[str] = None,
-        strict: bool = False,
-    ) -> Any:
-        """GARCH volatility
-
-        Args:
-            identifiers: 
-            query: 
-            filter: 
-            prices: 
-            prices_file: 
-            start_date: 
-            end_date: 
-            TR: 
-            currency: 
-            Obs: 
-            p: 
-            q: 
-            Annualized: 
-            as_table: Return as 'pandas', 'polars', or 'pyarrow'
-            strict: Validate params against schema
-        """
-        ...
-    async def hurst_exponent(
-        self,
-        *,
-        identifiers: Optional[Union[str, List[str]]] = None,
-        query: Optional[str] = None,
-        filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
-        prices_file: Optional[str] = None,
-        start_date: Optional[str] = None,
-        end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
-        currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        options: Optional[Dict[str, Any]] = None,
-        context: Optional[Dict[str, Any]] = None,
-        response_format: Optional[str] = None,
-        as_table: Optional[str] = None,
-        strict: bool = False,
-    ) -> Any:
-        """Hurst exponent
+        """Forecast future volatility using a fitted GARCH model
 
         Args:
             identifiers: 
@@ -3547,6 +6984,197 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
+            as_table: Return as 'pandas', 'polars', or 'pyarrow'
+            strict: Validate params against schema
+        """
+        ...
+    async def garch_volatility(
+        self,
+        *,
+        identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
+        prices_file: Optional[str] = None,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        TR: Optional[bool] = None,
+        currency: Optional[str] = None,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+        response_format: Optional[str] = None,
+        as_table: Optional[str] = None,
+        strict: bool = False,
+    ) -> Any:
+        """Estimate time-varying volatility using GARCH(1,1) model
+
+        Args:
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
+            as_table: Return as 'pandas', 'polars', or 'pyarrow'
+            strict: Validate params against schema
+        """
+        ...
+    async def hurst_exponent(
+        self,
+        *,
+        identifiers: Optional[Union[str, List[str]]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
+        prices_file: Optional[str] = None,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        TR: Optional[bool] = None,
+        currency: Optional[str] = None,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+        response_format: Optional[str] = None,
+        as_table: Optional[str] = None,
+        strict: bool = False,
+    ) -> Any:
+        """Calculate the Hurst exponent (trend persistence measure)
+
+        Args:
+            identifiers: 
+            query: 
+            filter: 
+            prices: 
+            prices_file: 
+            start_date: 
+            end_date: 
+            TR: 
+            currency: 
+            Obs: 
+            period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3561,10 +7189,10 @@ class AsyncAnalyticsAPI:
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Get function info
+        """Get detailed documentation for a specific analytics function
 
         Args:
-            function: Function name
+            function: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3579,10 +7207,10 @@ class AsyncAnalyticsAPI:
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """List analytics functions
+        """List all available analytics functions with categories
 
         Args:
-            category: Filter by category
+            category: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3593,20 +7221,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Log returns
+        """Calculate daily logarithmic returns from price series
 
         Args:
             identifiers: 
@@ -3619,6 +7271,30 @@ class AsyncAnalyticsAPI:
             TR: 
             currency: 
             Obs: 
+            period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3629,21 +7305,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
+        Obs: Optional[str] = None,
         period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Maximum drawdown
+        """Calculate the maximum drawdown (worst peak-to-trough decline)
 
         Args:
             identifiers: 
@@ -3657,6 +7356,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3667,21 +7389,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 20,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Momentum indicator
+        """Calculate price momentum over multiple lookback periods
 
         Args:
             identifiers: 
@@ -3695,6 +7440,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3705,20 +7473,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Monthly returns
+        """Aggregate daily returns into monthly return table
 
         Args:
             identifiers: 
@@ -3731,6 +7523,30 @@ class AsyncAnalyticsAPI:
             TR: 
             currency: 
             Obs: 
+            period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3741,21 +7557,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        Annualized: Optional[Any] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Monthly volatility
+        """Calculate volatility from monthly returns
 
         Args:
             identifiers: 
@@ -3768,7 +7607,30 @@ class AsyncAnalyticsAPI:
             TR: 
             currency: 
             Obs: 
+            period: 
             Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3779,22 +7641,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        threshold: Optional[float] = 0.0,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Omega ratio
+        """Calculate the Omega ratio (probability-weighted gain/loss ratio)
 
         Args:
             identifiers: 
@@ -3808,7 +7692,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
             threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3819,21 +7725,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Pain index
+        """Calculate the Pain Index (average drawdown depth)
 
         Args:
             identifiers: 
@@ -3847,6 +7776,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3857,21 +7809,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Profit factor
+        """Calculate the profit factor (gross gains / gross losses)
 
         Args:
             identifiers: 
@@ -3885,6 +7860,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3895,21 +7893,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 20,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rate of change
+        """Calculate the Rate of Change (ROC) indicator
 
         Args:
             identifiers: 
@@ -3923,6 +7944,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3933,23 +7977,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 20,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Relative strength
+        """Calculate relative strength of a security vs benchmark over time
 
         Args:
             identifiers: 
@@ -3963,8 +8028,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            y: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
             x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -3975,20 +8061,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Simple returns
+        """Calculate daily simple returns from price series
 
         Args:
             identifiers: 
@@ -4001,6 +8111,30 @@ class AsyncAnalyticsAPI:
             TR: 
             currency: 
             Obs: 
+            period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -4011,26 +8145,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
-        Annualized: Optional[Any] = True,
-        rf: Optional[float] = 0.0,
-        rf_frequency: Optional[str] = "annual",
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling alpha
+        """Calculate rolling Jensen's alpha (excess return vs benchmark)
 
         Args:
             identifiers: 
@@ -4044,11 +8196,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            y: 
-            x: 
             Annualized: 
             rf: 
             rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -4059,22 +8229,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        lag: Optional[int] = 1,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling autocorrelation
+        """Calculate rolling autocorrelation of returns
 
         Args:
             identifiers: 
@@ -4088,7 +8280,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
             lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -4099,23 +8313,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling beta
+        """Calculate rolling beta (market sensitivity)
 
         Args:
             identifiers: 
@@ -4129,8 +8364,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            y: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
             x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -4141,23 +8397,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling beta timing
+        """Calculate rolling market timing coefficient (Treynor-Mazuy)
 
         Args:
             identifiers: 
@@ -4171,8 +8448,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            y: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
             x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -4183,21 +8481,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling CAGR
+        """Calculate rolling Compound Annual Growth Rate
 
         Args:
             identifiers: 
@@ -4211,6 +8532,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -4221,22 +8565,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        Annualized: Optional[Any] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling Calmar ratio
+        """Calculate rolling Calmar ratio (return over max drawdown)
 
         Args:
             identifiers: 
@@ -4251,6 +8617,28 @@ class AsyncAnalyticsAPI:
             Obs: 
             period: 
             Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -4261,22 +8649,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
         min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling correlation
+        """Calculate rolling pairwise correlation matrix between securities
 
         Args:
             identifiers: 
@@ -4290,7 +8700,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
             min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -4301,23 +8733,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
         min_samples: Optional[int] = None,
-        Annualized: Optional[bool] = True,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling covariance
+        """Calculate rolling pairwise covariance matrix between securities
 
         Args:
             identifiers: 
@@ -4331,8 +8784,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            min_samples: 
             Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -4343,22 +8817,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        confidence: Optional[float] = 0.95,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling CVaR (Expected Shortfall)
+        """Calculate rolling Conditional VaR (Expected Shortfall)
 
         Args:
             identifiers: 
@@ -4372,7 +8868,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
             confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -4383,23 +8901,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling downside beta
+        """Calculate rolling downside beta (sensitivity during down markets)
 
         Args:
             identifiers: 
@@ -4413,8 +8952,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            y: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
             x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -4423,38 +8983,80 @@ class AsyncAnalyticsAPI:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
-        factors: Optional[Dict[str, Any]] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        model: Optional[str] = "custom",
-        period: Optional[int] = 260,
-        Obs: Optional[Any] = "",
-        annualize_alpha: Optional[bool] = True,
-        use_excess_returns: Optional[bool] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling factor regression
+        """Run rolling Fama-French factor regression over time
 
         Args:
             identifiers: 
+            query: 
+            filter: 
             prices: 
             prices_file: 
-            factors: 
             start_date: 
             end_date: 
             TR: 
             currency: 
-            model: 
-            period: 
             Obs: 
+            period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
             annualize_alpha: 
             use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
@@ -4467,24 +9069,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        p: Optional[int] = 1,
-        q: Optional[int] = 1,
-        Annualized: Optional[Any] = False,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling GARCH
+        """Calculate rolling GARCH volatility estimates over time
 
         Args:
             identifiers: 
@@ -4498,9 +9120,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            p: 
-            q: 
             Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -4511,24 +9153,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
-        Annualized: Optional[Any] = True,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling information ratio
+        """Calculate rolling Information Ratio (alpha per unit of tracking error)
 
         Args:
             identifiers: 
@@ -4542,9 +9204,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            y: 
-            x: 
             Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -4555,22 +9237,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        excess: Optional[bool] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling kurtosis
+        """Calculate rolling kurtosis of returns (fat-tail measure)
 
         Args:
             identifiers: 
@@ -4584,7 +9288,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
             excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -4595,23 +9321,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling R-squared
+        """Calculate rolling R-squared (proportion of variance explained by benchmark)
 
         Args:
             identifiers: 
@@ -4625,8 +9372,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            y: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
             x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -4637,26 +9405,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
-        Annualized: Optional[Any] = True,
-        rf: Optional[float] = 0.0,
-        rf_frequency: Optional[str] = "annual",
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling regression
+        """Run full rolling OLS regression with all statistics
 
         Args:
             identifiers: 
@@ -4670,11 +9456,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            y: 
-            x: 
             Annualized: 
             rf: 
             rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -4685,23 +9489,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling residuals
+        """Calculate rolling regression residuals (unexplained returns)
 
         Args:
             identifiers: 
@@ -4715,8 +9540,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            y: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
             x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -4727,24 +9573,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        rf: Optional[float] = 0.0,
-        rf_frequency: Optional[str] = "annual",
-        Annualized: Optional[Any] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling Sharpe ratio
+        """Calculate rolling Sharpe ratio (risk-adjusted return)
 
         Args:
             identifiers: 
@@ -4758,9 +9624,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
             rf: 
             rf_frequency: 
-            Annualized: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -4771,21 +9657,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling skewness
+        """Calculate rolling skewness of returns
 
         Args:
             identifiers: 
@@ -4799,6 +9708,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -4809,23 +9741,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        MAR: Optional[float] = 0.0,
-        Annualized: Optional[Any] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling Sortino ratio
+        """Calculate rolling Sortino ratio (downside risk-adjusted return)
 
         Args:
             identifiers: 
@@ -4839,8 +9792,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            MAR: 
             Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -4851,26 +9825,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
-        rf: Optional[float] = 0.0,
-        rf_frequency: Optional[str] = "annual",
-        Annualized: Optional[Any] = True,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling Treynor ratio
+        """Calculate rolling Treynor ratio (excess return per unit of beta)
 
         Args:
             identifiers: 
@@ -4884,11 +9876,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            y: 
-            x: 
+            Annualized: 
             rf: 
             rf_frequency: 
-            Annualized: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -4899,23 +9909,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling upside beta
+        """Calculate rolling upside beta (sensitivity during up markets)
 
         Args:
             identifiers: 
@@ -4929,8 +9960,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            y: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
             x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -4941,23 +9993,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        confidence: Optional[float] = 0.95,
-        method: Optional[str] = "historical",
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling Value at Risk
+        """Calculate rolling Value at Risk (VaR)
 
         Args:
             identifiers: 
@@ -4971,8 +10044,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
             confidence: 
             method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -4983,22 +10077,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        Annualized: Optional[Any] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling variance
+        """Calculate rolling variance of returns
 
         Args:
             identifiers: 
@@ -5013,6 +10129,28 @@ class AsyncAnalyticsAPI:
             Obs: 
             period: 
             Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -5023,22 +10161,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        Annualized: Optional[Any] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Rolling volatility
+        """Calculate rolling annualized volatility (standard deviation of returns)
 
         Args:
             identifiers: 
@@ -5053,6 +10213,28 @@ class AsyncAnalyticsAPI:
             Obs: 
             period: 
             Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -5063,23 +10245,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        threshold: Optional[float] = 0.0,
-        Annualized: Optional[Any] = False,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Semi-deviation
+        """Calculate semi-deviation (standard deviation of negative returns)
 
         Args:
             identifiers: 
@@ -5093,8 +10296,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            threshold: 
             Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -5105,23 +10329,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        threshold: Optional[float] = 0.0,
-        Annualized: Optional[Any] = False,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Semi-variance
+        """Calculate semi-variance (variance of negative returns only)
 
         Args:
             identifiers: 
@@ -5135,8 +10380,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            threshold: 
             Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -5147,24 +10413,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        rf: Optional[float] = 0.0,
-        rf_frequency: Optional[str] = "annual",
-        Annualized: Optional[Any] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Sterling ratio
+        """Calculate the Sterling ratio (excess return over average drawdown)
 
         Args:
             identifiers: 
@@ -5178,9 +10464,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
             rf: 
             rf_frequency: 
-            Annualized: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -5191,22 +10497,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        percentile: Optional[float] = 5.0,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Tail ratio
+        """Calculate the tail ratio (right tail vs left tail of return distribution)
 
         Args:
             identifiers: 
@@ -5220,7 +10548,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
             percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -5231,24 +10581,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
-        Annualized: Optional[Any] = True,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Tracking error
+        """Calculate tracking error (volatility of return difference vs benchmark)
 
         Args:
             identifiers: 
@@ -5262,9 +10632,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            y: 
-            x: 
             Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -5275,23 +10665,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Tracking error volatility
+        """Calculate tracking error decomposed into systematic and specific components
 
         Args:
             identifiers: 
@@ -5305,8 +10716,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            y: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
             x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -5317,21 +10749,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Ulcer index
+        """Calculate the Ulcer Index (depth and duration weighted drawdown measure)
 
         Args:
             identifiers: 
@@ -5345,6 +10800,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -5355,23 +10833,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Upside capture
+        """Calculate upside capture ratio vs benchmark
 
         Args:
             identifiers: 
@@ -5385,8 +10884,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            y: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
             x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -5397,23 +10917,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        threshold: Optional[float] = 0.0,
-        Annualized: Optional[Any] = False,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Upside deviation
+        """Calculate upside deviation above a threshold
 
         Args:
             identifiers: 
@@ -5427,8 +10968,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
-            threshold: 
             Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -5439,21 +11001,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Win rate (% positive periods)
+        """Calculate the percentage of positive return periods (win rate)
 
         Args:
             identifiers: 
@@ -5467,6 +11052,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
+            n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """
@@ -5477,22 +11085,44 @@ class AsyncAnalyticsAPI:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        n_periods: Optional[int] = 20,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
         as_table: Optional[str] = None,
         strict: bool = False,
     ) -> Any:
-        """Worst period return
+        """Find the worst single-period return in the history
 
         Args:
             identifiers: 
@@ -5506,7 +11136,29 @@ class AsyncAnalyticsAPI:
             currency: 
             Obs: 
             period: 
+            Annualized: 
+            rf: 
+            rf_frequency: 
+            MAR: 
+            confidence: 
+            method: 
+            min_samples: 
             n_periods: 
+            threshold: 
+            percentile: 
+            base: 
+            excess: 
+            horizon: 
+            lag: 
+            p: 
+            o: 
+            q: 
+            x: 
+            y: 
+            model: 
+            factors: 
+            annualize_alpha: 
+            use_excess_returns: 
             as_table: Return as 'pandas', 'polars', or 'pyarrow'
             strict: Validate params against schema
         """

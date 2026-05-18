@@ -145,10 +145,34 @@ def generate_test_value(type_name: str) -> Any:
     }.get(type_name, "test")
 
 
+import keyword as _keyword
+
+_PYTHON_KEYWORDS = set(_keyword.kwlist) | {"match", "case", "type"}
+
+def _sanitize_param_name(name: str) -> str:
+    """Mirror generate_sdk.py's sanitize_param_name for Python keywords."""
+    if name in _PYTHON_KEYWORDS:
+        return name + '_'
+    return name
+
 def build_minimal_params(params: List[Dict[str, Any]]) -> Dict[str, Any]:
     """Build minimal params dict with only required params."""
     result = {}
     for p in params:
         if p.get("required") and p["name"] != "format":
-            result[p["name"]] = generate_test_value(p["type"])
+            result[_sanitize_param_name(p["name"])] = generate_test_value(p["type"])
+    return result
+
+
+def build_all_params(params: List[Dict[str, Any]]) -> Dict[str, Any]:
+    """Build full optional payload projection params for wrapper canaries.
+
+    This is a structural SDK coverage canary: it verifies generated wrappers
+    accept and serialize every declared payload parameter. It does not assert
+    V3 semantic validity for the generated test values.
+    """
+    result = {}
+    for p in params:
+        if p["name"] != "format":
+            result[_sanitize_param_name(p["name"])] = generate_test_value(p["type"])
     return result

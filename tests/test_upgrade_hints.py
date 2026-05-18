@@ -39,6 +39,18 @@ class TestParseSemver:
     def test_with_spaces(self):
         assert _parse_semver("  1.2.3  ") == (1, 2, 3)
 
+    @pytest.mark.parametrize(
+        ("version", "expected"),
+        [
+            ("0.5.3rc1", (0, 5, 3)),
+            ("0.5.3.dev1", (0, 5, 3)),
+            ("0.5.3a1", (0, 5, 3)),
+            ("0.5.3b2", (0, 5, 3)),
+        ],
+    )
+    def test_prerelease_suffixes(self, version, expected):
+        assert _parse_semver(version) == expected
+
     def test_invalid_raises(self):
         with pytest.raises(ValueError):
             _parse_semver("abc")
@@ -90,8 +102,25 @@ class TestCheckSdkVersion:
             _check_sdk_version({"X-Tepilora-Min-SDK-Version": "99.99.99"})
             assert len(w) == 1
 
+    def test_current_rc_version_warns_when_min_version_newer(self, monkeypatch):
+        """Pre-release SDK versions still warn when server requires a newer SDK."""
+        monkeypatch.setattr(client_module, "__version__", "0.5.3rc1")
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            _check_sdk_version({"X-Tepilora-Min-SDK-Version": "99.99.99"})
+            assert len(w) == 1
+            assert "0.5.3rc1" in str(w[0].message)
+
     def test_invalid_header_value_no_crash(self):
         """Invalid version string doesn't crash."""
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            _check_sdk_version({"X-Tepilora-Min-SDK-Version": "not-a-version"})
+            assert len(w) == 0
+
+    def test_current_rc_version_invalid_header_value_no_crash(self, monkeypatch):
+        """Invalid server version strings stay silent even for pre-release clients."""
+        monkeypatch.setattr(client_module, "__version__", "0.5.3rc1")
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
             _check_sdk_version({"X-Tepilora-Min-SDK-Version": "not-a-version"})

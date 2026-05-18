@@ -4,6 +4,7 @@ import json
 import logging
 import os
 import random
+import re
 import time
 import warnings
 from dataclasses import dataclass
@@ -149,11 +150,15 @@ def _parse_binary_meta(headers: Mapping[str, str]) -> V3BinaryMeta:
 _upgrade_warned = False
 
 _UPGRADE_HINT = "This may require a newer SDK version. Try: pip install --upgrade tepilora"
+_VERSION_PREFIX_RE = re.compile(r"^(\d+(?:\.\d+)*)(?:[._-]?(?:rc|dev|a|b)\d*)?$", re.IGNORECASE)
 
 
 def _parse_semver(version_str: str) -> Tuple[int, ...]:
-    """Parse a semver string like '0.3.1' into a comparable tuple (0, 3, 1)."""
-    return tuple(int(p) for p in version_str.strip().split("."))
+    """Parse a semver/pre-release string like '0.3.1rc1' into a comparable tuple."""
+    match = _VERSION_PREFIX_RE.fullmatch(version_str.strip())
+    if match is None:
+        raise ValueError(f"Invalid version: {version_str!r}")
+    return tuple(int(p) for p in match.group(1).split("."))
 
 
 def _check_sdk_version(response_headers: Mapping[str, str]) -> None:
@@ -306,12 +311,14 @@ class TepiloraClient:
             AlertsAPI,
             AlternativesAPI,
             AssetAllocationAPI,
+            AuditAPI,
             BillingAPI,
             BondsAPI,
             ClientsAPI,
             DataAPI,
             DocumentsAPI,
             EsgAPI,
+            EvolutionAPI,
             ExportsAPI,
             FactorsAPI,
             FhAPI,
@@ -322,6 +329,7 @@ class TepiloraClient:
             ProfilingAPI,
             PublicationsAPI,
             QueriesAPI,
+            ReportingAPI,
             SearchAPI,
             SecuritiesAPI,
             StocksAPI,
@@ -335,12 +343,14 @@ class TepiloraClient:
         self.alternatives = AlternativesAPI(self)
         self.analytics = AnalyticsAPI(self)
         self.asset_allocation = AssetAllocationAPI(self)
+        self.audit = AuditAPI(self)
         self.billing = BillingAPI(self)
         self.bonds = BondsAPI(self)
         self.clients = ClientsAPI(self)
         self.data = DataAPI(self)
         self.documents = DocumentsAPI(self)
         self.esg = EsgAPI(self)
+        self.evolution = EvolutionAPI(self)
         self.exports = ExportsAPI(self)
         self.factors = FactorsAPI(self)
         self.fh = FhAPI(self)
@@ -352,6 +362,7 @@ class TepiloraClient:
         self.publications = PublicationsAPI(self)
         self.queries = QueriesAPI(self)
         self.realtime = RealtimeAPI(self)
+        self.reporting = ReportingAPI(self)
         self.search = SearchAPI(self)
         self.securities = SecuritiesAPI(self)
         self.stocks = StocksAPI(self)
@@ -627,12 +638,14 @@ class AsyncTepiloraClient:
             AsyncAlertsAPI,
             AsyncAlternativesAPI,
             AsyncAssetAllocationAPI,
+            AsyncAuditAPI,
             AsyncBillingAPI,
             AsyncBondsAPI,
             AsyncClientsAPI,
             AsyncDataAPI,
             AsyncDocumentsAPI,
             AsyncEsgAPI,
+            AsyncEvolutionAPI,
             AsyncExportsAPI,
             AsyncFactorsAPI,
             AsyncFhAPI,
@@ -643,6 +656,7 @@ class AsyncTepiloraClient:
             AsyncProfilingAPI,
             AsyncPublicationsAPI,
             AsyncQueriesAPI,
+            AsyncReportingAPI,
             AsyncSearchAPI,
             AsyncSecuritiesAPI,
             AsyncStocksAPI,
@@ -656,12 +670,14 @@ class AsyncTepiloraClient:
         self.alternatives = AsyncAlternativesAPI(self)
         self.analytics = AsyncAnalyticsAPI(self)
         self.asset_allocation = AsyncAssetAllocationAPI(self)
+        self.audit = AsyncAuditAPI(self)
         self.billing = AsyncBillingAPI(self)
         self.bonds = AsyncBondsAPI(self)
         self.clients = AsyncClientsAPI(self)
         self.data = AsyncDataAPI(self)
         self.documents = AsyncDocumentsAPI(self)
         self.esg = AsyncEsgAPI(self)
+        self.evolution = AsyncEvolutionAPI(self)
         self.exports = AsyncExportsAPI(self)
         self.factors = AsyncFactorsAPI(self)
         self.fh = AsyncFhAPI(self)
@@ -673,6 +689,7 @@ class AsyncTepiloraClient:
         self.publications = AsyncPublicationsAPI(self)
         self.queries = AsyncQueriesAPI(self)
         self.realtime = AsyncRealtimeAPI(self)
+        self.reporting = AsyncReportingAPI(self)
         self.search = AsyncSearchAPI(self)
         self.securities = AsyncSecuritiesAPI(self)
         self.stocks = AsyncStocksAPI(self)
@@ -944,3 +961,6 @@ class AsyncTepiloraClient:
         if not isinstance(resp, V3BinaryResponse):
             raise TepiloraAPIError(message="Expected Arrow IPC stream response, got JSON")
         return resp
+
+
+Client = TepiloraClient

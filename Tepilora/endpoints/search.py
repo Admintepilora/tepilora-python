@@ -6,7 +6,7 @@ Regenerate with: python scripts/generate_sdk.py --category search
 """
 from __future__ import annotations
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 from ._base import AsyncBaseAPI, BaseAPI
 
@@ -17,28 +17,33 @@ class SearchAPI(BaseAPI):
     def global_search(
         self,
         *,
-        query: str,
-        include_recent: Optional[bool] = None,
-        limit: Optional[int] = 20,
-        types: Optional[str] = None,
+        query: Optional[str] = "",
+        types: Optional[List[Any]] = None,
+        limit: Optional[int] = 5,
+        include_recent: Optional[bool] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Global search
+        """Unified cross-module search across securities, news, and publications
 
-        Search across securities, news, and publications.
+        Federated search that queries all three content modules (securities, news, publications) in a single call and merges results by relevance. Returns a mixed result set with items tagged by source type. The types parameter filters which modules to include. Used by the Dashboard universal search bar and by the AI assistant for broad discovery queries.
 
         Args:
-        query: Search query
-        limit: Maximum results"""
+        query: Search query string.
+        types: Types to search; defaults to all supported sources.
+        limit: Requested max results per type; legacy runtime caps to 20.
+
+        Examples:
+            >>> client.search.global_search(query='Apple', limit=5)"""
         _payload: Dict[str, Any] = {}
-        _payload["query"] = query
-        if include_recent is not None:
-            _payload["include_recent"] = include_recent
-        if limit is not None:
-            _payload["limit"] = limit
+        if query is not None:
+            _payload["query"] = query
         if types is not None:
             _payload["types"] = types
+        if limit is not None:
+            _payload["limit"] = limit
+        if include_recent is not None:
+            _payload["include_recent"] = include_recent
         return self._call("search.global", params=_payload, options=options, context=context)
 
 
@@ -49,28 +54,33 @@ class AsyncSearchAPI(AsyncBaseAPI):
     async def global_search(
         self,
         *,
-        query: str,
-        include_recent: Optional[bool] = None,
-        limit: Optional[int] = 20,
-        types: Optional[str] = None,
+        query: Optional[str] = "",
+        types: Optional[List[Any]] = None,
+        limit: Optional[int] = 5,
+        include_recent: Optional[bool] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Global search
+        """Unified cross-module search across securities, news, and publications
 
-        Search across securities, news, and publications.
+        Federated search that queries all three content modules (securities, news, publications) in a single call and merges results by relevance. Returns a mixed result set with items tagged by source type. The types parameter filters which modules to include. Used by the Dashboard universal search bar and by the AI assistant for broad discovery queries.
 
         Args:
-        query: Search query
-        limit: Maximum results"""
+        query: Search query string.
+        types: Types to search; defaults to all supported sources.
+        limit: Requested max results per type; legacy runtime caps to 20.
+
+        Examples:
+            >>> await client.search.global_search(query='Apple', limit=5)"""
         _payload: Dict[str, Any] = {}
-        _payload["query"] = query
-        if include_recent is not None:
-            _payload["include_recent"] = include_recent
-        if limit is not None:
-            _payload["limit"] = limit
+        if query is not None:
+            _payload["query"] = query
         if types is not None:
             _payload["types"] = types
+        if limit is not None:
+            _payload["limit"] = limit
+        if include_recent is not None:
+            _payload["include_recent"] = include_recent
         return await self._call("search.global", params=_payload, options=options, context=context)
 
 

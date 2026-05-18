@@ -19,15 +19,7 @@ def create_async_v3_handler(test_case: unittest.TestCase):
         params = payload.get("params", {})
 
         # Securities namespace
-        if action == "securities.description":
-            test_case.assertEqual(params["identifier"], "X")
-            return httpx.Response(
-                200,
-                json={"success": True, "action": action, "data": {"identifier": "X"}, "meta": {}},
-            )
-
         if action == "securities.details":
-            # Alias for description
             test_case.assertEqual(params["identifier"], "X")
             return httpx.Response(
                 200,

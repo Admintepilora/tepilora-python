@@ -206,7 +206,7 @@ class AnalyticsFunction:
         action = f"analytics.{self.name}"
         payload = dict(params)
         if strict:
-            info = self._api.info(self.name)
+            info = self._api._info_cached(self.name)
             payload = _normalize_param_names(info, payload)
             payload = _validate_and_fill_params(info, payload)
         effective_format = "arrow" if as_table else response_format
@@ -227,7 +227,7 @@ class AnalyticsFunction:
         return result
 
     def info(self, *, refresh: bool = False) -> Dict[str, Any]:
-        return self._api.info(self.name, refresh=refresh)
+        return self._api._info_cached(self.name, refresh=refresh)
 
     def help(self) -> str:
         return self._api.help(self.name)
@@ -263,7 +263,7 @@ class AsyncAnalyticsFunction:
         action = f"analytics.{self.name}"
         payload = dict(params)
         if strict:
-            info = await self._api.info(self.name)
+            info = await self._api._info_cached(self.name)
             payload = _normalize_param_names(info, payload)
             payload = _validate_and_fill_params(info, payload)
         effective_format = "arrow" if as_table else response_format
@@ -284,7 +284,7 @@ class AsyncAnalyticsFunction:
         return result
 
     async def info(self, *, refresh: bool = False) -> Dict[str, Any]:
-        return await self._api.info(self.name, refresh=refresh)
+        return await self._api._info_cached(self.name, refresh=refresh)
 
     async def help(self) -> str:
         return await self._api.help(self.name)
@@ -310,7 +310,7 @@ class AnalyticsAPI(_AnalyticsMethodsMixin):
         payload = dict(params)
         action = f"analytics.{name}"
         if strict:
-            info = self.info(name)
+            info = self._info_cached(name)
             payload = _normalize_param_names(info, payload)
             payload = _validate_and_fill_params(info, payload)
         effective_format = "arrow" if as_table else response_format
@@ -330,7 +330,7 @@ class AnalyticsAPI(_AnalyticsMethodsMixin):
             return _decode_table_from_json(tabular, as_table)
         return result
 
-    def list(self, *, category: Optional[str] = None, refresh: bool = False) -> Dict[str, Any]:
+    def _list_cached(self, *, category: Optional[str] = None, refresh: bool = False) -> Dict[str, Any]:
         if self._list_cache is not None and not refresh and category is None:
             return self._list_cache
 
@@ -347,7 +347,7 @@ class AnalyticsAPI(_AnalyticsMethodsMixin):
             self._list_cache = data
         return data
 
-    def info(self, function: str, *, refresh: bool = False) -> Dict[str, Any]:
+    def _info_cached(self, function: str, *, refresh: bool = False) -> Dict[str, Any]:
         if not refresh and function in self._info_cache:
             return self._info_cache[function]
 
@@ -361,7 +361,7 @@ class AnalyticsAPI(_AnalyticsMethodsMixin):
     def help(self, function: Optional[str] = None) -> str:
         if function is None:
             try:
-                listing = self.list()
+                listing = self._list_cached()
                 funcs = listing.get("functions", [])
                 count = listing.get("count", len(funcs))
                 cats = listing.get("categories", [])
@@ -375,7 +375,7 @@ class AnalyticsAPI(_AnalyticsMethodsMixin):
                 logger.debug("Failed to fetch analytics list for help()", exc_info=True)
                 return "Call: client.analytics.<function>(...) or client.analytics.info('<function>')"
 
-        info = self.info(function)
+        info = self._info_cached(function)
         params = info.get("parameters", {}) if isinstance(info, dict) else {}
         common = params.get("common", []) if isinstance(params, dict) else []
         specific = params.get("specific", []) if isinstance(params, dict) else []
@@ -411,7 +411,7 @@ class AnalyticsAPI(_AnalyticsMethodsMixin):
         """
         Search function names by substring.
         """
-        listing = self.list(category=category)
+        listing = self._list_cached(category=category)
         funcs = listing.get("functions", []) if isinstance(listing, dict) else []
         if not isinstance(funcs, list):
             return []
@@ -424,7 +424,7 @@ class AnalyticsAPI(_AnalyticsMethodsMixin):
         """
         Return the structured parameter schema for a function (from analytics.info).
         """
-        info = self.info(function)
+        info = self._info_cached(function)
         params = info.get("parameters", {})
         if isinstance(params, dict):
             return params
@@ -440,7 +440,7 @@ class AnalyticsAPI(_AnalyticsMethodsMixin):
         """
         Return example snippets (python + curl) for calling an analytics function.
         """
-        info = self.info(function)
+        info = self._info_cached(function)
         params = _validate_and_fill_params(info, {"identifiers": identifiers, **overrides})
         python_lines = [
             "import Tepilora as T",
@@ -496,7 +496,7 @@ class AsyncAnalyticsAPI(_AsyncAnalyticsMethodsMixin):
         payload = dict(params)
         action = f"analytics.{name}"
         if strict:
-            info = await self.info(name)
+            info = await self._info_cached(name)
             payload = _normalize_param_names(info, payload)
             payload = _validate_and_fill_params(info, payload)
         effective_format = "arrow" if as_table else response_format
@@ -516,7 +516,7 @@ class AsyncAnalyticsAPI(_AsyncAnalyticsMethodsMixin):
             return _decode_table_from_json(tabular, as_table)
         return result
 
-    async def list(self, *, category: Optional[str] = None, refresh: bool = False) -> Dict[str, Any]:
+    async def _list_cached(self, *, category: Optional[str] = None, refresh: bool = False) -> Dict[str, Any]:
         if self._list_cache is not None and not refresh and category is None:
             return self._list_cache
 
@@ -533,7 +533,7 @@ class AsyncAnalyticsAPI(_AsyncAnalyticsMethodsMixin):
             self._list_cache = data
         return data
 
-    async def info(self, function: str, *, refresh: bool = False) -> Dict[str, Any]:
+    async def _info_cached(self, function: str, *, refresh: bool = False) -> Dict[str, Any]:
         if not refresh and function in self._info_cache:
             return self._info_cache[function]
 
@@ -547,7 +547,7 @@ class AsyncAnalyticsAPI(_AsyncAnalyticsMethodsMixin):
     async def help(self, function: Optional[str] = None) -> str:
         if function is None:
             try:
-                listing = await self.list()
+                listing = await self._list_cached()
                 funcs = listing.get("functions", [])
                 count = listing.get("count", len(funcs))
                 cats = listing.get("categories", [])
@@ -561,7 +561,7 @@ class AsyncAnalyticsAPI(_AsyncAnalyticsMethodsMixin):
                 logger.debug("Failed to fetch analytics list for help()", exc_info=True)
                 return "Call: client.analytics.<function>(...) or client.analytics.info('<function>')"
 
-        info = await self.info(function)
+        info = await self._info_cached(function)
         params = info.get("parameters", {}) if isinstance(info, dict) else {}
         common = params.get("common", []) if isinstance(params, dict) else []
         specific = params.get("specific", []) if isinstance(params, dict) else []
@@ -594,7 +594,7 @@ class AsyncAnalyticsAPI(_AsyncAnalyticsMethodsMixin):
         return "\n".join(lines)
 
     async def search(self, text: str, *, category: Optional[str] = None) -> List[str]:
-        listing = await self.list(category=category)
+        listing = await self._list_cached(category=category)
         funcs = listing.get("functions", []) if isinstance(listing, dict) else []
         if not isinstance(funcs, list):
             return []
@@ -604,7 +604,7 @@ class AsyncAnalyticsAPI(_AsyncAnalyticsMethodsMixin):
         return [f for f in funcs if isinstance(f, str) and q in f.lower()]
 
     async def schema(self, function: str) -> Dict[str, Any]:
-        info = await self.info(function)
+        info = await self._info_cached(function)
         params = info.get("parameters", {})
         if isinstance(params, dict):
             return params

@@ -1,4 +1,4 @@
-from .client import AsyncTepiloraClient, TepiloraClient
+from .client import AsyncTepiloraClient, Client, TepiloraClient
 from ._default_client import close_default_client, configure_default_client
 from .errors import TepiloraAPIError, TepiloraError
 from .models import V3BinaryMeta, V3BinaryResponse, V3Meta, V3Request, V3Response
@@ -27,6 +27,7 @@ __all__ = [
     "AsyncTepiloraClient",
     "AnalyticsAPI",
     "AnalyticsFunction",
+    "Client",
     "TepiloraAPIError",
     "TepiloraClient",
     "TepiloraError",

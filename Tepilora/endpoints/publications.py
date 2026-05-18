@@ -23,13 +23,9 @@ class PublicationsAPI(BaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Get publications by source
+        """Get all publications from a specific institutional source
 
-        Publications from a specific source.
-
-        Args:
-        source_news_id: Source news ID
-        limit: Maximum results"""
+        Returns all publications from a single source institution identified by its source_news_id. Provides a chronological feed of all content published by one institution. Results include title, date, content type, language, and abstract. Used for building institution-specific research feeds and for tracking a particular institution's published investment views over time. Combine with publications.facets to discover available source_news_id values."""
         _payload: Dict[str, Any] = {}
         _payload["source_news_id"] = source_news_id
         if limit is not None:
@@ -43,12 +39,9 @@ class PublicationsAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get publication details
+        """Get full publication details and content by document ID
 
-        Full publication by ID.
-
-        Args:
-        doc_id: Document ID"""
+        Retrieves the complete metadata and content for a single institutional publication identified by its document ID. Returns the full title, source institution, author(s), publication date, content type, language, abstract, body text (when available), related securities (TepiloraCodes mentioned in the publication), and links to the original source. Used when a user selects a publication from the search results to read the full content within the Dashboard."""
         _payload: Dict[str, Any] = {}
         _payload["doc_id"] = doc_id
         return self._call("publications.details", params=_payload, options=options, context=context)
@@ -57,13 +50,13 @@ class PublicationsAPI(BaseAPI):
         self,
         *,
         fields: Optional[List[Any]] = None,
-        limit: Optional[int] = None,
+        limit: Optional[int] = 50,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get publication facets
+        """Get available publication sources, content types, and languages for filtering
 
-        Available sources and types."""
+        Returns the aggregated facets (distinct values and counts) for publication metadata fields: sources (which institutions publish content), content types (research report, market outlook, commentary, whitepaper), and languages. Used to populate filter dropdowns and chips in the publications search UI. Enables building a faceted search experience where users can drill down into specific institutions or content types."""
         _payload: Dict[str, Any] = {}
         if fields is not None:
             _payload["fields"] = fields
@@ -74,64 +67,60 @@ class PublicationsAPI(BaseAPI):
     def latest(
         self,
         *,
-        language: Optional[str] = None,
-        limit: Optional[int] = 20,
         platform: Optional[str] = None,
+        language: Optional[str] = None,
         status: Optional[str] = None,
+        limit: Optional[int] = 20,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Get latest publications
+        """Get the most recently published research reports and institutional content
 
-        Most recent publications.
-
-        Args:
-        limit: Maximum results"""
+        Returns the most recently indexed institutional publications in reverse chronological order. Each entry includes title, source institution, publication date, content type (research report, market outlook, investment commentary, etc.), language, and a brief abstract when available. Filterable by language, platform, and publication status. Used by the Dashboard Publications page for the default latest view and by the AI assistant to surface relevant recent research when answering investment questions."""
         _payload: Dict[str, Any] = {}
-        if language is not None:
-            _payload["language"] = language
-        if limit is not None:
-            _payload["limit"] = limit
         if platform is not None:
             _payload["platform"] = platform
+        if language is not None:
+            _payload["language"] = language
         if status is not None:
             _payload["status"] = status
+        if limit is not None:
+            _payload["limit"] = limit
         return self._call("publications.latest", params=_payload, options=options, context=context, response_format=response_format)
 
     def search(
         self,
         *,
-        query: str,
-        offset: Optional[int] = None,
-        order: Optional[str] = None,
-        limit: Optional[int] = 20,
-        sort: Optional[str] = None,
+        query: Optional[str] = "",
         filters: Optional[Dict[str, Any]] = None,
+        limit: Optional[int] = 50,
+        offset: Optional[int] = 0,
+        sort: Optional[str] = None,
+        order: Optional[str] = "desc",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Search publications
+        """Search research reports and institutional publications with full-text and faceted filtering
 
-        Search research reports and publications.
+        Full-text search across the institutional publications database powered by Tantivy search engine. Indexes research reports, market commentary, investment outlooks, and analysis papers from asset managers, research houses, and financial institutions. Supports advanced query syntax, date range filtering, source filtering, publication type filtering, and language filtering. Returns publication title, source, publication date, content type, language, and relevance score. Results are paginated and sortable by date or relevance. Used by the Dashboard Publications page for research discovery and by AI assistants for grounding investment recommendations with institutional research.
 
-        Args:
-        query: Search query
-        limit: Maximum results
-        filters: Source/type filters"""
+        Examples:
+            >>> client.publications.search(query='market outlook', limit=5)"""
         _payload: Dict[str, Any] = {}
-        _payload["query"] = query
-        if offset is not None:
-            _payload["offset"] = offset
-        if order is not None:
-            _payload["order"] = order
-        if limit is not None:
-            _payload["limit"] = limit
-        if sort is not None:
-            _payload["sort"] = sort
+        if query is not None:
+            _payload["query"] = query
         if filters is not None:
             _payload["filters"] = filters
+        if limit is not None:
+            _payload["limit"] = limit
+        if offset is not None:
+            _payload["offset"] = offset
+        if sort is not None:
+            _payload["sort"] = sort
+        if order is not None:
+            _payload["order"] = order
         return self._call("publications.search", params=_payload, options=options, context=context, response_format=response_format)
 
 
@@ -148,13 +137,9 @@ class AsyncPublicationsAPI(AsyncBaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Get publications by source
+        """Get all publications from a specific institutional source
 
-        Publications from a specific source.
-
-        Args:
-        source_news_id: Source news ID
-        limit: Maximum results"""
+        Returns all publications from a single source institution identified by its source_news_id. Provides a chronological feed of all content published by one institution. Results include title, date, content type, language, and abstract. Used for building institution-specific research feeds and for tracking a particular institution's published investment views over time. Combine with publications.facets to discover available source_news_id values."""
         _payload: Dict[str, Any] = {}
         _payload["source_news_id"] = source_news_id
         if limit is not None:
@@ -168,12 +153,9 @@ class AsyncPublicationsAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get publication details
+        """Get full publication details and content by document ID
 
-        Full publication by ID.
-
-        Args:
-        doc_id: Document ID"""
+        Retrieves the complete metadata and content for a single institutional publication identified by its document ID. Returns the full title, source institution, author(s), publication date, content type, language, abstract, body text (when available), related securities (TepiloraCodes mentioned in the publication), and links to the original source. Used when a user selects a publication from the search results to read the full content within the Dashboard."""
         _payload: Dict[str, Any] = {}
         _payload["doc_id"] = doc_id
         return await self._call("publications.details", params=_payload, options=options, context=context)
@@ -182,13 +164,13 @@ class AsyncPublicationsAPI(AsyncBaseAPI):
         self,
         *,
         fields: Optional[List[Any]] = None,
-        limit: Optional[int] = None,
+        limit: Optional[int] = 50,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get publication facets
+        """Get available publication sources, content types, and languages for filtering
 
-        Available sources and types."""
+        Returns the aggregated facets (distinct values and counts) for publication metadata fields: sources (which institutions publish content), content types (research report, market outlook, commentary, whitepaper), and languages. Used to populate filter dropdowns and chips in the publications search UI. Enables building a faceted search experience where users can drill down into specific institutions or content types."""
         _payload: Dict[str, Any] = {}
         if fields is not None:
             _payload["fields"] = fields
@@ -199,64 +181,60 @@ class AsyncPublicationsAPI(AsyncBaseAPI):
     async def latest(
         self,
         *,
-        language: Optional[str] = None,
-        limit: Optional[int] = 20,
         platform: Optional[str] = None,
+        language: Optional[str] = None,
         status: Optional[str] = None,
+        limit: Optional[int] = 20,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Get latest publications
+        """Get the most recently published research reports and institutional content
 
-        Most recent publications.
-
-        Args:
-        limit: Maximum results"""
+        Returns the most recently indexed institutional publications in reverse chronological order. Each entry includes title, source institution, publication date, content type (research report, market outlook, investment commentary, etc.), language, and a brief abstract when available. Filterable by language, platform, and publication status. Used by the Dashboard Publications page for the default latest view and by the AI assistant to surface relevant recent research when answering investment questions."""
         _payload: Dict[str, Any] = {}
-        if language is not None:
-            _payload["language"] = language
-        if limit is not None:
-            _payload["limit"] = limit
         if platform is not None:
             _payload["platform"] = platform
+        if language is not None:
+            _payload["language"] = language
         if status is not None:
             _payload["status"] = status
+        if limit is not None:
+            _payload["limit"] = limit
         return await self._call("publications.latest", params=_payload, options=options, context=context, response_format=response_format)
 
     async def search(
         self,
         *,
-        query: str,
-        offset: Optional[int] = None,
-        order: Optional[str] = None,
-        limit: Optional[int] = 20,
-        sort: Optional[str] = None,
+        query: Optional[str] = "",
         filters: Optional[Dict[str, Any]] = None,
+        limit: Optional[int] = 50,
+        offset: Optional[int] = 0,
+        sort: Optional[str] = None,
+        order: Optional[str] = "desc",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Search publications
+        """Search research reports and institutional publications with full-text and faceted filtering
 
-        Search research reports and publications.
+        Full-text search across the institutional publications database powered by Tantivy search engine. Indexes research reports, market commentary, investment outlooks, and analysis papers from asset managers, research houses, and financial institutions. Supports advanced query syntax, date range filtering, source filtering, publication type filtering, and language filtering. Returns publication title, source, publication date, content type, language, and relevance score. Results are paginated and sortable by date or relevance. Used by the Dashboard Publications page for research discovery and by AI assistants for grounding investment recommendations with institutional research.
 
-        Args:
-        query: Search query
-        limit: Maximum results
-        filters: Source/type filters"""
+        Examples:
+            >>> await client.publications.search(query='market outlook', limit=5)"""
         _payload: Dict[str, Any] = {}
-        _payload["query"] = query
-        if offset is not None:
-            _payload["offset"] = offset
-        if order is not None:
-            _payload["order"] = order
-        if limit is not None:
-            _payload["limit"] = limit
-        if sort is not None:
-            _payload["sort"] = sort
+        if query is not None:
+            _payload["query"] = query
         if filters is not None:
             _payload["filters"] = filters
+        if limit is not None:
+            _payload["limit"] = limit
+        if offset is not None:
+            _payload["offset"] = offset
+        if sort is not None:
+            _payload["sort"] = sort
+        if order is not None:
+            _payload["order"] = order
         return await self._call("publications.search", params=_payload, options=options, context=context, response_format=response_format)
 
 

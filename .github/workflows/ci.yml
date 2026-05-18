@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "pre-prod"]
   pull_request:
 
 jobs:

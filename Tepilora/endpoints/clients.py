@@ -6,7 +6,7 @@ Regenerate with: python scripts/generate_sdk.py --category clients
 """
 from __future__ import annotations
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 from ._base import AsyncBaseAPI, BaseAPI
 
@@ -17,20 +17,20 @@ class ClientsAPI(BaseAPI):
     def assign_portfolio(
         self,
         *,
-        client_id: str,
-        id: str,
+        client_id: Optional[str] = None,
+        id: Optional[str] = None,
         portfolio_id: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Assign portfolio to client
+        """Link a portfolio to a client
 
-        Args:
-        client_id: Client ID
-        id: Portfolio ID"""
+        Associates an existing portfolio with a client entity. A portfolio can be linked to one client, but a client can have multiple portfolios. Used by advisor workflows when assigning model portfolios to clients."""
         _payload: Dict[str, Any] = {}
-        _payload["client_id"] = client_id
-        _payload["id"] = id
+        if client_id is not None:
+            _payload["client_id"] = client_id
+        if id is not None:
+            _payload["id"] = id
         if portfolio_id is not None:
             _payload["portfolio_id"] = portfolio_id
         return self._call("clients.assign_portfolio", params=_payload, options=options, context=context)
@@ -39,38 +39,36 @@ class ClientsAPI(BaseAPI):
         self,
         *,
         name: str,
-        client_type: Optional[str] = None,
-        contact: Optional[str] = None,
-        members: Optional[str] = None,
+        client_type: Optional[str] = "individual",
+        type_: Optional[str] = None,
+        contact: Optional[Dict[str, Any]] = None,
+        tags: Optional[List[Any]] = None,
         external_id: Optional[str] = None,
         notes: Optional[str] = None,
-        tags: Optional[str] = None,
-        type_: Optional[str] = None,
-        visibility: Optional[str] = None,
+        members: Optional[List[Any]] = None,
+        visibility: Optional[str] = "private",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Create client
+        """Create a new client entity
 
-        Args:
-        name: Client name
-        external_id: External system ID"""
+        Creates a new client record in the Clients MongoDB collection. A client represents an individual investor or entity managed by an advisor. Includes name, email, phone, tax ID, MiFID profile reference, risk tolerance, and custom metadata. Clients can be linked to portfolios via clients.assign_portfolio. Used by advisor CRM workflows and by the Dashboard client management page."""
         _payload: Dict[str, Any] = {}
         _payload["name"] = name
         if client_type is not None:
             _payload["client_type"] = client_type
+        if type_ is not None:
+            _payload["type"] = type_
         if contact is not None:
             _payload["contact"] = contact
-        if members is not None:
-            _payload["members"] = members
+        if tags is not None:
+            _payload["tags"] = tags
         if external_id is not None:
             _payload["external_id"] = external_id
         if notes is not None:
             _payload["notes"] = notes
-        if tags is not None:
-            _payload["tags"] = tags
-        if type_ is not None:
-            _payload["type"] = type_
+        if members is not None:
+            _payload["members"] = members
         if visibility is not None:
             _payload["visibility"] = visibility
         return self._call("clients.create", params=_payload, options=options, context=context)
@@ -78,17 +76,17 @@ class ClientsAPI(BaseAPI):
     def delete(
         self,
         *,
-        client_id: str,
+        client_id: Optional[str] = None,
         id: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Delete client
+        """Delete a client and optionally their linked data
 
-        Args:
-        client_id: Client ID"""
+        Removes a client record from the Clients collection. Optionally cascades to unlink associated portfolios and archive MiFID profiles. Creates an audit trail entry. Used by the Dashboard client management."""
         _payload: Dict[str, Any] = {}
-        _payload["client_id"] = client_id
+        if client_id is not None:
+            _payload["client_id"] = client_id
         if id is not None:
             _payload["id"] = id
         return self._call("clients.delete", params=_payload, options=options, context=context)
@@ -96,18 +94,18 @@ class ClientsAPI(BaseAPI):
     def get(
         self,
         *,
-        client_id: str,
+        client_id: Optional[str] = None,
         id: Optional[str] = None,
-        include_portfolios: Optional[bool] = None,
+        include_portfolios: Optional[bool] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get client
+        """Get full details for a specific client
 
-        Args:
-        client_id: Client ID"""
+        Returns the complete client record including personal info, linked portfolios, MiFID profile reference, risk parameters, and all custom metadata. Used by the Dashboard client detail page."""
         _payload: Dict[str, Any] = {}
-        _payload["client_id"] = client_id
+        if client_id is not None:
+            _payload["client_id"] = client_id
         if id is not None:
             _payload["id"] = id
         if include_portfolios is not None:
@@ -117,63 +115,59 @@ class ClientsAPI(BaseAPI):
     def list(
         self,
         *,
-        client_type: Optional[str] = None,
-        order: Optional[str] = None,
         search: Optional[str] = None,
-        sort: Optional[str] = None,
         status: Optional[str] = "active",
+        tags: Optional[List[Any]] = None,
+        client_type: Optional[str] = None,
+        type_: Optional[str] = None,
+        sort: Optional[str] = "createdAt",
+        order: Optional[str] = "desc",
         limit: Optional[int] = 50,
         offset: Optional[int] = 0,
-        tags: Optional[str] = None,
-        type_: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """List clients
+        """List all clients for the current advisor with filtering
 
-        Args:
-        search: Search in name
-        status: active|inactive|all
-        limit: Maximum results
-        offset: Pagination offset"""
+        Returns paginated list of client records belonging to the authenticated advisor. Filterable by name search and sortable by creation date or name. Each entry includes client ID, name, email, linked portfolio count, and MiFID profile status. Used by the Dashboard client list page."""
         _payload: Dict[str, Any] = {}
-        if client_type is not None:
-            _payload["client_type"] = client_type
-        if order is not None:
-            _payload["order"] = order
         if search is not None:
             _payload["search"] = search
-        if sort is not None:
-            _payload["sort"] = sort
         if status is not None:
             _payload["status"] = status
+        if tags is not None:
+            _payload["tags"] = tags
+        if client_type is not None:
+            _payload["client_type"] = client_type
+        if type_ is not None:
+            _payload["type"] = type_
+        if sort is not None:
+            _payload["sort"] = sort
+        if order is not None:
+            _payload["order"] = order
         if limit is not None:
             _payload["limit"] = limit
         if offset is not None:
             _payload["offset"] = offset
-        if tags is not None:
-            _payload["tags"] = tags
-        if type_ is not None:
-            _payload["type"] = type_
         return self._call("clients.list", params=_payload, options=options, context=context, response_format=response_format)
 
     def portfolios(
         self,
         *,
-        client_id: str,
+        client_id: Optional[str] = None,
         id: Optional[str] = None,
-        include_summary: Optional[bool] = None,
+        include_summary: Optional[bool] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """List client portfolios
+        """List all portfolios linked to a specific client
 
-        Args:
-        client_id: Client ID"""
+        Returns all portfolios associated with a given client ID, including portfolio metadata (name, type, creation date, last modified, current value summary). Used by the Dashboard client detail page to show the client's portfolio overview."""
         _payload: Dict[str, Any] = {}
-        _payload["client_id"] = client_id
+        if client_id is not None:
+            _payload["client_id"] = client_id
         if id is not None:
             _payload["id"] = id
         if include_summary is not None:
@@ -183,66 +177,64 @@ class ClientsAPI(BaseAPI):
     def unassign_portfolio(
         self,
         *,
-        id: str,
         portfolio_id: Optional[str] = None,
+        id: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Unassign portfolio from client
+        """Remove a portfolio link from a client
 
-        Args:
-        id: Portfolio ID"""
+        Removes the association between a portfolio and a client without deleting either entity. Used when reassigning portfolios or during client offboarding."""
         _payload: Dict[str, Any] = {}
-        _payload["id"] = id
         if portfolio_id is not None:
             _payload["portfolio_id"] = portfolio_id
+        if id is not None:
+            _payload["id"] = id
         return self._call("clients.unassign_portfolio", params=_payload, options=options, context=context)
 
     def update(
         self,
         *,
-        client_id: str,
-        client_type: Optional[str] = None,
-        contact: Optional[str] = None,
-        external_id: Optional[str] = None,
+        client_id: Optional[str] = None,
         id: Optional[str] = None,
-        members: Optional[str] = None,
         name: Optional[str] = None,
-        notes: Optional[str] = None,
-        status: Optional[str] = None,
-        tags: Optional[str] = None,
+        client_type: Optional[str] = None,
         type_: Optional[str] = None,
+        contact: Optional[Dict[str, Any]] = None,
+        tags: Optional[List[Any]] = None,
+        external_id: Optional[str] = None,
+        notes: Optional[str] = None,
+        members: Optional[List[Any]] = None,
+        status: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Update client
+        """Update client details
 
-        Args:
-        client_id: Client ID
-        name: New name
-        status: New status"""
+        Modifies an existing client record. Can update name, contact info, risk parameters, and custom metadata. Creates an audit trail entry. Used by the Dashboard client edit form."""
         _payload: Dict[str, Any] = {}
-        _payload["client_id"] = client_id
-        if client_type is not None:
-            _payload["client_type"] = client_type
-        if contact is not None:
-            _payload["contact"] = contact
-        if external_id is not None:
-            _payload["external_id"] = external_id
+        if client_id is not None:
+            _payload["client_id"] = client_id
         if id is not None:
             _payload["id"] = id
-        if members is not None:
-            _payload["members"] = members
         if name is not None:
             _payload["name"] = name
-        if notes is not None:
-            _payload["notes"] = notes
-        if status is not None:
-            _payload["status"] = status
-        if tags is not None:
-            _payload["tags"] = tags
+        if client_type is not None:
+            _payload["client_type"] = client_type
         if type_ is not None:
             _payload["type"] = type_
+        if contact is not None:
+            _payload["contact"] = contact
+        if tags is not None:
+            _payload["tags"] = tags
+        if external_id is not None:
+            _payload["external_id"] = external_id
+        if notes is not None:
+            _payload["notes"] = notes
+        if members is not None:
+            _payload["members"] = members
+        if status is not None:
+            _payload["status"] = status
         return self._call("clients.update", params=_payload, options=options, context=context)
 
 
@@ -253,20 +245,20 @@ class AsyncClientsAPI(AsyncBaseAPI):
     async def assign_portfolio(
         self,
         *,
-        client_id: str,
-        id: str,
+        client_id: Optional[str] = None,
+        id: Optional[str] = None,
         portfolio_id: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Assign portfolio to client
+        """Link a portfolio to a client
 
-        Args:
-        client_id: Client ID
-        id: Portfolio ID"""
+        Associates an existing portfolio with a client entity. A portfolio can be linked to one client, but a client can have multiple portfolios. Used by advisor workflows when assigning model portfolios to clients."""
         _payload: Dict[str, Any] = {}
-        _payload["client_id"] = client_id
-        _payload["id"] = id
+        if client_id is not None:
+            _payload["client_id"] = client_id
+        if id is not None:
+            _payload["id"] = id
         if portfolio_id is not None:
             _payload["portfolio_id"] = portfolio_id
         return await self._call("clients.assign_portfolio", params=_payload, options=options, context=context)
@@ -275,38 +267,36 @@ class AsyncClientsAPI(AsyncBaseAPI):
         self,
         *,
         name: str,
-        client_type: Optional[str] = None,
-        contact: Optional[str] = None,
-        members: Optional[str] = None,
+        client_type: Optional[str] = "individual",
+        type_: Optional[str] = None,
+        contact: Optional[Dict[str, Any]] = None,
+        tags: Optional[List[Any]] = None,
         external_id: Optional[str] = None,
         notes: Optional[str] = None,
-        tags: Optional[str] = None,
-        type_: Optional[str] = None,
-        visibility: Optional[str] = None,
+        members: Optional[List[Any]] = None,
+        visibility: Optional[str] = "private",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Create client
+        """Create a new client entity
 
-        Args:
-        name: Client name
-        external_id: External system ID"""
+        Creates a new client record in the Clients MongoDB collection. A client represents an individual investor or entity managed by an advisor. Includes name, email, phone, tax ID, MiFID profile reference, risk tolerance, and custom metadata. Clients can be linked to portfolios via clients.assign_portfolio. Used by advisor CRM workflows and by the Dashboard client management page."""
         _payload: Dict[str, Any] = {}
         _payload["name"] = name
         if client_type is not None:
             _payload["client_type"] = client_type
+        if type_ is not None:
+            _payload["type"] = type_
         if contact is not None:
             _payload["contact"] = contact
-        if members is not None:
-            _payload["members"] = members
+        if tags is not None:
+            _payload["tags"] = tags
         if external_id is not None:
             _payload["external_id"] = external_id
         if notes is not None:
             _payload["notes"] = notes
-        if tags is not None:
-            _payload["tags"] = tags
-        if type_ is not None:
-            _payload["type"] = type_
+        if members is not None:
+            _payload["members"] = members
         if visibility is not None:
             _payload["visibility"] = visibility
         return await self._call("clients.create", params=_payload, options=options, context=context)
@@ -314,17 +304,17 @@ class AsyncClientsAPI(AsyncBaseAPI):
     async def delete(
         self,
         *,
-        client_id: str,
+        client_id: Optional[str] = None,
         id: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Delete client
+        """Delete a client and optionally their linked data
 
-        Args:
-        client_id: Client ID"""
+        Removes a client record from the Clients collection. Optionally cascades to unlink associated portfolios and archive MiFID profiles. Creates an audit trail entry. Used by the Dashboard client management."""
         _payload: Dict[str, Any] = {}
-        _payload["client_id"] = client_id
+        if client_id is not None:
+            _payload["client_id"] = client_id
         if id is not None:
             _payload["id"] = id
         return await self._call("clients.delete", params=_payload, options=options, context=context)
@@ -332,18 +322,18 @@ class AsyncClientsAPI(AsyncBaseAPI):
     async def get(
         self,
         *,
-        client_id: str,
+        client_id: Optional[str] = None,
         id: Optional[str] = None,
-        include_portfolios: Optional[bool] = None,
+        include_portfolios: Optional[bool] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get client
+        """Get full details for a specific client
 
-        Args:
-        client_id: Client ID"""
+        Returns the complete client record including personal info, linked portfolios, MiFID profile reference, risk parameters, and all custom metadata. Used by the Dashboard client detail page."""
         _payload: Dict[str, Any] = {}
-        _payload["client_id"] = client_id
+        if client_id is not None:
+            _payload["client_id"] = client_id
         if id is not None:
             _payload["id"] = id
         if include_portfolios is not None:
@@ -353,63 +343,59 @@ class AsyncClientsAPI(AsyncBaseAPI):
     async def list(
         self,
         *,
-        client_type: Optional[str] = None,
-        order: Optional[str] = None,
         search: Optional[str] = None,
-        sort: Optional[str] = None,
         status: Optional[str] = "active",
+        tags: Optional[List[Any]] = None,
+        client_type: Optional[str] = None,
+        type_: Optional[str] = None,
+        sort: Optional[str] = "createdAt",
+        order: Optional[str] = "desc",
         limit: Optional[int] = 50,
         offset: Optional[int] = 0,
-        tags: Optional[str] = None,
-        type_: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """List clients
+        """List all clients for the current advisor with filtering
 
-        Args:
-        search: Search in name
-        status: active|inactive|all
-        limit: Maximum results
-        offset: Pagination offset"""
+        Returns paginated list of client records belonging to the authenticated advisor. Filterable by name search and sortable by creation date or name. Each entry includes client ID, name, email, linked portfolio count, and MiFID profile status. Used by the Dashboard client list page."""
         _payload: Dict[str, Any] = {}
-        if client_type is not None:
-            _payload["client_type"] = client_type
-        if order is not None:
-            _payload["order"] = order
         if search is not None:
             _payload["search"] = search
-        if sort is not None:
-            _payload["sort"] = sort
         if status is not None:
             _payload["status"] = status
+        if tags is not None:
+            _payload["tags"] = tags
+        if client_type is not None:
+            _payload["client_type"] = client_type
+        if type_ is not None:
+            _payload["type"] = type_
+        if sort is not None:
+            _payload["sort"] = sort
+        if order is not None:
+            _payload["order"] = order
         if limit is not None:
             _payload["limit"] = limit
         if offset is not None:
             _payload["offset"] = offset
-        if tags is not None:
-            _payload["tags"] = tags
-        if type_ is not None:
-            _payload["type"] = type_
         return await self._call("clients.list", params=_payload, options=options, context=context, response_format=response_format)
 
     async def portfolios(
         self,
         *,
-        client_id: str,
+        client_id: Optional[str] = None,
         id: Optional[str] = None,
-        include_summary: Optional[bool] = None,
+        include_summary: Optional[bool] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """List client portfolios
+        """List all portfolios linked to a specific client
 
-        Args:
-        client_id: Client ID"""
+        Returns all portfolios associated with a given client ID, including portfolio metadata (name, type, creation date, last modified, current value summary). Used by the Dashboard client detail page to show the client's portfolio overview."""
         _payload: Dict[str, Any] = {}
-        _payload["client_id"] = client_id
+        if client_id is not None:
+            _payload["client_id"] = client_id
         if id is not None:
             _payload["id"] = id
         if include_summary is not None:
@@ -419,66 +405,64 @@ class AsyncClientsAPI(AsyncBaseAPI):
     async def unassign_portfolio(
         self,
         *,
-        id: str,
         portfolio_id: Optional[str] = None,
+        id: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Unassign portfolio from client
+        """Remove a portfolio link from a client
 
-        Args:
-        id: Portfolio ID"""
+        Removes the association between a portfolio and a client without deleting either entity. Used when reassigning portfolios or during client offboarding."""
         _payload: Dict[str, Any] = {}
-        _payload["id"] = id
         if portfolio_id is not None:
             _payload["portfolio_id"] = portfolio_id
+        if id is not None:
+            _payload["id"] = id
         return await self._call("clients.unassign_portfolio", params=_payload, options=options, context=context)
 
     async def update(
         self,
         *,
-        client_id: str,
-        client_type: Optional[str] = None,
-        contact: Optional[str] = None,
-        external_id: Optional[str] = None,
+        client_id: Optional[str] = None,
         id: Optional[str] = None,
-        members: Optional[str] = None,
         name: Optional[str] = None,
-        notes: Optional[str] = None,
-        status: Optional[str] = None,
-        tags: Optional[str] = None,
+        client_type: Optional[str] = None,
         type_: Optional[str] = None,
+        contact: Optional[Dict[str, Any]] = None,
+        tags: Optional[List[Any]] = None,
+        external_id: Optional[str] = None,
+        notes: Optional[str] = None,
+        members: Optional[List[Any]] = None,
+        status: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Update client
+        """Update client details
 
-        Args:
-        client_id: Client ID
-        name: New name
-        status: New status"""
+        Modifies an existing client record. Can update name, contact info, risk parameters, and custom metadata. Creates an audit trail entry. Used by the Dashboard client edit form."""
         _payload: Dict[str, Any] = {}
-        _payload["client_id"] = client_id
-        if client_type is not None:
-            _payload["client_type"] = client_type
-        if contact is not None:
-            _payload["contact"] = contact
-        if external_id is not None:
-            _payload["external_id"] = external_id
+        if client_id is not None:
+            _payload["client_id"] = client_id
         if id is not None:
             _payload["id"] = id
-        if members is not None:
-            _payload["members"] = members
         if name is not None:
             _payload["name"] = name
-        if notes is not None:
-            _payload["notes"] = notes
-        if status is not None:
-            _payload["status"] = status
-        if tags is not None:
-            _payload["tags"] = tags
+        if client_type is not None:
+            _payload["client_type"] = client_type
         if type_ is not None:
             _payload["type"] = type_
+        if contact is not None:
+            _payload["contact"] = contact
+        if tags is not None:
+            _payload["tags"] = tags
+        if external_id is not None:
+            _payload["external_id"] = external_id
+        if notes is not None:
+            _payload["notes"] = notes
+        if members is not None:
+            _payload["members"] = members
+        if status is not None:
+            _payload["status"] = status
         return await self._call("clients.update", params=_payload, options=options, context=context)
 
 

@@ -12,7 +12,7 @@ from ._base import AsyncBaseAPI, BaseAPI
 
 
 class OptionsAPI(BaseAPI):
-    """Options namespace: greeks, iv, payoff, price, pricing, strategies, strategy."""
+    """Options namespace: greeks, iv, payoff, price, strategies, strategy."""
 
     def greeks(
         self,
@@ -21,33 +21,24 @@ class OptionsAPI(BaseAPI):
         strike: float,
         time_to_expiry: float,
         volatility: float,
-        risk_free_rate: Optional[float] = 0.03,
         option_type: Optional[str] = "call",
+        risk_free_rate: Optional[float] = 0.03,
         dividend_yield: Optional[float] = 0.0,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Calculate Greeks
+        """Calculate all option Greeks (delta, gamma, theta, vega, rho)
 
-        Delta, gamma, theta, vega, rho.
-
-        Args:
-        spot: Underlying price
-        strike: Strike price
-        time_to_expiry: Time to expiry (years)
-        volatility: Volatility
-        risk_free_rate: Risk-free rate
-        option_type: call|put
-        dividend_yield: Dividend yield"""
+        Computes the full set of option sensitivity measures (Greeks) using the Black-Scholes model: Delta (price sensitivity to underlying), Gamma (delta sensitivity), Theta (time decay per day), Vega (volatility sensitivity), and Rho (interest rate sensitivity). Pure mathematical calculation. Used by the Dashboard options analysis view, by hedging workflows, and by risk management."""
         _payload: Dict[str, Any] = {}
         _payload["spot"] = spot
         _payload["strike"] = strike
         _payload["time_to_expiry"] = time_to_expiry
         _payload["volatility"] = volatility
-        if risk_free_rate is not None:
-            _payload["risk_free_rate"] = risk_free_rate
         if option_type is not None:
             _payload["option_type"] = option_type
+        if risk_free_rate is not None:
+            _payload["risk_free_rate"] = risk_free_rate
         if dividend_yield is not None:
             _payload["dividend_yield"] = dividend_yield
         return self._call("options.greeks", params=_payload, options=options, context=context)
@@ -59,33 +50,24 @@ class OptionsAPI(BaseAPI):
         spot: float,
         strike: float,
         time_to_expiry: float,
-        risk_free_rate: Optional[float] = 0.03,
         option_type: Optional[str] = "call",
+        risk_free_rate: Optional[float] = 0.03,
         dividend_yield: Optional[float] = 0.0,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Implied volatility
+        """Calculate implied volatility from an observed option market price
 
-        Calculate implied volatility from price.
-
-        Args:
-        market_price: Option market price
-        spot: Underlying price
-        strike: Strike price
-        time_to_expiry: Time to expiry (years)
-        risk_free_rate: Risk-free rate
-        option_type: call|put
-        dividend_yield: Dividend yield"""
+        Reverse-engineers the implied volatility from an observed market price using Newton-Raphson iteration on the Black-Scholes model. Given the market price, spot, strike, time to expiry, and risk-free rate, finds the volatility that produces the observed price. Returns implied volatility as annualized decimal. Used for volatility surface construction and by the Dashboard options analysis."""
         _payload: Dict[str, Any] = {}
         _payload["market_price"] = market_price
         _payload["spot"] = spot
         _payload["strike"] = strike
         _payload["time_to_expiry"] = time_to_expiry
-        if risk_free_rate is not None:
-            _payload["risk_free_rate"] = risk_free_rate
         if option_type is not None:
             _payload["option_type"] = option_type
+        if risk_free_rate is not None:
+            _payload["risk_free_rate"] = risk_free_rate
         if dividend_yield is not None:
             _payload["dividend_yield"] = dividend_yield
         return self._call("options.iv", params=_payload, options=options, context=context)
@@ -94,28 +76,23 @@ class OptionsAPI(BaseAPI):
         self,
         *,
         legs: List[Any],
-        num_points: Optional[str] = None,
-        spot_range: Optional[List[Any]] = None,
+        spot_range: Optional[float] = None,
         spot: Optional[float] = None,
+        num_points: Optional[int] = 50,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Calculate payoff
+        """Generate the payoff diagram data for an option or strategy at expiry
 
-        Calculate payoff at expiry.
-
-        Args:
-        legs: Strategy legs
-        spot_range: Spot price range [min, max]
-        spot: Current spot price"""
+        Calculates the profit/loss at expiration across a range of underlying prices for a single option or multi-leg strategy. Returns an array of (underlying_price, payoff) pairs suitable for charting. Shows breakeven points, max profit, max loss zones. Used by the Dashboard to render interactive payoff diagrams."""
         _payload: Dict[str, Any] = {}
         _payload["legs"] = legs
-        if num_points is not None:
-            _payload["num_points"] = num_points
         if spot_range is not None:
             _payload["spot_range"] = spot_range
         if spot is not None:
             _payload["spot"] = spot
+        if num_points is not None:
+            _payload["num_points"] = num_points
         return self._call("options.payoff", params=_payload, options=options, context=context)
 
     def price(
@@ -125,91 +102,27 @@ class OptionsAPI(BaseAPI):
         strike: float,
         time_to_expiry: float,
         volatility: float,
-        risk_free_rate: Optional[float] = 0.03,
         option_type: Optional[str] = "call",
+        risk_free_rate: Optional[float] = 0.03,
         dividend_yield: Optional[float] = 0.0,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Price option
+        """Price a European option using the Black-Scholes model
 
-        Calculate option price using Black-Scholes.
-
-        Args:
-        spot: Underlying price
-        strike: Strike price
-        time_to_expiry: Time to expiry (years)
-        volatility: Volatility
-        risk_free_rate: Risk-free rate
-        option_type: call|put
-        dividend_yield: Dividend yield"""
+        Calculates the theoretical price of a European call or put option using the Black-Scholes-Merton model. Inputs: spot price (S), strike price (K), time to expiry (T in years), risk-free rate (r), volatility (sigma), and optional dividend yield. Returns option price, intrinsic value, and time value. Pure mathematical calculation — no database lookup required. Used by the Dashboard options pricer and by strategy analysis workflows."""
         _payload: Dict[str, Any] = {}
         _payload["spot"] = spot
         _payload["strike"] = strike
         _payload["time_to_expiry"] = time_to_expiry
         _payload["volatility"] = volatility
-        if risk_free_rate is not None:
-            _payload["risk_free_rate"] = risk_free_rate
         if option_type is not None:
             _payload["option_type"] = option_type
+        if risk_free_rate is not None:
+            _payload["risk_free_rate"] = risk_free_rate
         if dividend_yield is not None:
             _payload["dividend_yield"] = dividend_yield
         return self._call("options.price", params=_payload, options=options, context=context)
-
-    def pricing(
-        self,
-        *,
-        spot: float,
-        strike: float,
-        time_to_expiry: float,
-        volatility: float,
-        dividend_yield: Optional[str] = None,
-        legs: Optional[str] = None,
-        market_price: Optional[str] = None,
-        num_points: Optional[str] = None,
-        option_type: Optional[str] = None,
-        risk_free_rate: Optional[str] = None,
-        spot_range: Optional[str] = None,
-        strategy_type: Optional[str] = None,
-        options: Optional[Dict[str, Any]] = None,
-        context: Optional[Dict[str, Any]] = None,
-    ) -> Any:
-        """Price option (alias of options.price)
-
-        Alias for options.price. Use options.price instead.
-
-        .. deprecated:: 3.2.0
-            Use options.price instead.
-
-        Args:
-        spot: Underlying price
-        strike: Strike price
-        time_to_expiry: Time to expiry (years)
-        volatility: Volatility"""
-        import warnings
-        warnings.warn("options.pricing is deprecated: Use options.price instead.", DeprecationWarning, stacklevel=2)
-        _payload: Dict[str, Any] = {}
-        _payload["spot"] = spot
-        _payload["strike"] = strike
-        _payload["time_to_expiry"] = time_to_expiry
-        _payload["volatility"] = volatility
-        if dividend_yield is not None:
-            _payload["dividend_yield"] = dividend_yield
-        if legs is not None:
-            _payload["legs"] = legs
-        if market_price is not None:
-            _payload["market_price"] = market_price
-        if num_points is not None:
-            _payload["num_points"] = num_points
-        if option_type is not None:
-            _payload["option_type"] = option_type
-        if risk_free_rate is not None:
-            _payload["risk_free_rate"] = risk_free_rate
-        if spot_range is not None:
-            _payload["spot_range"] = spot_range
-        if strategy_type is not None:
-            _payload["strategy_type"] = strategy_type
-        return self._call("options.pricing", params=_payload, options=options, context=context)
 
     def strategies(
         self,
@@ -217,9 +130,9 @@ class OptionsAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """List strategies
+        """List available pre-built option strategy templates
 
-        List predefined option strategies."""
+        Returns the catalog of pre-built option strategy templates with their descriptions, leg configurations, and typical use cases. Includes: covered call, protective put, bull/bear call/put spread, straddle, strangle, butterfly, iron condor, collar, and more. Each template shows the number of legs, directional bias, and risk/reward profile. Used by the Dashboard strategy selector dropdown."""
         _payload: Dict[str, Any] = {}
         return self._call("options.strategies", params=_payload, options=options, context=context)
 
@@ -228,44 +141,34 @@ class OptionsAPI(BaseAPI):
         *,
         strategy_type: str,
         spot: float,
-        dividend_yield: Optional[str] = None,
+        volatility: float,
+        time_to_expiry: float,
         legs: Optional[List[Any]] = None,
-        volatility: Optional[float] = None,
-        time_to_expiry: Optional[float] = None,
         risk_free_rate: Optional[float] = 0.03,
+        dividend_yield: Optional[float] = 0.0,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Price strategy
+        """Analyze a multi-leg option strategy with combined Greeks and payoff
 
-        Price multi-leg option strategy.
-
-        Args:
-        strategy_type: Strategy type
-        spot: Underlying price
-        legs: Strategy legs (for custom)
-        volatility: Volatility
-        time_to_expiry: Time to expiry
-        risk_free_rate: Risk-free rate"""
+        Analyzes a custom multi-leg option strategy (straddle, strangle, spread, butterfly, condor, etc.). Each leg specifies option type, strike, quantity, and position (long/short). Returns combined Greeks, net premium, max profit, max loss, breakeven points, and probability of profit. Also supports named strategies via strategy_type parameter. Used by the Dashboard strategy builder."""
         _payload: Dict[str, Any] = {}
         _payload["strategy_type"] = strategy_type
         _payload["spot"] = spot
-        if dividend_yield is not None:
-            _payload["dividend_yield"] = dividend_yield
+        _payload["volatility"] = volatility
+        _payload["time_to_expiry"] = time_to_expiry
         if legs is not None:
             _payload["legs"] = legs
-        if volatility is not None:
-            _payload["volatility"] = volatility
-        if time_to_expiry is not None:
-            _payload["time_to_expiry"] = time_to_expiry
         if risk_free_rate is not None:
             _payload["risk_free_rate"] = risk_free_rate
+        if dividend_yield is not None:
+            _payload["dividend_yield"] = dividend_yield
         return self._call("options.strategy", params=_payload, options=options, context=context)
 
 
 
 class AsyncOptionsAPI(AsyncBaseAPI):
-    """Options namespace: greeks, iv, payoff, price, pricing, strategies, strategy."""
+    """Options namespace: greeks, iv, payoff, price, strategies, strategy."""
 
     async def greeks(
         self,
@@ -274,33 +177,24 @@ class AsyncOptionsAPI(AsyncBaseAPI):
         strike: float,
         time_to_expiry: float,
         volatility: float,
-        risk_free_rate: Optional[float] = 0.03,
         option_type: Optional[str] = "call",
+        risk_free_rate: Optional[float] = 0.03,
         dividend_yield: Optional[float] = 0.0,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Calculate Greeks
+        """Calculate all option Greeks (delta, gamma, theta, vega, rho)
 
-        Delta, gamma, theta, vega, rho.
-
-        Args:
-        spot: Underlying price
-        strike: Strike price
-        time_to_expiry: Time to expiry (years)
-        volatility: Volatility
-        risk_free_rate: Risk-free rate
-        option_type: call|put
-        dividend_yield: Dividend yield"""
+        Computes the full set of option sensitivity measures (Greeks) using the Black-Scholes model: Delta (price sensitivity to underlying), Gamma (delta sensitivity), Theta (time decay per day), Vega (volatility sensitivity), and Rho (interest rate sensitivity). Pure mathematical calculation. Used by the Dashboard options analysis view, by hedging workflows, and by risk management."""
         _payload: Dict[str, Any] = {}
         _payload["spot"] = spot
         _payload["strike"] = strike
         _payload["time_to_expiry"] = time_to_expiry
         _payload["volatility"] = volatility
-        if risk_free_rate is not None:
-            _payload["risk_free_rate"] = risk_free_rate
         if option_type is not None:
             _payload["option_type"] = option_type
+        if risk_free_rate is not None:
+            _payload["risk_free_rate"] = risk_free_rate
         if dividend_yield is not None:
             _payload["dividend_yield"] = dividend_yield
         return await self._call("options.greeks", params=_payload, options=options, context=context)
@@ -312,33 +206,24 @@ class AsyncOptionsAPI(AsyncBaseAPI):
         spot: float,
         strike: float,
         time_to_expiry: float,
-        risk_free_rate: Optional[float] = 0.03,
         option_type: Optional[str] = "call",
+        risk_free_rate: Optional[float] = 0.03,
         dividend_yield: Optional[float] = 0.0,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Implied volatility
+        """Calculate implied volatility from an observed option market price
 
-        Calculate implied volatility from price.
-
-        Args:
-        market_price: Option market price
-        spot: Underlying price
-        strike: Strike price
-        time_to_expiry: Time to expiry (years)
-        risk_free_rate: Risk-free rate
-        option_type: call|put
-        dividend_yield: Dividend yield"""
+        Reverse-engineers the implied volatility from an observed market price using Newton-Raphson iteration on the Black-Scholes model. Given the market price, spot, strike, time to expiry, and risk-free rate, finds the volatility that produces the observed price. Returns implied volatility as annualized decimal. Used for volatility surface construction and by the Dashboard options analysis."""
         _payload: Dict[str, Any] = {}
         _payload["market_price"] = market_price
         _payload["spot"] = spot
         _payload["strike"] = strike
         _payload["time_to_expiry"] = time_to_expiry
-        if risk_free_rate is not None:
-            _payload["risk_free_rate"] = risk_free_rate
         if option_type is not None:
             _payload["option_type"] = option_type
+        if risk_free_rate is not None:
+            _payload["risk_free_rate"] = risk_free_rate
         if dividend_yield is not None:
             _payload["dividend_yield"] = dividend_yield
         return await self._call("options.iv", params=_payload, options=options, context=context)
@@ -347,28 +232,23 @@ class AsyncOptionsAPI(AsyncBaseAPI):
         self,
         *,
         legs: List[Any],
-        num_points: Optional[str] = None,
-        spot_range: Optional[List[Any]] = None,
+        spot_range: Optional[float] = None,
         spot: Optional[float] = None,
+        num_points: Optional[int] = 50,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Calculate payoff
+        """Generate the payoff diagram data for an option or strategy at expiry
 
-        Calculate payoff at expiry.
-
-        Args:
-        legs: Strategy legs
-        spot_range: Spot price range [min, max]
-        spot: Current spot price"""
+        Calculates the profit/loss at expiration across a range of underlying prices for a single option or multi-leg strategy. Returns an array of (underlying_price, payoff) pairs suitable for charting. Shows breakeven points, max profit, max loss zones. Used by the Dashboard to render interactive payoff diagrams."""
         _payload: Dict[str, Any] = {}
         _payload["legs"] = legs
-        if num_points is not None:
-            _payload["num_points"] = num_points
         if spot_range is not None:
             _payload["spot_range"] = spot_range
         if spot is not None:
             _payload["spot"] = spot
+        if num_points is not None:
+            _payload["num_points"] = num_points
         return await self._call("options.payoff", params=_payload, options=options, context=context)
 
     async def price(
@@ -378,91 +258,27 @@ class AsyncOptionsAPI(AsyncBaseAPI):
         strike: float,
         time_to_expiry: float,
         volatility: float,
-        risk_free_rate: Optional[float] = 0.03,
         option_type: Optional[str] = "call",
+        risk_free_rate: Optional[float] = 0.03,
         dividend_yield: Optional[float] = 0.0,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Price option
+        """Price a European option using the Black-Scholes model
 
-        Calculate option price using Black-Scholes.
-
-        Args:
-        spot: Underlying price
-        strike: Strike price
-        time_to_expiry: Time to expiry (years)
-        volatility: Volatility
-        risk_free_rate: Risk-free rate
-        option_type: call|put
-        dividend_yield: Dividend yield"""
+        Calculates the theoretical price of a European call or put option using the Black-Scholes-Merton model. Inputs: spot price (S), strike price (K), time to expiry (T in years), risk-free rate (r), volatility (sigma), and optional dividend yield. Returns option price, intrinsic value, and time value. Pure mathematical calculation — no database lookup required. Used by the Dashboard options pricer and by strategy analysis workflows."""
         _payload: Dict[str, Any] = {}
         _payload["spot"] = spot
         _payload["strike"] = strike
         _payload["time_to_expiry"] = time_to_expiry
         _payload["volatility"] = volatility
-        if risk_free_rate is not None:
-            _payload["risk_free_rate"] = risk_free_rate
         if option_type is not None:
             _payload["option_type"] = option_type
+        if risk_free_rate is not None:
+            _payload["risk_free_rate"] = risk_free_rate
         if dividend_yield is not None:
             _payload["dividend_yield"] = dividend_yield
         return await self._call("options.price", params=_payload, options=options, context=context)
-
-    async def pricing(
-        self,
-        *,
-        spot: float,
-        strike: float,
-        time_to_expiry: float,
-        volatility: float,
-        dividend_yield: Optional[str] = None,
-        legs: Optional[str] = None,
-        market_price: Optional[str] = None,
-        num_points: Optional[str] = None,
-        option_type: Optional[str] = None,
-        risk_free_rate: Optional[str] = None,
-        spot_range: Optional[str] = None,
-        strategy_type: Optional[str] = None,
-        options: Optional[Dict[str, Any]] = None,
-        context: Optional[Dict[str, Any]] = None,
-    ) -> Any:
-        """Price option (alias of options.price)
-
-        Alias for options.price. Use options.price instead.
-
-        .. deprecated:: 3.2.0
-            Use options.price instead.
-
-        Args:
-        spot: Underlying price
-        strike: Strike price
-        time_to_expiry: Time to expiry (years)
-        volatility: Volatility"""
-        import warnings
-        warnings.warn("options.pricing is deprecated: Use options.price instead.", DeprecationWarning, stacklevel=2)
-        _payload: Dict[str, Any] = {}
-        _payload["spot"] = spot
-        _payload["strike"] = strike
-        _payload["time_to_expiry"] = time_to_expiry
-        _payload["volatility"] = volatility
-        if dividend_yield is not None:
-            _payload["dividend_yield"] = dividend_yield
-        if legs is not None:
-            _payload["legs"] = legs
-        if market_price is not None:
-            _payload["market_price"] = market_price
-        if num_points is not None:
-            _payload["num_points"] = num_points
-        if option_type is not None:
-            _payload["option_type"] = option_type
-        if risk_free_rate is not None:
-            _payload["risk_free_rate"] = risk_free_rate
-        if spot_range is not None:
-            _payload["spot_range"] = spot_range
-        if strategy_type is not None:
-            _payload["strategy_type"] = strategy_type
-        return await self._call("options.pricing", params=_payload, options=options, context=context)
 
     async def strategies(
         self,
@@ -470,9 +286,9 @@ class AsyncOptionsAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """List strategies
+        """List available pre-built option strategy templates
 
-        List predefined option strategies."""
+        Returns the catalog of pre-built option strategy templates with their descriptions, leg configurations, and typical use cases. Includes: covered call, protective put, bull/bear call/put spread, straddle, strangle, butterfly, iron condor, collar, and more. Each template shows the number of legs, directional bias, and risk/reward profile. Used by the Dashboard strategy selector dropdown."""
         _payload: Dict[str, Any] = {}
         return await self._call("options.strategies", params=_payload, options=options, context=context)
 
@@ -481,38 +297,28 @@ class AsyncOptionsAPI(AsyncBaseAPI):
         *,
         strategy_type: str,
         spot: float,
-        dividend_yield: Optional[str] = None,
+        volatility: float,
+        time_to_expiry: float,
         legs: Optional[List[Any]] = None,
-        volatility: Optional[float] = None,
-        time_to_expiry: Optional[float] = None,
         risk_free_rate: Optional[float] = 0.03,
+        dividend_yield: Optional[float] = 0.0,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Price strategy
+        """Analyze a multi-leg option strategy with combined Greeks and payoff
 
-        Price multi-leg option strategy.
-
-        Args:
-        strategy_type: Strategy type
-        spot: Underlying price
-        legs: Strategy legs (for custom)
-        volatility: Volatility
-        time_to_expiry: Time to expiry
-        risk_free_rate: Risk-free rate"""
+        Analyzes a custom multi-leg option strategy (straddle, strangle, spread, butterfly, condor, etc.). Each leg specifies option type, strike, quantity, and position (long/short). Returns combined Greeks, net premium, max profit, max loss, breakeven points, and probability of profit. Also supports named strategies via strategy_type parameter. Used by the Dashboard strategy builder."""
         _payload: Dict[str, Any] = {}
         _payload["strategy_type"] = strategy_type
         _payload["spot"] = spot
-        if dividend_yield is not None:
-            _payload["dividend_yield"] = dividend_yield
+        _payload["volatility"] = volatility
+        _payload["time_to_expiry"] = time_to_expiry
         if legs is not None:
             _payload["legs"] = legs
-        if volatility is not None:
-            _payload["volatility"] = volatility
-        if time_to_expiry is not None:
-            _payload["time_to_expiry"] = time_to_expiry
         if risk_free_rate is not None:
             _payload["risk_free_rate"] = risk_free_rate
+        if dividend_yield is not None:
+            _payload["dividend_yield"] = dividend_yield
         return await self._call("options.strategy", params=_payload, options=options, context=context)
 
 

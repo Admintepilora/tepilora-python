@@ -23,13 +23,9 @@ class StocksAPI(BaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Compare stocks
+        """Compare multiple stocks side by side across key metrics
 
-        Compare multiple stocks.
-
-        Args:
-        identifiers: List of TepiloraCodes
-        metrics: Metrics to compare"""
+        Returns a comparison table for 2 or more stocks across: price performance (1M/3M/6M/1Y), valuation (PE, PB, dividend yield), fundamentals (margins, ROE, revenue growth), and technicals (RSI, momentum score). Each metric shows the value per stock plus a ranking. Used by the Dashboard stock comparison view."""
         _payload: Dict[str, Any] = {}
         _payload["identifiers"] = identifiers
         if metrics is not None:
@@ -44,12 +40,9 @@ class StocksAPI(BaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Dividend data
+        """Get dividend history, yield, and payout analysis for a stock
 
-        Dividend history and yield.
-
-        Args:
-        identifier: TepiloraCode or ISIN"""
+        Returns dividend history (payment dates, amounts, ex-dates), current dividend yield, payout ratio, dividend growth rate (1Y/3Y/5Y CAGR), and streak (consecutive years of dividend payments/increases). Used by the Dashboard dividend analysis tab and by income-focused screening strategies."""
         _payload: Dict[str, Any] = {}
         _payload["identifier"] = identifier
         return self._call("stocks.dividends", params=_payload, options=options, context=context, response_format=response_format)
@@ -60,9 +53,9 @@ class StocksAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """List indicators
+        """Catalog of available technical indicator definitions
 
-        List available technical indicators."""
+        Returns the static catalog of technical indicators the library knows how to compute, grouped by category: trend (SMA, EMA, MACD), momentum (RSI, ROC), volatility (Bollinger Bands, ATR), volume (OBV). Each entry carries the indicator name, category, default parameters, and a short description. NOTE: this operation takes no identifier and returns no per-stock values — to compute indicators for a specific stock, use stocks.technicals. Used by the Dashboard indicator picker and by the AI assistant to answer 'what indicators do you support'."""
         _payload: Dict[str, Any] = {}
         return self._call("stocks.indicators", params=_payload, options=options, context=context)
 
@@ -70,56 +63,47 @@ class StocksAPI(BaseAPI):
         self,
         *,
         identifier: Optional[str] = None,
-        lookback_periods: Optional[str] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        lookback_periods: Optional[List[Any]] = None,
         start_date: Optional[str] = None,
+        prices: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Momentum analysis
+        """Calculate price momentum scores and signals for stocks
 
-        Calculate momentum indicators.
-
-        Args:
-        identifier: TepiloraCode or ISIN
-        prices: User-provided prices
-        start_date: Start date (YYYY-MM-DD)"""
+        Computes momentum indicators: absolute momentum (returns over 1M, 3M, 6M, 12M periods), relative momentum (vs. benchmark or peer group), momentum score (composite ranking), and trend strength indicators. Used by momentum-based screening strategies and by the Dashboard momentum analysis view."""
         _payload: Dict[str, Any] = {}
         if identifier is not None:
             _payload["identifier"] = identifier
         if lookback_periods is not None:
             _payload["lookback_periods"] = lookback_periods
-        if prices is not None:
-            _payload["prices"] = prices
         if start_date is not None:
             _payload["start_date"] = start_date
+        if prices is not None:
+            _payload["prices"] = prices
         return self._call("stocks.momentum", params=_payload, options=options, context=context, response_format=response_format)
 
     def peers(
         self,
         *,
         identifier: str,
-        limit: Optional[int] = 20,
         metrics: Optional[List[Any]] = None,
+        limit: Optional[int] = 20,
         start_date: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Get peer stocks
+        """Find peer companies in the same sector and industry
 
-        Find peer companies.
-
-        Args:
-        identifier: TepiloraCode or ISIN
-        limit: Maximum results"""
+        Identifies peer companies for a given stock based on sector, industry, market cap tier, and geographic region. Returns peer list with key comparison metrics: market cap, PE, revenue, margins, and performance. Used by the Dashboard peers comparison tab and by relative valuation workflows."""
         _payload: Dict[str, Any] = {}
         _payload["identifier"] = identifier
-        if limit is not None:
-            _payload["limit"] = limit
         if metrics is not None:
             _payload["metrics"] = metrics
+        if limit is not None:
+            _payload["limit"] = limit
         if start_date is not None:
             _payload["start_date"] = start_date
         return self._call("stocks.peers", params=_payload, options=options, context=context, response_format=response_format)
@@ -127,128 +111,109 @@ class StocksAPI(BaseAPI):
     def screen(
         self,
         *,
-        rank_by: Optional[str] = None,
-        start_date: Optional[str] = None,
         universe: Optional[Dict[str, Any]] = None,
         criteria: Optional[Dict[str, Any]] = None,
+        rank_by: Optional[str] = None,
         limit: Optional[int] = 50,
+        start_date: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Screen stocks
+        """Screen stocks by technical and fundamental criteria
 
-        Screen stocks by technical criteria.
-
-        Args:
-        universe: Universe filters
-        criteria: Screening criteria
-        limit: Maximum results"""
+        Filters the stock universe by combined technical (RSI range, MA crossover, MACD signal) and fundamental (PE ratio, market cap, dividend yield) criteria. Returns stocks matching all criteria with their current indicator values. Used by the Dashboard stock screener."""
         _payload: Dict[str, Any] = {}
-        if rank_by is not None:
-            _payload["rank_by"] = rank_by
-        if start_date is not None:
-            _payload["start_date"] = start_date
         if universe is not None:
             _payload["universe"] = universe
         if criteria is not None:
             _payload["criteria"] = criteria
+        if rank_by is not None:
+            _payload["rank_by"] = rank_by
         if limit is not None:
             _payload["limit"] = limit
+        if start_date is not None:
+            _payload["start_date"] = start_date
         return self._call("stocks.screen", params=_payload, options=options, context=context, response_format=response_format)
 
     def signals(
         self,
         *,
         identifier: Optional[str] = None,
-        prices: Optional[Dict[str, Any]] = None,
         strategies: Optional[List[Any]] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        prices: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Trading signals
+        """Generate buy/sell/hold signals from technical indicators
 
-        Generate trading signals.
-
-        Args:
-        identifier: TepiloraCode or ISIN
-        prices: User-provided prices
-        strategies: Signal strategies to apply
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
+        Produces consolidated trading signals from multiple technical indicators: MA crossover signals, RSI overbought/oversold, MACD crossover, Bollinger Band breakout, and volume confirmation. Each signal includes direction (buy/sell/hold), strength (strong/moderate/weak), and the contributing indicators. Used by the Dashboard signal summary and by alert rule conditions."""
         _payload: Dict[str, Any] = {}
         if identifier is not None:
             _payload["identifier"] = identifier
-        if prices is not None:
-            _payload["prices"] = prices
         if strategies is not None:
             _payload["strategies"] = strategies
         if start_date is not None:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
+        if prices is not None:
+            _payload["prices"] = prices
         return self._call("stocks.signals", params=_payload, options=options, context=context, response_format=response_format)
 
     def technicals(
         self,
         *,
-        bb_period: Optional[str] = None,
-        bb_std: Optional[str] = None,
-        ema_periods: Optional[str] = None,
         identifier: Optional[str] = None,
-        macd_fast: Optional[str] = None,
-        macd_signal: Optional[str] = None,
-        macd_slow: Optional[str] = None,
-        prices: Optional[Dict[str, Any]] = None,
         indicators: Optional[List[Any]] = None,
-        rsi_period: Optional[str] = None,
-        sma_periods: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        prices: Optional[str] = None,
+        sma_periods: Optional[List[Any]] = None,
+        ema_periods: Optional[List[Any]] = None,
+        rsi_period: Optional[int] = 14,
+        macd_fast: Optional[int] = 12,
+        macd_slow: Optional[int] = 26,
+        macd_signal: Optional[int] = 9,
+        bb_period: Optional[int] = 20,
+        bb_std: Optional[int] = 2,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Technical indicators
+        """Calculate technical analysis indicators for a stock or ETF
 
-        Calculate technical indicators (SMA, RSI, MACD, etc.).
-
-        Args:
-        identifier: TepiloraCode or ISIN
-        prices: User-provided prices
-        indicators: Indicators to calculate
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
+        Computes standard technical analysis indicators from price history: moving averages (SMA, EMA, WMA for configurable periods), RSI (Relative Strength Index), MACD (Moving Average Convergence Divergence with signal and histogram), Bollinger Bands, ATR (Average True Range), Stochastic Oscillator, and OBV (On-Balance Volume). Accepts TepiloraCode or user-provided price data. Used by the Dashboard technical analysis view and by algorithmic screening workflows."""
         _payload: Dict[str, Any] = {}
-        if bb_period is not None:
-            _payload["bb_period"] = bb_period
-        if bb_std is not None:
-            _payload["bb_std"] = bb_std
-        if ema_periods is not None:
-            _payload["ema_periods"] = ema_periods
         if identifier is not None:
             _payload["identifier"] = identifier
-        if macd_fast is not None:
-            _payload["macd_fast"] = macd_fast
-        if macd_signal is not None:
-            _payload["macd_signal"] = macd_signal
-        if macd_slow is not None:
-            _payload["macd_slow"] = macd_slow
-        if prices is not None:
-            _payload["prices"] = prices
         if indicators is not None:
             _payload["indicators"] = indicators
-        if rsi_period is not None:
-            _payload["rsi_period"] = rsi_period
-        if sma_periods is not None:
-            _payload["sma_periods"] = sma_periods
         if start_date is not None:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
+        if prices is not None:
+            _payload["prices"] = prices
+        if sma_periods is not None:
+            _payload["sma_periods"] = sma_periods
+        if ema_periods is not None:
+            _payload["ema_periods"] = ema_periods
+        if rsi_period is not None:
+            _payload["rsi_period"] = rsi_period
+        if macd_fast is not None:
+            _payload["macd_fast"] = macd_fast
+        if macd_slow is not None:
+            _payload["macd_slow"] = macd_slow
+        if macd_signal is not None:
+            _payload["macd_signal"] = macd_signal
+        if bb_period is not None:
+            _payload["bb_period"] = bb_period
+        if bb_std is not None:
+            _payload["bb_std"] = bb_std
         return self._call("stocks.technicals", params=_payload, options=options, context=context, response_format=response_format)
 
     def valuation(
@@ -259,12 +224,9 @@ class StocksAPI(BaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Valuation metrics
+        """Calculate valuation metrics and fair value estimates for a stock
 
-        PE, PB, EV/EBITDA, etc.
-
-        Args:
-        identifier: TepiloraCode or ISIN"""
+        Computes relative valuation metrics: PE, PB, PS, PCF, EV/EBITDA, dividend yield, PEG ratio — compared against sector medians and historical averages. Includes a simple DCF fair value estimate when sufficient fundamental data is available. Returns current vs. historical percentile for each metric. Used by the Dashboard valuation tab and by the AI assistant for valuation context."""
         _payload: Dict[str, Any] = {}
         _payload["identifier"] = identifier
         return self._call("stocks.valuation", params=_payload, options=options, context=context, response_format=response_format)
@@ -283,13 +245,9 @@ class AsyncStocksAPI(AsyncBaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Compare stocks
+        """Compare multiple stocks side by side across key metrics
 
-        Compare multiple stocks.
-
-        Args:
-        identifiers: List of TepiloraCodes
-        metrics: Metrics to compare"""
+        Returns a comparison table for 2 or more stocks across: price performance (1M/3M/6M/1Y), valuation (PE, PB, dividend yield), fundamentals (margins, ROE, revenue growth), and technicals (RSI, momentum score). Each metric shows the value per stock plus a ranking. Used by the Dashboard stock comparison view."""
         _payload: Dict[str, Any] = {}
         _payload["identifiers"] = identifiers
         if metrics is not None:
@@ -304,12 +262,9 @@ class AsyncStocksAPI(AsyncBaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Dividend data
+        """Get dividend history, yield, and payout analysis for a stock
 
-        Dividend history and yield.
-
-        Args:
-        identifier: TepiloraCode or ISIN"""
+        Returns dividend history (payment dates, amounts, ex-dates), current dividend yield, payout ratio, dividend growth rate (1Y/3Y/5Y CAGR), and streak (consecutive years of dividend payments/increases). Used by the Dashboard dividend analysis tab and by income-focused screening strategies."""
         _payload: Dict[str, Any] = {}
         _payload["identifier"] = identifier
         return await self._call("stocks.dividends", params=_payload, options=options, context=context, response_format=response_format)
@@ -320,9 +275,9 @@ class AsyncStocksAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """List indicators
+        """Catalog of available technical indicator definitions
 
-        List available technical indicators."""
+        Returns the static catalog of technical indicators the library knows how to compute, grouped by category: trend (SMA, EMA, MACD), momentum (RSI, ROC), volatility (Bollinger Bands, ATR), volume (OBV). Each entry carries the indicator name, category, default parameters, and a short description. NOTE: this operation takes no identifier and returns no per-stock values — to compute indicators for a specific stock, use stocks.technicals. Used by the Dashboard indicator picker and by the AI assistant to answer 'what indicators do you support'."""
         _payload: Dict[str, Any] = {}
         return await self._call("stocks.indicators", params=_payload, options=options, context=context)
 
@@ -330,56 +285,47 @@ class AsyncStocksAPI(AsyncBaseAPI):
         self,
         *,
         identifier: Optional[str] = None,
-        lookback_periods: Optional[str] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        lookback_periods: Optional[List[Any]] = None,
         start_date: Optional[str] = None,
+        prices: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Momentum analysis
+        """Calculate price momentum scores and signals for stocks
 
-        Calculate momentum indicators.
-
-        Args:
-        identifier: TepiloraCode or ISIN
-        prices: User-provided prices
-        start_date: Start date (YYYY-MM-DD)"""
+        Computes momentum indicators: absolute momentum (returns over 1M, 3M, 6M, 12M periods), relative momentum (vs. benchmark or peer group), momentum score (composite ranking), and trend strength indicators. Used by momentum-based screening strategies and by the Dashboard momentum analysis view."""
         _payload: Dict[str, Any] = {}
         if identifier is not None:
             _payload["identifier"] = identifier
         if lookback_periods is not None:
             _payload["lookback_periods"] = lookback_periods
-        if prices is not None:
-            _payload["prices"] = prices
         if start_date is not None:
             _payload["start_date"] = start_date
+        if prices is not None:
+            _payload["prices"] = prices
         return await self._call("stocks.momentum", params=_payload, options=options, context=context, response_format=response_format)
 
     async def peers(
         self,
         *,
         identifier: str,
-        limit: Optional[int] = 20,
         metrics: Optional[List[Any]] = None,
+        limit: Optional[int] = 20,
         start_date: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Get peer stocks
+        """Find peer companies in the same sector and industry
 
-        Find peer companies.
-
-        Args:
-        identifier: TepiloraCode or ISIN
-        limit: Maximum results"""
+        Identifies peer companies for a given stock based on sector, industry, market cap tier, and geographic region. Returns peer list with key comparison metrics: market cap, PE, revenue, margins, and performance. Used by the Dashboard peers comparison tab and by relative valuation workflows."""
         _payload: Dict[str, Any] = {}
         _payload["identifier"] = identifier
-        if limit is not None:
-            _payload["limit"] = limit
         if metrics is not None:
             _payload["metrics"] = metrics
+        if limit is not None:
+            _payload["limit"] = limit
         if start_date is not None:
             _payload["start_date"] = start_date
         return await self._call("stocks.peers", params=_payload, options=options, context=context, response_format=response_format)
@@ -387,128 +333,109 @@ class AsyncStocksAPI(AsyncBaseAPI):
     async def screen(
         self,
         *,
-        rank_by: Optional[str] = None,
-        start_date: Optional[str] = None,
         universe: Optional[Dict[str, Any]] = None,
         criteria: Optional[Dict[str, Any]] = None,
+        rank_by: Optional[str] = None,
         limit: Optional[int] = 50,
+        start_date: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Screen stocks
+        """Screen stocks by technical and fundamental criteria
 
-        Screen stocks by technical criteria.
-
-        Args:
-        universe: Universe filters
-        criteria: Screening criteria
-        limit: Maximum results"""
+        Filters the stock universe by combined technical (RSI range, MA crossover, MACD signal) and fundamental (PE ratio, market cap, dividend yield) criteria. Returns stocks matching all criteria with their current indicator values. Used by the Dashboard stock screener."""
         _payload: Dict[str, Any] = {}
-        if rank_by is not None:
-            _payload["rank_by"] = rank_by
-        if start_date is not None:
-            _payload["start_date"] = start_date
         if universe is not None:
             _payload["universe"] = universe
         if criteria is not None:
             _payload["criteria"] = criteria
+        if rank_by is not None:
+            _payload["rank_by"] = rank_by
         if limit is not None:
             _payload["limit"] = limit
+        if start_date is not None:
+            _payload["start_date"] = start_date
         return await self._call("stocks.screen", params=_payload, options=options, context=context, response_format=response_format)
 
     async def signals(
         self,
         *,
         identifier: Optional[str] = None,
-        prices: Optional[Dict[str, Any]] = None,
         strategies: Optional[List[Any]] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        prices: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Trading signals
+        """Generate buy/sell/hold signals from technical indicators
 
-        Generate trading signals.
-
-        Args:
-        identifier: TepiloraCode or ISIN
-        prices: User-provided prices
-        strategies: Signal strategies to apply
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
+        Produces consolidated trading signals from multiple technical indicators: MA crossover signals, RSI overbought/oversold, MACD crossover, Bollinger Band breakout, and volume confirmation. Each signal includes direction (buy/sell/hold), strength (strong/moderate/weak), and the contributing indicators. Used by the Dashboard signal summary and by alert rule conditions."""
         _payload: Dict[str, Any] = {}
         if identifier is not None:
             _payload["identifier"] = identifier
-        if prices is not None:
-            _payload["prices"] = prices
         if strategies is not None:
             _payload["strategies"] = strategies
         if start_date is not None:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
+        if prices is not None:
+            _payload["prices"] = prices
         return await self._call("stocks.signals", params=_payload, options=options, context=context, response_format=response_format)
 
     async def technicals(
         self,
         *,
-        bb_period: Optional[str] = None,
-        bb_std: Optional[str] = None,
-        ema_periods: Optional[str] = None,
         identifier: Optional[str] = None,
-        macd_fast: Optional[str] = None,
-        macd_signal: Optional[str] = None,
-        macd_slow: Optional[str] = None,
-        prices: Optional[Dict[str, Any]] = None,
         indicators: Optional[List[Any]] = None,
-        rsi_period: Optional[str] = None,
-        sma_periods: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        prices: Optional[str] = None,
+        sma_periods: Optional[List[Any]] = None,
+        ema_periods: Optional[List[Any]] = None,
+        rsi_period: Optional[int] = 14,
+        macd_fast: Optional[int] = 12,
+        macd_slow: Optional[int] = 26,
+        macd_signal: Optional[int] = 9,
+        bb_period: Optional[int] = 20,
+        bb_std: Optional[int] = 2,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Technical indicators
+        """Calculate technical analysis indicators for a stock or ETF
 
-        Calculate technical indicators (SMA, RSI, MACD, etc.).
-
-        Args:
-        identifier: TepiloraCode or ISIN
-        prices: User-provided prices
-        indicators: Indicators to calculate
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
+        Computes standard technical analysis indicators from price history: moving averages (SMA, EMA, WMA for configurable periods), RSI (Relative Strength Index), MACD (Moving Average Convergence Divergence with signal and histogram), Bollinger Bands, ATR (Average True Range), Stochastic Oscillator, and OBV (On-Balance Volume). Accepts TepiloraCode or user-provided price data. Used by the Dashboard technical analysis view and by algorithmic screening workflows."""
         _payload: Dict[str, Any] = {}
-        if bb_period is not None:
-            _payload["bb_period"] = bb_period
-        if bb_std is not None:
-            _payload["bb_std"] = bb_std
-        if ema_periods is not None:
-            _payload["ema_periods"] = ema_periods
         if identifier is not None:
             _payload["identifier"] = identifier
-        if macd_fast is not None:
-            _payload["macd_fast"] = macd_fast
-        if macd_signal is not None:
-            _payload["macd_signal"] = macd_signal
-        if macd_slow is not None:
-            _payload["macd_slow"] = macd_slow
-        if prices is not None:
-            _payload["prices"] = prices
         if indicators is not None:
             _payload["indicators"] = indicators
-        if rsi_period is not None:
-            _payload["rsi_period"] = rsi_period
-        if sma_periods is not None:
-            _payload["sma_periods"] = sma_periods
         if start_date is not None:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
+        if prices is not None:
+            _payload["prices"] = prices
+        if sma_periods is not None:
+            _payload["sma_periods"] = sma_periods
+        if ema_periods is not None:
+            _payload["ema_periods"] = ema_periods
+        if rsi_period is not None:
+            _payload["rsi_period"] = rsi_period
+        if macd_fast is not None:
+            _payload["macd_fast"] = macd_fast
+        if macd_slow is not None:
+            _payload["macd_slow"] = macd_slow
+        if macd_signal is not None:
+            _payload["macd_signal"] = macd_signal
+        if bb_period is not None:
+            _payload["bb_period"] = bb_period
+        if bb_std is not None:
+            _payload["bb_std"] = bb_std
         return await self._call("stocks.technicals", params=_payload, options=options, context=context, response_format=response_format)
 
     async def valuation(
@@ -519,12 +446,9 @@ class AsyncStocksAPI(AsyncBaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Valuation metrics
+        """Calculate valuation metrics and fair value estimates for a stock
 
-        PE, PB, EV/EBITDA, etc.
-
-        Args:
-        identifier: TepiloraCode or ISIN"""
+        Computes relative valuation metrics: PE, PB, PS, PCF, EV/EBITDA, dividend yield, PEG ratio — compared against sector medians and historical averages. Includes a simple DCF fair value estimate when sufficient fundamental data is available. Returns current vs. historical percentile for each metric. Used by the Dashboard valuation tab and by the AI assistant for valuation context."""
         _payload: Dict[str, Any] = {}
         _payload["identifier"] = identifier
         return await self._call("stocks.valuation", params=_payload, options=options, context=context, response_format=response_format)

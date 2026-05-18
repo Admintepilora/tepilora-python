@@ -99,50 +99,99 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           TARGET_SHA: ${{ needs.lane-ancestry-gate.outputs.target_sha }}
-          CI_WORKFLOW_ID: "232001328"
+          CI_TIMEOUT_SECONDS: "900"
+          CI_POLL_SECONDS: "15"
         shell: bash
         run: |
           set -euo pipefail
 
-          gh api \
-            -H "Accept: application/vnd.github+json" \
-            "/repos/${GITHUB_REPOSITORY}/actions/workflows/${CI_WORKFLOW_ID}/runs?head_sha=${TARGET_SHA}&per_page=20" \
-            > /tmp/ci-runs.json
-
           python3 - <<'PY'
           import json
           import os
+          import subprocess
           import sys
+          import time
 
           target_sha = os.environ["TARGET_SHA"]
-          workflow_id = os.environ["CI_WORKFLOW_ID"]
+          repository = os.environ["GITHUB_REPOSITORY"]
+          timeout_seconds = int(os.environ.get("CI_TIMEOUT_SECONDS", "900"))
+          poll_seconds = int(os.environ.get("CI_POLL_SECONDS", "15"))
+          endpoint = (
+              f"/repos/{repository}/actions/runs"
+              f"?head_sha={target_sha}&per_page=100"
+          )
+          deadline = time.monotonic() + timeout_seconds
 
-          with open("/tmp/ci-runs.json", "r", encoding="utf-8") as handle:
-              payload = json.load(handle)
+          def workflow_path(run):
+              raw_path = run.get("path") or run.get("workflow_path") or ""
+              return raw_path.split("@", 1)[0]
 
-          runs = payload.get("workflow_runs", [])
-          if not runs:
-              status = "missing"
-              print(f"BLOCKED: CI workflow on {target_sha} is {status}. Publish refused.")
-              print(f"Workflow: CI ({workflow_id})")
-              sys.exit(1)
+          def is_ci_run(run):
+              return workflow_path(run) == ".github/workflows/ci.yml" or run.get("name") == "CI"
 
-          run = runs[0]
-          run_status = run.get("status") or "unknown"
-          conclusion = run.get("conclusion")
-          status = conclusion if run_status == "completed" else run_status
-          run_url = run.get("html_url", "")
+          def newest_key(run):
+              return run.get("run_started_at") or run.get("created_at") or ""
 
-          if status == "success":
-              print(f"CI workflow on {target_sha} is success. Publish allowed.")
-              print(f"Workflow: CI ({workflow_id})")
-              print(f"Run: {run_url}")
-              sys.exit(0)
+          while True:
+              result = subprocess.run(
+                  [
+                      "gh",
+                      "api",
+                      "-H",
+                      "Accept: application/vnd.github+json",
+                      endpoint,
+                  ],
+                  check=False,
+                  capture_output=True,
+                  text=True,
+              )
+              if result.returncode != 0:
+                  message = result.stderr.strip() or result.stdout.strip()
+                  print(f"BLOCKED: unable to query CI runs for {target_sha}.")
+                  print(f"Endpoint: {endpoint}")
+                  if message:
+                      print(message)
+                  sys.exit(result.returncode)
 
-          print(f"BLOCKED: CI workflow on {target_sha} is {status}. Publish refused.")
-          print(f"Workflow: CI ({workflow_id})")
-          print(f"Run: {run_url}")
-          sys.exit(1)
+              payload = json.loads(result.stdout)
+              ci_runs = [
+                  run for run in payload.get("workflow_runs", [])
+                  if is_ci_run(run)
+              ]
+
+              if ci_runs:
+                  ci_runs.sort(key=newest_key, reverse=True)
+                  run = ci_runs[0]
+                  status = run.get("status") or "unknown"
+                  conclusion = run.get("conclusion")
+                  run_url = run.get("html_url", "")
+                  run_label = f"{workflow_path(run) or run.get('name') or 'CI'}"
+
+                  if status == "completed":
+                      if conclusion == "success":
+                          print(f"CI workflow on {target_sha} is success. Publish allowed.")
+                          print(f"Workflow: {run_label}")
+                          print(f"Run: {run_url}")
+                          sys.exit(0)
+
+                      print(f"BLOCKED: CI workflow on {target_sha} completed with {conclusion or 'no conclusion'}.")
+                      print(f"Workflow: {run_label}")
+                      print(f"Run: {run_url}")
+                      sys.exit(1)
+
+                  print(f"Waiting for CI workflow on {target_sha}: status={status}.")
+                  print(f"Workflow: {run_label}")
+                  print(f"Run: {run_url}")
+              else:
+                  print(f"Waiting for CI workflow on {target_sha}: no matching run yet.")
+                  print(f"Endpoint: {endpoint}")
+
+              if time.monotonic() >= deadline:
+                  print(f"BLOCKED: timed out waiting for CI workflow on {target_sha}.")
+                  print(f"Endpoint: {endpoint}")
+                  sys.exit(1)
+
+              time.sleep(poll_seconds)
           PY
 
   build:
@@ -187,7 +236,7 @@ jobs:
     needs:
       - lane-ancestry-gate
       - build
-    if: needs.lane-ancestry-gate.outputs.package_index == 'testpypi'
+    if: github.repository == 'Admintepilora/tepilora-python' && needs.lane-ancestry-gate.outputs.package_index == 'testpypi'
     runs-on: ubuntu-latest
     environment: testpypi-preprod
     permissions:
@@ -208,7 +257,7 @@ jobs:
     needs:
       - lane-ancestry-gate
       - build
-    if: needs.lane-ancestry-gate.outputs.package_index == 'pypi'
+    if: github.repository == 'Admintepilora/tepilora-python' && needs.lane-ancestry-gate.outputs.package_index == 'pypi'
     runs-on: ubuntu-latest
     environment: pypi-prod
     permissions:

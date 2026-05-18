@@ -12,53 +12,35 @@ from ._base import AsyncBaseAPI, BaseAPI
 
 
 class SecuritiesAPI(BaseAPI):
-    """Securities namespace: breakdowns, description, details, facets, fees, filter, history, lookup, mifid, rels, screen, search."""
+    """Securities namespace: breakdowns, details, facets, fees, filter, history, lookup, mifid, rating_history, rels, screen, search."""
 
     def breakdowns(
         self,
         *,
-        identifiers: Union[str, List[str]],
         fields: Optional[List[Any]] = None,
-        identifier: Optional[str] = None,
-        options: Optional[Dict[str, Any]] = None,
-        context: Optional[Dict[str, Any]] = None,
-    ) -> Any:
-        """Get portfolio breakdowns
-
-        Sector, country, asset class breakdowns for funds/ETFs.
-
-        Args:
-        identifiers: List of TepiloraCodes"""
-        _payload: Dict[str, Any] = {}
-        _payload["identifiers"] = identifiers
-        if fields is not None:
-            _payload["fields"] = fields
-        if identifier is not None:
-            _payload["identifier"] = identifier
-        return self._call("securities.breakdowns", params=_payload, options=options, context=context)
-
-    def description(
-        self,
-        *,
         identifier: Optional[str] = None,
         identifiers: Optional[Union[str, List[str]]] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
-        response_format: Optional[str] = None,
     ) -> Any:
-        """Get security description
+        """Get the portfolio composition breakdowns for a fund or ETF
 
-        Full metadata for one or more securities.
+        Returns the internal portfolio composition of a fund or ETF, broken down by: top holdings (name and weight), sector allocation (GICS sectors), country/region allocation, asset class allocation, and currency allocation. Data comes from the fund's latest portfolio disclosure. For stocks, returns empty. Used by the Dashboard security detail page for the composition tab and by the reporting module for fund sheet allocation charts.
 
         Args:
-        identifier: Single identifier
-        identifiers: Multiple identifiers"""
+        identifier: Optional security identifier
+        identifiers: Optional list of security identifiers
+
+        Examples:
+            >>> client.securities.breakdowns(identifier='IE00B4L5Y983EURXMIL')"""
         _payload: Dict[str, Any] = {}
+        if fields is not None:
+            _payload["fields"] = fields
         if identifier is not None:
             _payload["identifier"] = identifier
         if identifiers is not None:
             _payload["identifiers"] = identifiers
-        return self._call("securities.description", params=_payload, options=options, context=context, response_format=response_format)
+        return self._call("securities.breakdowns", params=_payload, options=options, context=context)
 
     def details(
         self,
@@ -69,13 +51,16 @@ class SecuritiesAPI(BaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Get security details
+        """Get the complete metadata profile for one or more securities
 
-        Alias for description. Full metadata for one or more securities.
+        Returns the full metadata record (80+ fields from D parquet) for one or multiple securities identified by TepiloraCode. Includes identity, classification, ratings, costs, size, provider, regulatory, and fund-specific fields. Accepts both single identifier and batch identifiers. Used by the Dashboard security detail page, by the reporting module for fund sheet header data, by portfolio modules for position metadata enrichment, and by the AI assistant.
 
         Args:
-        identifier: Single identifier
-        identifiers: Multiple identifiers"""
+        identifier: Optional security identifier
+        identifiers: Optional list of security identifiers
+
+        Examples:
+            >>> client.securities.details(identifier='IE00B4L5Y983EURXMIL')"""
         _payload: Dict[str, Any] = {}
         if identifier is not None:
             _payload["identifier"] = identifier
@@ -91,13 +76,12 @@ class SecuritiesAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get facets
+        """Get aggregated field values and counts for building securities filter UIs
 
-        Aggregated field values for building filters.
+        Returns the distinct values and document counts for specified metadata fields across the securities universe. Supports pre-filtering to get facet counts within a subset. Common facet fields: TepiloraType, TepiloraArea, TepiloraAssetClass, TepiloraCategory, Currency, ManagementCompany. Essential for building cascading filter UIs. Used by the Dashboard Securities page for the filter sidebar.
 
-        Args:
-        fields: Fields to aggregate
-        filters: Pre-filter"""
+        Examples:
+            >>> client.securities.facets(fields=['TepiloraType'])"""
         _payload: Dict[str, Any] = {}
         _payload["fields"] = fields
         if filters is not None:
@@ -107,22 +91,27 @@ class SecuritiesAPI(BaseAPI):
     def fees(
         self,
         *,
-        identifiers: Union[str, List[str]],
         identifier: Optional[str] = None,
+        identifiers: Optional[Union[str, List[str]]] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Get fee data
+        """Get the complete fee structure and cost breakdown for securities
 
-        TER, ongoing charges, and fee breakdown.
+        Returns detailed fee and cost information for one or more securities. For ETFs and funds includes TER (as decimal fraction, e.g. 0.002 = 0.20%), ongoing charges, management fee, performance fee, entry/exit charges, and transaction costs. Used by the Dashboard for cost comparison tables, by the reporting module for fund sheet fee sections, and by the billing module for total cost of ownership calculations.
 
         Args:
-        identifiers: List of TepiloraCodes"""
+        identifier: Optional security identifier
+        identifiers: Optional list of security identifiers
+
+        Examples:
+            >>> client.securities.fees(identifiers='IE00B4L5Y983EURXMIL')"""
         _payload: Dict[str, Any] = {}
-        _payload["identifiers"] = identifiers
         if identifier is not None:
             _payload["identifier"] = identifier
+        if identifiers is not None:
+            _payload["identifiers"] = identifiers
         return self._call("securities.fees", params=_payload, options=options, context=context, response_format=response_format)
 
     def filter(
@@ -140,18 +129,13 @@ class SecuritiesAPI(BaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Filter securities
+        """Filter the securities universe by field values without text search
 
-        Filter by field values without text search. Results include TepiloraRating, TER, AUM. Sort is page-local.
+        Structured filtering of the securities universe by metadata field values, without full-text search. Requires at least one filter. Returns matching securities with metadata. Supports sort, group_by deduplication, preferred_currency, and faceted aggregations. Better than securities.search for programmatic screening. Used by the Dashboard for pre-built category screens, by asset allocation modules for ETF proxy discovery, and by screening workflows.
 
         Args:
-        filters: Field filters
-        limit: Maximum results
         offset: Pagination offset
-        sort: Sort field: TepiloraRating, TER, AUM, Name
-        order: Sort order: asc, desc (default per field)
-        group_by: Deduplicate by field (TepiloraParentId). Keeps one per group.
-        preferred_currency: When group_by active, prefer share class with this currency (e.g. EUR)"""
+        preferred_currency: Optional ISO 4217 currency code"""
         _payload: Dict[str, Any] = {}
         _payload["filters"] = filters
         if include_facets is not None:
@@ -173,34 +157,39 @@ class SecuritiesAPI(BaseAPI):
     def history(
         self,
         *,
-        identifiers: Union[str, List[str]],
-        currency: Optional[str] = None,
         identifier: Optional[str] = None,
+        identifiers: Optional[Union[str, List[str]]] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         limit: Optional[int] = 5000,
         pivot: Optional[bool] = False,
-        total_return: Optional[str] = None,
+        currency: Optional[str] = None,
+        total_return: Optional[bool] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Get price history
+        """Get historical daily NAV/price time series for one or more securities
 
-        Historical prices for securities. Requires TepiloraCode(s).
+        Returns daily historical prices (NAV for funds/ETFs, close price for stocks) from the H parquet files. Supports date range filtering, result limiting, and pivot format for multi-security comparison. This is the foundational data operation for the entire analytics module: all rolling metrics and portfolio returns calculations consume history data. Used by the Dashboard for NAV charts, by the reporting module for fund sheet performance charts, and by the portfolio module for return computation.
 
         Args:
-        identifiers: List of TepiloraCodes
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        limit: Maximum results
-        pivot: Pivot format (dates as rows, TCs as columns)"""
+        identifier: Optional security identifier
+        identifiers: Single TepiloraCode or list of TepiloraCodes.
+        start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
+        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)
+        limit: Maximum number of rows per security.
+        pivot: Return pivoted history for dict output.
+        currency: Optional ISO 4217 currency code
+        total_return: Return total return prices.
+
+        Examples:
+            >>> client.securities.history(identifiers='IE00B4L5Y983EURXMIL', limit=100)"""
         _payload: Dict[str, Any] = {}
-        _payload["identifiers"] = identifiers
-        if currency is not None:
-            _payload["currency"] = currency
         if identifier is not None:
             _payload["identifier"] = identifier
+        if identifiers is not None:
+            _payload["identifiers"] = identifiers
         if start_date is not None:
             _payload["start_date"] = start_date
         if end_date is not None:
@@ -209,6 +198,8 @@ class SecuritiesAPI(BaseAPI):
             _payload["limit"] = limit
         if pivot is not None:
             _payload["pivot"] = pivot
+        if currency is not None:
+            _payload["currency"] = currency
         if total_return is not None:
             _payload["total_return"] = total_return
         return self._call("securities.history", params=_payload, options=options, context=context, response_format=response_format)
@@ -222,12 +213,16 @@ class SecuritiesAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Lookup security by identifier
+        """Direct lookup of a security by ISIN, TepiloraCode, or ticker
 
-        Direct lookup by ISIN, TepiloraCode, or ticker.
+        Resolves a single security identifier to its full metadata record. Accepts ISIN (e.g. 'IE00B4L5Y983'), TepiloraCode (e.g. 'IE00B4L5Y983EURXMIL'), or ticker (e.g. 'IWDA'). When an ISIN matches multiple share classes (common for ETFs and funds listed on multiple exchanges and currencies), returns all matching share classes so the caller can select the appropriate one. Returns the complete metadata record including Name, ISIN, TepiloraCode, TepiloraType, Currency, Exchange, TepiloraRating, TER, AUM, TepiloraArea, TepiloraCategory, TepiloraAssetClass, ManagementCompany, and InceptionDate. Used by the reporting module's resolve_identifier() to auto-resolve ISINs to TepiloraCodes, by the Dashboard security detail page, and by the AI assistant when a user provides an ISIN without specifying the share class.
 
         Args:
-        identifier: TepiloraCode or ISIN"""
+        identifier: Single security identifier: ISIN, TepiloraCode, or Bloomberg ticker
+
+        Examples:
+            >>> client.securities.lookup(identifier='IE00B4L5Y983EURXMIL')
+            >>> client.securities.lookup(identifier='US0378331005')"""
         _payload: Dict[str, Any] = {}
         _payload["identifier"] = identifier
         if filters is not None:
@@ -239,41 +234,71 @@ class SecuritiesAPI(BaseAPI):
     def mifid(
         self,
         *,
-        identifiers: Union[str, List[str]],
         identifier: Optional[str] = None,
-        options: Optional[Dict[str, Any]] = None,
-        context: Optional[Dict[str, Any]] = None,
-        response_format: Optional[str] = None,
-    ) -> Any:
-        """Get MiFID II data
-
-        MiFID II classification and risk data.
-
-        Args:
-        identifiers: List of TepiloraCodes"""
-        _payload: Dict[str, Any] = {}
-        _payload["identifiers"] = identifiers
-        if identifier is not None:
-            _payload["identifier"] = identifier
-        return self._call("securities.mifid", params=_payload, options=options, context=context, response_format=response_format)
-
-    def rels(
-        self,
-        *,
-        identifier: str,
         identifiers: Optional[Union[str, List[str]]] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Get related securities
+        """Get MiFID II regulatory classification and risk profile for securities
 
-        Related securities (same index, same issuer, etc.).
+        Returns MiFID II regulatory data including SRI (1-7 scale), target market classification, product complexity, knowledge requirements, time horizon, and risk tolerance. Essential for investment suitability checks required by European financial regulations. Used by the profiling module for suitability checks, by the Dashboard compliance panel, and by reporting modules for regulatory disclosures.
 
         Args:
-        identifier: TepiloraCode or ISIN"""
+        identifier: Optional security identifier
+        identifiers: Optional list of security identifiers"""
         _payload: Dict[str, Any] = {}
-        _payload["identifier"] = identifier
+        if identifier is not None:
+            _payload["identifier"] = identifier
+        if identifiers is not None:
+            _payload["identifiers"] = identifiers
+        return self._call("securities.mifid", params=_payload, options=options, context=context, response_format=response_format)
+
+    def rating_history(
+        self,
+        *,
+        identifier: Optional[str] = None,
+        identifiers: Optional[Union[str, List[str]]] = None,
+        limit: Optional[int] = 36,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+        response_format: Optional[str] = None,
+    ) -> Any:
+        """Get the historical Tepilora Rating time series with all 7 component scores
+
+        Returns the monthly time series of the Tepilora Rating (1-5 star composite) along with the 7 individual component percentile scores: Performance, Volatility, Consistency, Drawdown, Recovery, Cost, and Flows. Each component is a percentile (0.0-1.0) within the fund's peer group, calculated monthly from Rating.parquet. Default limit is 36 months. Used by the Dashboard for the rating evolution chart and by the reporting module for fund sheet rating section.
+
+        Args:
+        identifier: Optional security identifier
+        identifiers: Optional list of security identifiers"""
+        _payload: Dict[str, Any] = {}
+        if identifier is not None:
+            _payload["identifier"] = identifier
+        if identifiers is not None:
+            _payload["identifiers"] = identifiers
+        if limit is not None:
+            _payload["limit"] = limit
+        return self._call("securities.rating_history", params=_payload, options=options, context=context, response_format=response_format)
+
+    def rels(
+        self,
+        *,
+        identifier: Optional[str] = None,
+        identifiers: Optional[Union[str, List[str]]] = None,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+        response_format: Optional[str] = None,
+    ) -> Any:
+        """Find securities related to a given security by issuer, index, or category
+
+        Returns securities related to the input through shared attributes: same issuer, same tracked index, same TepiloraCategory, same TepiloraParentId (different share classes), or same sector. Each related security includes metadata and the relationship type. Used by the Dashboard security detail page for the Related Securities section and by the AI assistant for alternative suggestions.
+
+        Args:
+        identifier: Optional security identifier
+        identifiers: Optional list of security identifiers"""
+        _payload: Dict[str, Any] = {}
+        if identifier is not None:
+            _payload["identifier"] = identifier
         if identifiers is not None:
             _payload["identifiers"] = identifiers
         return self._call("securities.rels", params=_payload, options=options, context=context, response_format=response_format)
@@ -281,46 +306,39 @@ class SecuritiesAPI(BaseAPI):
     def screen(
         self,
         *,
-        benchmark: Optional[str] = None,
-        metrics: Optional[List[Any]] = None,
-        period: Optional[int] = None,
-        query_id: Optional[str] = None,
         universe: Optional[Dict[str, Any]] = None,
+        query_id: Optional[str] = None,
         query_name: Optional[str] = None,
         criteria: Optional[Dict[str, Any]] = None,
-        rank_by: Optional[str] = None,
+        metrics: Optional[List[Any]] = None,
+        rank_by: Optional[float] = None,
+        benchmark: Optional[str] = None,
+        period: Optional[int] = None,
         limit: Optional[int] = 50,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Screen securities
+        """Screen the securities universe by quantitative analytics criteria and rank results
 
-        Batch screening by analytics metrics.
-
-        Args:
-        universe: Universe filters
-        query_name: Saved query name
-        criteria: Metric criteria
-        rank_by: Ranking metric
-        limit: Maximum results"""
+        Advanced quantitative screening combining universe filtering with analytics-based criteria. First defines a universe, then applies quantitative criteria (e.g. volatility < 15%, Sharpe > 1.0). Securities passing all criteria are ranked by the specified metric. Supports saved queries for reusable strategies. This is the most computationally intensive securities operation. Used by the Dashboard for advanced screening and by asset allocation modules for ETF proxy selection."""
         _payload: Dict[str, Any] = {}
-        if benchmark is not None:
-            _payload["benchmark"] = benchmark
-        if metrics is not None:
-            _payload["metrics"] = metrics
-        if period is not None:
-            _payload["period"] = period
-        if query_id is not None:
-            _payload["query_id"] = query_id
         if universe is not None:
             _payload["universe"] = universe
+        if query_id is not None:
+            _payload["query_id"] = query_id
         if query_name is not None:
             _payload["query_name"] = query_name
         if criteria is not None:
             _payload["criteria"] = criteria
+        if metrics is not None:
+            _payload["metrics"] = metrics
         if rank_by is not None:
             _payload["rank_by"] = rank_by
+        if benchmark is not None:
+            _payload["benchmark"] = benchmark
+        if period is not None:
+            _payload["period"] = period
         if limit is not None:
             _payload["limit"] = limit
         return self._call("securities.screen", params=_payload, options=options, context=context, response_format=response_format)
@@ -328,12 +346,12 @@ class SecuritiesAPI(BaseAPI):
     def search(
         self,
         *,
-        include_metrics: Optional[bool] = None,
         query: Optional[str] = "",
         filters: Optional[Dict[str, Any]] = None,
         limit: Optional[int] = 50,
         offset: Optional[int] = 0,
         include_facets: Optional[bool] = False,
+        include_metrics: Optional[bool] = None,
         sort: Optional[str] = None,
         order: Optional[str] = None,
         group_by: Optional[str] = None,
@@ -342,23 +360,18 @@ class SecuritiesAPI(BaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Search securities
+        """Search securities by name, ISIN, or ticker with full-text and faceted filtering
 
-        Full-text search with filters and facets. Results include TepiloraRating, TER, AUM. Sort is page-local.
+        Full-text search across the securities universe (ETFs, funds, stocks, bonds, indices) powered by Tantivy search engine. Accepts free-text queries and returns matching securities with metadata including Name, ISIN, TepiloraCode, TepiloraType, Currency, TepiloraRating, TER, AUM. Supports field-based filters, faceted aggregations, sort by key metrics, and deduplication via group_by=TepiloraParentId. Used by the Dashboard Securities page, by the AI assistant for security discovery, and by workflow bridges for cross-module composition.
 
         Args:
-        query: Search query
-        filters: Field filters
-        limit: Maximum results
         offset: Pagination offset
-        include_facets: Include aggregations
-        sort: Sort field: TepiloraRating, TER, AUM, Name
-        order: Sort order: asc, desc (default per field)
-        group_by: Deduplicate by field (TepiloraParentId). Keeps one per group.
-        preferred_currency: When group_by active, prefer share class with this currency (e.g. EUR)"""
+        preferred_currency: Optional ISO 4217 currency code
+
+        Examples:
+            >>> client.securities.search(query='msci world', limit=5)
+            >>> client.securities.search(query='sp500', filters={'TepiloraType': 'ETF'}, limit=3)"""
         _payload: Dict[str, Any] = {}
-        if include_metrics is not None:
-            _payload["include_metrics"] = include_metrics
         if query is not None:
             _payload["query"] = query
         if filters is not None:
@@ -369,6 +382,8 @@ class SecuritiesAPI(BaseAPI):
             _payload["offset"] = offset
         if include_facets is not None:
             _payload["include_facets"] = include_facets
+        if include_metrics is not None:
+            _payload["include_metrics"] = include_metrics
         if sort is not None:
             _payload["sort"] = sort
         if order is not None:
@@ -382,53 +397,35 @@ class SecuritiesAPI(BaseAPI):
 
 
 class AsyncSecuritiesAPI(AsyncBaseAPI):
-    """Securities namespace: breakdowns, description, details, facets, fees, filter, history, lookup, mifid, rels, screen, search."""
+    """Securities namespace: breakdowns, details, facets, fees, filter, history, lookup, mifid, rating_history, rels, screen, search."""
 
     async def breakdowns(
         self,
         *,
-        identifiers: Union[str, List[str]],
         fields: Optional[List[Any]] = None,
-        identifier: Optional[str] = None,
-        options: Optional[Dict[str, Any]] = None,
-        context: Optional[Dict[str, Any]] = None,
-    ) -> Any:
-        """Get portfolio breakdowns
-
-        Sector, country, asset class breakdowns for funds/ETFs.
-
-        Args:
-        identifiers: List of TepiloraCodes"""
-        _payload: Dict[str, Any] = {}
-        _payload["identifiers"] = identifiers
-        if fields is not None:
-            _payload["fields"] = fields
-        if identifier is not None:
-            _payload["identifier"] = identifier
-        return await self._call("securities.breakdowns", params=_payload, options=options, context=context)
-
-    async def description(
-        self,
-        *,
         identifier: Optional[str] = None,
         identifiers: Optional[Union[str, List[str]]] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
-        response_format: Optional[str] = None,
     ) -> Any:
-        """Get security description
+        """Get the portfolio composition breakdowns for a fund or ETF
 
-        Full metadata for one or more securities.
+        Returns the internal portfolio composition of a fund or ETF, broken down by: top holdings (name and weight), sector allocation (GICS sectors), country/region allocation, asset class allocation, and currency allocation. Data comes from the fund's latest portfolio disclosure. For stocks, returns empty. Used by the Dashboard security detail page for the composition tab and by the reporting module for fund sheet allocation charts.
 
         Args:
-        identifier: Single identifier
-        identifiers: Multiple identifiers"""
+        identifier: Optional security identifier
+        identifiers: Optional list of security identifiers
+
+        Examples:
+            >>> await client.securities.breakdowns(identifier='IE00B4L5Y983EURXMIL')"""
         _payload: Dict[str, Any] = {}
+        if fields is not None:
+            _payload["fields"] = fields
         if identifier is not None:
             _payload["identifier"] = identifier
         if identifiers is not None:
             _payload["identifiers"] = identifiers
-        return await self._call("securities.description", params=_payload, options=options, context=context, response_format=response_format)
+        return await self._call("securities.breakdowns", params=_payload, options=options, context=context)
 
     async def details(
         self,
@@ -439,13 +436,16 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Get security details
+        """Get the complete metadata profile for one or more securities
 
-        Alias for description. Full metadata for one or more securities.
+        Returns the full metadata record (80+ fields from D parquet) for one or multiple securities identified by TepiloraCode. Includes identity, classification, ratings, costs, size, provider, regulatory, and fund-specific fields. Accepts both single identifier and batch identifiers. Used by the Dashboard security detail page, by the reporting module for fund sheet header data, by portfolio modules for position metadata enrichment, and by the AI assistant.
 
         Args:
-        identifier: Single identifier
-        identifiers: Multiple identifiers"""
+        identifier: Optional security identifier
+        identifiers: Optional list of security identifiers
+
+        Examples:
+            >>> await client.securities.details(identifier='IE00B4L5Y983EURXMIL')"""
         _payload: Dict[str, Any] = {}
         if identifier is not None:
             _payload["identifier"] = identifier
@@ -461,13 +461,12 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get facets
+        """Get aggregated field values and counts for building securities filter UIs
 
-        Aggregated field values for building filters.
+        Returns the distinct values and document counts for specified metadata fields across the securities universe. Supports pre-filtering to get facet counts within a subset. Common facet fields: TepiloraType, TepiloraArea, TepiloraAssetClass, TepiloraCategory, Currency, ManagementCompany. Essential for building cascading filter UIs. Used by the Dashboard Securities page for the filter sidebar.
 
-        Args:
-        fields: Fields to aggregate
-        filters: Pre-filter"""
+        Examples:
+            >>> await client.securities.facets(fields=['TepiloraType'])"""
         _payload: Dict[str, Any] = {}
         _payload["fields"] = fields
         if filters is not None:
@@ -477,22 +476,27 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
     async def fees(
         self,
         *,
-        identifiers: Union[str, List[str]],
         identifier: Optional[str] = None,
+        identifiers: Optional[Union[str, List[str]]] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Get fee data
+        """Get the complete fee structure and cost breakdown for securities
 
-        TER, ongoing charges, and fee breakdown.
+        Returns detailed fee and cost information for one or more securities. For ETFs and funds includes TER (as decimal fraction, e.g. 0.002 = 0.20%), ongoing charges, management fee, performance fee, entry/exit charges, and transaction costs. Used by the Dashboard for cost comparison tables, by the reporting module for fund sheet fee sections, and by the billing module for total cost of ownership calculations.
 
         Args:
-        identifiers: List of TepiloraCodes"""
+        identifier: Optional security identifier
+        identifiers: Optional list of security identifiers
+
+        Examples:
+            >>> await client.securities.fees(identifiers='IE00B4L5Y983EURXMIL')"""
         _payload: Dict[str, Any] = {}
-        _payload["identifiers"] = identifiers
         if identifier is not None:
             _payload["identifier"] = identifier
+        if identifiers is not None:
+            _payload["identifiers"] = identifiers
         return await self._call("securities.fees", params=_payload, options=options, context=context, response_format=response_format)
 
     async def filter(
@@ -510,18 +514,13 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Filter securities
+        """Filter the securities universe by field values without text search
 
-        Filter by field values without text search. Results include TepiloraRating, TER, AUM. Sort is page-local.
+        Structured filtering of the securities universe by metadata field values, without full-text search. Requires at least one filter. Returns matching securities with metadata. Supports sort, group_by deduplication, preferred_currency, and faceted aggregations. Better than securities.search for programmatic screening. Used by the Dashboard for pre-built category screens, by asset allocation modules for ETF proxy discovery, and by screening workflows.
 
         Args:
-        filters: Field filters
-        limit: Maximum results
         offset: Pagination offset
-        sort: Sort field: TepiloraRating, TER, AUM, Name
-        order: Sort order: asc, desc (default per field)
-        group_by: Deduplicate by field (TepiloraParentId). Keeps one per group.
-        preferred_currency: When group_by active, prefer share class with this currency (e.g. EUR)"""
+        preferred_currency: Optional ISO 4217 currency code"""
         _payload: Dict[str, Any] = {}
         _payload["filters"] = filters
         if include_facets is not None:
@@ -543,34 +542,39 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
     async def history(
         self,
         *,
-        identifiers: Union[str, List[str]],
-        currency: Optional[str] = None,
         identifier: Optional[str] = None,
+        identifiers: Optional[Union[str, List[str]]] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         limit: Optional[int] = 5000,
         pivot: Optional[bool] = False,
-        total_return: Optional[str] = None,
+        currency: Optional[str] = None,
+        total_return: Optional[bool] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Get price history
+        """Get historical daily NAV/price time series for one or more securities
 
-        Historical prices for securities. Requires TepiloraCode(s).
+        Returns daily historical prices (NAV for funds/ETFs, close price for stocks) from the H parquet files. Supports date range filtering, result limiting, and pivot format for multi-security comparison. This is the foundational data operation for the entire analytics module: all rolling metrics and portfolio returns calculations consume history data. Used by the Dashboard for NAV charts, by the reporting module for fund sheet performance charts, and by the portfolio module for return computation.
 
         Args:
-        identifiers: List of TepiloraCodes
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        limit: Maximum results
-        pivot: Pivot format (dates as rows, TCs as columns)"""
+        identifier: Optional security identifier
+        identifiers: Single TepiloraCode or list of TepiloraCodes.
+        start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
+        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)
+        limit: Maximum number of rows per security.
+        pivot: Return pivoted history for dict output.
+        currency: Optional ISO 4217 currency code
+        total_return: Return total return prices.
+
+        Examples:
+            >>> await client.securities.history(identifiers='IE00B4L5Y983EURXMIL', limit=100)"""
         _payload: Dict[str, Any] = {}
-        _payload["identifiers"] = identifiers
-        if currency is not None:
-            _payload["currency"] = currency
         if identifier is not None:
             _payload["identifier"] = identifier
+        if identifiers is not None:
+            _payload["identifiers"] = identifiers
         if start_date is not None:
             _payload["start_date"] = start_date
         if end_date is not None:
@@ -579,6 +583,8 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
             _payload["limit"] = limit
         if pivot is not None:
             _payload["pivot"] = pivot
+        if currency is not None:
+            _payload["currency"] = currency
         if total_return is not None:
             _payload["total_return"] = total_return
         return await self._call("securities.history", params=_payload, options=options, context=context, response_format=response_format)
@@ -592,12 +598,16 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Lookup security by identifier
+        """Direct lookup of a security by ISIN, TepiloraCode, or ticker
 
-        Direct lookup by ISIN, TepiloraCode, or ticker.
+        Resolves a single security identifier to its full metadata record. Accepts ISIN (e.g. 'IE00B4L5Y983'), TepiloraCode (e.g. 'IE00B4L5Y983EURXMIL'), or ticker (e.g. 'IWDA'). When an ISIN matches multiple share classes (common for ETFs and funds listed on multiple exchanges and currencies), returns all matching share classes so the caller can select the appropriate one. Returns the complete metadata record including Name, ISIN, TepiloraCode, TepiloraType, Currency, Exchange, TepiloraRating, TER, AUM, TepiloraArea, TepiloraCategory, TepiloraAssetClass, ManagementCompany, and InceptionDate. Used by the reporting module's resolve_identifier() to auto-resolve ISINs to TepiloraCodes, by the Dashboard security detail page, and by the AI assistant when a user provides an ISIN without specifying the share class.
 
         Args:
-        identifier: TepiloraCode or ISIN"""
+        identifier: Single security identifier: ISIN, TepiloraCode, or Bloomberg ticker
+
+        Examples:
+            >>> await client.securities.lookup(identifier='IE00B4L5Y983EURXMIL')
+            >>> await client.securities.lookup(identifier='US0378331005')"""
         _payload: Dict[str, Any] = {}
         _payload["identifier"] = identifier
         if filters is not None:
@@ -609,41 +619,71 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
     async def mifid(
         self,
         *,
-        identifiers: Union[str, List[str]],
         identifier: Optional[str] = None,
-        options: Optional[Dict[str, Any]] = None,
-        context: Optional[Dict[str, Any]] = None,
-        response_format: Optional[str] = None,
-    ) -> Any:
-        """Get MiFID II data
-
-        MiFID II classification and risk data.
-
-        Args:
-        identifiers: List of TepiloraCodes"""
-        _payload: Dict[str, Any] = {}
-        _payload["identifiers"] = identifiers
-        if identifier is not None:
-            _payload["identifier"] = identifier
-        return await self._call("securities.mifid", params=_payload, options=options, context=context, response_format=response_format)
-
-    async def rels(
-        self,
-        *,
-        identifier: str,
         identifiers: Optional[Union[str, List[str]]] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Get related securities
+        """Get MiFID II regulatory classification and risk profile for securities
 
-        Related securities (same index, same issuer, etc.).
+        Returns MiFID II regulatory data including SRI (1-7 scale), target market classification, product complexity, knowledge requirements, time horizon, and risk tolerance. Essential for investment suitability checks required by European financial regulations. Used by the profiling module for suitability checks, by the Dashboard compliance panel, and by reporting modules for regulatory disclosures.
 
         Args:
-        identifier: TepiloraCode or ISIN"""
+        identifier: Optional security identifier
+        identifiers: Optional list of security identifiers"""
         _payload: Dict[str, Any] = {}
-        _payload["identifier"] = identifier
+        if identifier is not None:
+            _payload["identifier"] = identifier
+        if identifiers is not None:
+            _payload["identifiers"] = identifiers
+        return await self._call("securities.mifid", params=_payload, options=options, context=context, response_format=response_format)
+
+    async def rating_history(
+        self,
+        *,
+        identifier: Optional[str] = None,
+        identifiers: Optional[Union[str, List[str]]] = None,
+        limit: Optional[int] = 36,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+        response_format: Optional[str] = None,
+    ) -> Any:
+        """Get the historical Tepilora Rating time series with all 7 component scores
+
+        Returns the monthly time series of the Tepilora Rating (1-5 star composite) along with the 7 individual component percentile scores: Performance, Volatility, Consistency, Drawdown, Recovery, Cost, and Flows. Each component is a percentile (0.0-1.0) within the fund's peer group, calculated monthly from Rating.parquet. Default limit is 36 months. Used by the Dashboard for the rating evolution chart and by the reporting module for fund sheet rating section.
+
+        Args:
+        identifier: Optional security identifier
+        identifiers: Optional list of security identifiers"""
+        _payload: Dict[str, Any] = {}
+        if identifier is not None:
+            _payload["identifier"] = identifier
+        if identifiers is not None:
+            _payload["identifiers"] = identifiers
+        if limit is not None:
+            _payload["limit"] = limit
+        return await self._call("securities.rating_history", params=_payload, options=options, context=context, response_format=response_format)
+
+    async def rels(
+        self,
+        *,
+        identifier: Optional[str] = None,
+        identifiers: Optional[Union[str, List[str]]] = None,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+        response_format: Optional[str] = None,
+    ) -> Any:
+        """Find securities related to a given security by issuer, index, or category
+
+        Returns securities related to the input through shared attributes: same issuer, same tracked index, same TepiloraCategory, same TepiloraParentId (different share classes), or same sector. Each related security includes metadata and the relationship type. Used by the Dashboard security detail page for the Related Securities section and by the AI assistant for alternative suggestions.
+
+        Args:
+        identifier: Optional security identifier
+        identifiers: Optional list of security identifiers"""
+        _payload: Dict[str, Any] = {}
+        if identifier is not None:
+            _payload["identifier"] = identifier
         if identifiers is not None:
             _payload["identifiers"] = identifiers
         return await self._call("securities.rels", params=_payload, options=options, context=context, response_format=response_format)
@@ -651,46 +691,39 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
     async def screen(
         self,
         *,
-        benchmark: Optional[str] = None,
-        metrics: Optional[List[Any]] = None,
-        period: Optional[int] = None,
-        query_id: Optional[str] = None,
         universe: Optional[Dict[str, Any]] = None,
+        query_id: Optional[str] = None,
         query_name: Optional[str] = None,
         criteria: Optional[Dict[str, Any]] = None,
-        rank_by: Optional[str] = None,
+        metrics: Optional[List[Any]] = None,
+        rank_by: Optional[float] = None,
+        benchmark: Optional[str] = None,
+        period: Optional[int] = None,
         limit: Optional[int] = 50,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Screen securities
+        """Screen the securities universe by quantitative analytics criteria and rank results
 
-        Batch screening by analytics metrics.
-
-        Args:
-        universe: Universe filters
-        query_name: Saved query name
-        criteria: Metric criteria
-        rank_by: Ranking metric
-        limit: Maximum results"""
+        Advanced quantitative screening combining universe filtering with analytics-based criteria. First defines a universe, then applies quantitative criteria (e.g. volatility < 15%, Sharpe > 1.0). Securities passing all criteria are ranked by the specified metric. Supports saved queries for reusable strategies. This is the most computationally intensive securities operation. Used by the Dashboard for advanced screening and by asset allocation modules for ETF proxy selection."""
         _payload: Dict[str, Any] = {}
-        if benchmark is not None:
-            _payload["benchmark"] = benchmark
-        if metrics is not None:
-            _payload["metrics"] = metrics
-        if period is not None:
-            _payload["period"] = period
-        if query_id is not None:
-            _payload["query_id"] = query_id
         if universe is not None:
             _payload["universe"] = universe
+        if query_id is not None:
+            _payload["query_id"] = query_id
         if query_name is not None:
             _payload["query_name"] = query_name
         if criteria is not None:
             _payload["criteria"] = criteria
+        if metrics is not None:
+            _payload["metrics"] = metrics
         if rank_by is not None:
             _payload["rank_by"] = rank_by
+        if benchmark is not None:
+            _payload["benchmark"] = benchmark
+        if period is not None:
+            _payload["period"] = period
         if limit is not None:
             _payload["limit"] = limit
         return await self._call("securities.screen", params=_payload, options=options, context=context, response_format=response_format)
@@ -698,12 +731,12 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
     async def search(
         self,
         *,
-        include_metrics: Optional[bool] = None,
         query: Optional[str] = "",
         filters: Optional[Dict[str, Any]] = None,
         limit: Optional[int] = 50,
         offset: Optional[int] = 0,
         include_facets: Optional[bool] = False,
+        include_metrics: Optional[bool] = None,
         sort: Optional[str] = None,
         order: Optional[str] = None,
         group_by: Optional[str] = None,
@@ -712,23 +745,18 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Search securities
+        """Search securities by name, ISIN, or ticker with full-text and faceted filtering
 
-        Full-text search with filters and facets. Results include TepiloraRating, TER, AUM. Sort is page-local.
+        Full-text search across the securities universe (ETFs, funds, stocks, bonds, indices) powered by Tantivy search engine. Accepts free-text queries and returns matching securities with metadata including Name, ISIN, TepiloraCode, TepiloraType, Currency, TepiloraRating, TER, AUM. Supports field-based filters, faceted aggregations, sort by key metrics, and deduplication via group_by=TepiloraParentId. Used by the Dashboard Securities page, by the AI assistant for security discovery, and by workflow bridges for cross-module composition.
 
         Args:
-        query: Search query
-        filters: Field filters
-        limit: Maximum results
         offset: Pagination offset
-        include_facets: Include aggregations
-        sort: Sort field: TepiloraRating, TER, AUM, Name
-        order: Sort order: asc, desc (default per field)
-        group_by: Deduplicate by field (TepiloraParentId). Keeps one per group.
-        preferred_currency: When group_by active, prefer share class with this currency (e.g. EUR)"""
+        preferred_currency: Optional ISO 4217 currency code
+
+        Examples:
+            >>> await client.securities.search(query='msci world', limit=5)
+            >>> await client.securities.search(query='sp500', filters={'TepiloraType': 'ETF'}, limit=3)"""
         _payload: Dict[str, Any] = {}
-        if include_metrics is not None:
-            _payload["include_metrics"] = include_metrics
         if query is not None:
             _payload["query"] = query
         if filters is not None:
@@ -739,6 +767,8 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
             _payload["offset"] = offset
         if include_facets is not None:
             _payload["include_facets"] = include_facets
+        if include_metrics is not None:
+            _payload["include_metrics"] = include_metrics
         if sort is not None:
             _payload["sort"] = sort
         if order is not None:

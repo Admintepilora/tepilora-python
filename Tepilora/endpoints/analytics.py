@@ -18,13 +18,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -32,7 +56,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Annualized returns"""
+        """Calculate calendar year returns
+
+        Computes annual returns for each calendar year in the price history. Returns year and percentage return per security. Used by the Dashboard for calendar year bar charts and by the reporting module for fund sheet annual performance tables."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -48,12 +74,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
+        if period is not None:
+            _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("annual_returns", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def annual_volatility(
@@ -62,14 +136,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        Annualized: Optional[Any] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -77,7 +174,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Annualized volatility"""
+        """Calculate annualized volatility from the full price history
+
+        Computes a single annualized volatility figure from the entire price history (not rolling). Standard deviation of daily returns times sqrt(260). Used for summary statistics and peer comparison."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -93,14 +192,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if Annualized is not None and (not strict or Annualized != True):
+        if period is not None:
+            _payload["period"] = period
+        if Annualized is not None:
             _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("annual_volatility", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def average_drawdown(
@@ -109,14 +254,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
+        Obs: Optional[str] = None,
         period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -124,7 +292,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Average drawdown"""
+        """Calculate the average of all drawdown events
+
+        Computes the mean depth of all distinct drawdown episodes. A drawdown episode starts when price drops below a previous peak and ends when a new peak is reached. Average drawdown is less extreme than max drawdown and gives a better sense of typical loss experience."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -140,14 +310,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
         if period is not None:
             _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("average_drawdown", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def batch(
@@ -156,12 +372,12 @@ class _AnalyticsMethodsMixin:
         operations: List[Any],
         currency: Optional[str] = None,
         identifiers: Optional[Union[str, List[str]]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        total_return: Optional[str] = None,
-        TR: Optional[str] = None,
+        total_return: Optional[bool] = None,
+        TR: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -169,16 +385,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Batch analytics
+        """Execute multiple analytics functions in a single call with shared price data
 
-        Execute multiple analytics functions in one call.
-
-        Args:
-        operations: List of operations [{function, params}]
-        identifiers: List of TepiloraCodes
-        prices: Shared prices data
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
+        Runs multiple analytics functions in one request, sharing the same price data to avoid redundant fetches. Each operation specifies a function name and optional per-function parameters. Common parameters (identifiers, start_date, end_date, prices) are shared across all operations. Returns results keyed by function name. Used by the Dashboard analytics dashboard (which computes volatility, Sharpe, drawdown, etc. in parallel) and by batch screening workflows."""
         _payload: Dict[str, Any] = dict(extra_params)
         _payload["operations"] = operations
         if currency is not None:
@@ -205,15 +414,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        n_periods: Optional[int] = 20,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -221,7 +452,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Best period return"""
+        """Find the best single-period return in the history
+
+        Returns the highest single-day (or single-period) return in the price history, along with the date it occurred. Used for return distribution analysis and for understanding maximum upside potential."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -237,16 +470,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if n_periods is not None and (not strict or n_periods != 20):
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
             _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("best_period", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def burke_ratio(
@@ -255,17 +532,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        rf: Optional[float] = 0.0,
-        rf_frequency: Optional[str] = "annual",
-        Annualized: Optional[Any] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -273,7 +570,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Burke ratio"""
+        """Calculate the Burke ratio (return adjusted for drawdown volatility)
+
+        Computes the Burke ratio: (annualized return - risk-free rate) / sqrt(sum of squared drawdowns). Penalizes both the number and severity of drawdowns. More sophisticated than Calmar or Sterling for evaluating managers who experience multiple distinct drawdown events."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -289,20 +588,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if rf is not None and (not strict or rf != 0.0):
-            _payload["rf"] = rf
-        if rf_frequency is not None and (not strict or rf_frequency != "annual"):
-            _payload["rf_frequency"] = rf_frequency
-        if Annualized is not None and (not strict or Annualized != True):
+        if Annualized is not None:
             _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("burke_ratio", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def capture_ratio(
@@ -311,16 +650,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -328,7 +688,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Up/down capture ratio"""
+        """Calculate combined up/down capture ratio
+
+        Computes both upside and downside capture ratios in a single call, plus the capture ratio (upside_capture / downside_capture). A capture ratio > 1 means the security captures more upside than downside — the ideal profile. Used by the Dashboard for capture analysis and by fund evaluation."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -344,18 +706,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if y is not None:
-            _payload["y"] = y
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
         if x is not None:
             _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("capture_ratio", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def cumulative_performance(
@@ -364,14 +768,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        base: Optional[float] = 100.0,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -379,7 +806,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Cumulative performance"""
+        """Calculate cumulative return series (growth of initial investment)
+
+        Computes the cumulative compounded return series: how a unit investment grows over time. At each date, shows the total return since inception as a multiplier (1.25 = +25%). Used by the Dashboard for the NAV/growth chart and for comparing securities on a common base."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -395,14 +824,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if base is not None and (not strict or base != 100.0):
+        if period is not None:
+            _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
             _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("cumulative_performance", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def downside_capture(
@@ -411,16 +886,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -428,7 +924,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Downside capture"""
+        """Calculate downside capture ratio vs benchmark
+
+        Computes the downside capture ratio: the percentage of benchmark losses captured during down-market periods. A ratio < 100% means the security falls less than the benchmark during declines. Investors want low downside capture. Used for defensive quality assessment."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -444,18 +942,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if y is not None:
-            _payload["y"] = y
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
         if x is not None:
             _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("downside_capture", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def downside_deviation(
@@ -464,16 +1004,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        MAR: Optional[float] = 0.0,
-        Annualized: Optional[Any] = False,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -481,7 +1042,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Downside deviation"""
+        """Calculate downside deviation below a minimum acceptable return (MAR)
+
+        Computes the standard deviation of returns below a Minimum Acceptable Return (MAR, default 0). Unlike semi-deviation which uses the mean as threshold, downside deviation uses a user-defined target. Used in the Sortino ratio when a specific target return is required."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -497,18 +1060,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if MAR is not None and (not strict or MAR != 0.0):
-            _payload["MAR"] = MAR
-        if Annualized is not None and (not strict or Annualized != False):
+        if Annualized is not None:
             _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("downside_deviation", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def drawdown(
@@ -517,13 +1122,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -531,7 +1160,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Drawdown series"""
+        """Calculate the drawdown series (peak-to-trough decline at each point)
+
+        Computes the drawdown at each point: the percentage decline from the most recent peak. Values range from 0 (at a peak) to negative numbers (in a drawdown). The drawdown series visualizes how far an investment has fallen from its highest point over time. Used by the Dashboard for drawdown area charts and by risk analysis."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -547,12 +1178,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
+        if period is not None:
+            _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("drawdown", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def drawdown_duration(
@@ -561,13 +1240,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -575,7 +1278,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Drawdown duration"""
+        """Calculate the duration statistics of drawdown events
+
+        Computes duration statistics for drawdown episodes: average duration, maximum duration, and current drawdown duration (if in a drawdown). Duration is measured in trading days. Long drawdown durations can be psychologically harder for investors than deep but short drawdowns."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -591,12 +1296,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
+        if period is not None:
+            _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("drawdown_duration", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def egarch_volatility(
@@ -605,17 +1358,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        p: Optional[int] = 1,
-        o: Optional[int] = 1,
-        q: Optional[int] = 1,
-        Annualized: Optional[Any] = False,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -623,7 +1396,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """EGARCH volatility"""
+        """Estimate asymmetric volatility using EGARCH model
+
+        Fits an EGARCH (Exponential GARCH) model that captures the leverage effect: negative returns tend to increase volatility more than positive returns of the same magnitude. Returns conditional volatility series and asymmetry parameters. Used for equity risk modeling where downside moves have disproportionate volatility impact."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -639,35 +1414,99 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if p is not None and (not strict or p != 1):
-            _payload["p"] = p
-        if o is not None and (not strict or o != 1):
-            _payload["o"] = o
-        if q is not None and (not strict or q != 1):
-            _payload["q"] = q
-        if Annualized is not None and (not strict or Annualized != False):
+        if period is not None:
+            _payload["period"] = period
+        if Annualized is not None:
             _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("egarch_volatility", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def factor_attribution(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
-        factors: Optional[Dict[str, Any]] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        model: Optional[str] = "custom",
-        use_excess_returns: Optional[bool] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -675,27 +1514,77 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Factor attribution"""
+        """Decompose returns into factor contributions
+
+        Attributes security returns to individual factor contributions using the fitted factor model. Shows how much of the return came from market exposure, size (SMB), value (HML), profitability (RMW), investment (CMA), and alpha (unexplained). Used by the Dashboard factor attribution chart."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
             _payload["prices"] = prices
         if prices_file is not None:
             _payload["prices_file"] = prices_file
-        if factors is not None:
-            _payload["factors"] = factors
         if start_date is not None:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if model is not None and (not strict or model != "custom"):
+        if Obs is not None:
+            _payload["Obs"] = Obs
+        if period is not None:
+            _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
             _payload["model"] = model
-        if use_excess_returns is not None and (not strict or use_excess_returns != True):
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
             _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("factor_attribution", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
@@ -703,16 +1592,39 @@ class _AnalyticsMethodsMixin:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
-        factors: Optional[Dict[str, Any]] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        model: Optional[str] = "custom",
-        annualize_alpha: Optional[bool] = True,
-        use_excess_returns: Optional[bool] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -720,29 +1632,77 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Factor regression (FF3/FF5)"""
+        """Run Fama-French factor regression (FF3 or FF5) on security returns
+
+        Regresses security returns against Fama-French factor returns (FF3: Market, SMB, HML; FF5: adds RMW, CMA). Returns factor loadings (betas), alpha, R-squared, and statistical significance. Uses excess returns (R - RF) by default for proper factor model estimation. Used for understanding what drives a security's returns beyond market exposure."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
             _payload["prices"] = prices
         if prices_file is not None:
             _payload["prices_file"] = prices_file
-        if factors is not None:
-            _payload["factors"] = factors
         if start_date is not None:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if model is not None and (not strict or model != "custom"):
+        if Obs is not None:
+            _payload["Obs"] = Obs
+        if period is not None:
+            _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
             _payload["model"] = model
-        if annualize_alpha is not None and (not strict or annualize_alpha != True):
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
             _payload["annualize_alpha"] = annualize_alpha
-        if use_excess_returns is not None and (not strict or use_excess_returns != True):
+        if use_excess_returns is not None:
             _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("factor_regression", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
@@ -752,14 +1712,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -767,7 +1750,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Gain/loss ratio"""
+        """Calculate the average gain to average loss ratio
+
+        Computes the ratio of the average positive return to the average negative return. Unlike profit factor (which uses totals), gain/loss ratio uses averages. A ratio > 1 with a win rate > 50% indicates a robust return profile. Used for trade analysis and strategy evaluation."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -783,14 +1768,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("gain_loss_ratio", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def garch_forecast(
@@ -799,16 +1830,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        horizon: Optional[int] = 5,
-        p: Optional[int] = 1,
-        q: Optional[int] = 1,
-        Annualized: Optional[Any] = False,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -816,7 +1868,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """GARCH forecast"""
+        """Forecast future volatility using a fitted GARCH model
+
+        Fits a GARCH(1,1) model and projects volatility forward for a specified number of days. Returns the forecasted volatility path showing how current volatility is expected to mean-revert. Used for option pricing inputs, risk budgeting, and VaR forecasting."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -832,18 +1886,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if horizon is not None and (not strict or horizon != 5):
-            _payload["horizon"] = horizon
-        if p is not None and (not strict or p != 1):
-            _payload["p"] = p
-        if q is not None and (not strict or q != 1):
-            _payload["q"] = q
-        if Annualized is not None and (not strict or Annualized != False):
+        if Obs is not None:
+            _payload["Obs"] = Obs
+        if period is not None:
+            _payload["period"] = period
+        if Annualized is not None:
             _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("garch_forecast", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def garch_volatility(
@@ -852,16 +1948,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        p: Optional[int] = 1,
-        q: Optional[int] = 1,
-        Annualized: Optional[Any] = False,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -869,7 +1986,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """GARCH volatility"""
+        """Estimate time-varying volatility using GARCH(1,1) model
+
+        Fits a GARCH(1,1) (Generalized Autoregressive Conditional Heteroskedasticity) model to daily returns and extracts the conditional volatility series. GARCH captures volatility clustering (high-vol periods followed by high-vol) which simple rolling volatility misses. Returns fitted conditional volatility time series and model parameters (omega, alpha, beta)."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -885,18 +2004,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if p is not None and (not strict or p != 1):
-            _payload["p"] = p
-        if q is not None and (not strict or q != 1):
-            _payload["q"] = q
-        if Annualized is not None and (not strict or Annualized != False):
+        if period is not None:
+            _payload["period"] = period
+        if Annualized is not None:
             _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("garch_volatility", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def hurst_exponent(
@@ -905,14 +2066,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -920,7 +2104,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Hurst exponent"""
+        """Calculate the Hurst exponent (trend persistence measure)
+
+        Estimates the Hurst exponent (H) from price returns using rescaled range (R/S) analysis. H > 0.5 indicates persistent (trending) behavior, H = 0.5 indicates random walk, H < 0.5 indicates anti-persistent (mean-reverting) behavior. Used for assessing whether momentum or mean-reversion strategies are appropriate."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -936,14 +2122,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("hurst_exponent", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def info(
@@ -957,12 +2189,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Get function info
+        """Get detailed documentation for a specific analytics function
 
-        Get detailed info about an analytics function.
-
-        Args:
-        function: Function name"""
+        Returns the full specification of a single analytics function: name, category, description, parameter definitions (name, type, required, default), methodology reference, and usage examples. Used by the Dashboard analytics help panel, by the AI assistant when explaining function parameters, and by the SDK for method-level documentation."""
         _payload: Dict[str, Any] = dict(extra_params)
         _payload["function"] = function
         return self._call_analytics("info", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
@@ -978,12 +2207,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """List analytics functions
+        """List all available analytics functions with categories
 
-        List available analytics functions.
-
-        Args:
-        category: Filter by category"""
+        Returns the catalog of all available analytics functions (75+) with their names, categories (returns, volatility, risk, regression, distribution, ratios, etc.), and parameter signatures. Optionally filterable by category. Used by the Dashboard analytics selector, by the AI assistant to discover available computations, and by the SDK to generate method stubs."""
         _payload: Dict[str, Any] = dict(extra_params)
         if category is not None:
             _payload["category"] = category
@@ -995,13 +2221,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1009,7 +2259,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Log returns"""
+        """Calculate daily logarithmic returns from price series
+
+        Computes daily log returns (ln(P_t/P_{t-1})) for one or more securities. Log returns are additive across time (unlike simple returns) and approximately equal to simple returns for small values. Preferred for statistical analysis, risk modeling, and multi-period aggregation."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -1025,12 +2277,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
+        if period is not None:
+            _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("log_returns", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def max_drawdown(
@@ -1039,14 +2339,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
+        Obs: Optional[str] = None,
         period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1054,7 +2377,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Maximum drawdown"""
+        """Calculate the maximum drawdown (worst peak-to-trough decline)
+
+        Returns the largest peak-to-trough percentage decline in the price history. Max drawdown is the most intuitive risk metric: it answers 'what was the worst loss an investor could have experienced?' Includes the drawdown start date, trough date, and recovery date (if recovered). Used by screening criteria, risk dashboards, and reporting."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -1070,14 +2395,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
         if period is not None:
             _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("max_drawdown", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def momentum(
@@ -1086,14 +2457,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 20,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1101,7 +2495,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Momentum indicator"""
+        """Calculate price momentum over multiple lookback periods
+
+        Computes momentum as the total return over specified lookback periods (1M, 3M, 6M, 12M). Momentum is one of the most robust anomalies in finance: securities with positive recent returns tend to continue outperforming. Used by momentum-based screening strategies and by the Dashboard momentum indicators."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -1117,14 +2513,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 20):
+        if period is not None:
             _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("momentum", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def monthly_returns(
@@ -1133,13 +2575,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1147,7 +2613,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Monthly returns"""
+        """Aggregate daily returns into monthly return table
+
+        Computes monthly returns from daily price data, organized as a pivot table with years as rows and months as columns. Returns are expressed as percentage points (1.74 = 1.74% return). Used by the Dashboard for monthly return heatmaps and by the reporting module for fund sheet monthly performance tables."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -1163,12 +2631,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
+        if period is not None:
+            _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("monthly_returns", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def monthly_volatility(
@@ -1177,14 +2693,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        Annualized: Optional[Any] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1192,7 +2731,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Monthly volatility"""
+        """Calculate volatility from monthly returns
+
+        Computes annualized volatility using monthly return data instead of daily. Useful when only monthly data is available or when daily noise should be smoothed. Annualization: multiply by sqrt(12)."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -1208,14 +2749,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if Annualized is not None and (not strict or Annualized != True):
+        if period is not None:
+            _payload["period"] = period
+        if Annualized is not None:
             _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("monthly_volatility", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def omega_ratio(
@@ -1224,15 +2811,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        threshold: Optional[float] = 0.0,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1240,7 +2849,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Omega ratio"""
+        """Calculate the Omega ratio (probability-weighted gain/loss ratio)
+
+        Computes the Omega ratio: the ratio of the probability-weighted gains above a threshold to the probability-weighted losses below it. Omega captures the entire return distribution, not just mean and variance. Omega > 1 is favorable. More informative than Sharpe for non-normal return distributions."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -1256,16 +2867,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if threshold is not None and (not strict or threshold != 0.0):
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
             _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("omega_ratio", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def pain_index(
@@ -1274,14 +2929,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1289,7 +2967,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Pain index"""
+        """Calculate the Pain Index (average drawdown depth)
+
+        Computes the Pain Index: the average of all drawdown values over the full period. Simpler than the Ulcer Index (no squaring). Represents the average pain an investor experienced from being below prior peaks. Used alongside the Pain Ratio (return / pain index) for risk-adjusted evaluation."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -1305,14 +2985,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("pain_index", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def profit_factor(
@@ -1321,14 +3047,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1336,7 +3085,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Profit factor"""
+        """Calculate the profit factor (gross gains / gross losses)
+
+        Computes the ratio of total positive returns to total negative returns. Profit factor > 1 means gross gains exceed gross losses. Combines win rate with average win/loss size into a single metric. Used for evaluating trading strategies and for fund quality assessment."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -1352,14 +3103,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("profit_factor", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rate_of_change(
@@ -1368,14 +3165,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 20,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1383,7 +3203,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rate of change"""
+        """Calculate the Rate of Change (ROC) indicator
+
+        Computes the rate of change: ((price_today / price_n_days_ago) - 1) * 100. A simple momentum indicator expressed as a percentage. Positive ROC indicates upward momentum, negative indicates downward. Used by technical analysis views and by momentum screening criteria."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -1399,14 +3221,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 20):
+        if period is not None:
             _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("rate_of_change", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def relative_strength(
@@ -1415,16 +3283,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 20,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1432,7 +3321,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Relative strength"""
+        """Calculate relative strength of a security vs benchmark over time
+
+        Computes the relative strength line: the ratio of the security price to the benchmark price over time. A rising relative strength line means the security is outperforming the benchmark. Used for identifying market leaders and laggards, and for sector rotation analysis."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -1448,18 +3339,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 20):
+        if period is not None:
             _payload["period"] = period
-        if y is not None:
-            _payload["y"] = y
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
         if x is not None:
             _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("relative_strength", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def returns(
@@ -1468,13 +3401,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1482,7 +3439,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Simple returns"""
+        """Calculate daily simple returns from price series
+
+        Computes daily arithmetic returns (P_t/P_{t-1} - 1) for one or more securities. Returns a time series of daily percentage changes. The foundational calculation for all other analytics — volatility, Sharpe, drawdown, etc. all start from returns. Accepts TepiloraCodes (fetches prices automatically) or user-provided price data."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -1498,12 +3457,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
+        if period is not None:
+            _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("returns", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_alpha(
@@ -1512,19 +3519,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
-        Annualized: Optional[Any] = True,
-        rf: Optional[float] = 0.0,
-        rf_frequency: Optional[str] = "annual",
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1532,7 +3557,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling alpha"""
+        """Calculate rolling Jensen's alpha (excess return vs benchmark)
+
+        Computes the rolling alpha from CAPM regression: the intercept term representing return not explained by market exposure. Positive alpha indicates outperformance after adjusting for beta. Formula: alpha = E[R_p - R_f] - beta * E[R_m - R_f]. Requires a benchmark as the second identifier. Used by the Dashboard for alpha charts and by performance evaluation."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -1548,24 +3575,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if y is not None:
-            _payload["y"] = y
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
         if x is not None:
             _payload["x"] = x
-        if Annualized is not None and (not strict or Annualized != True):
-            _payload["Annualized"] = Annualized
-        if rf is not None and (not strict or rf != 0.0):
-            _payload["rf"] = rf
-        if rf_frequency is not None and (not strict or rf_frequency != "annual"):
-            _payload["rf_frequency"] = rf_frequency
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("rolling_alpha", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_autocorrelation(
@@ -1574,15 +3637,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        lag: Optional[int] = 1,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1590,7 +3675,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling autocorrelation"""
+        """Calculate rolling autocorrelation of returns
+
+        Computes the rolling first-order autocorrelation of daily returns: the correlation between today's return and yesterday's. Significant positive autocorrelation suggests momentum, while negative autocorrelation suggests mean-reversion. Used for testing the random walk hypothesis and for momentum strategy design."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -1606,16 +3693,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if lag is not None and (not strict or lag != 1):
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
             _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("rolling_autocorrelation", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_beta(
@@ -1624,16 +3755,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1641,7 +3793,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling beta"""
+        """Calculate rolling beta (market sensitivity)
+
+        Computes the rolling beta: the slope of the regression of security returns against benchmark returns. Beta = 1 means the security moves with the market, beta > 1 means more volatile than the market, beta < 1 means less volatile. Used by CAPM analysis, factor models, and portfolio hedging calculations."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -1657,18 +3811,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if y is not None:
-            _payload["y"] = y
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
         if x is not None:
             _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("rolling_beta", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_beta_timing(
@@ -1677,16 +3873,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1694,7 +3911,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling beta timing"""
+        """Calculate rolling market timing coefficient (Treynor-Mazuy)
+
+        Estimates the Treynor-Mazuy market timing coefficient: a quadratic regression term that captures whether the manager increases beta before market rallies and decreases it before declines. Positive timing coefficient suggests successful market timing ability. Used for evaluating active fund managers."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -1710,18 +3929,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if y is not None:
-            _payload["y"] = y
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
         if x is not None:
             _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("rolling_beta_timing", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_cagr(
@@ -1730,14 +3991,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1745,7 +4029,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling CAGR"""
+        """Calculate rolling Compound Annual Growth Rate
+
+        Computes the rolling CAGR (Compound Annual Growth Rate) over a specified window. CAGR represents the smoothed annualized return assuming reinvestment. Formula: (P_end/P_start)^(252/days) - 1. Used for comparing returns across different time horizons on an equal basis."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -1761,14 +4047,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("rolling_cagr", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_calmar(
@@ -1777,15 +4109,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        Annualized: Optional[Any] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1793,7 +4147,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling Calmar ratio"""
+        """Calculate rolling Calmar ratio (return over max drawdown)
+
+        Computes the rolling Calmar ratio: CAGR divided by absolute max drawdown. Measures how much return is earned per unit of maximum loss risk. Higher is better. Unlike Sharpe (which uses volatility), Calmar specifically penalizes large peak-to-trough losses. Used for hedge fund and absolute return evaluation."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -1809,16 +4165,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if Annualized is not None and (not strict or Annualized != True):
+        if Annualized is not None:
             _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("rolling_calmar", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_correlation(
@@ -1827,15 +4227,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
         min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1843,7 +4265,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling correlation"""
+        """Calculate rolling pairwise correlation matrix between securities
+
+        Computes the rolling correlation matrix between all pairs of input securities. Correlations range from -1 (perfect inverse) to +1 (perfect co-movement). Reveals how diversification benefits change over time (correlations tend to increase during crises). Used by portfolio construction, risk management, and the Dashboard correlation heatmap."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -1859,16 +4283,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
         if min_samples is not None:
             _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("rolling_correlation", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_covariance(
@@ -1877,16 +4345,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
         min_samples: Optional[int] = None,
-        Annualized: Optional[bool] = True,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1894,7 +4383,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling covariance"""
+        """Calculate rolling pairwise covariance matrix between securities
+
+        Computes the rolling covariance matrix between input securities. Covariance combines correlation with volatility magnitudes. The covariance matrix is the primary input for mean-variance portfolio optimization and for factor risk models. Used by portfolio.optimize, factors.risk_model, and risk decomposition."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -1910,18 +4401,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
         if min_samples is not None:
             _payload["min_samples"] = min_samples
-        if Annualized is not None and (not strict or Annualized != True):
-            _payload["Annualized"] = Annualized
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("rolling_covariance", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_cvar(
@@ -1930,15 +4463,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        confidence: Optional[float] = 0.95,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1946,7 +4501,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling CVaR (Expected Shortfall)"""
+        """Calculate rolling Conditional VaR (Expected Shortfall)
+
+        Computes the rolling Conditional Value at Risk (CVaR), also called Expected Shortfall. CVaR answers: 'Given that we exceed VaR, what is the expected loss?' CVaR is always worse than VaR and is considered a more coherent risk measure. Used by risk management and by portfolio optimization (cvar solver mode)."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -1962,16 +4519,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if confidence is not None and (not strict or confidence != 0.95):
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
             _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("rolling_cvar", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_downside_beta(
@@ -1980,16 +4581,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -1997,7 +4619,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling downside beta"""
+        """Calculate rolling downside beta (sensitivity during down markets)
+
+        Computes beta using only periods when the benchmark return is negative. Downside beta measures how much the security falls during market declines. A security with low downside beta provides better downside protection. Used alongside upside beta for asymmetric risk analysis."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -2013,36 +4637,99 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if y is not None:
-            _payload["y"] = y
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
         if x is not None:
             _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("rolling_downside_beta", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_factor_regression(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
-        factors: Optional[Dict[str, Any]] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        model: Optional[str] = "custom",
-        period: Optional[int] = 260,
-        Obs: Optional[Any] = "",
-        annualize_alpha: Optional[bool] = True,
-        use_excess_returns: Optional[bool] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2050,33 +4737,77 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling factor regression"""
+        """Run rolling Fama-French factor regression over time
+
+        Performs factor regression over rolling windows, producing time series of factor loadings. Reveals how a security's factor exposures change over time (e.g. a fund shifting from value to growth). Used for style analysis and manager evaluation."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
             _payload["prices"] = prices
         if prices_file is not None:
             _payload["prices_file"] = prices_file
-        if factors is not None:
-            _payload["factors"] = factors
         if start_date is not None:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if model is not None and (not strict or model != "custom"):
-            _payload["model"] = model
-        if period is not None and (not strict or period != 260):
-            _payload["period"] = period
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if annualize_alpha is not None and (not strict or annualize_alpha != True):
+        if period is not None:
+            _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
             _payload["annualize_alpha"] = annualize_alpha
-        if use_excess_returns is not None and (not strict or use_excess_returns != True):
+        if use_excess_returns is not None:
             _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("rolling_factor_regression", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
@@ -2086,17 +4817,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        p: Optional[int] = 1,
-        q: Optional[int] = 1,
-        Annualized: Optional[Any] = False,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2104,7 +4855,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling GARCH"""
+        """Calculate rolling GARCH volatility estimates over time
+
+        Fits GARCH(1,1) models over rolling windows and extracts the final conditional volatility at each point. Produces a time series of GARCH-estimated volatility that adapts to changing market regimes. More computationally intensive than rolling standard deviation but captures volatility dynamics better."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -2120,20 +4873,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if p is not None and (not strict or p != 1):
-            _payload["p"] = p
-        if q is not None and (not strict or q != 1):
-            _payload["q"] = q
-        if Annualized is not None and (not strict or Annualized != False):
+        if Annualized is not None:
             _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("rolling_garch", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_information_ratio(
@@ -2142,17 +4935,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
-        Annualized: Optional[Any] = True,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2160,7 +4973,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling information ratio"""
+        """Calculate rolling Information Ratio (alpha per unit of tracking error)
+
+        Computes the rolling Information Ratio: alpha divided by tracking error. Measures the consistency of excess returns over a benchmark. A high IR (> 0.5) indicates consistent outperformance, not just lucky periods. The key metric for evaluating active managers. Used by fund evaluation dashboards."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -2176,20 +4991,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if y is not None:
-            _payload["y"] = y
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
         if x is not None:
             _payload["x"] = x
-        if Annualized is not None and (not strict or Annualized != True):
-            _payload["Annualized"] = Annualized
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("rolling_information_ratio", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_kurtosis(
@@ -2198,15 +5053,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        excess: Optional[bool] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2214,7 +5091,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling kurtosis"""
+        """Calculate rolling kurtosis of returns (fat-tail measure)
+
+        Computes the rolling excess kurtosis (fourth standardized moment minus 3) of daily returns. Positive excess kurtosis indicates fat tails (more extreme events than a normal distribution). Most financial returns exhibit positive excess kurtosis. Used for tail risk assessment and VaR model validation."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -2230,16 +5109,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if excess is not None and (not strict or excess != True):
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
             _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("rolling_kurtosis", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_r_squared(
@@ -2248,16 +5171,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2265,7 +5209,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling R-squared"""
+        """Calculate rolling R-squared (proportion of variance explained by benchmark)
+
+        Computes the rolling R-squared from the regression against a benchmark. R-squared ranges from 0 to 1: high values mean the security closely tracks the benchmark, low values mean it moves independently. Used for assessing benchmark appropriateness and for tracking error analysis."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -2281,18 +5227,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if y is not None:
-            _payload["y"] = y
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
         if x is not None:
             _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("rolling_r_squared", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_regression(
@@ -2301,19 +5289,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
-        Annualized: Optional[Any] = True,
-        rf: Optional[float] = 0.0,
-        rf_frequency: Optional[str] = "annual",
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2321,7 +5327,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling regression"""
+        """Run full rolling OLS regression with all statistics
+
+        Performs complete rolling OLS regression of security returns against benchmark returns. Returns: alpha, beta, R-squared, standard errors, t-statistics, and p-values at each rolling window endpoint. The most comprehensive regression output. Used for detailed statistical analysis and for factor model research."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -2337,24 +5345,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if y is not None:
-            _payload["y"] = y
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
         if x is not None:
             _payload["x"] = x
-        if Annualized is not None and (not strict or Annualized != True):
-            _payload["Annualized"] = Annualized
-        if rf is not None and (not strict or rf != 0.0):
-            _payload["rf"] = rf
-        if rf_frequency is not None and (not strict or rf_frequency != "annual"):
-            _payload["rf_frequency"] = rf_frequency
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("rolling_regression", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_residuals(
@@ -2363,16 +5407,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2380,7 +5445,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling residuals"""
+        """Calculate rolling regression residuals (unexplained returns)
+
+        Returns the rolling residual series from the regression of security returns against benchmark returns. Residuals represent the portion of returns not explained by market movement. Large residuals indicate stock-specific events. Used for alpha research and for detecting structural breaks in the security-benchmark relationship."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -2396,18 +5463,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if y is not None:
-            _payload["y"] = y
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
         if x is not None:
             _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("rolling_residuals", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_sharpe(
@@ -2416,17 +5525,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        rf: Optional[float] = 0.0,
-        rf_frequency: Optional[str] = "annual",
-        Annualized: Optional[Any] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2434,7 +5563,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling Sharpe ratio"""
+        """Calculate rolling Sharpe ratio (risk-adjusted return)
+
+        Computes the rolling annualized Sharpe ratio: (mean return - risk-free rate) / volatility. The most widely used risk-adjusted performance measure. A Sharpe > 1 is generally considered good, > 2 excellent. The rf parameter accepts annual rate by default (rf_frequency='annual'). Used by the Dashboard, screening criteria, and all performance reporting."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -2450,20 +5581,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if rf is not None and (not strict or rf != 0.0):
-            _payload["rf"] = rf
-        if rf_frequency is not None and (not strict or rf_frequency != "annual"):
-            _payload["rf_frequency"] = rf_frequency
-        if Annualized is not None and (not strict or Annualized != True):
+        if Annualized is not None:
             _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("rolling_sharpe", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_skewness(
@@ -2472,14 +5643,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2487,7 +5681,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling skewness"""
+        """Calculate rolling skewness of returns
+
+        Computes the rolling skewness (third standardized moment) of daily returns. Positive skewness means the right tail is longer (more extreme gains), negative skewness means the left tail is longer (more extreme losses). Most equity returns exhibit negative skewness. Used for risk characterization beyond volatility."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -2503,14 +5699,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("rolling_skewness", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_sortino(
@@ -2519,16 +5761,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        MAR: Optional[float] = 0.0,
-        Annualized: Optional[Any] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2536,7 +5799,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling Sortino ratio"""
+        """Calculate rolling Sortino ratio (downside risk-adjusted return)
+
+        Computes the rolling Sortino ratio: (mean return - MAR) / downside deviation. Like Sharpe but only penalizes downside volatility, not total volatility. Better for asymmetric return distributions. A Sortino > 2 is generally considered good. Used alongside Sharpe for more complete risk-adjusted assessment."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -2552,18 +5817,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if MAR is not None and (not strict or MAR != 0.0):
-            _payload["MAR"] = MAR
-        if Annualized is not None and (not strict or Annualized != True):
+        if Annualized is not None:
             _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("rolling_sortino", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_treynor(
@@ -2572,19 +5879,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
-        rf: Optional[float] = 0.0,
-        rf_frequency: Optional[str] = "annual",
-        Annualized: Optional[Any] = True,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2592,7 +5917,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling Treynor ratio"""
+        """Calculate rolling Treynor ratio (excess return per unit of beta)
+
+        Computes the rolling Treynor ratio: (return - risk-free rate) / beta. Unlike Sharpe (which divides by total risk), Treynor divides by systematic risk only. Appropriate for well-diversified portfolios where unsystematic risk is minimal. Used alongside Sharpe for diversified portfolio evaluation."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -2608,24 +5935,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if y is not None:
-            _payload["y"] = y
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
         if x is not None:
             _payload["x"] = x
-        if rf is not None and (not strict or rf != 0.0):
-            _payload["rf"] = rf
-        if rf_frequency is not None and (not strict or rf_frequency != "annual"):
-            _payload["rf_frequency"] = rf_frequency
-        if Annualized is not None and (not strict or Annualized != True):
-            _payload["Annualized"] = Annualized
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("rolling_treynor", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_upside_beta(
@@ -2634,16 +5997,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2651,7 +6035,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling upside beta"""
+        """Calculate rolling upside beta (sensitivity during up markets)
+
+        Computes beta using only periods when the benchmark return is positive. Upside beta measures how much the security participates in market rallies. Investors prefer high upside beta (captures gains) with low downside beta (limits losses)."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -2667,18 +6053,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if y is not None:
-            _payload["y"] = y
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
         if x is not None:
             _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("rolling_upside_beta", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_var(
@@ -2687,16 +6115,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        confidence: Optional[float] = 0.95,
-        method: Optional[str] = "historical",
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2704,7 +6153,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling Value at Risk"""
+        """Calculate rolling Value at Risk (VaR)
+
+        Computes the rolling parametric Value at Risk at a specified confidence level (default 95%). VaR answers: 'What is the maximum expected loss over one day with X% confidence?' Uses the normal distribution assumption. Returns daily VaR values as negative percentages. Used by risk dashboards and regulatory reporting."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -2720,18 +6171,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if confidence is not None and (not strict or confidence != 0.95):
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
             _payload["confidence"] = confidence
-        if method is not None and (not strict or method != "historical"):
+        if method is not None:
             _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("rolling_var", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_variance(
@@ -2740,15 +6233,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        Annualized: Optional[Any] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2756,7 +6271,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling variance"""
+        """Calculate rolling variance of returns
+
+        Computes the rolling variance (square of volatility) of daily returns over a specified window. Variance is the base input for covariance matrices and portfolio optimization. Not annualized by default — multiply by trading_days for annualized variance."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -2772,16 +6289,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if Annualized is not None and (not strict or Annualized != True):
+        if Annualized is not None:
             _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("rolling_variance", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def rolling_volatility(
@@ -2790,15 +6351,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        Annualized: Optional[Any] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2806,7 +6389,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling volatility"""
+        """Calculate rolling annualized volatility (standard deviation of returns)
+
+        Computes the rolling annualized volatility: standard deviation of daily returns multiplied by sqrt(trading_days). Default annualization: 260 trading days (European convention). The most common risk metric for securities and portfolios. Used by the Dashboard risk view, by screening criteria, and by the reporting module."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -2822,16 +6407,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if Annualized is not None and (not strict or Annualized != True):
+        if Annualized is not None:
             _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("rolling_volatility", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def semi_deviation(
@@ -2840,16 +6469,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        threshold: Optional[float] = 0.0,
-        Annualized: Optional[Any] = False,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2857,7 +6507,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Semi-deviation"""
+        """Calculate semi-deviation (standard deviation of negative returns)
+
+        Square root of semi-variance. Measures downside volatility in the same units as returns. Used in the Sortino ratio denominator and for asymmetric risk reporting."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -2873,18 +6525,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if threshold is not None and (not strict or threshold != 0.0):
-            _payload["threshold"] = threshold
-        if Annualized is not None and (not strict or Annualized != False):
+        if Annualized is not None:
             _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("semi_deviation", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def semi_variance(
@@ -2893,16 +6587,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        threshold: Optional[float] = 0.0,
-        Annualized: Optional[Any] = False,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2910,7 +6625,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Semi-variance"""
+        """Calculate semi-variance (variance of negative returns only)
+
+        Computes the variance using only returns below the mean (or a specified threshold). Semi-variance penalizes downside deviations while ignoring upside variability. Used as the basis for the Sortino ratio and for investors who care only about downside risk."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -2926,18 +6643,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if threshold is not None and (not strict or threshold != 0.0):
-            _payload["threshold"] = threshold
-        if Annualized is not None and (not strict or Annualized != False):
+        if Annualized is not None:
             _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("semi_variance", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def sterling_ratio(
@@ -2946,17 +6705,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        rf: Optional[float] = 0.0,
-        rf_frequency: Optional[str] = "annual",
-        Annualized: Optional[Any] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -2964,7 +6743,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Sterling ratio"""
+        """Calculate the Sterling ratio (excess return over average drawdown)
+
+        Computes the Sterling ratio: (annualized return - risk-free rate) / average of the N worst annual drawdowns. Measures return per unit of drawdown risk. Similar to Calmar but uses average worst drawdowns instead of the single worst. More stable than Calmar for shorter periods."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -2980,20 +6761,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if rf is not None and (not strict or rf != 0.0):
-            _payload["rf"] = rf
-        if rf_frequency is not None and (not strict or rf_frequency != "annual"):
-            _payload["rf_frequency"] = rf_frequency
-        if Annualized is not None and (not strict or Annualized != True):
+        if Annualized is not None:
             _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("sterling_ratio", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def tail_ratio(
@@ -3002,15 +6823,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        percentile: Optional[float] = 5.0,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3018,7 +6861,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Tail ratio"""
+        """Calculate the tail ratio (right tail vs left tail of return distribution)
+
+        Computes the tail ratio: the 95th percentile return divided by the absolute 5th percentile return. A ratio > 1 means the right tail (gains) is fatter than the left tail (losses). Measures return distribution asymmetry at the extremes. Used for tail risk assessment."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -3034,16 +6879,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if percentile is not None and (not strict or percentile != 5.0):
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
             _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("tail_ratio", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def tracking_error(
@@ -3052,17 +6941,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
-        Annualized: Optional[Any] = True,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3070,7 +6979,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Tracking error"""
+        """Calculate tracking error (volatility of return difference vs benchmark)
+
+        Computes the annualized tracking error: the standard deviation of the difference between security and benchmark daily returns. Low tracking error means the security closely follows the benchmark (index funds: < 0.5%). High tracking error indicates active management or style drift. Used for passive fund evaluation and for index replication quality."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -3086,20 +6997,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if y is not None:
-            _payload["y"] = y
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
         if x is not None:
             _payload["x"] = x
-        if Annualized is not None and (not strict or Annualized != True):
-            _payload["Annualized"] = Annualized
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("tracking_error", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def tracking_error_volatility(
@@ -3108,16 +7059,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3125,7 +7097,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Tracking error volatility"""
+        """Calculate tracking error decomposed into systematic and specific components
+
+        Decomposes tracking error into systematic (explained by beta deviation from 1) and specific (stock-specific) components. Helps distinguish whether tracking error comes from intentional beta positioning or unintended stock-specific bets. Used for portfolio risk attribution."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -3141,18 +7115,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if y is not None:
-            _payload["y"] = y
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
         if x is not None:
             _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("tracking_error_volatility", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def ulcer_index(
@@ -3161,14 +7177,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3176,7 +7215,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Ulcer index"""
+        """Calculate the Ulcer Index (depth and duration weighted drawdown measure)
+
+        Computes the Ulcer Index: the square root of the mean of squared drawdowns. Unlike max drawdown (a single worst case), the Ulcer Index considers the depth and duration of ALL drawdowns. Named for the stomach ulcers caused by watching investments decline. Used for risk-averse investor evaluation."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -3192,14 +7233,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("ulcer_index", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def upside_capture(
@@ -3208,16 +7295,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3225,7 +7333,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Upside capture"""
+        """Calculate upside capture ratio vs benchmark
+
+        Computes the upside capture ratio: the percentage of benchmark gains captured during up-market periods. A ratio > 100% means the security outperforms the benchmark during rallies. Used for evaluating fund manager skill during bull markets."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -3241,18 +7351,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if y is not None:
-            _payload["y"] = y
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
         if x is not None:
             _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("upside_capture", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def upside_deviation(
@@ -3261,16 +7413,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        threshold: Optional[float] = 0.0,
-        Annualized: Optional[Any] = False,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3278,7 +7451,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Upside deviation"""
+        """Calculate upside deviation above a threshold
+
+        Computes the standard deviation of returns above a threshold (default: mean return). Measures the variability of gains. Comparing upside vs downside deviation reveals return asymmetry: investors prefer high upside deviation with low downside deviation."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -3294,18 +7469,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if threshold is not None and (not strict or threshold != 0.0):
-            _payload["threshold"] = threshold
-        if Annualized is not None and (not strict or Annualized != False):
+        if Annualized is not None:
             _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("upside_deviation", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def win_rate(
@@ -3314,14 +7531,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3329,7 +7569,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Win rate (% positive periods)"""
+        """Calculate the percentage of positive return periods (win rate)
+
+        Computes the percentage of days (or periods) with positive returns. A win rate > 50% means more winning days than losing days. Note: win rate alone is insufficient — a high win rate with small wins and large losses can still produce negative returns. Used alongside gain/loss ratio for complete trade analysis."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -3345,14 +7587,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("win_rate", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     def worst_period(
@@ -3361,15 +7649,37 @@ class _AnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        n_periods: Optional[int] = 20,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3377,7 +7687,9 @@ class _AnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Worst period return"""
+        """Find the worst single-period return in the history
+
+        Returns the lowest single-day (or single-period) return in the price history, along with the date it occurred. Used for tail risk assessment and for stress testing context."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -3393,16 +7705,60 @@ class _AnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if n_periods is not None and (not strict or n_periods != 20):
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
             _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return self._call_analytics("worst_period", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
 
@@ -3416,13 +7772,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3430,7 +7810,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Annualized returns"""
+        """Calculate calendar year returns
+
+        Computes annual returns for each calendar year in the price history. Returns year and percentage return per security. Used by the Dashboard for calendar year bar charts and by the reporting module for fund sheet annual performance tables."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -3446,12 +7828,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
+        if period is not None:
+            _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("annual_returns", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def annual_volatility(
@@ -3460,14 +7890,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        Annualized: Optional[Any] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3475,7 +7928,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Annualized volatility"""
+        """Calculate annualized volatility from the full price history
+
+        Computes a single annualized volatility figure from the entire price history (not rolling). Standard deviation of daily returns times sqrt(260). Used for summary statistics and peer comparison."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -3491,14 +7946,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if Annualized is not None and (not strict or Annualized != True):
+        if period is not None:
+            _payload["period"] = period
+        if Annualized is not None:
             _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("annual_volatility", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def average_drawdown(
@@ -3507,14 +8008,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
+        Obs: Optional[str] = None,
         period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3522,7 +8046,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Average drawdown"""
+        """Calculate the average of all drawdown events
+
+        Computes the mean depth of all distinct drawdown episodes. A drawdown episode starts when price drops below a previous peak and ends when a new peak is reached. Average drawdown is less extreme than max drawdown and gives a better sense of typical loss experience."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -3538,14 +8064,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
         if period is not None:
             _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("average_drawdown", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def batch(
@@ -3554,12 +8126,12 @@ class _AsyncAnalyticsMethodsMixin:
         operations: List[Any],
         currency: Optional[str] = None,
         identifiers: Optional[Union[str, List[str]]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        total_return: Optional[str] = None,
-        TR: Optional[str] = None,
+        total_return: Optional[bool] = None,
+        TR: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3567,16 +8139,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Batch analytics
+        """Execute multiple analytics functions in a single call with shared price data
 
-        Execute multiple analytics functions in one call.
-
-        Args:
-        operations: List of operations [{function, params}]
-        identifiers: List of TepiloraCodes
-        prices: Shared prices data
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
+        Runs multiple analytics functions in one request, sharing the same price data to avoid redundant fetches. Each operation specifies a function name and optional per-function parameters. Common parameters (identifiers, start_date, end_date, prices) are shared across all operations. Returns results keyed by function name. Used by the Dashboard analytics dashboard (which computes volatility, Sharpe, drawdown, etc. in parallel) and by batch screening workflows."""
         _payload: Dict[str, Any] = dict(extra_params)
         _payload["operations"] = operations
         if currency is not None:
@@ -3603,15 +8168,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        n_periods: Optional[int] = 20,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3619,7 +8206,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Best period return"""
+        """Find the best single-period return in the history
+
+        Returns the highest single-day (or single-period) return in the price history, along with the date it occurred. Used for return distribution analysis and for understanding maximum upside potential."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -3635,16 +8224,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if n_periods is not None and (not strict or n_periods != 20):
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
             _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("best_period", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def burke_ratio(
@@ -3653,17 +8286,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        rf: Optional[float] = 0.0,
-        rf_frequency: Optional[str] = "annual",
-        Annualized: Optional[Any] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3671,7 +8324,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Burke ratio"""
+        """Calculate the Burke ratio (return adjusted for drawdown volatility)
+
+        Computes the Burke ratio: (annualized return - risk-free rate) / sqrt(sum of squared drawdowns). Penalizes both the number and severity of drawdowns. More sophisticated than Calmar or Sterling for evaluating managers who experience multiple distinct drawdown events."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -3687,20 +8342,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if rf is not None and (not strict or rf != 0.0):
-            _payload["rf"] = rf
-        if rf_frequency is not None and (not strict or rf_frequency != "annual"):
-            _payload["rf_frequency"] = rf_frequency
-        if Annualized is not None and (not strict or Annualized != True):
+        if Annualized is not None:
             _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("burke_ratio", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def capture_ratio(
@@ -3709,16 +8404,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3726,7 +8442,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Up/down capture ratio"""
+        """Calculate combined up/down capture ratio
+
+        Computes both upside and downside capture ratios in a single call, plus the capture ratio (upside_capture / downside_capture). A capture ratio > 1 means the security captures more upside than downside — the ideal profile. Used by the Dashboard for capture analysis and by fund evaluation."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -3742,18 +8460,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if y is not None:
-            _payload["y"] = y
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
         if x is not None:
             _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("capture_ratio", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def cumulative_performance(
@@ -3762,14 +8522,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        base: Optional[float] = 100.0,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3777,7 +8560,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Cumulative performance"""
+        """Calculate cumulative return series (growth of initial investment)
+
+        Computes the cumulative compounded return series: how a unit investment grows over time. At each date, shows the total return since inception as a multiplier (1.25 = +25%). Used by the Dashboard for the NAV/growth chart and for comparing securities on a common base."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -3793,14 +8578,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if base is not None and (not strict or base != 100.0):
+        if period is not None:
+            _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
             _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("cumulative_performance", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def downside_capture(
@@ -3809,16 +8640,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3826,7 +8678,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Downside capture"""
+        """Calculate downside capture ratio vs benchmark
+
+        Computes the downside capture ratio: the percentage of benchmark losses captured during down-market periods. A ratio < 100% means the security falls less than the benchmark during declines. Investors want low downside capture. Used for defensive quality assessment."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -3842,18 +8696,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if y is not None:
-            _payload["y"] = y
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
         if x is not None:
             _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("downside_capture", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def downside_deviation(
@@ -3862,16 +8758,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        MAR: Optional[float] = 0.0,
-        Annualized: Optional[Any] = False,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3879,7 +8796,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Downside deviation"""
+        """Calculate downside deviation below a minimum acceptable return (MAR)
+
+        Computes the standard deviation of returns below a Minimum Acceptable Return (MAR, default 0). Unlike semi-deviation which uses the mean as threshold, downside deviation uses a user-defined target. Used in the Sortino ratio when a specific target return is required."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -3895,18 +8814,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if MAR is not None and (not strict or MAR != 0.0):
-            _payload["MAR"] = MAR
-        if Annualized is not None and (not strict or Annualized != False):
+        if Annualized is not None:
             _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("downside_deviation", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def drawdown(
@@ -3915,13 +8876,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3929,7 +8914,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Drawdown series"""
+        """Calculate the drawdown series (peak-to-trough decline at each point)
+
+        Computes the drawdown at each point: the percentage decline from the most recent peak. Values range from 0 (at a peak) to negative numbers (in a drawdown). The drawdown series visualizes how far an investment has fallen from its highest point over time. Used by the Dashboard for drawdown area charts and by risk analysis."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -3945,12 +8932,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
+        if period is not None:
+            _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("drawdown", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def drawdown_duration(
@@ -3959,13 +8994,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -3973,7 +9032,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Drawdown duration"""
+        """Calculate the duration statistics of drawdown events
+
+        Computes duration statistics for drawdown episodes: average duration, maximum duration, and current drawdown duration (if in a drawdown). Duration is measured in trading days. Long drawdown durations can be psychologically harder for investors than deep but short drawdowns."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -3989,12 +9050,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
+        if period is not None:
+            _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("drawdown_duration", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def egarch_volatility(
@@ -4003,17 +9112,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        p: Optional[int] = 1,
-        o: Optional[int] = 1,
-        q: Optional[int] = 1,
-        Annualized: Optional[Any] = False,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4021,7 +9150,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """EGARCH volatility"""
+        """Estimate asymmetric volatility using EGARCH model
+
+        Fits an EGARCH (Exponential GARCH) model that captures the leverage effect: negative returns tend to increase volatility more than positive returns of the same magnitude. Returns conditional volatility series and asymmetry parameters. Used for equity risk modeling where downside moves have disproportionate volatility impact."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -4037,35 +9168,99 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if p is not None and (not strict or p != 1):
-            _payload["p"] = p
-        if o is not None and (not strict or o != 1):
-            _payload["o"] = o
-        if q is not None and (not strict or q != 1):
-            _payload["q"] = q
-        if Annualized is not None and (not strict or Annualized != False):
+        if period is not None:
+            _payload["period"] = period
+        if Annualized is not None:
             _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("egarch_volatility", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def factor_attribution(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
-        factors: Optional[Dict[str, Any]] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        model: Optional[str] = "custom",
-        use_excess_returns: Optional[bool] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4073,27 +9268,77 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Factor attribution"""
+        """Decompose returns into factor contributions
+
+        Attributes security returns to individual factor contributions using the fitted factor model. Shows how much of the return came from market exposure, size (SMB), value (HML), profitability (RMW), investment (CMA), and alpha (unexplained). Used by the Dashboard factor attribution chart."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
             _payload["prices"] = prices
         if prices_file is not None:
             _payload["prices_file"] = prices_file
-        if factors is not None:
-            _payload["factors"] = factors
         if start_date is not None:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if model is not None and (not strict or model != "custom"):
+        if Obs is not None:
+            _payload["Obs"] = Obs
+        if period is not None:
+            _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
             _payload["model"] = model
-        if use_excess_returns is not None and (not strict or use_excess_returns != True):
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
             _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("factor_attribution", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
@@ -4101,16 +9346,39 @@ class _AsyncAnalyticsMethodsMixin:
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
-        factors: Optional[Dict[str, Any]] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        model: Optional[str] = "custom",
-        annualize_alpha: Optional[bool] = True,
-        use_excess_returns: Optional[bool] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4118,29 +9386,77 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Factor regression (FF3/FF5)"""
+        """Run Fama-French factor regression (FF3 or FF5) on security returns
+
+        Regresses security returns against Fama-French factor returns (FF3: Market, SMB, HML; FF5: adds RMW, CMA). Returns factor loadings (betas), alpha, R-squared, and statistical significance. Uses excess returns (R - RF) by default for proper factor model estimation. Used for understanding what drives a security's returns beyond market exposure."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
             _payload["prices"] = prices
         if prices_file is not None:
             _payload["prices_file"] = prices_file
-        if factors is not None:
-            _payload["factors"] = factors
         if start_date is not None:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if model is not None and (not strict or model != "custom"):
+        if Obs is not None:
+            _payload["Obs"] = Obs
+        if period is not None:
+            _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
             _payload["model"] = model
-        if annualize_alpha is not None and (not strict or annualize_alpha != True):
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
             _payload["annualize_alpha"] = annualize_alpha
-        if use_excess_returns is not None and (not strict or use_excess_returns != True):
+        if use_excess_returns is not None:
             _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("factor_regression", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
@@ -4150,14 +9466,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4165,7 +9504,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Gain/loss ratio"""
+        """Calculate the average gain to average loss ratio
+
+        Computes the ratio of the average positive return to the average negative return. Unlike profit factor (which uses totals), gain/loss ratio uses averages. A ratio > 1 with a win rate > 50% indicates a robust return profile. Used for trade analysis and strategy evaluation."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -4181,14 +9522,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("gain_loss_ratio", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def garch_forecast(
@@ -4197,16 +9584,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        horizon: Optional[int] = 5,
-        p: Optional[int] = 1,
-        q: Optional[int] = 1,
-        Annualized: Optional[Any] = False,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4214,7 +9622,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """GARCH forecast"""
+        """Forecast future volatility using a fitted GARCH model
+
+        Fits a GARCH(1,1) model and projects volatility forward for a specified number of days. Returns the forecasted volatility path showing how current volatility is expected to mean-revert. Used for option pricing inputs, risk budgeting, and VaR forecasting."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -4230,18 +9640,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if horizon is not None and (not strict or horizon != 5):
-            _payload["horizon"] = horizon
-        if p is not None and (not strict or p != 1):
-            _payload["p"] = p
-        if q is not None and (not strict or q != 1):
-            _payload["q"] = q
-        if Annualized is not None and (not strict or Annualized != False):
+        if Obs is not None:
+            _payload["Obs"] = Obs
+        if period is not None:
+            _payload["period"] = period
+        if Annualized is not None:
             _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("garch_forecast", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def garch_volatility(
@@ -4250,16 +9702,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        p: Optional[int] = 1,
-        q: Optional[int] = 1,
-        Annualized: Optional[Any] = False,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4267,7 +9740,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """GARCH volatility"""
+        """Estimate time-varying volatility using GARCH(1,1) model
+
+        Fits a GARCH(1,1) (Generalized Autoregressive Conditional Heteroskedasticity) model to daily returns and extracts the conditional volatility series. GARCH captures volatility clustering (high-vol periods followed by high-vol) which simple rolling volatility misses. Returns fitted conditional volatility time series and model parameters (omega, alpha, beta)."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -4283,18 +9758,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if p is not None and (not strict or p != 1):
-            _payload["p"] = p
-        if q is not None and (not strict or q != 1):
-            _payload["q"] = q
-        if Annualized is not None and (not strict or Annualized != False):
+        if period is not None:
+            _payload["period"] = period
+        if Annualized is not None:
             _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("garch_volatility", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def hurst_exponent(
@@ -4303,14 +9820,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4318,7 +9858,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Hurst exponent"""
+        """Calculate the Hurst exponent (trend persistence measure)
+
+        Estimates the Hurst exponent (H) from price returns using rescaled range (R/S) analysis. H > 0.5 indicates persistent (trending) behavior, H = 0.5 indicates random walk, H < 0.5 indicates anti-persistent (mean-reverting) behavior. Used for assessing whether momentum or mean-reversion strategies are appropriate."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -4334,14 +9876,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("hurst_exponent", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def info(
@@ -4355,12 +9943,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Get function info
+        """Get detailed documentation for a specific analytics function
 
-        Get detailed info about an analytics function.
-
-        Args:
-        function: Function name"""
+        Returns the full specification of a single analytics function: name, category, description, parameter definitions (name, type, required, default), methodology reference, and usage examples. Used by the Dashboard analytics help panel, by the AI assistant when explaining function parameters, and by the SDK for method-level documentation."""
         _payload: Dict[str, Any] = dict(extra_params)
         _payload["function"] = function
         return await self._call_analytics("info", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
@@ -4376,12 +9961,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """List analytics functions
+        """List all available analytics functions with categories
 
-        List available analytics functions.
-
-        Args:
-        category: Filter by category"""
+        Returns the catalog of all available analytics functions (75+) with their names, categories (returns, volatility, risk, regression, distribution, ratios, etc.), and parameter signatures. Optionally filterable by category. Used by the Dashboard analytics selector, by the AI assistant to discover available computations, and by the SDK to generate method stubs."""
         _payload: Dict[str, Any] = dict(extra_params)
         if category is not None:
             _payload["category"] = category
@@ -4393,13 +9975,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4407,7 +10013,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Log returns"""
+        """Calculate daily logarithmic returns from price series
+
+        Computes daily log returns (ln(P_t/P_{t-1})) for one or more securities. Log returns are additive across time (unlike simple returns) and approximately equal to simple returns for small values. Preferred for statistical analysis, risk modeling, and multi-period aggregation."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -4423,12 +10031,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
+        if period is not None:
+            _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("log_returns", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def max_drawdown(
@@ -4437,14 +10093,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
+        Obs: Optional[str] = None,
         period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4452,7 +10131,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Maximum drawdown"""
+        """Calculate the maximum drawdown (worst peak-to-trough decline)
+
+        Returns the largest peak-to-trough percentage decline in the price history. Max drawdown is the most intuitive risk metric: it answers 'what was the worst loss an investor could have experienced?' Includes the drawdown start date, trough date, and recovery date (if recovered). Used by screening criteria, risk dashboards, and reporting."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -4468,14 +10149,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
         if period is not None:
             _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("max_drawdown", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def momentum(
@@ -4484,14 +10211,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 20,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4499,7 +10249,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Momentum indicator"""
+        """Calculate price momentum over multiple lookback periods
+
+        Computes momentum as the total return over specified lookback periods (1M, 3M, 6M, 12M). Momentum is one of the most robust anomalies in finance: securities with positive recent returns tend to continue outperforming. Used by momentum-based screening strategies and by the Dashboard momentum indicators."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -4515,14 +10267,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 20):
+        if period is not None:
             _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("momentum", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def monthly_returns(
@@ -4531,13 +10329,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4545,7 +10367,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Monthly returns"""
+        """Aggregate daily returns into monthly return table
+
+        Computes monthly returns from daily price data, organized as a pivot table with years as rows and months as columns. Returns are expressed as percentage points (1.74 = 1.74% return). Used by the Dashboard for monthly return heatmaps and by the reporting module for fund sheet monthly performance tables."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -4561,12 +10385,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
+        if period is not None:
+            _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("monthly_returns", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def monthly_volatility(
@@ -4575,14 +10447,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        Annualized: Optional[Any] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4590,7 +10485,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Monthly volatility"""
+        """Calculate volatility from monthly returns
+
+        Computes annualized volatility using monthly return data instead of daily. Useful when only monthly data is available or when daily noise should be smoothed. Annualization: multiply by sqrt(12)."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -4606,14 +10503,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if Annualized is not None and (not strict or Annualized != True):
+        if period is not None:
+            _payload["period"] = period
+        if Annualized is not None:
             _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("monthly_volatility", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def omega_ratio(
@@ -4622,15 +10565,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        threshold: Optional[float] = 0.0,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4638,7 +10603,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Omega ratio"""
+        """Calculate the Omega ratio (probability-weighted gain/loss ratio)
+
+        Computes the Omega ratio: the ratio of the probability-weighted gains above a threshold to the probability-weighted losses below it. Omega captures the entire return distribution, not just mean and variance. Omega > 1 is favorable. More informative than Sharpe for non-normal return distributions."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -4654,16 +10621,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if threshold is not None and (not strict or threshold != 0.0):
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
             _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("omega_ratio", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def pain_index(
@@ -4672,14 +10683,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4687,7 +10721,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Pain index"""
+        """Calculate the Pain Index (average drawdown depth)
+
+        Computes the Pain Index: the average of all drawdown values over the full period. Simpler than the Ulcer Index (no squaring). Represents the average pain an investor experienced from being below prior peaks. Used alongside the Pain Ratio (return / pain index) for risk-adjusted evaluation."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -4703,14 +10739,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("pain_index", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def profit_factor(
@@ -4719,14 +10801,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4734,7 +10839,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Profit factor"""
+        """Calculate the profit factor (gross gains / gross losses)
+
+        Computes the ratio of total positive returns to total negative returns. Profit factor > 1 means gross gains exceed gross losses. Combines win rate with average win/loss size into a single metric. Used for evaluating trading strategies and for fund quality assessment."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -4750,14 +10857,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("profit_factor", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rate_of_change(
@@ -4766,14 +10919,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 20,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4781,7 +10957,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rate of change"""
+        """Calculate the Rate of Change (ROC) indicator
+
+        Computes the rate of change: ((price_today / price_n_days_ago) - 1) * 100. A simple momentum indicator expressed as a percentage. Positive ROC indicates upward momentum, negative indicates downward. Used by technical analysis views and by momentum screening criteria."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -4797,14 +10975,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 20):
+        if period is not None:
             _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("rate_of_change", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def relative_strength(
@@ -4813,16 +11037,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 20,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4830,7 +11075,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Relative strength"""
+        """Calculate relative strength of a security vs benchmark over time
+
+        Computes the relative strength line: the ratio of the security price to the benchmark price over time. A rising relative strength line means the security is outperforming the benchmark. Used for identifying market leaders and laggards, and for sector rotation analysis."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -4846,18 +11093,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 20):
+        if period is not None:
             _payload["period"] = period
-        if y is not None:
-            _payload["y"] = y
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
         if x is not None:
             _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("relative_strength", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def returns(
@@ -4866,13 +11155,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4880,7 +11193,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Simple returns"""
+        """Calculate daily simple returns from price series
+
+        Computes daily arithmetic returns (P_t/P_{t-1} - 1) for one or more securities. Returns a time series of daily percentage changes. The foundational calculation for all other analytics — volatility, Sharpe, drawdown, etc. all start from returns. Accepts TepiloraCodes (fetches prices automatically) or user-provided price data."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -4896,12 +11211,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
+        if period is not None:
+            _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("returns", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_alpha(
@@ -4910,19 +11273,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
-        Annualized: Optional[Any] = True,
-        rf: Optional[float] = 0.0,
-        rf_frequency: Optional[str] = "annual",
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4930,7 +11311,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling alpha"""
+        """Calculate rolling Jensen's alpha (excess return vs benchmark)
+
+        Computes the rolling alpha from CAPM regression: the intercept term representing return not explained by market exposure. Positive alpha indicates outperformance after adjusting for beta. Formula: alpha = E[R_p - R_f] - beta * E[R_m - R_f]. Requires a benchmark as the second identifier. Used by the Dashboard for alpha charts and by performance evaluation."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -4946,24 +11329,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if y is not None:
-            _payload["y"] = y
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
         if x is not None:
             _payload["x"] = x
-        if Annualized is not None and (not strict or Annualized != True):
-            _payload["Annualized"] = Annualized
-        if rf is not None and (not strict or rf != 0.0):
-            _payload["rf"] = rf
-        if rf_frequency is not None and (not strict or rf_frequency != "annual"):
-            _payload["rf_frequency"] = rf_frequency
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("rolling_alpha", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_autocorrelation(
@@ -4972,15 +11391,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        lag: Optional[int] = 1,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -4988,7 +11429,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling autocorrelation"""
+        """Calculate rolling autocorrelation of returns
+
+        Computes the rolling first-order autocorrelation of daily returns: the correlation between today's return and yesterday's. Significant positive autocorrelation suggests momentum, while negative autocorrelation suggests mean-reversion. Used for testing the random walk hypothesis and for momentum strategy design."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -5004,16 +11447,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if lag is not None and (not strict or lag != 1):
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
             _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("rolling_autocorrelation", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_beta(
@@ -5022,16 +11509,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -5039,7 +11547,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling beta"""
+        """Calculate rolling beta (market sensitivity)
+
+        Computes the rolling beta: the slope of the regression of security returns against benchmark returns. Beta = 1 means the security moves with the market, beta > 1 means more volatile than the market, beta < 1 means less volatile. Used by CAPM analysis, factor models, and portfolio hedging calculations."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -5055,18 +11565,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if y is not None:
-            _payload["y"] = y
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
         if x is not None:
             _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("rolling_beta", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_beta_timing(
@@ -5075,16 +11627,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -5092,7 +11665,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling beta timing"""
+        """Calculate rolling market timing coefficient (Treynor-Mazuy)
+
+        Estimates the Treynor-Mazuy market timing coefficient: a quadratic regression term that captures whether the manager increases beta before market rallies and decreases it before declines. Positive timing coefficient suggests successful market timing ability. Used for evaluating active fund managers."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -5108,18 +11683,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if y is not None:
-            _payload["y"] = y
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
         if x is not None:
             _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("rolling_beta_timing", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_cagr(
@@ -5128,14 +11745,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -5143,7 +11783,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling CAGR"""
+        """Calculate rolling Compound Annual Growth Rate
+
+        Computes the rolling CAGR (Compound Annual Growth Rate) over a specified window. CAGR represents the smoothed annualized return assuming reinvestment. Formula: (P_end/P_start)^(252/days) - 1. Used for comparing returns across different time horizons on an equal basis."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -5159,14 +11801,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("rolling_cagr", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_calmar(
@@ -5175,15 +11863,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        Annualized: Optional[Any] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -5191,7 +11901,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling Calmar ratio"""
+        """Calculate rolling Calmar ratio (return over max drawdown)
+
+        Computes the rolling Calmar ratio: CAGR divided by absolute max drawdown. Measures how much return is earned per unit of maximum loss risk. Higher is better. Unlike Sharpe (which uses volatility), Calmar specifically penalizes large peak-to-trough losses. Used for hedge fund and absolute return evaluation."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -5207,16 +11919,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if Annualized is not None and (not strict or Annualized != True):
+        if Annualized is not None:
             _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("rolling_calmar", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_correlation(
@@ -5225,15 +11981,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
         min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -5241,7 +12019,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling correlation"""
+        """Calculate rolling pairwise correlation matrix between securities
+
+        Computes the rolling correlation matrix between all pairs of input securities. Correlations range from -1 (perfect inverse) to +1 (perfect co-movement). Reveals how diversification benefits change over time (correlations tend to increase during crises). Used by portfolio construction, risk management, and the Dashboard correlation heatmap."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -5257,16 +12037,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
         if min_samples is not None:
             _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("rolling_correlation", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_covariance(
@@ -5275,16 +12099,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
         min_samples: Optional[int] = None,
-        Annualized: Optional[bool] = True,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -5292,7 +12137,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling covariance"""
+        """Calculate rolling pairwise covariance matrix between securities
+
+        Computes the rolling covariance matrix between input securities. Covariance combines correlation with volatility magnitudes. The covariance matrix is the primary input for mean-variance portfolio optimization and for factor risk models. Used by portfolio.optimize, factors.risk_model, and risk decomposition."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -5308,18 +12155,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
         if min_samples is not None:
             _payload["min_samples"] = min_samples
-        if Annualized is not None and (not strict or Annualized != True):
-            _payload["Annualized"] = Annualized
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("rolling_covariance", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_cvar(
@@ -5328,15 +12217,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        confidence: Optional[float] = 0.95,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -5344,7 +12255,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling CVaR (Expected Shortfall)"""
+        """Calculate rolling Conditional VaR (Expected Shortfall)
+
+        Computes the rolling Conditional Value at Risk (CVaR), also called Expected Shortfall. CVaR answers: 'Given that we exceed VaR, what is the expected loss?' CVaR is always worse than VaR and is considered a more coherent risk measure. Used by risk management and by portfolio optimization (cvar solver mode)."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -5360,16 +12273,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if confidence is not None and (not strict or confidence != 0.95):
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
             _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("rolling_cvar", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_downside_beta(
@@ -5378,16 +12335,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -5395,7 +12373,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling downside beta"""
+        """Calculate rolling downside beta (sensitivity during down markets)
+
+        Computes beta using only periods when the benchmark return is negative. Downside beta measures how much the security falls during market declines. A security with low downside beta provides better downside protection. Used alongside upside beta for asymmetric risk analysis."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -5411,36 +12391,99 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if y is not None:
-            _payload["y"] = y
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
         if x is not None:
             _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("rolling_downside_beta", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_factor_regression(
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        query: Optional[str] = None,
+        filter: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
-        factors: Optional[Dict[str, Any]] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        model: Optional[str] = "custom",
-        period: Optional[int] = 260,
-        Obs: Optional[Any] = "",
-        annualize_alpha: Optional[bool] = True,
-        use_excess_returns: Optional[bool] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -5448,33 +12491,77 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling factor regression"""
+        """Run rolling Fama-French factor regression over time
+
+        Performs factor regression over rolling windows, producing time series of factor loadings. Reveals how a security's factor exposures change over time (e.g. a fund shifting from value to growth). Used for style analysis and manager evaluation."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
+        if query is not None:
+            _payload["query"] = query
+        if filter is not None:
+            _payload["filter"] = filter
         if prices is not None:
             _payload["prices"] = prices
         if prices_file is not None:
             _payload["prices_file"] = prices_file
-        if factors is not None:
-            _payload["factors"] = factors
         if start_date is not None:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if model is not None and (not strict or model != "custom"):
-            _payload["model"] = model
-        if period is not None and (not strict or period != 260):
-            _payload["period"] = period
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if annualize_alpha is not None and (not strict or annualize_alpha != True):
+        if period is not None:
+            _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
             _payload["annualize_alpha"] = annualize_alpha
-        if use_excess_returns is not None and (not strict or use_excess_returns != True):
+        if use_excess_returns is not None:
             _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("rolling_factor_regression", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
@@ -5484,17 +12571,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        p: Optional[int] = 1,
-        q: Optional[int] = 1,
-        Annualized: Optional[Any] = False,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -5502,7 +12609,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling GARCH"""
+        """Calculate rolling GARCH volatility estimates over time
+
+        Fits GARCH(1,1) models over rolling windows and extracts the final conditional volatility at each point. Produces a time series of GARCH-estimated volatility that adapts to changing market regimes. More computationally intensive than rolling standard deviation but captures volatility dynamics better."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -5518,20 +12627,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if p is not None and (not strict or p != 1):
-            _payload["p"] = p
-        if q is not None and (not strict or q != 1):
-            _payload["q"] = q
-        if Annualized is not None and (not strict or Annualized != False):
+        if Annualized is not None:
             _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("rolling_garch", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_information_ratio(
@@ -5540,17 +12689,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
-        Annualized: Optional[Any] = True,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -5558,7 +12727,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling information ratio"""
+        """Calculate rolling Information Ratio (alpha per unit of tracking error)
+
+        Computes the rolling Information Ratio: alpha divided by tracking error. Measures the consistency of excess returns over a benchmark. A high IR (> 0.5) indicates consistent outperformance, not just lucky periods. The key metric for evaluating active managers. Used by fund evaluation dashboards."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -5574,20 +12745,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if y is not None:
-            _payload["y"] = y
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
         if x is not None:
             _payload["x"] = x
-        if Annualized is not None and (not strict or Annualized != True):
-            _payload["Annualized"] = Annualized
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("rolling_information_ratio", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_kurtosis(
@@ -5596,15 +12807,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        excess: Optional[bool] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -5612,7 +12845,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling kurtosis"""
+        """Calculate rolling kurtosis of returns (fat-tail measure)
+
+        Computes the rolling excess kurtosis (fourth standardized moment minus 3) of daily returns. Positive excess kurtosis indicates fat tails (more extreme events than a normal distribution). Most financial returns exhibit positive excess kurtosis. Used for tail risk assessment and VaR model validation."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -5628,16 +12863,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if excess is not None and (not strict or excess != True):
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
             _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("rolling_kurtosis", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_r_squared(
@@ -5646,16 +12925,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -5663,7 +12963,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling R-squared"""
+        """Calculate rolling R-squared (proportion of variance explained by benchmark)
+
+        Computes the rolling R-squared from the regression against a benchmark. R-squared ranges from 0 to 1: high values mean the security closely tracks the benchmark, low values mean it moves independently. Used for assessing benchmark appropriateness and for tracking error analysis."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -5679,18 +12981,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if y is not None:
-            _payload["y"] = y
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
         if x is not None:
             _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("rolling_r_squared", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_regression(
@@ -5699,19 +13043,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
-        Annualized: Optional[Any] = True,
-        rf: Optional[float] = 0.0,
-        rf_frequency: Optional[str] = "annual",
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -5719,7 +13081,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling regression"""
+        """Run full rolling OLS regression with all statistics
+
+        Performs complete rolling OLS regression of security returns against benchmark returns. Returns: alpha, beta, R-squared, standard errors, t-statistics, and p-values at each rolling window endpoint. The most comprehensive regression output. Used for detailed statistical analysis and for factor model research."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -5735,24 +13099,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if y is not None:
-            _payload["y"] = y
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
         if x is not None:
             _payload["x"] = x
-        if Annualized is not None and (not strict or Annualized != True):
-            _payload["Annualized"] = Annualized
-        if rf is not None and (not strict or rf != 0.0):
-            _payload["rf"] = rf
-        if rf_frequency is not None and (not strict or rf_frequency != "annual"):
-            _payload["rf_frequency"] = rf_frequency
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("rolling_regression", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_residuals(
@@ -5761,16 +13161,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -5778,7 +13199,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling residuals"""
+        """Calculate rolling regression residuals (unexplained returns)
+
+        Returns the rolling residual series from the regression of security returns against benchmark returns. Residuals represent the portion of returns not explained by market movement. Large residuals indicate stock-specific events. Used for alpha research and for detecting structural breaks in the security-benchmark relationship."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -5794,18 +13217,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if y is not None:
-            _payload["y"] = y
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
         if x is not None:
             _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("rolling_residuals", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_sharpe(
@@ -5814,17 +13279,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        rf: Optional[float] = 0.0,
-        rf_frequency: Optional[str] = "annual",
-        Annualized: Optional[Any] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -5832,7 +13317,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling Sharpe ratio"""
+        """Calculate rolling Sharpe ratio (risk-adjusted return)
+
+        Computes the rolling annualized Sharpe ratio: (mean return - risk-free rate) / volatility. The most widely used risk-adjusted performance measure. A Sharpe > 1 is generally considered good, > 2 excellent. The rf parameter accepts annual rate by default (rf_frequency='annual'). Used by the Dashboard, screening criteria, and all performance reporting."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -5848,20 +13335,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if rf is not None and (not strict or rf != 0.0):
-            _payload["rf"] = rf
-        if rf_frequency is not None and (not strict or rf_frequency != "annual"):
-            _payload["rf_frequency"] = rf_frequency
-        if Annualized is not None and (not strict or Annualized != True):
+        if Annualized is not None:
             _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("rolling_sharpe", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_skewness(
@@ -5870,14 +13397,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -5885,7 +13435,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling skewness"""
+        """Calculate rolling skewness of returns
+
+        Computes the rolling skewness (third standardized moment) of daily returns. Positive skewness means the right tail is longer (more extreme gains), negative skewness means the left tail is longer (more extreme losses). Most equity returns exhibit negative skewness. Used for risk characterization beyond volatility."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -5901,14 +13453,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("rolling_skewness", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_sortino(
@@ -5917,16 +13515,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        MAR: Optional[float] = 0.0,
-        Annualized: Optional[Any] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -5934,7 +13553,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling Sortino ratio"""
+        """Calculate rolling Sortino ratio (downside risk-adjusted return)
+
+        Computes the rolling Sortino ratio: (mean return - MAR) / downside deviation. Like Sharpe but only penalizes downside volatility, not total volatility. Better for asymmetric return distributions. A Sortino > 2 is generally considered good. Used alongside Sharpe for more complete risk-adjusted assessment."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -5950,18 +13571,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if MAR is not None and (not strict or MAR != 0.0):
-            _payload["MAR"] = MAR
-        if Annualized is not None and (not strict or Annualized != True):
+        if Annualized is not None:
             _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("rolling_sortino", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_treynor(
@@ -5970,19 +13633,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
-        rf: Optional[float] = 0.0,
-        rf_frequency: Optional[str] = "annual",
-        Annualized: Optional[Any] = True,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -5990,7 +13671,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling Treynor ratio"""
+        """Calculate rolling Treynor ratio (excess return per unit of beta)
+
+        Computes the rolling Treynor ratio: (return - risk-free rate) / beta. Unlike Sharpe (which divides by total risk), Treynor divides by systematic risk only. Appropriate for well-diversified portfolios where unsystematic risk is minimal. Used alongside Sharpe for diversified portfolio evaluation."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -6006,24 +13689,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if y is not None:
-            _payload["y"] = y
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
         if x is not None:
             _payload["x"] = x
-        if rf is not None and (not strict or rf != 0.0):
-            _payload["rf"] = rf
-        if rf_frequency is not None and (not strict or rf_frequency != "annual"):
-            _payload["rf_frequency"] = rf_frequency
-        if Annualized is not None and (not strict or Annualized != True):
-            _payload["Annualized"] = Annualized
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("rolling_treynor", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_upside_beta(
@@ -6032,16 +13751,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -6049,7 +13789,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling upside beta"""
+        """Calculate rolling upside beta (sensitivity during up markets)
+
+        Computes beta using only periods when the benchmark return is positive. Upside beta measures how much the security participates in market rallies. Investors prefer high upside beta (captures gains) with low downside beta (limits losses)."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -6065,18 +13807,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if y is not None:
-            _payload["y"] = y
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
         if x is not None:
             _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("rolling_upside_beta", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_var(
@@ -6085,16 +13869,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        confidence: Optional[float] = 0.95,
-        method: Optional[str] = "historical",
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -6102,7 +13907,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling Value at Risk"""
+        """Calculate rolling Value at Risk (VaR)
+
+        Computes the rolling parametric Value at Risk at a specified confidence level (default 95%). VaR answers: 'What is the maximum expected loss over one day with X% confidence?' Uses the normal distribution assumption. Returns daily VaR values as negative percentages. Used by risk dashboards and regulatory reporting."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -6118,18 +13925,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if confidence is not None and (not strict or confidence != 0.95):
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
             _payload["confidence"] = confidence
-        if method is not None and (not strict or method != "historical"):
+        if method is not None:
             _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("rolling_var", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_variance(
@@ -6138,15 +13987,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        Annualized: Optional[Any] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -6154,7 +14025,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling variance"""
+        """Calculate rolling variance of returns
+
+        Computes the rolling variance (square of volatility) of daily returns over a specified window. Variance is the base input for covariance matrices and portfolio optimization. Not annualized by default — multiply by trading_days for annualized variance."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -6170,16 +14043,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if Annualized is not None and (not strict or Annualized != True):
+        if Annualized is not None:
             _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("rolling_variance", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def rolling_volatility(
@@ -6188,15 +14105,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        Annualized: Optional[Any] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -6204,7 +14143,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Rolling volatility"""
+        """Calculate rolling annualized volatility (standard deviation of returns)
+
+        Computes the rolling annualized volatility: standard deviation of daily returns multiplied by sqrt(trading_days). Default annualization: 260 trading days (European convention). The most common risk metric for securities and portfolios. Used by the Dashboard risk view, by screening criteria, and by the reporting module."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -6220,16 +14161,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if Annualized is not None and (not strict or Annualized != True):
+        if Annualized is not None:
             _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("rolling_volatility", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def semi_deviation(
@@ -6238,16 +14223,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        threshold: Optional[float] = 0.0,
-        Annualized: Optional[Any] = False,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -6255,7 +14261,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Semi-deviation"""
+        """Calculate semi-deviation (standard deviation of negative returns)
+
+        Square root of semi-variance. Measures downside volatility in the same units as returns. Used in the Sortino ratio denominator and for asymmetric risk reporting."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -6271,18 +14279,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if threshold is not None and (not strict or threshold != 0.0):
-            _payload["threshold"] = threshold
-        if Annualized is not None and (not strict or Annualized != False):
+        if Annualized is not None:
             _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("semi_deviation", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def semi_variance(
@@ -6291,16 +14341,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        threshold: Optional[float] = 0.0,
-        Annualized: Optional[Any] = False,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -6308,7 +14379,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Semi-variance"""
+        """Calculate semi-variance (variance of negative returns only)
+
+        Computes the variance using only returns below the mean (or a specified threshold). Semi-variance penalizes downside deviations while ignoring upside variability. Used as the basis for the Sortino ratio and for investors who care only about downside risk."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -6324,18 +14397,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if threshold is not None and (not strict or threshold != 0.0):
-            _payload["threshold"] = threshold
-        if Annualized is not None and (not strict or Annualized != False):
+        if Annualized is not None:
             _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("semi_variance", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def sterling_ratio(
@@ -6344,17 +14459,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        rf: Optional[float] = 0.0,
-        rf_frequency: Optional[str] = "annual",
-        Annualized: Optional[Any] = True,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -6362,7 +14497,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Sterling ratio"""
+        """Calculate the Sterling ratio (excess return over average drawdown)
+
+        Computes the Sterling ratio: (annualized return - risk-free rate) / average of the N worst annual drawdowns. Measures return per unit of drawdown risk. Similar to Calmar but uses average worst drawdowns instead of the single worst. More stable than Calmar for shorter periods."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -6378,20 +14515,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if rf is not None and (not strict or rf != 0.0):
-            _payload["rf"] = rf
-        if rf_frequency is not None and (not strict or rf_frequency != "annual"):
-            _payload["rf_frequency"] = rf_frequency
-        if Annualized is not None and (not strict or Annualized != True):
+        if Annualized is not None:
             _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("sterling_ratio", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def tail_ratio(
@@ -6400,15 +14577,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        percentile: Optional[float] = 5.0,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -6416,7 +14615,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Tail ratio"""
+        """Calculate the tail ratio (right tail vs left tail of return distribution)
+
+        Computes the tail ratio: the 95th percentile return divided by the absolute 5th percentile return. A ratio > 1 means the right tail (gains) is fatter than the left tail (losses). Measures return distribution asymmetry at the extremes. Used for tail risk assessment."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -6432,16 +14633,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if percentile is not None and (not strict or percentile != 5.0):
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
             _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("tail_ratio", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def tracking_error(
@@ -6450,17 +14695,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
-        Annualized: Optional[Any] = True,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -6468,7 +14733,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Tracking error"""
+        """Calculate tracking error (volatility of return difference vs benchmark)
+
+        Computes the annualized tracking error: the standard deviation of the difference between security and benchmark daily returns. Low tracking error means the security closely follows the benchmark (index funds: < 0.5%). High tracking error indicates active management or style drift. Used for passive fund evaluation and for index replication quality."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -6484,20 +14751,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if y is not None:
-            _payload["y"] = y
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
         if x is not None:
             _payload["x"] = x
-        if Annualized is not None and (not strict or Annualized != True):
-            _payload["Annualized"] = Annualized
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("tracking_error", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def tracking_error_volatility(
@@ -6506,16 +14813,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -6523,7 +14851,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Tracking error volatility"""
+        """Calculate tracking error decomposed into systematic and specific components
+
+        Decomposes tracking error into systematic (explained by beta deviation from 1) and specific (stock-specific) components. Helps distinguish whether tracking error comes from intentional beta positioning or unintended stock-specific bets. Used for portfolio risk attribution."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -6539,18 +14869,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if y is not None:
-            _payload["y"] = y
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
         if x is not None:
             _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("tracking_error_volatility", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def ulcer_index(
@@ -6559,14 +14931,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -6574,7 +14969,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Ulcer index"""
+        """Calculate the Ulcer Index (depth and duration weighted drawdown measure)
+
+        Computes the Ulcer Index: the square root of the mean of squared drawdowns. Unlike max drawdown (a single worst case), the Ulcer Index considers the depth and duration of ALL drawdowns. Named for the stomach ulcers caused by watching investments decline. Used for risk-averse investor evaluation."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -6590,14 +14987,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("ulcer_index", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def upside_capture(
@@ -6606,16 +15049,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
         y: Optional[str] = None,
-        x: Optional[Any] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -6623,7 +15087,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Upside capture"""
+        """Calculate upside capture ratio vs benchmark
+
+        Computes the upside capture ratio: the percentage of benchmark gains captured during up-market periods. A ratio > 100% means the security outperforms the benchmark during rallies. Used for evaluating fund manager skill during bull markets."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -6639,18 +15105,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if y is not None:
-            _payload["y"] = y
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
         if x is not None:
             _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("upside_capture", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def upside_deviation(
@@ -6659,16 +15167,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        threshold: Optional[float] = 0.0,
-        Annualized: Optional[Any] = False,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -6676,7 +15205,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Upside deviation"""
+        """Calculate upside deviation above a threshold
+
+        Computes the standard deviation of returns above a threshold (default: mean return). Measures the variability of gains. Comparing upside vs downside deviation reveals return asymmetry: investors prefer high upside deviation with low downside deviation."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -6692,18 +15223,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if threshold is not None and (not strict or threshold != 0.0):
-            _payload["threshold"] = threshold
-        if Annualized is not None and (not strict or Annualized != False):
+        if Annualized is not None:
             _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("upside_deviation", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def win_rate(
@@ -6712,14 +15285,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -6727,7 +15323,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Win rate (% positive periods)"""
+        """Calculate the percentage of positive return periods (win rate)
+
+        Computes the percentage of days (or periods) with positive returns. A win rate > 50% means more winning days than losing days. Note: win rate alone is insufficient — a high win rate with small wins and large losses can still produce negative returns. Used alongside gain/loss ratio for complete trade analysis."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -6743,14 +15341,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
+            _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("win_rate", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
     async def worst_period(
@@ -6759,15 +15403,37 @@ class _AsyncAnalyticsMethodsMixin:
         identifiers: Optional[Union[str, List[str]]] = None,
         query: Optional[str] = None,
         filter: Optional[Dict[str, Any]] = None,
-        prices: Optional[Dict[str, Any]] = None,
+        prices: Optional[str] = None,
         prices_file: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        TR: Optional[bool] = False,
+        TR: Optional[bool] = None,
         currency: Optional[str] = None,
-        Obs: Optional[Any] = "",
-        period: Optional[int] = 260,
-        n_periods: Optional[int] = 20,
+        Obs: Optional[str] = None,
+        period: Optional[int] = None,
+        Annualized: Optional[str] = None,
+        rf: Optional[float] = None,
+        rf_frequency: Optional[str] = None,
+        MAR: Optional[float] = None,
+        confidence: Optional[float] = None,
+        method: Optional[str] = None,
+        min_samples: Optional[int] = None,
+        n_periods: Optional[int] = None,
+        threshold: Optional[float] = None,
+        percentile: Optional[float] = None,
+        base: Optional[float] = None,
+        excess: Optional[bool] = None,
+        horizon: Optional[int] = None,
+        lag: Optional[int] = None,
+        p: Optional[int] = None,
+        o: Optional[int] = None,
+        q: Optional[int] = None,
+        x: Optional[str] = None,
+        y: Optional[str] = None,
+        model: Optional[str] = None,
+        factors: Optional[Dict[str, Any]] = None,
+        annualize_alpha: Optional[bool] = None,
+        use_excess_returns: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -6775,7 +15441,9 @@ class _AsyncAnalyticsMethodsMixin:
         strict: bool = False,
         **extra_params: Any,
     ) -> Any:
-        """Worst period return"""
+        """Find the worst single-period return in the history
+
+        Returns the lowest single-day (or single-period) return in the price history, along with the date it occurred. Used for tail risk assessment and for stress testing context."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -6791,16 +15459,60 @@ class _AsyncAnalyticsMethodsMixin:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if TR is not None and (not strict or TR != False):
+        if TR is not None:
             _payload["TR"] = TR
         if currency is not None:
             _payload["currency"] = currency
-        if Obs is not None and (not strict or Obs != ""):
+        if Obs is not None:
             _payload["Obs"] = Obs
-        if period is not None and (not strict or period != 260):
+        if period is not None:
             _payload["period"] = period
-        if n_periods is not None and (not strict or n_periods != 20):
+        if Annualized is not None:
+            _payload["Annualized"] = Annualized
+        if rf is not None:
+            _payload["rf"] = rf
+        if rf_frequency is not None:
+            _payload["rf_frequency"] = rf_frequency
+        if MAR is not None:
+            _payload["MAR"] = MAR
+        if confidence is not None:
+            _payload["confidence"] = confidence
+        if method is not None:
+            _payload["method"] = method
+        if min_samples is not None:
+            _payload["min_samples"] = min_samples
+        if n_periods is not None:
             _payload["n_periods"] = n_periods
+        if threshold is not None:
+            _payload["threshold"] = threshold
+        if percentile is not None:
+            _payload["percentile"] = percentile
+        if base is not None:
+            _payload["base"] = base
+        if excess is not None:
+            _payload["excess"] = excess
+        if horizon is not None:
+            _payload["horizon"] = horizon
+        if lag is not None:
+            _payload["lag"] = lag
+        if p is not None:
+            _payload["p"] = p
+        if o is not None:
+            _payload["o"] = o
+        if q is not None:
+            _payload["q"] = q
+        if x is not None:
+            _payload["x"] = x
+        if y is not None:
+            _payload["y"] = y
+        if model is not None:
+            _payload["model"] = model
+        if factors is not None:
+            _payload["factors"] = factors
+        if annualize_alpha is not None:
+            _payload["annualize_alpha"] = annualize_alpha
+        if use_excess_returns is not None:
+            _payload["use_excess_returns"] = use_excess_returns
         return await self._call_analytics("worst_period", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
 
 

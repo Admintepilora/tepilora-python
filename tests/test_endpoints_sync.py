@@ -19,15 +19,7 @@ def create_v3_handler(test_case: unittest.TestCase):
         params = payload.get("params", {})
 
         # Securities namespace
-        if action == "securities.description":
-            test_case.assertEqual(params["identifier"], "FR0010655712EURXPAR")
-            return httpx.Response(
-                200,
-                json={"success": True, "action": action, "data": {"identifier": params["identifier"]}, "meta": {}},
-            )
-
         if action == "securities.details":
-            # Alias for description
             test_case.assertEqual(params["identifier"], "FR0010655712EURXPAR")
             return httpx.Response(
                 200,
@@ -145,7 +137,6 @@ class TestTypedEndpointsSync(unittest.TestCase):
         transport = httpx.MockTransport(create_v3_handler(self))
         client = TepiloraClient(api_key="k", base_url="http://testserver", transport=transport)
 
-        self.assertEqual(client.securities.description(identifier="FR0010655712EURXPAR")["identifier"], "FR0010655712EURXPAR")
         self.assertEqual(client.securities.details(identifier="FR0010655712EURXPAR")["identifier"], "FR0010655712EURXPAR")
         self.assertEqual(client.securities.facets(fields=["Currency"])["facets"], {})
         self.assertEqual(client.securities.history(identifiers="X", limit=10)["rows"], [])

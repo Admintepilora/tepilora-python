@@ -22,11 +22,9 @@ class WorkflowsAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """List available bridge functions
+        """List all available cross-module workflow bridges
 
-        Args:
-        source: Filter by source module
-        target: Filter by target module"""
+        Returns the catalog of available workflow bridges that transform output from one module into input for another. Each bridge includes: name, source module, target module, description, and required target_params. 8 bridges available: securities_to_portfolio, securities_to_analytics, securities_to_history, portfolio_to_analytics, portfolio_to_factors, portfolio_to_optimize, news_to_securities, search_to_bonds. Used by the AI assistant to discover available cross-module compositions."""
         _payload: Dict[str, Any] = {}
         if source is not None:
             _payload["source"] = source
@@ -38,23 +36,16 @@ class WorkflowsAPI(BaseAPI):
         self,
         *,
         bridge: str,
-        source_data: Dict[str, Any],
+        source_data: str,
         target_params: Optional[Dict[str, Any]] = None,
         execute: Optional[bool] = False,
         target_action: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Transform data between modules
+        """Transform data between modules using a workflow bridge, optionally executing the target
 
-        Map output from one module to input format of another. Set execute=true to also run the target operation.
-
-        Args:
-        bridge: Bridge function name
-        source_data: Output data from source operation
-        target_params: Additional params for target
-        execute: If true, execute target operation
-        target_action: Explicit target action (required when execute=true and bridge target has wildcard)"""
+        Applies a workflow bridge to transform source data into target module input format. Two modes: translate-only (returns mapped params) or translate+execute (runs the target operation and returns results directly). For wildcard targets (e.g. securities_to_analytics targeting analytics.*), provide target_action to specify which operation to execute. Used by the AI assistant and SDK for composing multi-step analytical workflows from a single call."""
         _payload: Dict[str, Any] = {}
         _payload["bridge"] = bridge
         _payload["source_data"] = source_data
@@ -79,11 +70,9 @@ class AsyncWorkflowsAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """List available bridge functions
+        """List all available cross-module workflow bridges
 
-        Args:
-        source: Filter by source module
-        target: Filter by target module"""
+        Returns the catalog of available workflow bridges that transform output from one module into input for another. Each bridge includes: name, source module, target module, description, and required target_params. 8 bridges available: securities_to_portfolio, securities_to_analytics, securities_to_history, portfolio_to_analytics, portfolio_to_factors, portfolio_to_optimize, news_to_securities, search_to_bonds. Used by the AI assistant to discover available cross-module compositions."""
         _payload: Dict[str, Any] = {}
         if source is not None:
             _payload["source"] = source
@@ -95,23 +84,16 @@ class AsyncWorkflowsAPI(AsyncBaseAPI):
         self,
         *,
         bridge: str,
-        source_data: Dict[str, Any],
+        source_data: str,
         target_params: Optional[Dict[str, Any]] = None,
         execute: Optional[bool] = False,
         target_action: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Transform data between modules
+        """Transform data between modules using a workflow bridge, optionally executing the target
 
-        Map output from one module to input format of another. Set execute=true to also run the target operation.
-
-        Args:
-        bridge: Bridge function name
-        source_data: Output data from source operation
-        target_params: Additional params for target
-        execute: If true, execute target operation
-        target_action: Explicit target action (required when execute=true and bridge target has wildcard)"""
+        Applies a workflow bridge to transform source data into target module input format. Two modes: translate-only (returns mapped params) or translate+execute (runs the target operation and returns results directly). For wildcard targets (e.g. securities_to_analytics targeting analytics.*), provide target_action to specify which operation to execute. Used by the AI assistant and SDK for composing multi-step analytical workflows from a single call."""
         _payload: Dict[str, Any] = {}
         _payload["bridge"] = bridge
         _payload["source_data"] = source_data

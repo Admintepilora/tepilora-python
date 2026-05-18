@@ -21,12 +21,9 @@ class NewsAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get article details
+        """Get full article details and content by URL
 
-        Full article content by URL.
-
-        Args:
-        url: Article URL"""
+        Retrieves the complete article content and metadata for a single news article identified by its URL. Returns the full text (when available from the source), headline, author, publication date, source, extracted topics and entities, and related article links. Used when a user clicks on a headline in the news list to read the full article within the Dashboard, avoiding external navigation. If the source does not provide full text via RSS/API, returns the available summary with a link to the original source."""
         _payload: Dict[str, Any] = {}
         _payload["url"] = url
         return self._call("news.details", params=_payload, options=options, context=context)
@@ -35,116 +32,101 @@ class NewsAPI(BaseAPI):
         self,
         *,
         fields: Optional[List[Any]] = None,
-        force_refresh: Optional[bool] = None,
-        limit: Optional[int] = None,
+        limit: Optional[int] = 50,
+        force_refresh: Optional[bool] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get news facets
+        """Get available news sources and topic categories for filtering
 
-        Available sources and topics."""
+        Returns the aggregated facets (distinct values and counts) for news metadata fields: sources, topics, entities, and categories. Used to populate filter dropdowns and chips in the news search UI. Shows which sources are available, which topics are trending, and which entities appear most frequently. Supports optional force_refresh to bypass the cache and get fresh counts. Essential for building a faceted search experience where users can drill down into specific sources or topics."""
         _payload: Dict[str, Any] = {}
         if fields is not None:
             _payload["fields"] = fields
-        if force_refresh is not None:
-            _payload["force_refresh"] = force_refresh
         if limit is not None:
             _payload["limit"] = limit
+        if force_refresh is not None:
+            _payload["force_refresh"] = force_refresh
         return self._call("news.facets", params=_payload, options=options, context=context)
 
     def latest(
         self,
         *,
-        limit: Optional[int] = 20,
         search_key: Optional[str] = None,
-        searchKey: Optional[str] = None,
         source: Optional[str] = None,
+        limit: Optional[int] = 20,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Get latest news
+        """Get the most recently published financial news articles
 
-        Most recent articles.
+        Returns the most recently indexed news articles in reverse chronological order. Optionally filterable by news source or search key for quick topic-specific feeds. Each article includes headline, source name, publication timestamp, URL, and extracted entities (companies, indices, sectors mentioned). Ideal for building a live news ticker, a 'latest headlines' widget, or a source-specific news feed. Used by the Dashboard News page for the default latest headlines view and by the Market Snapshot page for the news sidebar.
 
-        Args:
-        limit: Maximum results"""
+        Examples:
+            >>> client.news.latest(limit=5)"""
         _payload: Dict[str, Any] = {}
-        if limit is not None:
-            _payload["limit"] = limit
         if search_key is not None:
             _payload["search_key"] = search_key
-        if searchKey is not None:
-            _payload["searchKey"] = searchKey
         if source is not None:
             _payload["source"] = source
+        if limit is not None:
+            _payload["limit"] = limit
         return self._call("news.latest", params=_payload, options=options, context=context, response_format=response_format)
 
     def search(
         self,
         *,
-        query: str,
-        endDate: Optional[str] = None,
-        exclude_topics: Optional[bool] = None,
-        excludeTopics: Optional[str] = None,
+        query: Optional[str] = "",
+        filters: Optional[Dict[str, Any]] = None,
         from_date: Optional[str] = None,
-        fromDate: Optional[str] = None,
-        offset: Optional[int] = None,
-        order: Optional[str] = None,
-        limit: Optional[int] = 20,
-        sort: Optional[str] = None,
+        to_date: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        filters: Optional[Dict[str, Any]] = None,
-        startDate: Optional[str] = None,
-        to_date: Optional[str] = None,
-        toDate: Optional[str] = None,
+        exclude_topics: Optional[bool] = False,
+        limit: Optional[int] = 50,
+        offset: Optional[int] = 0,
+        sort: Optional[str] = None,
+        order: Optional[str] = "desc",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Search news articles
+        """Search financial news articles with full-text and faceted filtering
 
-        Full-text search in news articles.
+        Full-text search across the financial news database powered by Tantivy search engine. Indexes articles from major financial news sources (Bloomberg, Reuters, Financial Times, CNBC, MarketWatch, local financial media). Supports advanced query syntax (AND, OR, phrases), date range filtering, source filtering, and topic exclusion. Returns article headline, source, publication date, URL, matched topics/entities, and relevance score. Results are paginated and sortable by date or relevance. Used by the Dashboard News page as the primary news search, by the AI assistant for news context grounding, and by alert rules that monitor specific topics or entities.
 
         Args:
-        query: Search query
-        limit: Maximum results
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        filters: Source/topic filters"""
+        from_date: Optional date in ISO 8601 format (YYYY-MM-DD)
+        to_date: Optional date in ISO 8601 format (YYYY-MM-DD)
+        start_date: Optional date in ISO 8601 format (YYYY-MM-DD)
+        end_date: Optional date in ISO 8601 format (YYYY-MM-DD)
+
+        Examples:
+            >>> client.news.search(query='inflation', limit=5)"""
         _payload: Dict[str, Any] = {}
-        _payload["query"] = query
-        if endDate is not None:
-            _payload["endDate"] = endDate
-        if exclude_topics is not None:
-            _payload["exclude_topics"] = exclude_topics
-        if excludeTopics is not None:
-            _payload["excludeTopics"] = excludeTopics
+        if query is not None:
+            _payload["query"] = query
+        if filters is not None:
+            _payload["filters"] = filters
         if from_date is not None:
             _payload["from_date"] = from_date
-        if fromDate is not None:
-            _payload["fromDate"] = fromDate
-        if offset is not None:
-            _payload["offset"] = offset
-        if order is not None:
-            _payload["order"] = order
-        if limit is not None:
-            _payload["limit"] = limit
-        if sort is not None:
-            _payload["sort"] = sort
+        if to_date is not None:
+            _payload["to_date"] = to_date
         if start_date is not None:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if filters is not None:
-            _payload["filters"] = filters
-        if startDate is not None:
-            _payload["startDate"] = startDate
-        if to_date is not None:
-            _payload["to_date"] = to_date
-        if toDate is not None:
-            _payload["toDate"] = toDate
+        if exclude_topics is not None:
+            _payload["exclude_topics"] = exclude_topics
+        if limit is not None:
+            _payload["limit"] = limit
+        if offset is not None:
+            _payload["offset"] = offset
+        if sort is not None:
+            _payload["sort"] = sort
+        if order is not None:
+            _payload["order"] = order
         return self._call("news.search", params=_payload, options=options, context=context, response_format=response_format)
 
     def trending(
@@ -158,15 +140,12 @@ class NewsAPI(BaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Get trending terms
+        """Get currently trending topics and entities in financial news
 
-        Currently trending topics and entities.
+        Identifies terms, entities (companies, indices, currencies), and topics that are trending in financial news right now. Uses velocity-based detection: measures how rapidly the frequency of a term is increasing compared to its historical baseline. Returns each trending term with its current velocity score, article count, term type (entity vs. keyword), and sample headlines. Filterable by term type and minimum velocity threshold. Finance-only mode excludes generic trending topics and focuses on market-relevant terms. Used by the Dashboard News page for the 'Trending Now' widget and by the AI assistant to understand current market narrative.
 
-        Args:
-        limit: Maximum results
-        term_type: all|entity|keyword
-        finance_only: Finance terms only
-        min_velocity: Minimum velocity threshold"""
+        Examples:
+            >>> client.news.trending(limit=10, finance_only=True)"""
         _payload: Dict[str, Any] = {}
         if limit is not None:
             _payload["limit"] = limit
@@ -188,14 +167,13 @@ class NewsAPI(BaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Compare trending terms
+        """Compare the trending trajectories of multiple terms side by side
 
-        Compare multiple terms over time.
+        Compares the trending velocity of 2 or more terms over the same time period. Returns aligned time series for each term, enabling visual comparison of media attention across topics. Each term's series includes velocity score, article count, and normalized intensity. Ideal for building comparison charts, detecting narrative rotation, and grounding AI-assisted market commentary.
 
         Args:
-        terms: Terms to compare
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
+        start_date: Optional date in ISO 8601 format (YYYY-MM-DD)
+        end_date: Optional date in ISO 8601 format (YYYY-MM-DD)"""
         _payload: Dict[str, Any] = {}
         _payload["terms"] = terms
         if start_date is not None:
@@ -208,29 +186,28 @@ class NewsAPI(BaseAPI):
         self,
         *,
         term: str,
-        limit: Optional[int] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        limit: Optional[int] = 168,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Get trending history
+        """Get the historical trending trajectory of a specific term
 
-        Historical trending data for a term.
+        Tracks how a specific term's trending velocity has evolved over time. Returns a time series of velocity scores and article counts for the given term across the specified date range. Useful for understanding whether a topic is gaining or losing momentum in financial media over days or weeks. Enables trend-over-time charts and comparative analysis of media attention cycles. Used by the Dashboard for detailed trending term analysis and by research workflows studying narrative shifts.
 
         Args:
-        term: Term to track
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
+        start_date: Optional date in ISO 8601 format (YYYY-MM-DD)
+        end_date: Optional date in ISO 8601 format (YYYY-MM-DD)"""
         _payload: Dict[str, Any] = {}
         _payload["term"] = term
-        if limit is not None:
-            _payload["limit"] = limit
         if start_date is not None:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
+        if limit is not None:
+            _payload["limit"] = limit
         return self._call("news.trending_history", params=_payload, options=options, context=context, response_format=response_format)
 
 
@@ -245,12 +222,9 @@ class AsyncNewsAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get article details
+        """Get full article details and content by URL
 
-        Full article content by URL.
-
-        Args:
-        url: Article URL"""
+        Retrieves the complete article content and metadata for a single news article identified by its URL. Returns the full text (when available from the source), headline, author, publication date, source, extracted topics and entities, and related article links. Used when a user clicks on a headline in the news list to read the full article within the Dashboard, avoiding external navigation. If the source does not provide full text via RSS/API, returns the available summary with a link to the original source."""
         _payload: Dict[str, Any] = {}
         _payload["url"] = url
         return await self._call("news.details", params=_payload, options=options, context=context)
@@ -259,116 +233,101 @@ class AsyncNewsAPI(AsyncBaseAPI):
         self,
         *,
         fields: Optional[List[Any]] = None,
-        force_refresh: Optional[bool] = None,
-        limit: Optional[int] = None,
+        limit: Optional[int] = 50,
+        force_refresh: Optional[bool] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get news facets
+        """Get available news sources and topic categories for filtering
 
-        Available sources and topics."""
+        Returns the aggregated facets (distinct values and counts) for news metadata fields: sources, topics, entities, and categories. Used to populate filter dropdowns and chips in the news search UI. Shows which sources are available, which topics are trending, and which entities appear most frequently. Supports optional force_refresh to bypass the cache and get fresh counts. Essential for building a faceted search experience where users can drill down into specific sources or topics."""
         _payload: Dict[str, Any] = {}
         if fields is not None:
             _payload["fields"] = fields
-        if force_refresh is not None:
-            _payload["force_refresh"] = force_refresh
         if limit is not None:
             _payload["limit"] = limit
+        if force_refresh is not None:
+            _payload["force_refresh"] = force_refresh
         return await self._call("news.facets", params=_payload, options=options, context=context)
 
     async def latest(
         self,
         *,
-        limit: Optional[int] = 20,
         search_key: Optional[str] = None,
-        searchKey: Optional[str] = None,
         source: Optional[str] = None,
+        limit: Optional[int] = 20,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Get latest news
+        """Get the most recently published financial news articles
 
-        Most recent articles.
+        Returns the most recently indexed news articles in reverse chronological order. Optionally filterable by news source or search key for quick topic-specific feeds. Each article includes headline, source name, publication timestamp, URL, and extracted entities (companies, indices, sectors mentioned). Ideal for building a live news ticker, a 'latest headlines' widget, or a source-specific news feed. Used by the Dashboard News page for the default latest headlines view and by the Market Snapshot page for the news sidebar.
 
-        Args:
-        limit: Maximum results"""
+        Examples:
+            >>> await client.news.latest(limit=5)"""
         _payload: Dict[str, Any] = {}
-        if limit is not None:
-            _payload["limit"] = limit
         if search_key is not None:
             _payload["search_key"] = search_key
-        if searchKey is not None:
-            _payload["searchKey"] = searchKey
         if source is not None:
             _payload["source"] = source
+        if limit is not None:
+            _payload["limit"] = limit
         return await self._call("news.latest", params=_payload, options=options, context=context, response_format=response_format)
 
     async def search(
         self,
         *,
-        query: str,
-        endDate: Optional[str] = None,
-        exclude_topics: Optional[bool] = None,
-        excludeTopics: Optional[str] = None,
+        query: Optional[str] = "",
+        filters: Optional[Dict[str, Any]] = None,
         from_date: Optional[str] = None,
-        fromDate: Optional[str] = None,
-        offset: Optional[int] = None,
-        order: Optional[str] = None,
-        limit: Optional[int] = 20,
-        sort: Optional[str] = None,
+        to_date: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        filters: Optional[Dict[str, Any]] = None,
-        startDate: Optional[str] = None,
-        to_date: Optional[str] = None,
-        toDate: Optional[str] = None,
+        exclude_topics: Optional[bool] = False,
+        limit: Optional[int] = 50,
+        offset: Optional[int] = 0,
+        sort: Optional[str] = None,
+        order: Optional[str] = "desc",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Search news articles
+        """Search financial news articles with full-text and faceted filtering
 
-        Full-text search in news articles.
+        Full-text search across the financial news database powered by Tantivy search engine. Indexes articles from major financial news sources (Bloomberg, Reuters, Financial Times, CNBC, MarketWatch, local financial media). Supports advanced query syntax (AND, OR, phrases), date range filtering, source filtering, and topic exclusion. Returns article headline, source, publication date, URL, matched topics/entities, and relevance score. Results are paginated and sortable by date or relevance. Used by the Dashboard News page as the primary news search, by the AI assistant for news context grounding, and by alert rules that monitor specific topics or entities.
 
         Args:
-        query: Search query
-        limit: Maximum results
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        filters: Source/topic filters"""
+        from_date: Optional date in ISO 8601 format (YYYY-MM-DD)
+        to_date: Optional date in ISO 8601 format (YYYY-MM-DD)
+        start_date: Optional date in ISO 8601 format (YYYY-MM-DD)
+        end_date: Optional date in ISO 8601 format (YYYY-MM-DD)
+
+        Examples:
+            >>> await client.news.search(query='inflation', limit=5)"""
         _payload: Dict[str, Any] = {}
-        _payload["query"] = query
-        if endDate is not None:
-            _payload["endDate"] = endDate
-        if exclude_topics is not None:
-            _payload["exclude_topics"] = exclude_topics
-        if excludeTopics is not None:
-            _payload["excludeTopics"] = excludeTopics
+        if query is not None:
+            _payload["query"] = query
+        if filters is not None:
+            _payload["filters"] = filters
         if from_date is not None:
             _payload["from_date"] = from_date
-        if fromDate is not None:
-            _payload["fromDate"] = fromDate
-        if offset is not None:
-            _payload["offset"] = offset
-        if order is not None:
-            _payload["order"] = order
-        if limit is not None:
-            _payload["limit"] = limit
-        if sort is not None:
-            _payload["sort"] = sort
+        if to_date is not None:
+            _payload["to_date"] = to_date
         if start_date is not None:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
-        if filters is not None:
-            _payload["filters"] = filters
-        if startDate is not None:
-            _payload["startDate"] = startDate
-        if to_date is not None:
-            _payload["to_date"] = to_date
-        if toDate is not None:
-            _payload["toDate"] = toDate
+        if exclude_topics is not None:
+            _payload["exclude_topics"] = exclude_topics
+        if limit is not None:
+            _payload["limit"] = limit
+        if offset is not None:
+            _payload["offset"] = offset
+        if sort is not None:
+            _payload["sort"] = sort
+        if order is not None:
+            _payload["order"] = order
         return await self._call("news.search", params=_payload, options=options, context=context, response_format=response_format)
 
     async def trending(
@@ -382,15 +341,12 @@ class AsyncNewsAPI(AsyncBaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Get trending terms
+        """Get currently trending topics and entities in financial news
 
-        Currently trending topics and entities.
+        Identifies terms, entities (companies, indices, currencies), and topics that are trending in financial news right now. Uses velocity-based detection: measures how rapidly the frequency of a term is increasing compared to its historical baseline. Returns each trending term with its current velocity score, article count, term type (entity vs. keyword), and sample headlines. Filterable by term type and minimum velocity threshold. Finance-only mode excludes generic trending topics and focuses on market-relevant terms. Used by the Dashboard News page for the 'Trending Now' widget and by the AI assistant to understand current market narrative.
 
-        Args:
-        limit: Maximum results
-        term_type: all|entity|keyword
-        finance_only: Finance terms only
-        min_velocity: Minimum velocity threshold"""
+        Examples:
+            >>> await client.news.trending(limit=10, finance_only=True)"""
         _payload: Dict[str, Any] = {}
         if limit is not None:
             _payload["limit"] = limit
@@ -412,14 +368,13 @@ class AsyncNewsAPI(AsyncBaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Compare trending terms
+        """Compare the trending trajectories of multiple terms side by side
 
-        Compare multiple terms over time.
+        Compares the trending velocity of 2 or more terms over the same time period. Returns aligned time series for each term, enabling visual comparison of media attention across topics. Each term's series includes velocity score, article count, and normalized intensity. Ideal for building comparison charts, detecting narrative rotation, and grounding AI-assisted market commentary.
 
         Args:
-        terms: Terms to compare
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
+        start_date: Optional date in ISO 8601 format (YYYY-MM-DD)
+        end_date: Optional date in ISO 8601 format (YYYY-MM-DD)"""
         _payload: Dict[str, Any] = {}
         _payload["terms"] = terms
         if start_date is not None:
@@ -432,29 +387,28 @@ class AsyncNewsAPI(AsyncBaseAPI):
         self,
         *,
         term: str,
-        limit: Optional[int] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        limit: Optional[int] = 168,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Get trending history
+        """Get the historical trending trajectory of a specific term
 
-        Historical trending data for a term.
+        Tracks how a specific term's trending velocity has evolved over time. Returns a time series of velocity scores and article counts for the given term across the specified date range. Useful for understanding whether a topic is gaining or losing momentum in financial media over days or weeks. Enables trend-over-time charts and comparative analysis of media attention cycles. Used by the Dashboard for detailed trending term analysis and by research workflows studying narrative shifts.
 
         Args:
-        term: Term to track
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
+        start_date: Optional date in ISO 8601 format (YYYY-MM-DD)
+        end_date: Optional date in ISO 8601 format (YYYY-MM-DD)"""
         _payload: Dict[str, Any] = {}
         _payload["term"] = term
-        if limit is not None:
-            _payload["limit"] = limit
         if start_date is not None:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
+        if limit is not None:
+            _payload["limit"] = limit
         return await self._call("news.trending_history", params=_payload, options=options, context=context, response_format=response_format)
 
 

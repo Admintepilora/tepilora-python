@@ -15,7 +15,7 @@ from conftest import _load_schema
 
 
 SCHEMA = _load_schema()
-HIDDEN_CATEGORIES = {"audit"}
+HIDDEN_CATEGORIES = set()
 
 
 def _non_internal_ops():

@@ -200,7 +200,7 @@ class TestAnalyticsQuantE2E(unittest.TestCase):
         for fn in funcs:
             if not isinstance(fn, str):
                 continue
-            info = c.analytics.info(fn)
+            info = c.analytics.info(function=fn)
             category = info.get("category")
             params: Dict[str, Any] = {}
 
