@@ -35,7 +35,7 @@ class BillingAPI(BaseAPI):
     def calculate(
         self,
         *,
-        fee_schedule: Dict[str, Any],
+        fee_schedule: Any,
         aum: Optional[float] = None,
         portfolio_return: Optional[float] = None,
         benchmark_return: Optional[float] = None,
@@ -336,7 +336,7 @@ class BillingAPI(BaseAPI):
     def simulate(
         self,
         *,
-        fee_schedule: Dict[str, Any],
+        fee_schedule: Any,
         scenarios: Optional[List[Any]] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
@@ -376,7 +376,7 @@ class AsyncBillingAPI(AsyncBaseAPI):
     async def calculate(
         self,
         *,
-        fee_schedule: Dict[str, Any],
+        fee_schedule: Any,
         aum: Optional[float] = None,
         portfolio_return: Optional[float] = None,
         benchmark_return: Optional[float] = None,
@@ -677,7 +677,7 @@ class AsyncBillingAPI(AsyncBaseAPI):
     async def simulate(
         self,
         *,
-        fee_schedule: Dict[str, Any],
+        fee_schedule: Any,
         scenarios: Optional[List[Any]] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,

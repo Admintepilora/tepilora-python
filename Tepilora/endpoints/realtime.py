@@ -38,13 +38,13 @@ class RealtimeAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get intraday OHLCV chart data for a symbol from realtime feeds
+        """Get realtime chart data and period performance
 
-        Returns intraday OHLCV (Open, High, Low, Close, Volume) candlestick data for a given symbol from Redis DB 1. Supports multiple timeframes: 1m, 5m, 15m, 30m, 1H, 4H, 1D. Data points include timestamp, open, high, low, close, and volume. The symbol can be identified by its realtime feed symbol (e.g. 'EUR/USD') or by TepiloraCode via the identifier parameter (resolved through rt:map:tc). Used by the Dashboard Market Snapshot page for inline sparkline charts and detailed instrument chart views, and by technical analysis workflows requiring intraday granularity beyond what securities.history provides (which is daily only).
+        Returns a clean V3 chart contract for market snapshot symbols using cached EOD history plus realtime quote merge. The response includes entries, last_price, currency and 1D/5D/1M/3M/6M/YTD/1Y/5Y/MAX period performance without diagnostic fields.
 
         Args:
         symbol: Symbol for chart retrieval.
-        timeframe: Chart timeframe.
+        timeframe: Chart timeframe: 1D, 5D, 1M, 3M, 6M, YTD, 1Y, 5Y, MAX.
         identifier: Optional TepiloraCode."""
         _payload: Dict[str, Any] = {}
         if symbol is not None:
@@ -149,13 +149,13 @@ class AsyncRealtimeAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get intraday OHLCV chart data for a symbol from realtime feeds
+        """Get realtime chart data and period performance
 
-        Returns intraday OHLCV (Open, High, Low, Close, Volume) candlestick data for a given symbol from Redis DB 1. Supports multiple timeframes: 1m, 5m, 15m, 30m, 1H, 4H, 1D. Data points include timestamp, open, high, low, close, and volume. The symbol can be identified by its realtime feed symbol (e.g. 'EUR/USD') or by TepiloraCode via the identifier parameter (resolved through rt:map:tc). Used by the Dashboard Market Snapshot page for inline sparkline charts and detailed instrument chart views, and by technical analysis workflows requiring intraday granularity beyond what securities.history provides (which is daily only).
+        Returns a clean V3 chart contract for market snapshot symbols using cached EOD history plus realtime quote merge. The response includes entries, last_price, currency and 1D/5D/1M/3M/6M/YTD/1Y/5Y/MAX period performance without diagnostic fields.
 
         Args:
         symbol: Symbol for chart retrieval.
-        timeframe: Chart timeframe.
+        timeframe: Chart timeframe: 1D, 5D, 1M, 3M, 6M, YTD, 1Y, 5Y, MAX.
         identifier: Optional TepiloraCode."""
         _payload: Dict[str, Any] = {}
         if symbol is not None:

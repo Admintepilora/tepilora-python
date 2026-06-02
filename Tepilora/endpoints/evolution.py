@@ -223,7 +223,7 @@ class EvolutionAPI(BaseAPI):
     def stats(
         self,
         *,
-        group_by: Optional[List[Any]] = None,
+        group_by: Optional[Any] = None,
         status: Optional[str] = None,
         category: Optional[str] = None,
         type_: Optional[str] = None,
@@ -519,7 +519,7 @@ class AsyncEvolutionAPI(AsyncBaseAPI):
     async def stats(
         self,
         *,
-        group_by: Optional[List[Any]] = None,
+        group_by: Optional[Any] = None,
         status: Optional[str] = None,
         category: Optional[str] = None,
         type_: Optional[str] = None,

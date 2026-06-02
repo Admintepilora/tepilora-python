@@ -1158,7 +1158,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -1176,7 +1176,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -1200,7 +1200,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -1212,7 +1212,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -1224,7 +1224,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -1326,7 +1326,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -1416,7 +1416,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -1434,7 +1434,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -1458,7 +1458,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -1470,7 +1470,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -1482,7 +1482,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -1584,7 +1584,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -1674,7 +1674,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -1692,7 +1692,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -1716,7 +1716,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -1728,7 +1728,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -1740,7 +1740,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -1842,7 +1842,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -1944,13 +1944,13 @@
         },
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -1974,13 +1974,13 @@
         },
         {
           "name": "total_return",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         }
@@ -2016,7 +2016,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -2034,7 +2034,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -2058,7 +2058,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -2070,7 +2070,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -2082,7 +2082,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -2184,7 +2184,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -2274,7 +2274,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -2292,7 +2292,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -2316,7 +2316,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -2328,7 +2328,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -2340,7 +2340,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -2442,7 +2442,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -2532,7 +2532,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -2550,7 +2550,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -2574,7 +2574,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -2586,7 +2586,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -2598,7 +2598,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -2700,7 +2700,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -2790,7 +2790,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -2808,7 +2808,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -2832,7 +2832,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -2844,7 +2844,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -2856,7 +2856,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -2958,7 +2958,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -3048,7 +3048,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -3066,7 +3066,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -3090,7 +3090,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -3102,7 +3102,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -3114,7 +3114,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -3216,7 +3216,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -3306,7 +3306,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -3324,7 +3324,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -3348,7 +3348,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -3360,7 +3360,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -3372,7 +3372,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -3474,7 +3474,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -3564,7 +3564,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -3582,7 +3582,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -3606,7 +3606,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -3618,7 +3618,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -3630,7 +3630,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -3732,7 +3732,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -3822,7 +3822,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -3840,7 +3840,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -3864,7 +3864,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -3876,7 +3876,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -3888,7 +3888,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -3990,7 +3990,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -4080,7 +4080,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -4098,7 +4098,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -4122,7 +4122,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -4134,7 +4134,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -4146,7 +4146,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -4248,7 +4248,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -4338,7 +4338,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -4356,7 +4356,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -4380,7 +4380,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -4392,7 +4392,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -4404,7 +4404,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -4506,7 +4506,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -4596,7 +4596,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -4614,7 +4614,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -4638,7 +4638,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -4650,7 +4650,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -4662,7 +4662,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -4764,7 +4764,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -4854,7 +4854,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -4872,7 +4872,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -4896,7 +4896,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -4908,7 +4908,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -4920,7 +4920,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -5022,7 +5022,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -5112,7 +5112,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -5130,7 +5130,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -5154,7 +5154,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -5166,7 +5166,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -5178,7 +5178,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -5280,7 +5280,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -5370,7 +5370,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -5388,7 +5388,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -5412,7 +5412,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -5424,7 +5424,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -5436,7 +5436,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -5538,7 +5538,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -5628,7 +5628,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -5646,7 +5646,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -5670,7 +5670,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -5682,7 +5682,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -5694,7 +5694,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -5796,7 +5796,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -5940,7 +5940,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -5958,7 +5958,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -5982,7 +5982,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -5994,7 +5994,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -6006,7 +6006,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -6108,7 +6108,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -6198,7 +6198,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -6216,7 +6216,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -6240,7 +6240,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -6252,7 +6252,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -6264,7 +6264,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -6366,7 +6366,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -6456,7 +6456,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -6474,7 +6474,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -6498,7 +6498,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -6510,7 +6510,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -6522,7 +6522,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -6624,7 +6624,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -6714,7 +6714,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -6732,7 +6732,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -6756,7 +6756,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -6768,7 +6768,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -6780,7 +6780,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -6882,7 +6882,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -6972,7 +6972,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -6990,7 +6990,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -7014,7 +7014,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -7026,7 +7026,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -7038,7 +7038,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -7140,7 +7140,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -7230,7 +7230,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -7248,7 +7248,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -7272,7 +7272,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -7284,7 +7284,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -7296,7 +7296,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -7398,7 +7398,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -7488,7 +7488,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -7506,7 +7506,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -7530,7 +7530,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -7542,7 +7542,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -7554,7 +7554,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -7656,7 +7656,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -7746,7 +7746,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -7764,7 +7764,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -7788,7 +7788,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -7800,7 +7800,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -7812,7 +7812,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -7914,7 +7914,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -8004,7 +8004,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -8022,7 +8022,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -8046,7 +8046,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -8058,7 +8058,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -8070,7 +8070,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -8172,7 +8172,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -8262,7 +8262,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -8280,7 +8280,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -8304,7 +8304,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -8316,7 +8316,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -8328,7 +8328,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -8430,7 +8430,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -8520,7 +8520,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -8538,7 +8538,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -8562,7 +8562,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -8574,7 +8574,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -8586,7 +8586,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -8688,7 +8688,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -8778,7 +8778,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -8796,7 +8796,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -8820,7 +8820,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -8832,7 +8832,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -8844,7 +8844,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -8946,7 +8946,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -9036,7 +9036,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -9054,7 +9054,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -9078,7 +9078,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -9090,7 +9090,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -9102,7 +9102,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -9204,7 +9204,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -9294,7 +9294,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -9312,7 +9312,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -9336,7 +9336,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -9348,7 +9348,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -9360,7 +9360,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -9462,7 +9462,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -9552,7 +9552,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -9570,7 +9570,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -9594,7 +9594,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -9606,7 +9606,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -9618,7 +9618,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -9720,7 +9720,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -9810,7 +9810,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -9828,7 +9828,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -9852,7 +9852,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -9864,7 +9864,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -9876,7 +9876,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -9978,7 +9978,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -10068,7 +10068,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -10086,7 +10086,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -10110,7 +10110,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -10122,7 +10122,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -10134,7 +10134,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -10236,7 +10236,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -10326,7 +10326,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -10344,7 +10344,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -10368,7 +10368,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -10380,7 +10380,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -10392,7 +10392,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -10494,7 +10494,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -10584,7 +10584,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -10602,7 +10602,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -10626,7 +10626,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -10638,7 +10638,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -10650,7 +10650,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -10752,7 +10752,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -10842,7 +10842,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -10860,7 +10860,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -10884,7 +10884,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -10896,7 +10896,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -10908,7 +10908,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -11010,7 +11010,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -11100,7 +11100,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -11118,7 +11118,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -11142,7 +11142,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -11154,7 +11154,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -11166,7 +11166,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -11268,7 +11268,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -11358,7 +11358,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -11376,7 +11376,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -11400,7 +11400,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -11412,7 +11412,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -11424,7 +11424,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -11526,7 +11526,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -11616,7 +11616,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -11634,7 +11634,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -11658,7 +11658,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -11670,7 +11670,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -11682,7 +11682,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -11784,7 +11784,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -11874,7 +11874,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -11892,7 +11892,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -11916,7 +11916,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -11928,7 +11928,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -11940,7 +11940,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -12042,7 +12042,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -12132,7 +12132,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -12150,7 +12150,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -12174,7 +12174,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -12186,7 +12186,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -12198,7 +12198,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -12300,7 +12300,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -12390,7 +12390,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -12408,7 +12408,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -12432,7 +12432,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -12444,7 +12444,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -12456,7 +12456,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -12558,7 +12558,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -12648,7 +12648,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -12666,7 +12666,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -12690,7 +12690,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -12702,7 +12702,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -12714,7 +12714,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -12816,7 +12816,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -12906,7 +12906,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -12924,7 +12924,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -12948,7 +12948,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -12960,7 +12960,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -12972,7 +12972,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -13074,7 +13074,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -13164,7 +13164,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -13182,7 +13182,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -13206,7 +13206,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -13218,7 +13218,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -13230,7 +13230,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -13332,7 +13332,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -13422,7 +13422,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -13440,7 +13440,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -13464,7 +13464,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -13476,7 +13476,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -13488,7 +13488,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -13590,7 +13590,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -13680,7 +13680,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -13698,7 +13698,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -13722,7 +13722,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -13734,7 +13734,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -13746,7 +13746,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -13848,7 +13848,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -13938,7 +13938,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -13956,7 +13956,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -13980,7 +13980,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -13992,7 +13992,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -14004,7 +14004,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -14106,7 +14106,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -14196,7 +14196,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -14214,7 +14214,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -14238,7 +14238,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -14250,7 +14250,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -14262,7 +14262,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -14364,7 +14364,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -14454,7 +14454,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -14472,7 +14472,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -14496,7 +14496,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -14508,7 +14508,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -14520,7 +14520,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -14622,7 +14622,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -14712,7 +14712,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -14730,7 +14730,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -14754,7 +14754,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -14766,7 +14766,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -14778,7 +14778,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -14880,7 +14880,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -14970,7 +14970,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -14988,7 +14988,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -15012,7 +15012,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -15024,7 +15024,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -15036,7 +15036,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -15138,7 +15138,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -15228,7 +15228,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -15246,7 +15246,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -15270,7 +15270,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -15282,7 +15282,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -15294,7 +15294,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -15396,7 +15396,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -15486,7 +15486,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -15504,7 +15504,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -15528,7 +15528,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -15540,7 +15540,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -15552,7 +15552,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -15654,7 +15654,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -15744,7 +15744,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -15762,7 +15762,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -15786,7 +15786,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -15798,7 +15798,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -15810,7 +15810,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -15912,7 +15912,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -16002,7 +16002,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -16020,7 +16020,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -16044,7 +16044,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -16056,7 +16056,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -16068,7 +16068,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -16170,7 +16170,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -16260,7 +16260,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -16278,7 +16278,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -16302,7 +16302,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -16314,7 +16314,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -16326,7 +16326,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -16428,7 +16428,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -16518,7 +16518,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -16536,7 +16536,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -16560,7 +16560,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -16572,7 +16572,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -16584,7 +16584,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -16686,7 +16686,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -16776,7 +16776,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -16794,7 +16794,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -16818,7 +16818,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -16830,7 +16830,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -16842,7 +16842,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -16944,7 +16944,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -17034,7 +17034,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -17052,7 +17052,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -17076,7 +17076,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -17088,7 +17088,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -17100,7 +17100,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -17202,7 +17202,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -17292,7 +17292,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -17310,7 +17310,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -17334,7 +17334,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -17346,7 +17346,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -17358,7 +17358,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -17460,7 +17460,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -17550,7 +17550,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -17568,7 +17568,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -17592,7 +17592,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -17604,7 +17604,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -17616,7 +17616,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -17718,7 +17718,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -17808,7 +17808,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -17826,7 +17826,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -17850,7 +17850,7 @@
         },
         {
           "name": "TR",
-          "type": "bool",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -17862,7 +17862,7 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -17874,7 +17874,7 @@
         },
         {
           "name": "Annualized",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -17976,7 +17976,7 @@
         },
         {
           "name": "x",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -18446,7 +18446,7 @@
         },
         {
           "name": "scenarios",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -18715,7 +18715,7 @@
       "params": [
         {
           "name": "fee_schedule",
-          "type": "dict",
+          "type": "any",
           "required": true,
           "description": ""
         },
@@ -19371,7 +19371,7 @@
       "params": [
         {
           "name": "fee_schedule",
-          "type": "dict",
+          "type": "any",
           "required": true,
           "description": ""
         },
@@ -19518,7 +19518,7 @@
         },
         {
           "name": "target_maturities",
-          "type": "float",
+          "type": "list",
           "required": false,
           "description": ""
         },
@@ -19601,7 +19601,7 @@
         },
         {
           "name": "weights",
-          "type": "float",
+          "type": "list",
           "required": false,
           "description": ""
         }
@@ -19654,7 +19654,7 @@
         },
         {
           "name": "weights",
-          "type": "float",
+          "type": "list",
           "required": false,
           "description": ""
         },
@@ -20421,7 +20421,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "list",
+          "type": "any",
           "required": true,
           "description": ""
         }
@@ -20454,7 +20454,7 @@
         },
         {
           "name": "weights",
-          "type": "float",
+          "type": "dict",
           "required": false,
           "description": ""
         }
@@ -20552,7 +20552,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "list",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -21044,7 +21044,7 @@
       "params": [
         {
           "name": "group_by",
-          "type": "list",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -21388,13 +21388,13 @@
         },
         {
           "name": "weights",
-          "type": "float",
+          "type": "dict",
           "required": false,
           "description": ""
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -21461,13 +21461,13 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "list",
+          "type": "any",
           "required": false,
           "description": ""
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -21615,13 +21615,13 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "list",
+          "type": "any",
           "required": false,
           "description": ""
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -21639,13 +21639,13 @@
         },
         {
           "name": "weights",
-          "type": "float",
+          "type": "dict",
           "required": false,
           "description": ""
         },
         {
           "name": "scenarios",
-          "type": "string",
+          "type": "any",
           "required": true,
           "description": ""
         },
@@ -21735,7 +21735,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "list",
+          "type": "any",
           "required": true,
           "description": ""
         },
@@ -21855,7 +21855,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "list",
+          "type": "any",
           "required": true,
           "description": ""
         },
@@ -21898,7 +21898,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "list",
+          "type": "any",
           "required": true,
           "description": ""
         },
@@ -21955,7 +21955,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "list",
+          "type": "any",
           "required": true,
           "description": ""
         },
@@ -21980,7 +21980,7 @@
         },
         {
           "name": "metrics",
-          "type": "list",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -22019,7 +22019,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "list",
+          "type": "any",
           "required": true,
           "description": ""
         }
@@ -22133,13 +22133,13 @@
       "params": [
         {
           "name": "identifier",
-          "type": "list",
+          "type": "any",
           "required": false,
           "description": ""
         },
         {
           "name": "identifiers",
-          "type": "list",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -22255,13 +22255,13 @@
       "params": [
         {
           "name": "identifier",
-          "type": "list",
+          "type": "any",
           "required": false,
           "description": ""
         },
         {
           "name": "identifiers",
-          "type": "list",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -22897,7 +22897,7 @@
         },
         {
           "name": "spot_range",
-          "type": "float",
+          "type": "list",
           "required": false,
           "description": ""
         },
@@ -23116,7 +23116,7 @@
         },
         {
           "name": "weights",
-          "type": "float",
+          "type": "dict",
           "required": false,
           "description": ""
         },
@@ -23279,7 +23279,7 @@
         },
         {
           "name": "weights",
-          "type": "float",
+          "type": "dict",
           "required": false,
           "description": ""
         },
@@ -23451,7 +23451,7 @@
         },
         {
           "name": "initial_weights",
-          "type": "float",
+          "type": "dict",
           "required": false,
           "description": ""
         },
@@ -23469,7 +23469,7 @@
         },
         {
           "name": "weights",
-          "type": "float",
+          "type": "dict",
           "required": false,
           "description": ""
         },
@@ -23595,7 +23595,7 @@
       "params": [
         {
           "name": "compare_rebalanced",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -23619,25 +23619,25 @@
         },
         {
           "name": "target_weights",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
         {
           "name": "threshold",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
         {
           "name": "total_return",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
         {
           "name": "user_prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         }
@@ -23677,7 +23677,7 @@
         },
         {
           "name": "weights",
-          "type": "float",
+          "type": "dict",
           "required": false,
           "description": ""
         },
@@ -23891,7 +23891,7 @@
       "params": [
         {
           "name": "identifiers",
-          "type": "list",
+          "type": "any",
           "required": true,
           "description": ""
         },
@@ -23977,31 +23977,31 @@
       "params": [
         {
           "name": "current_weights",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
         {
           "name": "target_weights",
-          "type": "float",
+          "type": "dict",
           "required": false,
           "description": ""
         },
         {
           "name": "costs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
         {
           "name": "min_trade_value",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
         {
           "name": "portfolio_value",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -24013,7 +24013,7 @@
         },
         {
           "name": "threshold",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         }
@@ -24052,7 +24052,7 @@
         },
         {
           "name": "weights",
-          "type": "float",
+          "type": "dict",
           "required": false,
           "description": ""
         },
@@ -24106,7 +24106,7 @@
         },
         {
           "name": "borrow_cost",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -24118,7 +24118,7 @@
         },
         {
           "name": "cash_yield",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -24148,37 +24148,37 @@
         },
         {
           "name": "Obs",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
         {
           "name": "price_fill",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
         {
           "name": "rebalance_dates",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
         {
           "name": "rebalance_effective",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
         {
           "name": "rebalance_frequency",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
         {
           "name": "rebalance_on",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -24190,7 +24190,7 @@
         },
         {
           "name": "stale_policy",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -24392,7 +24392,7 @@
         },
         {
           "name": "portfolio_value",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -24416,25 +24416,25 @@
         },
         {
           "name": "shock_range",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
         {
           "name": "shocks",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
         {
           "name": "steps",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
         {
           "name": "weights",
-          "type": "float",
+          "type": "dict",
           "required": false,
           "description": ""
         }
@@ -24477,7 +24477,7 @@
         },
         {
           "name": "weights",
-          "type": "float",
+          "type": "dict",
           "required": false,
           "description": ""
         },
@@ -24519,7 +24519,7 @@
         },
         {
           "name": "benchmark_weights",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -24543,7 +24543,7 @@
         },
         {
           "name": "risk_free_rate",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -24561,7 +24561,7 @@
         },
         {
           "name": "total_return",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         }
@@ -25510,6 +25510,20 @@
           "description": ""
         },
         {
+          "name": "limit",
+          "type": "int",
+          "required": false,
+          "description": "",
+          "default": 100
+        },
+        {
+          "name": "offset",
+          "type": "int",
+          "required": false,
+          "description": "",
+          "default": 0
+        },
+        {
           "name": "output_path",
           "type": "string",
           "required": false,
@@ -25522,6 +25536,8 @@
         "query_id",
         "name",
         "category",
+        "limit",
+        "offset",
         "output_path"
       ],
       "credits": 1,
@@ -25839,8 +25855,8 @@
       "action": "realtime.chart",
       "category": "realtime",
       "operation": "chart",
-      "summary": "Get intraday OHLCV chart data for a symbol from realtime feeds",
-      "description": "Returns intraday OHLCV (Open, High, Low, Close, Volume) candlestick data for a given symbol from Redis DB 1. Supports multiple timeframes: 1m, 5m, 15m, 30m, 1H, 4H, 1D. Data points include timestamp, open, high, low, close, and volume. The symbol can be identified by its realtime feed symbol (e.g. 'EUR/USD') or by TepiloraCode via the identifier parameter (resolved through rt:map:tc). Used by the Dashboard Market Snapshot page for inline sparkline charts and detailed instrument chart views, and by technical analysis workflows requiring intraday granularity beyond what securities.history provides (which is daily only).",
+      "summary": "Get realtime chart data and period performance",
+      "description": "Returns a clean V3 chart contract for market snapshot symbols using cached EOD history plus realtime quote merge. The response includes entries, last_price, currency and 1D/5D/1M/3M/6M/YTD/1Y/5Y/MAX period performance without diagnostic fields.",
       "methodology_doc": "",
       "params": [
         {
@@ -25854,7 +25870,7 @@
           "name": "timeframe",
           "type": "string",
           "required": false,
-          "description": "Chart timeframe.",
+          "description": "Chart timeframe: 1D, 5D, 1M, 3M, 6M, YTD, 1Y, 5Y, MAX.",
           "default": "1D"
         },
         {
@@ -26090,7 +26106,7 @@
       "params": [
         {
           "name": "template",
-          "type": "string",
+          "type": "any",
           "required": true,
           "description": ""
         },
@@ -26161,7 +26177,7 @@
         },
         {
           "name": "weights",
-          "type": "float",
+          "type": "dict",
           "required": false,
           "description": ""
         },
@@ -26185,7 +26201,7 @@
         },
         {
           "name": "benchmark_weights",
-          "type": "float",
+          "type": "dict",
           "required": false,
           "description": ""
         },
@@ -26653,6 +26669,30 @@
       "examples": [],
       "method_name": "filter"
     },
+    "securities.filter_fields": {
+      "action": "securities.filter_fields",
+      "category": "securities",
+      "operation": "filter_fields",
+      "summary": "Get machine-readable catalog of securities filter fields (55 fields)",
+      "description": "Returns the full catalog of filterable fields available on the securities universe (11 legacy + 44 added via Tantivy 55-field expansion). Each entry includes canonical name, type (enum/boolean), Tantivy field, Parquet column, optional allowed_values (for value-allowlist enums like DistributionPolicy), value_labels (FE rendering hints), and derived/degenerate flags. Used by the Dashboard to render dynamic filter UI and by SDK/MCP consumers for capability discovery.",
+      "methodology_doc": "",
+      "params": [],
+      "required_params": [],
+      "optional_params": [],
+      "credits": 1,
+      "tags": [],
+      "deprecated": false,
+      "internal": false,
+      "supports_format": false,
+      "examples": [
+        {
+          "name": "filter_fields_base",
+          "description": "Get full catalog of 55 securities filter fields (no params required).",
+          "params": {}
+        }
+      ],
+      "method_name": "filter_fields"
+    },
     "securities.history": {
       "action": "securities.history",
       "category": "securities",
@@ -26669,7 +26709,7 @@
         },
         {
           "name": "identifiers",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": "Single TepiloraCode or list of TepiloraCodes."
         },
@@ -26948,7 +26988,7 @@
         },
         {
           "name": "rank_by",
-          "type": "float",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -27220,7 +27260,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         }
@@ -27390,7 +27430,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         }
@@ -27450,7 +27490,7 @@
         },
         {
           "name": "prices",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -27619,7 +27659,7 @@
         },
         {
           "name": "source_data",
-          "type": "string",
+          "type": "any",
           "required": true,
           "description": ""
         },
@@ -27957,6 +27997,7 @@
       "facets",
       "fees",
       "filter",
+      "filter_fields",
       "history",
       "lookup",
       "mifid",
@@ -27982,7 +28023,7 @@
     ]
   },
   "stats": {
-    "total_operations": 262,
+    "total_operations": 263,
     "categories": 28,
     "operations_by_category": {
       "alerts": 9,
@@ -28010,7 +28051,7 @@
       "realtime": 5,
       "reporting": 8,
       "search": 1,
-      "securities": 12,
+      "securities": 13,
       "stocks": 9,
       "workflows": 2
     }

@@ -89,6 +89,8 @@ class QueriesAPI(BaseAPI):
         query_id: Optional[str] = None,
         name: Optional[str] = None,
         category: Optional[str] = None,
+        limit: Optional[int] = 100,
+        offset: Optional[int] = 0,
         output_path: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
@@ -106,6 +108,10 @@ class QueriesAPI(BaseAPI):
             _payload["name"] = name
         if category is not None:
             _payload["category"] = category
+        if limit is not None:
+            _payload["limit"] = limit
+        if offset is not None:
+            _payload["offset"] = offset
         if output_path is not None:
             _payload["output_path"] = output_path
         return self._call("queries.execute", params=_payload, options=options, context=context, response_format=response_format)
@@ -315,6 +321,8 @@ class AsyncQueriesAPI(AsyncBaseAPI):
         query_id: Optional[str] = None,
         name: Optional[str] = None,
         category: Optional[str] = None,
+        limit: Optional[int] = 100,
+        offset: Optional[int] = 0,
         output_path: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
@@ -332,6 +340,10 @@ class AsyncQueriesAPI(AsyncBaseAPI):
             _payload["name"] = name
         if category is not None:
             _payload["category"] = category
+        if limit is not None:
+            _payload["limit"] = limit
+        if offset is not None:
+            _payload["offset"] = offset
         if output_path is not None:
             _payload["output_path"] = output_path
         return await self._call("queries.execute", params=_payload, options=options, context=context, response_format=response_format)

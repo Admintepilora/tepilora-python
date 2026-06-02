@@ -46,7 +46,7 @@ class EsgAPI(BaseAPI):
         self,
         *,
         portfolio_id: Optional[str] = None,
-        weights: Optional[float] = None,
+        weights: Optional[Dict[str, Any]] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
@@ -149,7 +149,7 @@ class AsyncEsgAPI(AsyncBaseAPI):
         self,
         *,
         portfolio_id: Optional[str] = None,
-        weights: Optional[float] = None,
+        weights: Optional[Dict[str, Any]] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:

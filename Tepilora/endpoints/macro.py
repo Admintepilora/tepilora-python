@@ -70,7 +70,7 @@ class MacroAPI(BaseAPI):
     def history(
         self,
         *,
-        identifier: Optional[List[Any]] = None,
+        identifier: Optional[Any] = None,
         identifiers: Optional[Union[str, List[str]]] = None,
         indicator: Optional[str] = None,
         start_date: Optional[str] = None,
@@ -133,7 +133,7 @@ class MacroAPI(BaseAPI):
     def latest(
         self,
         *,
-        identifier: Optional[List[Any]] = None,
+        identifier: Optional[Any] = None,
         identifiers: Optional[Union[str, List[str]]] = None,
         indicator: Optional[str] = None,
         country: Optional[str] = None,
@@ -243,7 +243,7 @@ class AsyncMacroAPI(AsyncBaseAPI):
     async def history(
         self,
         *,
-        identifier: Optional[List[Any]] = None,
+        identifier: Optional[Any] = None,
         identifiers: Optional[Union[str, List[str]]] = None,
         indicator: Optional[str] = None,
         start_date: Optional[str] = None,
@@ -306,7 +306,7 @@ class AsyncMacroAPI(AsyncBaseAPI):
     async def latest(
         self,
         *,
-        identifier: Optional[List[Any]] = None,
+        identifier: Optional[Any] = None,
         identifiers: Optional[Union[str, List[str]]] = None,
         indicator: Optional[str] = None,
         country: Optional[str] = None,

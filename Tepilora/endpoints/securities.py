@@ -12,7 +12,7 @@ from ._base import AsyncBaseAPI, BaseAPI
 
 
 class SecuritiesAPI(BaseAPI):
-    """Securities namespace: breakdowns, details, facets, fees, filter, history, lookup, mifid, rating_history, rels, screen, search."""
+    """Securities namespace: breakdowns, details, facets, fees, filter, filter_fields, history, lookup, mifid, rating_history, rels, screen, search."""
 
     def breakdowns(
         self,
@@ -153,6 +153,21 @@ class SecuritiesAPI(BaseAPI):
         if preferred_currency is not None:
             _payload["preferred_currency"] = preferred_currency
         return self._call("securities.filter", params=_payload, options=options, context=context, response_format=response_format)
+
+    def filter_fields(
+        self,
+        *,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+    ) -> Any:
+        """Get machine-readable catalog of securities filter fields (55 fields)
+
+        Returns the full catalog of filterable fields available on the securities universe (11 legacy + 44 added via Tantivy 55-field expansion). Each entry includes canonical name, type (enum/boolean), Tantivy field, Parquet column, optional allowed_values (for value-allowlist enums like DistributionPolicy), value_labels (FE rendering hints), and derived/degenerate flags. Used by the Dashboard to render dynamic filter UI and by SDK/MCP consumers for capability discovery.
+
+        Examples:
+            >>> client.securities.filter_fields()"""
+        _payload: Dict[str, Any] = {}
+        return self._call("securities.filter_fields", params=_payload, options=options, context=context)
 
     def history(
         self,
@@ -311,7 +326,7 @@ class SecuritiesAPI(BaseAPI):
         query_name: Optional[str] = None,
         criteria: Optional[Dict[str, Any]] = None,
         metrics: Optional[List[Any]] = None,
-        rank_by: Optional[float] = None,
+        rank_by: Optional[Any] = None,
         benchmark: Optional[str] = None,
         period: Optional[int] = None,
         limit: Optional[int] = 50,
@@ -397,7 +412,7 @@ class SecuritiesAPI(BaseAPI):
 
 
 class AsyncSecuritiesAPI(AsyncBaseAPI):
-    """Securities namespace: breakdowns, details, facets, fees, filter, history, lookup, mifid, rating_history, rels, screen, search."""
+    """Securities namespace: breakdowns, details, facets, fees, filter, filter_fields, history, lookup, mifid, rating_history, rels, screen, search."""
 
     async def breakdowns(
         self,
@@ -538,6 +553,21 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
         if preferred_currency is not None:
             _payload["preferred_currency"] = preferred_currency
         return await self._call("securities.filter", params=_payload, options=options, context=context, response_format=response_format)
+
+    async def filter_fields(
+        self,
+        *,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+    ) -> Any:
+        """Get machine-readable catalog of securities filter fields (55 fields)
+
+        Returns the full catalog of filterable fields available on the securities universe (11 legacy + 44 added via Tantivy 55-field expansion). Each entry includes canonical name, type (enum/boolean), Tantivy field, Parquet column, optional allowed_values (for value-allowlist enums like DistributionPolicy), value_labels (FE rendering hints), and derived/degenerate flags. Used by the Dashboard to render dynamic filter UI and by SDK/MCP consumers for capability discovery.
+
+        Examples:
+            >>> await client.securities.filter_fields()"""
+        _payload: Dict[str, Any] = {}
+        return await self._call("securities.filter_fields", params=_payload, options=options, context=context)
 
     async def history(
         self,
@@ -696,7 +726,7 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
         query_name: Optional[str] = None,
         criteria: Optional[Dict[str, Any]] = None,
         metrics: Optional[List[Any]] = None,
-        rank_by: Optional[float] = None,
+        rank_by: Optional[Any] = None,
         benchmark: Optional[str] = None,
         period: Optional[int] = None,
         limit: Optional[int] = 50,
