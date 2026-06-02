@@ -99,7 +99,7 @@ class _SyncRequestStub:
 class TestAnalyticsApiCoverageSync(unittest.TestCase):
     def test_analytics_function_info_and_help_proxy_methods(self) -> None:
         api = Mock()
-        api.info.return_value = {"name": "rolling_volatility"}
+        api._info_cached.return_value = {"name": "rolling_volatility"}
         api.help.return_value = "help text"
 
         fn = AnalyticsFunction(api, "rolling_volatility")
@@ -108,7 +108,7 @@ class TestAnalyticsApiCoverageSync(unittest.TestCase):
 
         self.assertEqual(info, {"name": "rolling_volatility"})
         self.assertEqual(help_text, "help text")
-        api.info.assert_called_once_with("rolling_volatility", refresh=True)
+        api._info_cached.assert_called_once_with("rolling_volatility", refresh=True)
         api.help.assert_called_once_with("rolling_volatility")
 
     def test_help_overview_without_function(self) -> None:
@@ -121,7 +121,7 @@ class TestAnalyticsApiCoverageSync(unittest.TestCase):
 
     def test_help_overview_fallback_when_list_fails(self) -> None:
         api = AnalyticsAPI(Mock())
-        api.list = Mock(side_effect=RuntimeError("boom"))  # type: ignore[method-assign]
+        api._list_cached = Mock(side_effect=RuntimeError("boom"))  # type: ignore[method-assign]
         text = api.help()
         self.assertIn("client.analytics.<function>(...)", text)
 
@@ -209,7 +209,7 @@ class _AsyncApiForFunction:
         self.info_calls = []
         self.help_calls = []
 
-    async def info(self, name: str, *, refresh: bool = False):
+    async def _info_cached(self, name: str, *, refresh: bool = False):
         self.info_calls.append((name, refresh))
         return self._info_payload
 
@@ -263,14 +263,14 @@ class TestAnalyticsApiCoverageAsync(unittest.IsolatedAsyncioTestCase):
         stub = _AsyncRequestStub()
         api = AsyncAnalyticsAPI(stub)
 
-        listing1 = await api.list()
-        listing2 = await api.list()
-        listing_by_category = await api.list(category="single")
+        listing1 = await api._list_cached()
+        listing2 = await api._list_cached()
+        listing_by_category = await api._list_cached(category="single")
         self.assertIs(listing1, listing2)
         self.assertEqual(listing_by_category["count"], 2)
 
-        info1 = await api.info("rolling_beta")
-        info2 = await api.info("rolling_beta")
+        info1 = await api._info_cached("rolling_beta")
+        info2 = await api._info_cached("rolling_beta")
         self.assertIs(info1, info2)
 
         overview = await api.help()
@@ -300,7 +300,7 @@ class TestAnalyticsApiCoverageAsync(unittest.IsolatedAsyncioTestCase):
 
     async def test_async_help_overview_fallback_when_list_fails(self) -> None:
         api = AsyncAnalyticsAPI(Mock())
-        api.list = AsyncMock(side_effect=RuntimeError("boom"))  # type: ignore[method-assign]
+        api._list_cached = AsyncMock(side_effect=RuntimeError("boom"))  # type: ignore[method-assign]
         text = await api.help()
         self.assertIn("client.analytics.info", text)
 

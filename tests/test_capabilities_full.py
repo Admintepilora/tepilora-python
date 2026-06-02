@@ -2,7 +2,7 @@
 
 from Tepilora import capabilities, get_operation_info, list_namespaces, list_operations
 
-HIDDEN_CATEGORIES = {"audit"}
+HIDDEN_CATEGORIES = set()
 
 
 def _schema():

@@ -12,33 +12,40 @@ from ._base import AsyncBaseAPI, BaseAPI
 
 
 class PortfolioAPI(BaseAPI):
-    """Portfolio namespace: attribution, compare, contribution, costs, create, delete, drift, exposure, get, list, optimize, rebalance, returns, share, shares, stress, tearsheet, unshare, update."""
+    """Portfolio namespace: attribution, compare, contribution, costs, create, delete, drift, exposure, get, list, optimize, rebalance, returns, share, shares, solver_info, stress, tearsheet, unshare, update."""
 
     def attribution(
         self,
         *,
-        benchmark_weights: Optional[str] = None,
+        benchmark_weights: Dict[str, Any],
+        id: Optional[str] = None,
+        weights: Optional[Dict[str, Any]] = None,
+        components: Optional[List[Any]] = None,
         currency: Optional[str] = None,
+        drifting: Optional[bool] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        total_return: Optional[str] = None,
-        user_prices: Optional[str] = None,
+        total_return: Optional[bool] = False,
+        user_prices: Optional[Dict[str, Any]] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Performance attribution
+        """Run Brinson performance attribution analysis vs. a benchmark
 
-        Brinson attribution analysis.
-
-        Args:
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
+        Performs Brinson-Hood-Beebower attribution analysis comparing portfolio returns against a benchmark. Decomposes the excess return into: allocation effect (over/underweight in asset classes), selection effect (security selection within asset classes), and interaction effect. Requires benchmark_weights. Returns multi-period attribution with cumulative effects. Used by the Dashboard attribution view and by advisor performance reporting."""
         _payload: Dict[str, Any] = {}
-        if benchmark_weights is not None:
-            _payload["benchmark_weights"] = benchmark_weights
+        _payload["benchmark_weights"] = benchmark_weights
+        if id is not None:
+            _payload["id"] = id
+        if weights is not None:
+            _payload["weights"] = weights
+        if components is not None:
+            _payload["components"] = components
         if currency is not None:
             _payload["currency"] = currency
+        if drifting is not None:
+            _payload["drifting"] = drifting
         if start_date is not None:
             _payload["start_date"] = start_date
         if end_date is not None:
@@ -54,24 +61,19 @@ class PortfolioAPI(BaseAPI):
         *,
         portfolios: List[Any],
         currency: Optional[str] = None,
-        exposure_dimensions: Optional[str] = None,
+        exposure_dimensions: Optional[List[Any]] = None,
         include_exposure: Optional[bool] = None,
         metrics: Optional[List[Any]] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        total_return: Optional[str] = None,
+        total_return: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Compare portfolios
+        """Compare performance and risk metrics across multiple portfolios
 
-        Compare multiple portfolios.
-
-        Args:
-        portfolios: List of portfolio definitions (id or weights)
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
+        Side-by-side comparison of 2 or more portfolios over the same period. Returns: performance comparison (return, volatility, Sharpe, max drawdown per portfolio), cumulative return overlay series, difference series, and optional exposure comparison. Used by the Dashboard portfolio comparison view."""
         _payload: Dict[str, Any] = {}
         _payload["portfolios"] = portfolios
         if currency is not None:
@@ -93,29 +95,27 @@ class PortfolioAPI(BaseAPI):
     def contribution(
         self,
         *,
-        id: str,
-        components: Optional[str] = None,
+        id: Optional[str] = None,
+        weights: Optional[Dict[str, Any]] = None,
+        components: Optional[List[Any]] = None,
         currency: Optional[str] = None,
-        drifting: Optional[str] = None,
+        drifting: Optional[bool] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        total_return: Optional[str] = None,
-        user_prices: Optional[str] = None,
-        weights: Optional[str] = None,
+        total_return: Optional[bool] = None,
+        user_prices: Optional[Dict[str, Any]] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Return contribution
+        """Calculate the return contribution of each holding to total portfolio return
 
-        Contribution of each holding to portfolio return.
-
-        Args:
-        id: Portfolio ID
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
+        Decomposes total portfolio return into contributions from each holding. Each position's contribution equals its weight multiplied by its return. Returns a table of positions with individual return, weight, and contribution to total. Used by the Dashboard portfolio attribution view and by reporting modules."""
         _payload: Dict[str, Any] = {}
-        _payload["id"] = id
+        if id is not None:
+            _payload["id"] = id
+        if weights is not None:
+            _payload["weights"] = weights
         if components is not None:
             _payload["components"] = components
         if currency is not None:
@@ -130,27 +130,24 @@ class PortfolioAPI(BaseAPI):
             _payload["total_return"] = total_return
         if user_prices is not None:
             _payload["user_prices"] = user_prices
-        if weights is not None:
-            _payload["weights"] = weights
         return self._call("portfolio.contribution", params=_payload, options=options, context=context, response_format=response_format)
 
     def costs(
         self,
         *,
-        portfolio_value: Optional[str] = None,
-        weights: Optional[str] = None,
+        weights: Dict[str, Any],
+        portfolio_value: Optional[float] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Portfolio costs
+        """Analyze the total cost structure of a portfolio (TER, trading costs)
 
-        TER and trading costs analysis."""
+        Computes the total cost of ownership for a portfolio: weighted-average TER across holdings, estimated trading costs for rebalancing, and total annual cost as percentage of portfolio value. Used by the Dashboard cost analysis view and by fee comparison workflows."""
         _payload: Dict[str, Any] = {}
+        _payload["weights"] = weights
         if portfolio_value is not None:
             _payload["portfolio_value"] = portfolio_value
-        if weights is not None:
-            _payload["weights"] = weights
         return self._call("portfolio.costs", params=_payload, options=options, context=context, response_format=response_format)
 
     def create(
@@ -160,43 +157,30 @@ class PortfolioAPI(BaseAPI):
         input_type: str,
         allow_negative_cash: Optional[bool] = None,
         allow_short: Optional[bool] = None,
-        auto_cash: Optional[str] = None,
+        auto_cash: Optional[bool] = None,
         base_currency: Optional[str] = None,
-        components: Optional[str] = None,
+        components: Optional[List[Any]] = None,
         currency: Optional[str] = None,
-        holdings: Optional[str] = None,
-        initial_cash: Optional[str] = None,
-        initial_weights: Optional[str] = None,
-        trades: Optional[str] = None,
-        values: Optional[str] = None,
+        holdings: Optional[List[Any]] = None,
+        initial_cash: Optional[float] = None,
+        initial_weights: Optional[Dict[str, Any]] = None,
+        trades: Optional[List[Any]] = None,
+        values: Optional[List[Any]] = None,
         weights: Optional[Dict[str, Any]] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         type_: Optional[str] = "Real",
         input_data: Optional[Dict[str, Any]] = None,
         benchmark: Optional[str] = None,
-        description: Optional[str] = "",
+        description: Optional[str] = None,
         settings: Optional[Dict[str, Any]] = None,
         visibility: Optional[str] = "private",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Create portfolio
+        """Create a new portfolio with specified input type and holdings
 
-        Create a new portfolio.
-
-        Args:
-        name: Portfolio name
-        input_type: fixed_weights|drifting_weights|holdings|values|trades
-        weights: Portfolio weights {TepiloraCode: float}. Required for fixed_weights
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        type_: Real|Suggested|Simulation|Backtest|Model
-        input_data: Input data (alternative to flat params). Format depends on input_type: holdings=[{date,positions}], trades=[{date,type,security,quantity,price}], values=[{date,security,value}]
-        benchmark: Benchmark TepiloraCode
-        description: Description
-        settings: Portfolio settings
-        visibility: private|shared"""
+        Creates a portfolio in the Portfolios MongoDB collection. Supports 5 input types: fixed_weights (static allocation percentages), drifting_weights (weights that drift with market returns), holdings (position snapshots with quantities at dates), values (position values at dates), and trades (transaction-level input). Each input type requires specific data: weights needs {TepiloraCode: weight}, holdings needs [{date, positions}], trades needs [{date, type, security, quantity, price}]. Optionally sets benchmark, description, visibility, and portfolio type (Real/Suggested/Simulation/Backtest/Model). Used by the Dashboard portfolio creation wizard and by workflow bridges."""
         _payload: Dict[str, Any] = {}
         _payload["name"] = name
         _payload["input_type"] = input_type
@@ -249,12 +233,9 @@ class PortfolioAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Delete portfolio
+        """Delete a portfolio
 
-        Delete portfolio.
-
-        Args:
-        id: Portfolio ID"""
+        Permanently removes a portfolio from the Portfolios collection. Also removes client linkages and sharing records. Creates an audit trail entry. Used by the Dashboard portfolio management."""
         _payload: Dict[str, Any] = {}
         _payload["id"] = id
         return self._call("portfolio.delete", params=_payload, options=options, context=context)
@@ -262,21 +243,21 @@ class PortfolioAPI(BaseAPI):
     def drift(
         self,
         *,
-        compare_rebalanced: Optional[str] = None,
+        compare_rebalanced: Optional[Any] = None,
         currency: Optional[str] = None,
         end_date: Optional[str] = None,
         start_date: Optional[str] = None,
-        target_weights: Optional[str] = None,
-        threshold: Optional[str] = None,
-        total_return: Optional[str] = None,
-        user_prices: Optional[str] = None,
+        target_weights: Optional[Any] = None,
+        threshold: Optional[Any] = None,
+        total_return: Optional[Any] = None,
+        user_prices: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Portfolio drift
+        """Calculate how portfolio weights have drifted from targets over time
 
-        Weight drift from target."""
+        Tracks the divergence of actual portfolio weights from target weights over time due to differential security returns. Returns time series of drift per position and total portfolio drift metric. Optionally compares drifted vs. periodically-rebalanced scenarios. Used by the Dashboard drift monitoring and by rebalancing alert rules."""
         _payload: Dict[str, Any] = {}
         if compare_rebalanced is not None:
             _payload["compare_rebalanced"] = compare_rebalanced
@@ -299,26 +280,50 @@ class PortfolioAPI(BaseAPI):
     def exposure(
         self,
         *,
+        id: Optional[str] = None,
+        weights: Optional[Dict[str, Any]] = None,
+        components: Optional[List[Any]] = None,
         date: Optional[str] = None,
-        dimensions: Optional[str] = None,
-        dimension: Optional[str] = "sector",
+        dimensions: Optional[List[Any]] = None,
+        dimension: Optional[str] = None,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        currency: Optional[str] = None,
+        drifting: Optional[bool] = None,
+        total_return: Optional[bool] = None,
+        user_prices: Optional[Dict[str, Any]] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Portfolio exposure
+        """Calculate portfolio exposure by sector, country, currency, or asset class
 
-        Exposure by sector, country, currency, etc.
-
-        Args:
-        dimension: sector|country|currency|asset_class"""
+        Computes weighted portfolio exposure across a chosen dimension: sector (GICS), country, currency, or asset_class. Uses look-through analysis — resolves fund/ETF holdings to their underlying exposures. Returns exposure percentages per category. Used by the Dashboard portfolio composition pie charts and by compliance monitoring."""
         _payload: Dict[str, Any] = {}
+        if id is not None:
+            _payload["id"] = id
+        if weights is not None:
+            _payload["weights"] = weights
+        if components is not None:
+            _payload["components"] = components
         if date is not None:
             _payload["date"] = date
         if dimensions is not None:
             _payload["dimensions"] = dimensions
         if dimension is not None:
             _payload["dimension"] = dimension
+        if start_date is not None:
+            _payload["start_date"] = start_date
+        if end_date is not None:
+            _payload["end_date"] = end_date
+        if currency is not None:
+            _payload["currency"] = currency
+        if drifting is not None:
+            _payload["drifting"] = drifting
+        if total_return is not None:
+            _payload["total_return"] = total_return
+        if user_prices is not None:
+            _payload["user_prices"] = user_prices
         return self._call("portfolio.exposure", params=_payload, options=options, context=context, response_format=response_format)
 
     def get(
@@ -328,12 +333,9 @@ class PortfolioAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get portfolio
+        """Get full details for a specific portfolio
 
-        Get portfolio details.
-
-        Args:
-        id: Portfolio ID"""
+        Returns the complete portfolio record: name, type, input_type, weights/holdings/trades data, benchmark, settings, creation/modification dates, and sharing status. Used by the Dashboard portfolio detail page and as input for returns/attribution/exposure calculations."""
         _payload: Dict[str, Any] = {}
         _payload["id"] = id
         return self._call("portfolio.get", params=_payload, options=options, context=context)
@@ -352,19 +354,12 @@ class PortfolioAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """List portfolios
+        """List all portfolios for the current user with filtering and search
 
-        List user's portfolios.
+        Returns paginated list of portfolios belonging to the authenticated user. Filterable by type (Real/Suggested/Simulation), input_type, and name search. Each entry shows ID, name, type, creation date, and position count. Includes shared portfolios by default. Used by the Dashboard portfolio list page.
 
-        Args:
-        type_: Filter by type
-        input_type: Filter by input type
-        search: Search in name
-        sort: Sort field
-        order: Sort order: asc|desc
-        limit: Maximum results
-        offset: Pagination offset
-        include_shared: Include shared portfolios"""
+        Examples:
+            >>> client.portfolio.list(limit=5)"""
         _payload: Dict[str, Any] = {}
         if type_ is not None:
             _payload["type"] = type_
@@ -387,10 +382,10 @@ class PortfolioAPI(BaseAPI):
     def optimize(
         self,
         *,
-        identifiers: Optional[Union[str, List[str]]] = None,
-        poll_interval: Optional[str] = None,
-        securities_metadata: Optional[str] = None,
-        settings: Optional[Dict[str, Any]] = None,
+        identifiers: Union[str, List[str]],
+        settings: Dict[str, Any],
+        poll_interval: Optional[float] = 1.0,
+        securities_metadata: Optional[Dict[str, Any]] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         total_return: Optional[bool] = False,
@@ -399,27 +394,16 @@ class PortfolioAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Optimize portfolio
+        """Optimize portfolio weights using the Julia-powered solver
 
-        Portfolio optimization (Julia backend). Pass identifiers for inline mode or id for saved portfolio.
-
-        Args:
-        identifiers: TepiloraCodes (for inline mode)
-        settings: Optimizer settings (solver_mode, constraints, etc.)
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        total_return: Use total return prices
-        currency: Base currency
-        timeout: Optimization timeout (seconds)"""
+        Runs portfolio optimization via the Julia optimization server. 12 solver modes: minimum_variance, lean (custom mean-variance), full (all regularization terms), risk_parity (equal risk contribution), hrp (hierarchical risk parity), black_litterman (with investor views), factor_neutral, inverse_volatility, herc (hierarchical equal risk), cvar (conditional VaR minimization), robust (robust optimization), max_sharpe. Returns optimal weights, expected return/risk, and solver diagnostics. Use portfolio.solver_info for mathematical details on each mode. Used by the Dashboard optimizer."""
         _payload: Dict[str, Any] = {}
-        if identifiers is not None:
-            _payload["identifiers"] = identifiers
+        _payload["identifiers"] = identifiers
+        _payload["settings"] = settings
         if poll_interval is not None:
             _payload["poll_interval"] = poll_interval
         if securities_metadata is not None:
             _payload["securities_metadata"] = securities_metadata
-        if settings is not None:
-            _payload["settings"] = settings
         if start_date is not None:
             _payload["start_date"] = start_date
         if end_date is not None:
@@ -435,36 +419,33 @@ class PortfolioAPI(BaseAPI):
     def rebalance(
         self,
         *,
-        costs: Optional[str] = None,
-        current_weights: Optional[str] = None,
-        min_trade_value: Optional[str] = None,
-        portfolio_value: Optional[str] = None,
-        strategy: Optional[str] = None,
+        current_weights: Optional[Any] = None,
         target_weights: Optional[Dict[str, Any]] = None,
-        threshold: Optional[str] = None,
+        costs: Optional[Any] = None,
+        min_trade_value: Optional[Any] = None,
+        portfolio_value: Optional[Any] = None,
+        strategy: Optional[str] = None,
+        threshold: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Rebalance portfolio
+        """Calculate the trades needed to rebalance a portfolio to target weights
 
-        Calculate rebalancing trades.
-
-        Args:
-        target_weights: Target weights"""
+        Given current weights (or portfolio_id) and target weights, calculates the minimum trades required to rebalance. Supports minimum trade value threshold to avoid tiny trades, and includes estimated transaction costs. Returns a trade list with direction (buy/sell), amount, and cost impact. Used by the Dashboard rebalancing wizard."""
         _payload: Dict[str, Any] = {}
-        if costs is not None:
-            _payload["costs"] = costs
         if current_weights is not None:
             _payload["current_weights"] = current_weights
+        if target_weights is not None:
+            _payload["target_weights"] = target_weights
+        if costs is not None:
+            _payload["costs"] = costs
         if min_trade_value is not None:
             _payload["min_trade_value"] = min_trade_value
         if portfolio_value is not None:
             _payload["portfolio_value"] = portfolio_value
         if strategy is not None:
             _payload["strategy"] = strategy
-        if target_weights is not None:
-            _payload["target_weights"] = target_weights
         if threshold is not None:
             _payload["threshold"] = threshold
         return self._call("portfolio.rebalance", params=_payload, options=options, context=context, response_format=response_format)
@@ -472,51 +453,56 @@ class PortfolioAPI(BaseAPI):
     def returns(
         self,
         *,
-        id: str,
+        id: Optional[str] = None,
+        weights: Optional[Dict[str, Any]] = None,
+        components: Optional[List[Any]] = None,
+        holdings: Optional[List[Any]] = None,
+        trades: Optional[List[Any]] = None,
+        values: Optional[List[Any]] = None,
         allow_negative_cash: Optional[bool] = None,
         allow_short: Optional[bool] = None,
-        auto_cash: Optional[str] = None,
+        auto_cash: Optional[bool] = None,
         base_currency: Optional[str] = None,
-        borrow_cost: Optional[str] = None,
-        borrow_spread_annual: Optional[str] = None,
-        cash_yield: Optional[str] = None,
-        components: Optional[str] = None,
+        borrow_cost: Optional[Any] = None,
+        borrow_spread_annual: Optional[float] = None,
+        cash_yield: Optional[Any] = None,
         currency: Optional[str] = None,
-        drifting: Optional[str] = None,
-        holdings: Optional[str] = None,
-        initial_value: Optional[str] = None,
-        max_stale_days: Optional[str] = None,
-        Obs: Optional[str] = None,
-        price_fill: Optional[str] = None,
-        rebalance_dates: Optional[str] = None,
-        rebalance_effective: Optional[str] = None,
-        rebalance_frequency: Optional[str] = None,
-        rebalance_on: Optional[str] = None,
+        drifting: Optional[bool] = None,
+        initial_value: Optional[float] = None,
+        max_stale_days: Optional[int] = None,
+        Obs: Optional[Any] = None,
+        price_fill: Optional[Any] = None,
+        rebalance_dates: Optional[Any] = None,
+        rebalance_effective: Optional[Any] = None,
+        rebalance_frequency: Optional[Any] = None,
+        rebalance_on: Optional[Any] = None,
         settings: Optional[Dict[str, Any]] = None,
-        stale_policy: Optional[str] = None,
+        stale_policy: Optional[Any] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         return_method: Optional[str] = "twr",
-        total_return: Optional[str] = None,
-        trades: Optional[str] = None,
-        user_prices: Optional[str] = None,
-        values: Optional[str] = None,
-        weights: Optional[str] = None,
+        total_return: Optional[bool] = None,
+        user_prices: Optional[Dict[str, Any]] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Get portfolio returns
+        """Calculate portfolio return time series using TWR, MWR, or Modified Dietz
 
-        Time series of portfolio returns.
-
-        Args:
-        id: Portfolio ID
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        return_method: twr|mwr|modified_dietz"""
+        Computes the daily return time series for a portfolio using the selected return methodology: TWR (Time-Weighted Return, for benchmark comparison), MWR (Money-Weighted Return via XIRR, for actual investor experience), or Modified Dietz (fast MWR approximation). Supports fixed weights (periodic rebalancing at configurable frequency), drifting weights (buy-and-hold drift), and transaction-based input. Returns daily NAV series, cumulative return, and period statistics. Cash flow convention: negative = deposit, positive = withdrawal. Used by the Dashboard portfolio performance chart and by all portfolio analytics."""
         _payload: Dict[str, Any] = {}
-        _payload["id"] = id
+        if id is not None:
+            _payload["id"] = id
+        if weights is not None:
+            _payload["weights"] = weights
+        if components is not None:
+            _payload["components"] = components
+        if holdings is not None:
+            _payload["holdings"] = holdings
+        if trades is not None:
+            _payload["trades"] = trades
+        if values is not None:
+            _payload["values"] = values
         if allow_negative_cash is not None:
             _payload["allow_negative_cash"] = allow_negative_cash
         if allow_short is not None:
@@ -531,14 +517,10 @@ class PortfolioAPI(BaseAPI):
             _payload["borrow_spread_annual"] = borrow_spread_annual
         if cash_yield is not None:
             _payload["cash_yield"] = cash_yield
-        if components is not None:
-            _payload["components"] = components
         if currency is not None:
             _payload["currency"] = currency
         if drifting is not None:
             _payload["drifting"] = drifting
-        if holdings is not None:
-            _payload["holdings"] = holdings
         if initial_value is not None:
             _payload["initial_value"] = initial_value
         if max_stale_days is not None:
@@ -567,14 +549,8 @@ class PortfolioAPI(BaseAPI):
             _payload["return_method"] = return_method
         if total_return is not None:
             _payload["total_return"] = total_return
-        if trades is not None:
-            _payload["trades"] = trades
         if user_prices is not None:
             _payload["user_prices"] = user_prices
-        if values is not None:
-            _payload["values"] = values
-        if weights is not None:
-            _payload["weights"] = weights
         return self._call("portfolio.returns", params=_payload, options=options, context=context, response_format=response_format)
 
     def share(
@@ -586,14 +562,9 @@ class PortfolioAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Share portfolio
+        """Share a portfolio with another user
 
-        Share portfolio with another user.
-
-        Args:
-        id: Portfolio ID
-        target_apikey: Target user apikey
-        permission: read|write"""
+        Grants read or write access to a portfolio for another user (identified by target_apikey). The shared user can view the portfolio in their list and access its analytics. Used by advisor workflows sharing model portfolios with clients or colleagues."""
         _payload: Dict[str, Any] = {}
         _payload["id"] = id
         _payload["target_apikey"] = target_apikey
@@ -608,44 +579,53 @@ class PortfolioAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """List shares
+        """List all users who have access to a portfolio
 
-        List users with access to portfolio.
-
-        Args:
-        id: Portfolio ID"""
+        Returns the list of users with whom a portfolio is shared, including their permission level (read/write) and sharing date. Used by the Dashboard portfolio sharing management."""
         _payload: Dict[str, Any] = {}
         _payload["id"] = id
         return self._call("portfolio.shares", params=_payload, options=options, context=context)
 
-    def stress(
+    def solver_info(
         self,
         *,
-        id: str,
-        asset_class: Optional[str] = None,
-        mode: Optional[str] = None,
-        portfolio_value: Optional[str] = None,
-        scenario: Optional[str] = None,
-        scenario_name: Optional[str] = None,
-        scenarios: Optional[List[Any]] = None,
-        shock_range: Optional[str] = None,
-        shocks: Optional[str] = None,
-        steps: Optional[str] = None,
-        weights: Optional[str] = None,
+        solver_mode: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Stress test
+        """Get financial documentation for optimization solver modes
 
-        Portfolio stress testing.
-
-        Args:
-        id: Portfolio ID
-        scenarios: Custom scenarios"""
+        Returns detailed financial and mathematical documentation for one or all optimization solver modes: mathematical formulation, parameters, strengths, limitations, typical use cases, and academic references. Includes the minimum_variance preset and all Julia solver modes exposed by portfolio.optimize. Used by the Dashboard optimizer help panel and by the AI assistant when explaining optimization choices."""
         _payload: Dict[str, Any] = {}
-        _payload["id"] = id
+        if solver_mode is not None:
+            _payload["solver_mode"] = solver_mode
+        return self._call("portfolio.solver_info", params=_payload, options=options, context=context)
+
+    def stress(
+        self,
+        *,
+        asset_class: Optional[str] = None,
+        id: Optional[str] = None,
+        mode: Optional[str] = None,
+        portfolio_value: Optional[Any] = None,
+        scenario: Optional[str] = None,
+        scenario_name: Optional[str] = None,
+        scenarios: Optional[List[Any]] = None,
+        shock_range: Optional[Any] = None,
+        shocks: Optional[Any] = None,
+        steps: Optional[Any] = None,
+        weights: Optional[Dict[str, Any]] = None,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+    ) -> Any:
+        """Run stress test scenarios on a portfolio
+
+        Applies historical or hypothetical stress scenarios to a portfolio. Built-in scenarios: 2008 crisis, COVID crash, rate shock, sector rotation. Custom scenarios define per-security or per-asset-class return assumptions. Returns estimated portfolio loss per scenario and the most vulnerable positions. Supports sensitivity analysis (shock range with steps). Used by the Dashboard stress testing view."""
+        _payload: Dict[str, Any] = {}
         if asset_class is not None:
             _payload["asset_class"] = asset_class
+        if id is not None:
+            _payload["id"] = id
         if mode is not None:
             _payload["mode"] = mode
         if portfolio_value is not None:
@@ -669,30 +649,46 @@ class PortfolioAPI(BaseAPI):
     def tearsheet(
         self,
         *,
-        id: str,
+        id: Optional[str] = None,
+        weights: Optional[Dict[str, Any]] = None,
+        components: Optional[List[Any]] = None,
+        holdings: Optional[List[Any]] = None,
+        trades: Optional[List[Any]] = None,
+        values: Optional[List[Any]] = None,
         benchmark_id: Optional[str] = None,
         benchmark_name: Optional[str] = None,
-        benchmark_weights: Optional[str] = None,
+        benchmark_weights: Optional[Any] = None,
         currency: Optional[str] = None,
         name: Optional[str] = None,
         output_path: Optional[str] = None,
-        risk_free_rate: Optional[str] = None,
+        risk_free_rate: Optional[Any] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        total_return: Optional[str] = None,
+        total_return: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Portfolio tearsheet
+        """Generate a portfolio tearsheet (deprecated, use reporting.tearsheet)
 
-        Comprehensive portfolio report.
+        Deprecated: generates a portfolio performance tearsheet. Use reporting.tearsheet instead for enhanced reporting with templates, charts, PDF export, and multi-locale support. This operation will be removed after sunset date 2026-09-01.
 
-        Args:
-        id: Portfolio ID
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
+        .. deprecated:: 3.8.0
+            Use reporting.tearsheet for enhanced reporting with templates, charts, and PDF export"""
+        import warnings
+        warnings.warn("portfolio.tearsheet is deprecated: Use reporting.tearsheet for enhanced reporting with templates, charts, and PDF export", DeprecationWarning, stacklevel=2)
         _payload: Dict[str, Any] = {}
-        _payload["id"] = id
+        if id is not None:
+            _payload["id"] = id
+        if weights is not None:
+            _payload["weights"] = weights
+        if components is not None:
+            _payload["components"] = components
+        if holdings is not None:
+            _payload["holdings"] = holdings
+        if trades is not None:
+            _payload["trades"] = trades
+        if values is not None:
+            _payload["values"] = values
         if benchmark_id is not None:
             _payload["benchmark_id"] = benchmark_id
         if benchmark_name is not None:
@@ -723,13 +719,9 @@ class PortfolioAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Unshare portfolio
+        """Revoke portfolio sharing for a user
 
-        Revoke portfolio sharing.
-
-        Args:
-        id: Portfolio ID
-        target_apikey: User to remove"""
+        Removes portfolio access for a specific user. The user will no longer see the portfolio in their shared list."""
         _payload: Dict[str, Any] = {}
         _payload["id"] = id
         _payload["target_apikey"] = target_apikey
@@ -747,17 +739,9 @@ class PortfolioAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Update portfolio
+        """Update portfolio metadata or holdings
 
-        Update portfolio details.
-
-        Args:
-        id: Portfolio ID
-        name: New name
-        input_data: New holdings/weights
-        benchmark: New benchmark
-        description: New description
-        settings: New settings"""
+        Modifies an existing portfolio. Can update name, description, input data (new weights/holdings), benchmark, and settings. Creates an audit trail entry. Used by the Dashboard portfolio editor."""
         _payload: Dict[str, Any] = {}
         _payload["id"] = id
         if name is not None:
@@ -775,33 +759,40 @@ class PortfolioAPI(BaseAPI):
 
 
 class AsyncPortfolioAPI(AsyncBaseAPI):
-    """Portfolio namespace: attribution, compare, contribution, costs, create, delete, drift, exposure, get, list, optimize, rebalance, returns, share, shares, stress, tearsheet, unshare, update."""
+    """Portfolio namespace: attribution, compare, contribution, costs, create, delete, drift, exposure, get, list, optimize, rebalance, returns, share, shares, solver_info, stress, tearsheet, unshare, update."""
 
     async def attribution(
         self,
         *,
-        benchmark_weights: Optional[str] = None,
+        benchmark_weights: Dict[str, Any],
+        id: Optional[str] = None,
+        weights: Optional[Dict[str, Any]] = None,
+        components: Optional[List[Any]] = None,
         currency: Optional[str] = None,
+        drifting: Optional[bool] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        total_return: Optional[str] = None,
-        user_prices: Optional[str] = None,
+        total_return: Optional[bool] = False,
+        user_prices: Optional[Dict[str, Any]] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Performance attribution
+        """Run Brinson performance attribution analysis vs. a benchmark
 
-        Brinson attribution analysis.
-
-        Args:
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
+        Performs Brinson-Hood-Beebower attribution analysis comparing portfolio returns against a benchmark. Decomposes the excess return into: allocation effect (over/underweight in asset classes), selection effect (security selection within asset classes), and interaction effect. Requires benchmark_weights. Returns multi-period attribution with cumulative effects. Used by the Dashboard attribution view and by advisor performance reporting."""
         _payload: Dict[str, Any] = {}
-        if benchmark_weights is not None:
-            _payload["benchmark_weights"] = benchmark_weights
+        _payload["benchmark_weights"] = benchmark_weights
+        if id is not None:
+            _payload["id"] = id
+        if weights is not None:
+            _payload["weights"] = weights
+        if components is not None:
+            _payload["components"] = components
         if currency is not None:
             _payload["currency"] = currency
+        if drifting is not None:
+            _payload["drifting"] = drifting
         if start_date is not None:
             _payload["start_date"] = start_date
         if end_date is not None:
@@ -817,24 +808,19 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         *,
         portfolios: List[Any],
         currency: Optional[str] = None,
-        exposure_dimensions: Optional[str] = None,
+        exposure_dimensions: Optional[List[Any]] = None,
         include_exposure: Optional[bool] = None,
         metrics: Optional[List[Any]] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        total_return: Optional[str] = None,
+        total_return: Optional[bool] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Compare portfolios
+        """Compare performance and risk metrics across multiple portfolios
 
-        Compare multiple portfolios.
-
-        Args:
-        portfolios: List of portfolio definitions (id or weights)
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
+        Side-by-side comparison of 2 or more portfolios over the same period. Returns: performance comparison (return, volatility, Sharpe, max drawdown per portfolio), cumulative return overlay series, difference series, and optional exposure comparison. Used by the Dashboard portfolio comparison view."""
         _payload: Dict[str, Any] = {}
         _payload["portfolios"] = portfolios
         if currency is not None:
@@ -856,29 +842,27 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
     async def contribution(
         self,
         *,
-        id: str,
-        components: Optional[str] = None,
+        id: Optional[str] = None,
+        weights: Optional[Dict[str, Any]] = None,
+        components: Optional[List[Any]] = None,
         currency: Optional[str] = None,
-        drifting: Optional[str] = None,
+        drifting: Optional[bool] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        total_return: Optional[str] = None,
-        user_prices: Optional[str] = None,
-        weights: Optional[str] = None,
+        total_return: Optional[bool] = None,
+        user_prices: Optional[Dict[str, Any]] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Return contribution
+        """Calculate the return contribution of each holding to total portfolio return
 
-        Contribution of each holding to portfolio return.
-
-        Args:
-        id: Portfolio ID
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
+        Decomposes total portfolio return into contributions from each holding. Each position's contribution equals its weight multiplied by its return. Returns a table of positions with individual return, weight, and contribution to total. Used by the Dashboard portfolio attribution view and by reporting modules."""
         _payload: Dict[str, Any] = {}
-        _payload["id"] = id
+        if id is not None:
+            _payload["id"] = id
+        if weights is not None:
+            _payload["weights"] = weights
         if components is not None:
             _payload["components"] = components
         if currency is not None:
@@ -893,27 +877,24 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
             _payload["total_return"] = total_return
         if user_prices is not None:
             _payload["user_prices"] = user_prices
-        if weights is not None:
-            _payload["weights"] = weights
         return await self._call("portfolio.contribution", params=_payload, options=options, context=context, response_format=response_format)
 
     async def costs(
         self,
         *,
-        portfolio_value: Optional[str] = None,
-        weights: Optional[str] = None,
+        weights: Dict[str, Any],
+        portfolio_value: Optional[float] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Portfolio costs
+        """Analyze the total cost structure of a portfolio (TER, trading costs)
 
-        TER and trading costs analysis."""
+        Computes the total cost of ownership for a portfolio: weighted-average TER across holdings, estimated trading costs for rebalancing, and total annual cost as percentage of portfolio value. Used by the Dashboard cost analysis view and by fee comparison workflows."""
         _payload: Dict[str, Any] = {}
+        _payload["weights"] = weights
         if portfolio_value is not None:
             _payload["portfolio_value"] = portfolio_value
-        if weights is not None:
-            _payload["weights"] = weights
         return await self._call("portfolio.costs", params=_payload, options=options, context=context, response_format=response_format)
 
     async def create(
@@ -923,43 +904,30 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         input_type: str,
         allow_negative_cash: Optional[bool] = None,
         allow_short: Optional[bool] = None,
-        auto_cash: Optional[str] = None,
+        auto_cash: Optional[bool] = None,
         base_currency: Optional[str] = None,
-        components: Optional[str] = None,
+        components: Optional[List[Any]] = None,
         currency: Optional[str] = None,
-        holdings: Optional[str] = None,
-        initial_cash: Optional[str] = None,
-        initial_weights: Optional[str] = None,
-        trades: Optional[str] = None,
-        values: Optional[str] = None,
+        holdings: Optional[List[Any]] = None,
+        initial_cash: Optional[float] = None,
+        initial_weights: Optional[Dict[str, Any]] = None,
+        trades: Optional[List[Any]] = None,
+        values: Optional[List[Any]] = None,
         weights: Optional[Dict[str, Any]] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         type_: Optional[str] = "Real",
         input_data: Optional[Dict[str, Any]] = None,
         benchmark: Optional[str] = None,
-        description: Optional[str] = "",
+        description: Optional[str] = None,
         settings: Optional[Dict[str, Any]] = None,
         visibility: Optional[str] = "private",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Create portfolio
+        """Create a new portfolio with specified input type and holdings
 
-        Create a new portfolio.
-
-        Args:
-        name: Portfolio name
-        input_type: fixed_weights|drifting_weights|holdings|values|trades
-        weights: Portfolio weights {TepiloraCode: float}. Required for fixed_weights
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        type_: Real|Suggested|Simulation|Backtest|Model
-        input_data: Input data (alternative to flat params). Format depends on input_type: holdings=[{date,positions}], trades=[{date,type,security,quantity,price}], values=[{date,security,value}]
-        benchmark: Benchmark TepiloraCode
-        description: Description
-        settings: Portfolio settings
-        visibility: private|shared"""
+        Creates a portfolio in the Portfolios MongoDB collection. Supports 5 input types: fixed_weights (static allocation percentages), drifting_weights (weights that drift with market returns), holdings (position snapshots with quantities at dates), values (position values at dates), and trades (transaction-level input). Each input type requires specific data: weights needs {TepiloraCode: weight}, holdings needs [{date, positions}], trades needs [{date, type, security, quantity, price}]. Optionally sets benchmark, description, visibility, and portfolio type (Real/Suggested/Simulation/Backtest/Model). Used by the Dashboard portfolio creation wizard and by workflow bridges."""
         _payload: Dict[str, Any] = {}
         _payload["name"] = name
         _payload["input_type"] = input_type
@@ -1012,12 +980,9 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Delete portfolio
+        """Delete a portfolio
 
-        Delete portfolio.
-
-        Args:
-        id: Portfolio ID"""
+        Permanently removes a portfolio from the Portfolios collection. Also removes client linkages and sharing records. Creates an audit trail entry. Used by the Dashboard portfolio management."""
         _payload: Dict[str, Any] = {}
         _payload["id"] = id
         return await self._call("portfolio.delete", params=_payload, options=options, context=context)
@@ -1025,21 +990,21 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
     async def drift(
         self,
         *,
-        compare_rebalanced: Optional[str] = None,
+        compare_rebalanced: Optional[Any] = None,
         currency: Optional[str] = None,
         end_date: Optional[str] = None,
         start_date: Optional[str] = None,
-        target_weights: Optional[str] = None,
-        threshold: Optional[str] = None,
-        total_return: Optional[str] = None,
-        user_prices: Optional[str] = None,
+        target_weights: Optional[Any] = None,
+        threshold: Optional[Any] = None,
+        total_return: Optional[Any] = None,
+        user_prices: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Portfolio drift
+        """Calculate how portfolio weights have drifted from targets over time
 
-        Weight drift from target."""
+        Tracks the divergence of actual portfolio weights from target weights over time due to differential security returns. Returns time series of drift per position and total portfolio drift metric. Optionally compares drifted vs. periodically-rebalanced scenarios. Used by the Dashboard drift monitoring and by rebalancing alert rules."""
         _payload: Dict[str, Any] = {}
         if compare_rebalanced is not None:
             _payload["compare_rebalanced"] = compare_rebalanced
@@ -1062,26 +1027,50 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
     async def exposure(
         self,
         *,
+        id: Optional[str] = None,
+        weights: Optional[Dict[str, Any]] = None,
+        components: Optional[List[Any]] = None,
         date: Optional[str] = None,
-        dimensions: Optional[str] = None,
-        dimension: Optional[str] = "sector",
+        dimensions: Optional[List[Any]] = None,
+        dimension: Optional[str] = None,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        currency: Optional[str] = None,
+        drifting: Optional[bool] = None,
+        total_return: Optional[bool] = None,
+        user_prices: Optional[Dict[str, Any]] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Portfolio exposure
+        """Calculate portfolio exposure by sector, country, currency, or asset class
 
-        Exposure by sector, country, currency, etc.
-
-        Args:
-        dimension: sector|country|currency|asset_class"""
+        Computes weighted portfolio exposure across a chosen dimension: sector (GICS), country, currency, or asset_class. Uses look-through analysis — resolves fund/ETF holdings to their underlying exposures. Returns exposure percentages per category. Used by the Dashboard portfolio composition pie charts and by compliance monitoring."""
         _payload: Dict[str, Any] = {}
+        if id is not None:
+            _payload["id"] = id
+        if weights is not None:
+            _payload["weights"] = weights
+        if components is not None:
+            _payload["components"] = components
         if date is not None:
             _payload["date"] = date
         if dimensions is not None:
             _payload["dimensions"] = dimensions
         if dimension is not None:
             _payload["dimension"] = dimension
+        if start_date is not None:
+            _payload["start_date"] = start_date
+        if end_date is not None:
+            _payload["end_date"] = end_date
+        if currency is not None:
+            _payload["currency"] = currency
+        if drifting is not None:
+            _payload["drifting"] = drifting
+        if total_return is not None:
+            _payload["total_return"] = total_return
+        if user_prices is not None:
+            _payload["user_prices"] = user_prices
         return await self._call("portfolio.exposure", params=_payload, options=options, context=context, response_format=response_format)
 
     async def get(
@@ -1091,12 +1080,9 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get portfolio
+        """Get full details for a specific portfolio
 
-        Get portfolio details.
-
-        Args:
-        id: Portfolio ID"""
+        Returns the complete portfolio record: name, type, input_type, weights/holdings/trades data, benchmark, settings, creation/modification dates, and sharing status. Used by the Dashboard portfolio detail page and as input for returns/attribution/exposure calculations."""
         _payload: Dict[str, Any] = {}
         _payload["id"] = id
         return await self._call("portfolio.get", params=_payload, options=options, context=context)
@@ -1115,19 +1101,12 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """List portfolios
+        """List all portfolios for the current user with filtering and search
 
-        List user's portfolios.
+        Returns paginated list of portfolios belonging to the authenticated user. Filterable by type (Real/Suggested/Simulation), input_type, and name search. Each entry shows ID, name, type, creation date, and position count. Includes shared portfolios by default. Used by the Dashboard portfolio list page.
 
-        Args:
-        type_: Filter by type
-        input_type: Filter by input type
-        search: Search in name
-        sort: Sort field
-        order: Sort order: asc|desc
-        limit: Maximum results
-        offset: Pagination offset
-        include_shared: Include shared portfolios"""
+        Examples:
+            >>> await client.portfolio.list(limit=5)"""
         _payload: Dict[str, Any] = {}
         if type_ is not None:
             _payload["type"] = type_
@@ -1150,10 +1129,10 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
     async def optimize(
         self,
         *,
-        identifiers: Optional[Union[str, List[str]]] = None,
-        poll_interval: Optional[str] = None,
-        securities_metadata: Optional[str] = None,
-        settings: Optional[Dict[str, Any]] = None,
+        identifiers: Union[str, List[str]],
+        settings: Dict[str, Any],
+        poll_interval: Optional[float] = 1.0,
+        securities_metadata: Optional[Dict[str, Any]] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         total_return: Optional[bool] = False,
@@ -1162,27 +1141,16 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Optimize portfolio
+        """Optimize portfolio weights using the Julia-powered solver
 
-        Portfolio optimization (Julia backend). Pass identifiers for inline mode or id for saved portfolio.
-
-        Args:
-        identifiers: TepiloraCodes (for inline mode)
-        settings: Optimizer settings (solver_mode, constraints, etc.)
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        total_return: Use total return prices
-        currency: Base currency
-        timeout: Optimization timeout (seconds)"""
+        Runs portfolio optimization via the Julia optimization server. 12 solver modes: minimum_variance, lean (custom mean-variance), full (all regularization terms), risk_parity (equal risk contribution), hrp (hierarchical risk parity), black_litterman (with investor views), factor_neutral, inverse_volatility, herc (hierarchical equal risk), cvar (conditional VaR minimization), robust (robust optimization), max_sharpe. Returns optimal weights, expected return/risk, and solver diagnostics. Use portfolio.solver_info for mathematical details on each mode. Used by the Dashboard optimizer."""
         _payload: Dict[str, Any] = {}
-        if identifiers is not None:
-            _payload["identifiers"] = identifiers
+        _payload["identifiers"] = identifiers
+        _payload["settings"] = settings
         if poll_interval is not None:
             _payload["poll_interval"] = poll_interval
         if securities_metadata is not None:
             _payload["securities_metadata"] = securities_metadata
-        if settings is not None:
-            _payload["settings"] = settings
         if start_date is not None:
             _payload["start_date"] = start_date
         if end_date is not None:
@@ -1198,36 +1166,33 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
     async def rebalance(
         self,
         *,
-        costs: Optional[str] = None,
-        current_weights: Optional[str] = None,
-        min_trade_value: Optional[str] = None,
-        portfolio_value: Optional[str] = None,
-        strategy: Optional[str] = None,
+        current_weights: Optional[Any] = None,
         target_weights: Optional[Dict[str, Any]] = None,
-        threshold: Optional[str] = None,
+        costs: Optional[Any] = None,
+        min_trade_value: Optional[Any] = None,
+        portfolio_value: Optional[Any] = None,
+        strategy: Optional[str] = None,
+        threshold: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Rebalance portfolio
+        """Calculate the trades needed to rebalance a portfolio to target weights
 
-        Calculate rebalancing trades.
-
-        Args:
-        target_weights: Target weights"""
+        Given current weights (or portfolio_id) and target weights, calculates the minimum trades required to rebalance. Supports minimum trade value threshold to avoid tiny trades, and includes estimated transaction costs. Returns a trade list with direction (buy/sell), amount, and cost impact. Used by the Dashboard rebalancing wizard."""
         _payload: Dict[str, Any] = {}
-        if costs is not None:
-            _payload["costs"] = costs
         if current_weights is not None:
             _payload["current_weights"] = current_weights
+        if target_weights is not None:
+            _payload["target_weights"] = target_weights
+        if costs is not None:
+            _payload["costs"] = costs
         if min_trade_value is not None:
             _payload["min_trade_value"] = min_trade_value
         if portfolio_value is not None:
             _payload["portfolio_value"] = portfolio_value
         if strategy is not None:
             _payload["strategy"] = strategy
-        if target_weights is not None:
-            _payload["target_weights"] = target_weights
         if threshold is not None:
             _payload["threshold"] = threshold
         return await self._call("portfolio.rebalance", params=_payload, options=options, context=context, response_format=response_format)
@@ -1235,51 +1200,56 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
     async def returns(
         self,
         *,
-        id: str,
+        id: Optional[str] = None,
+        weights: Optional[Dict[str, Any]] = None,
+        components: Optional[List[Any]] = None,
+        holdings: Optional[List[Any]] = None,
+        trades: Optional[List[Any]] = None,
+        values: Optional[List[Any]] = None,
         allow_negative_cash: Optional[bool] = None,
         allow_short: Optional[bool] = None,
-        auto_cash: Optional[str] = None,
+        auto_cash: Optional[bool] = None,
         base_currency: Optional[str] = None,
-        borrow_cost: Optional[str] = None,
-        borrow_spread_annual: Optional[str] = None,
-        cash_yield: Optional[str] = None,
-        components: Optional[str] = None,
+        borrow_cost: Optional[Any] = None,
+        borrow_spread_annual: Optional[float] = None,
+        cash_yield: Optional[Any] = None,
         currency: Optional[str] = None,
-        drifting: Optional[str] = None,
-        holdings: Optional[str] = None,
-        initial_value: Optional[str] = None,
-        max_stale_days: Optional[str] = None,
-        Obs: Optional[str] = None,
-        price_fill: Optional[str] = None,
-        rebalance_dates: Optional[str] = None,
-        rebalance_effective: Optional[str] = None,
-        rebalance_frequency: Optional[str] = None,
-        rebalance_on: Optional[str] = None,
+        drifting: Optional[bool] = None,
+        initial_value: Optional[float] = None,
+        max_stale_days: Optional[int] = None,
+        Obs: Optional[Any] = None,
+        price_fill: Optional[Any] = None,
+        rebalance_dates: Optional[Any] = None,
+        rebalance_effective: Optional[Any] = None,
+        rebalance_frequency: Optional[Any] = None,
+        rebalance_on: Optional[Any] = None,
         settings: Optional[Dict[str, Any]] = None,
-        stale_policy: Optional[str] = None,
+        stale_policy: Optional[Any] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         return_method: Optional[str] = "twr",
-        total_return: Optional[str] = None,
-        trades: Optional[str] = None,
-        user_prices: Optional[str] = None,
-        values: Optional[str] = None,
-        weights: Optional[str] = None,
+        total_return: Optional[bool] = None,
+        user_prices: Optional[Dict[str, Any]] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Get portfolio returns
+        """Calculate portfolio return time series using TWR, MWR, or Modified Dietz
 
-        Time series of portfolio returns.
-
-        Args:
-        id: Portfolio ID
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        return_method: twr|mwr|modified_dietz"""
+        Computes the daily return time series for a portfolio using the selected return methodology: TWR (Time-Weighted Return, for benchmark comparison), MWR (Money-Weighted Return via XIRR, for actual investor experience), or Modified Dietz (fast MWR approximation). Supports fixed weights (periodic rebalancing at configurable frequency), drifting weights (buy-and-hold drift), and transaction-based input. Returns daily NAV series, cumulative return, and period statistics. Cash flow convention: negative = deposit, positive = withdrawal. Used by the Dashboard portfolio performance chart and by all portfolio analytics."""
         _payload: Dict[str, Any] = {}
-        _payload["id"] = id
+        if id is not None:
+            _payload["id"] = id
+        if weights is not None:
+            _payload["weights"] = weights
+        if components is not None:
+            _payload["components"] = components
+        if holdings is not None:
+            _payload["holdings"] = holdings
+        if trades is not None:
+            _payload["trades"] = trades
+        if values is not None:
+            _payload["values"] = values
         if allow_negative_cash is not None:
             _payload["allow_negative_cash"] = allow_negative_cash
         if allow_short is not None:
@@ -1294,14 +1264,10 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
             _payload["borrow_spread_annual"] = borrow_spread_annual
         if cash_yield is not None:
             _payload["cash_yield"] = cash_yield
-        if components is not None:
-            _payload["components"] = components
         if currency is not None:
             _payload["currency"] = currency
         if drifting is not None:
             _payload["drifting"] = drifting
-        if holdings is not None:
-            _payload["holdings"] = holdings
         if initial_value is not None:
             _payload["initial_value"] = initial_value
         if max_stale_days is not None:
@@ -1330,14 +1296,8 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
             _payload["return_method"] = return_method
         if total_return is not None:
             _payload["total_return"] = total_return
-        if trades is not None:
-            _payload["trades"] = trades
         if user_prices is not None:
             _payload["user_prices"] = user_prices
-        if values is not None:
-            _payload["values"] = values
-        if weights is not None:
-            _payload["weights"] = weights
         return await self._call("portfolio.returns", params=_payload, options=options, context=context, response_format=response_format)
 
     async def share(
@@ -1349,14 +1309,9 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Share portfolio
+        """Share a portfolio with another user
 
-        Share portfolio with another user.
-
-        Args:
-        id: Portfolio ID
-        target_apikey: Target user apikey
-        permission: read|write"""
+        Grants read or write access to a portfolio for another user (identified by target_apikey). The shared user can view the portfolio in their list and access its analytics. Used by advisor workflows sharing model portfolios with clients or colleagues."""
         _payload: Dict[str, Any] = {}
         _payload["id"] = id
         _payload["target_apikey"] = target_apikey
@@ -1371,44 +1326,53 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """List shares
+        """List all users who have access to a portfolio
 
-        List users with access to portfolio.
-
-        Args:
-        id: Portfolio ID"""
+        Returns the list of users with whom a portfolio is shared, including their permission level (read/write) and sharing date. Used by the Dashboard portfolio sharing management."""
         _payload: Dict[str, Any] = {}
         _payload["id"] = id
         return await self._call("portfolio.shares", params=_payload, options=options, context=context)
 
-    async def stress(
+    async def solver_info(
         self,
         *,
-        id: str,
-        asset_class: Optional[str] = None,
-        mode: Optional[str] = None,
-        portfolio_value: Optional[str] = None,
-        scenario: Optional[str] = None,
-        scenario_name: Optional[str] = None,
-        scenarios: Optional[List[Any]] = None,
-        shock_range: Optional[str] = None,
-        shocks: Optional[str] = None,
-        steps: Optional[str] = None,
-        weights: Optional[str] = None,
+        solver_mode: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Stress test
+        """Get financial documentation for optimization solver modes
 
-        Portfolio stress testing.
-
-        Args:
-        id: Portfolio ID
-        scenarios: Custom scenarios"""
+        Returns detailed financial and mathematical documentation for one or all optimization solver modes: mathematical formulation, parameters, strengths, limitations, typical use cases, and academic references. Includes the minimum_variance preset and all Julia solver modes exposed by portfolio.optimize. Used by the Dashboard optimizer help panel and by the AI assistant when explaining optimization choices."""
         _payload: Dict[str, Any] = {}
-        _payload["id"] = id
+        if solver_mode is not None:
+            _payload["solver_mode"] = solver_mode
+        return await self._call("portfolio.solver_info", params=_payload, options=options, context=context)
+
+    async def stress(
+        self,
+        *,
+        asset_class: Optional[str] = None,
+        id: Optional[str] = None,
+        mode: Optional[str] = None,
+        portfolio_value: Optional[Any] = None,
+        scenario: Optional[str] = None,
+        scenario_name: Optional[str] = None,
+        scenarios: Optional[List[Any]] = None,
+        shock_range: Optional[Any] = None,
+        shocks: Optional[Any] = None,
+        steps: Optional[Any] = None,
+        weights: Optional[Dict[str, Any]] = None,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+    ) -> Any:
+        """Run stress test scenarios on a portfolio
+
+        Applies historical or hypothetical stress scenarios to a portfolio. Built-in scenarios: 2008 crisis, COVID crash, rate shock, sector rotation. Custom scenarios define per-security or per-asset-class return assumptions. Returns estimated portfolio loss per scenario and the most vulnerable positions. Supports sensitivity analysis (shock range with steps). Used by the Dashboard stress testing view."""
+        _payload: Dict[str, Any] = {}
         if asset_class is not None:
             _payload["asset_class"] = asset_class
+        if id is not None:
+            _payload["id"] = id
         if mode is not None:
             _payload["mode"] = mode
         if portfolio_value is not None:
@@ -1432,30 +1396,46 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
     async def tearsheet(
         self,
         *,
-        id: str,
+        id: Optional[str] = None,
+        weights: Optional[Dict[str, Any]] = None,
+        components: Optional[List[Any]] = None,
+        holdings: Optional[List[Any]] = None,
+        trades: Optional[List[Any]] = None,
+        values: Optional[List[Any]] = None,
         benchmark_id: Optional[str] = None,
         benchmark_name: Optional[str] = None,
-        benchmark_weights: Optional[str] = None,
+        benchmark_weights: Optional[Any] = None,
         currency: Optional[str] = None,
         name: Optional[str] = None,
         output_path: Optional[str] = None,
-        risk_free_rate: Optional[str] = None,
+        risk_free_rate: Optional[Any] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        total_return: Optional[str] = None,
+        total_return: Optional[Any] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Portfolio tearsheet
+        """Generate a portfolio tearsheet (deprecated, use reporting.tearsheet)
 
-        Comprehensive portfolio report.
+        Deprecated: generates a portfolio performance tearsheet. Use reporting.tearsheet instead for enhanced reporting with templates, charts, PDF export, and multi-locale support. This operation will be removed after sunset date 2026-09-01.
 
-        Args:
-        id: Portfolio ID
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
+        .. deprecated:: 3.8.0
+            Use reporting.tearsheet for enhanced reporting with templates, charts, and PDF export"""
+        import warnings
+        warnings.warn("portfolio.tearsheet is deprecated: Use reporting.tearsheet for enhanced reporting with templates, charts, and PDF export", DeprecationWarning, stacklevel=2)
         _payload: Dict[str, Any] = {}
-        _payload["id"] = id
+        if id is not None:
+            _payload["id"] = id
+        if weights is not None:
+            _payload["weights"] = weights
+        if components is not None:
+            _payload["components"] = components
+        if holdings is not None:
+            _payload["holdings"] = holdings
+        if trades is not None:
+            _payload["trades"] = trades
+        if values is not None:
+            _payload["values"] = values
         if benchmark_id is not None:
             _payload["benchmark_id"] = benchmark_id
         if benchmark_name is not None:
@@ -1486,13 +1466,9 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Unshare portfolio
+        """Revoke portfolio sharing for a user
 
-        Revoke portfolio sharing.
-
-        Args:
-        id: Portfolio ID
-        target_apikey: User to remove"""
+        Removes portfolio access for a specific user. The user will no longer see the portfolio in their shared list."""
         _payload: Dict[str, Any] = {}
         _payload["id"] = id
         _payload["target_apikey"] = target_apikey
@@ -1510,17 +1486,9 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Update portfolio
+        """Update portfolio metadata or holdings
 
-        Update portfolio details.
-
-        Args:
-        id: Portfolio ID
-        name: New name
-        input_data: New holdings/weights
-        benchmark: New benchmark
-        description: New description
-        settings: New settings"""
+        Modifies an existing portfolio. Can update name, description, input data (new weights/holdings), benchmark, and settings. Creates an audit trail entry. Used by the Dashboard portfolio editor."""
         _payload: Dict[str, Any] = {}
         _payload["id"] = id
         if name is not None:

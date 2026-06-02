@@ -17,22 +17,22 @@ class ProfilingAPI(BaseAPI):
     def archive(
         self,
         *,
-        profile_id: str,
-        client_id: Optional[str] = None,
         id: Optional[str] = None,
+        profile_id: Optional[str] = None,
+        client_id: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Archive profile
+        """Archive a MiFID II profile (mark as no longer current)
 
-        Args:
-        profile_id: Profile ID"""
+        Marks a profile as archived, making it no longer the active profile for the linked client. Archived profiles are retained for regulatory record-keeping but excluded from suitability checks. Used when a client completes a new questionnaire."""
         _payload: Dict[str, Any] = {}
-        _payload["profile_id"] = profile_id
-        if client_id is not None:
-            _payload["client_id"] = client_id
         if id is not None:
             _payload["id"] = id
+        if profile_id is not None:
+            _payload["profile_id"] = profile_id
+        if client_id is not None:
+            _payload["client_id"] = client_id
         return self._call("profiling.archive", params=_payload, options=options, context=context)
 
     def check_suitability(
@@ -44,12 +44,9 @@ class ProfilingAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Check suitability
+        """Check if a security or portfolio is suitable for a client's MiFID II profile
 
-        Check if portfolio is suitable for client profile.
-
-        Args:
-        client_id: Client ID"""
+        Evaluates whether a specific security or portfolio allocation is suitable given the client's MiFID II profile. Compares the security's risk level (SRI), complexity, and product type against the client's risk tolerance, knowledge, and investment objectives. Returns: suitable (yes/no), warnings, reasons, and the specific MiFID II constraints that were checked. Required by European regulation before any investment recommendation. Used by the Dashboard recommendation flow and by portfolio rebalancing workflows."""
         _payload: Dict[str, Any] = {}
         _payload["client_id"] = client_id
         if identifiers is not None:
@@ -62,16 +59,13 @@ class ProfilingAPI(BaseAPI):
         self,
         *,
         answers: Dict[str, Any],
-        language: Optional[str] = None,
+        language: Optional[str] = "it",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Convert answers to profile
+        """Convert raw questionnaire answers into scored profile dimensions
 
-        Calculate risk profile from answers.
-
-        Args:
-        answers: Questionnaire answers"""
+        Transforms raw questionnaire answers into numerical scores across MiFID II dimensions: risk tolerance (1-7), investment horizon, knowledge level, loss capacity, and investment objectives. Each dimension is scored based on the answer weighting scheme. Returns the scored dimensions ready for profile creation. Used as an intermediate step between validation and profile creation."""
         _payload: Dict[str, Any] = {}
         _payload["answers"] = answers
         if language is not None:
@@ -82,22 +76,20 @@ class ProfilingAPI(BaseAPI):
         self,
         *,
         client_id: str,
-        classification: Optional[str] = None,
-        questionnaire: Optional[str] = None,
-        visibility: Optional[str] = None,
+        questionnaire: Dict[str, Any],
+        classification: Optional[str] = "retail",
+        visibility: Optional[str] = "private",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Create client profile
+        """Create a MiFID II investor profile from scored dimensions
 
-        Args:
-        client_id: Client ID"""
+        Creates a new MiFID II investor profile in the MifidProfiles MongoDB collection. Accepts scored dimensions from profiling.convert_answers and generates: risk profile category (conservative to aggressive), recommended asset allocation ranges, suitability constraints, and regulatory classification. Links to a client entity if client_id is provided. Used by the Dashboard after questionnaire completion."""
         _payload: Dict[str, Any] = {}
         _payload["client_id"] = client_id
+        _payload["questionnaire"] = questionnaire
         if classification is not None:
             _payload["classification"] = classification
-        if questionnaire is not None:
-            _payload["questionnaire"] = questionnaire
         if visibility is not None:
             _payload["visibility"] = visibility
         return self._call("profiling.create_profile", params=_payload, options=options, context=context)
@@ -109,12 +101,9 @@ class ProfilingAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get current profile
+        """Get the current active MiFID II profile for a client
 
-        Get client's current active profile.
-
-        Args:
-        client_id: Client ID"""
+        Returns the most recent active (non-archived) MiFID II profile for a given client. A client may have multiple profiles over time but only one is current. Used by suitability checks to get the applicable profile and by the Dashboard client overview."""
         _payload: Dict[str, Any] = {}
         _payload["client_id"] = client_id
         return self._call("profiling.get_current", params=_payload, options=options, context=context)
@@ -122,23 +111,23 @@ class ProfilingAPI(BaseAPI):
     def get_profile(
         self,
         *,
-        profile_id: str,
-        client_id: Optional[str] = None,
         id: Optional[str] = None,
-        version: Optional[str] = None,
+        profile_id: Optional[str] = None,
+        client_id: Optional[str] = None,
+        version: Optional[int] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get profile by ID
+        """Get a specific MiFID II profile by ID
 
-        Args:
-        profile_id: Profile ID"""
+        Returns the complete MiFID II profile: risk category, scored dimensions, recommended allocations, suitability constraints, creation date, and linked client. Used by the Dashboard profile detail view and by suitability check workflows."""
         _payload: Dict[str, Any] = {}
-        _payload["profile_id"] = profile_id
-        if client_id is not None:
-            _payload["client_id"] = client_id
         if id is not None:
             _payload["id"] = id
+        if profile_id is not None:
+            _payload["profile_id"] = profile_id
+        if client_id is not None:
+            _payload["client_id"] = client_id
         if version is not None:
             _payload["version"] = version
         return self._call("profiling.get_profile", params=_payload, options=options, context=context)
@@ -146,43 +135,41 @@ class ProfilingAPI(BaseAPI):
     def list(
         self,
         *,
-        client_id: str,
-        current_only: Optional[str] = None,
-        limit: Optional[int] = None,
-        offset: Optional[int] = None,
+        client_id: Optional[str] = None,
         status: Optional[str] = None,
+        current_only: Optional[bool] = False,
+        limit: Optional[int] = 50,
+        offset: Optional[int] = 0,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """List profiles
+        """List MiFID II profiles with optional client and status filters
 
-        List all profiles for a client.
-
-        Args:
-        client_id: Client ID"""
+        Returns paginated list of MiFID II profiles. Filterable by client_id, status (active/archived), and current_only flag. Supports limit and offset pagination. Used by the Dashboard profiles management page and by compliance reporting workflows."""
         _payload: Dict[str, Any] = {}
-        _payload["client_id"] = client_id
+        if client_id is not None:
+            _payload["client_id"] = client_id
+        if status is not None:
+            _payload["status"] = status
         if current_only is not None:
             _payload["current_only"] = current_only
         if limit is not None:
             _payload["limit"] = limit
         if offset is not None:
             _payload["offset"] = offset
-        if status is not None:
-            _payload["status"] = status
         return self._call("profiling.list", params=_payload, options=options, context=context)
 
     def questionnaire(
         self,
         *,
-        flat: Optional[str] = None,
-        language: Optional[str] = None,
+        flat: Optional[bool] = False,
+        language: Optional[str] = "it",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get MiFID questionnaire
+        """Get the MiFID II suitability questionnaire template
 
-        Get questionnaire template."""
+        Returns the structured MiFID II investor profiling questionnaire with all sections: investment experience, financial knowledge, risk tolerance, investment objectives, time horizon, and loss capacity. Each question includes type (single choice, multiple choice, slider), options with scores, and regulatory mapping. Used by the Dashboard client onboarding flow to render the questionnaire form."""
         _payload: Dict[str, Any] = {}
         if flat is not None:
             _payload["flat"] = flat
@@ -193,20 +180,21 @@ class ProfilingAPI(BaseAPI):
     def update(
         self,
         *,
+        client_id: str,
+        questionnaire: Optional[Dict[str, Any]] = None,
         classification: Optional[str] = None,
-        client_id: Optional[str] = None,
-        questionnaire: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Update profile"""
+        """Update an existing MiFID II profile
+
+        Modifies an existing profile's dimensions, risk category, or metadata. Creates an audit trail entry. Note: typically a new profile is created rather than updating an existing one, to preserve the historical record. Used for corrections."""
         _payload: Dict[str, Any] = {}
-        if classification is not None:
-            _payload["classification"] = classification
-        if client_id is not None:
-            _payload["client_id"] = client_id
+        _payload["client_id"] = client_id
         if questionnaire is not None:
             _payload["questionnaire"] = questionnaire
+        if classification is not None:
+            _payload["classification"] = classification
         return self._call("profiling.update", params=_payload, options=options, context=context)
 
     def validate_answers(
@@ -216,12 +204,9 @@ class ProfilingAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Validate answers
+        """Validate questionnaire answers before profile creation
 
-        Validate questionnaire answers.
-
-        Args:
-        answers: Questionnaire answers"""
+        Validates a set of questionnaire answers against the question schema: checks required fields, valid option values, answer types, and logical consistency. Returns validation result with any errors or warnings. Used as a prerequisite step before profiling.create_profile to catch issues early."""
         _payload: Dict[str, Any] = {}
         _payload["answers"] = answers
         return self._call("profiling.validate_answers", params=_payload, options=options, context=context)
@@ -234,22 +219,22 @@ class AsyncProfilingAPI(AsyncBaseAPI):
     async def archive(
         self,
         *,
-        profile_id: str,
-        client_id: Optional[str] = None,
         id: Optional[str] = None,
+        profile_id: Optional[str] = None,
+        client_id: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Archive profile
+        """Archive a MiFID II profile (mark as no longer current)
 
-        Args:
-        profile_id: Profile ID"""
+        Marks a profile as archived, making it no longer the active profile for the linked client. Archived profiles are retained for regulatory record-keeping but excluded from suitability checks. Used when a client completes a new questionnaire."""
         _payload: Dict[str, Any] = {}
-        _payload["profile_id"] = profile_id
-        if client_id is not None:
-            _payload["client_id"] = client_id
         if id is not None:
             _payload["id"] = id
+        if profile_id is not None:
+            _payload["profile_id"] = profile_id
+        if client_id is not None:
+            _payload["client_id"] = client_id
         return await self._call("profiling.archive", params=_payload, options=options, context=context)
 
     async def check_suitability(
@@ -261,12 +246,9 @@ class AsyncProfilingAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Check suitability
+        """Check if a security or portfolio is suitable for a client's MiFID II profile
 
-        Check if portfolio is suitable for client profile.
-
-        Args:
-        client_id: Client ID"""
+        Evaluates whether a specific security or portfolio allocation is suitable given the client's MiFID II profile. Compares the security's risk level (SRI), complexity, and product type against the client's risk tolerance, knowledge, and investment objectives. Returns: suitable (yes/no), warnings, reasons, and the specific MiFID II constraints that were checked. Required by European regulation before any investment recommendation. Used by the Dashboard recommendation flow and by portfolio rebalancing workflows."""
         _payload: Dict[str, Any] = {}
         _payload["client_id"] = client_id
         if identifiers is not None:
@@ -279,16 +261,13 @@ class AsyncProfilingAPI(AsyncBaseAPI):
         self,
         *,
         answers: Dict[str, Any],
-        language: Optional[str] = None,
+        language: Optional[str] = "it",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Convert answers to profile
+        """Convert raw questionnaire answers into scored profile dimensions
 
-        Calculate risk profile from answers.
-
-        Args:
-        answers: Questionnaire answers"""
+        Transforms raw questionnaire answers into numerical scores across MiFID II dimensions: risk tolerance (1-7), investment horizon, knowledge level, loss capacity, and investment objectives. Each dimension is scored based on the answer weighting scheme. Returns the scored dimensions ready for profile creation. Used as an intermediate step between validation and profile creation."""
         _payload: Dict[str, Any] = {}
         _payload["answers"] = answers
         if language is not None:
@@ -299,22 +278,20 @@ class AsyncProfilingAPI(AsyncBaseAPI):
         self,
         *,
         client_id: str,
-        classification: Optional[str] = None,
-        questionnaire: Optional[str] = None,
-        visibility: Optional[str] = None,
+        questionnaire: Dict[str, Any],
+        classification: Optional[str] = "retail",
+        visibility: Optional[str] = "private",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Create client profile
+        """Create a MiFID II investor profile from scored dimensions
 
-        Args:
-        client_id: Client ID"""
+        Creates a new MiFID II investor profile in the MifidProfiles MongoDB collection. Accepts scored dimensions from profiling.convert_answers and generates: risk profile category (conservative to aggressive), recommended asset allocation ranges, suitability constraints, and regulatory classification. Links to a client entity if client_id is provided. Used by the Dashboard after questionnaire completion."""
         _payload: Dict[str, Any] = {}
         _payload["client_id"] = client_id
+        _payload["questionnaire"] = questionnaire
         if classification is not None:
             _payload["classification"] = classification
-        if questionnaire is not None:
-            _payload["questionnaire"] = questionnaire
         if visibility is not None:
             _payload["visibility"] = visibility
         return await self._call("profiling.create_profile", params=_payload, options=options, context=context)
@@ -326,12 +303,9 @@ class AsyncProfilingAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get current profile
+        """Get the current active MiFID II profile for a client
 
-        Get client's current active profile.
-
-        Args:
-        client_id: Client ID"""
+        Returns the most recent active (non-archived) MiFID II profile for a given client. A client may have multiple profiles over time but only one is current. Used by suitability checks to get the applicable profile and by the Dashboard client overview."""
         _payload: Dict[str, Any] = {}
         _payload["client_id"] = client_id
         return await self._call("profiling.get_current", params=_payload, options=options, context=context)
@@ -339,23 +313,23 @@ class AsyncProfilingAPI(AsyncBaseAPI):
     async def get_profile(
         self,
         *,
-        profile_id: str,
-        client_id: Optional[str] = None,
         id: Optional[str] = None,
-        version: Optional[str] = None,
+        profile_id: Optional[str] = None,
+        client_id: Optional[str] = None,
+        version: Optional[int] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get profile by ID
+        """Get a specific MiFID II profile by ID
 
-        Args:
-        profile_id: Profile ID"""
+        Returns the complete MiFID II profile: risk category, scored dimensions, recommended allocations, suitability constraints, creation date, and linked client. Used by the Dashboard profile detail view and by suitability check workflows."""
         _payload: Dict[str, Any] = {}
-        _payload["profile_id"] = profile_id
-        if client_id is not None:
-            _payload["client_id"] = client_id
         if id is not None:
             _payload["id"] = id
+        if profile_id is not None:
+            _payload["profile_id"] = profile_id
+        if client_id is not None:
+            _payload["client_id"] = client_id
         if version is not None:
             _payload["version"] = version
         return await self._call("profiling.get_profile", params=_payload, options=options, context=context)
@@ -363,43 +337,41 @@ class AsyncProfilingAPI(AsyncBaseAPI):
     async def list(
         self,
         *,
-        client_id: str,
-        current_only: Optional[str] = None,
-        limit: Optional[int] = None,
-        offset: Optional[int] = None,
+        client_id: Optional[str] = None,
         status: Optional[str] = None,
+        current_only: Optional[bool] = False,
+        limit: Optional[int] = 50,
+        offset: Optional[int] = 0,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """List profiles
+        """List MiFID II profiles with optional client and status filters
 
-        List all profiles for a client.
-
-        Args:
-        client_id: Client ID"""
+        Returns paginated list of MiFID II profiles. Filterable by client_id, status (active/archived), and current_only flag. Supports limit and offset pagination. Used by the Dashboard profiles management page and by compliance reporting workflows."""
         _payload: Dict[str, Any] = {}
-        _payload["client_id"] = client_id
+        if client_id is not None:
+            _payload["client_id"] = client_id
+        if status is not None:
+            _payload["status"] = status
         if current_only is not None:
             _payload["current_only"] = current_only
         if limit is not None:
             _payload["limit"] = limit
         if offset is not None:
             _payload["offset"] = offset
-        if status is not None:
-            _payload["status"] = status
         return await self._call("profiling.list", params=_payload, options=options, context=context)
 
     async def questionnaire(
         self,
         *,
-        flat: Optional[str] = None,
-        language: Optional[str] = None,
+        flat: Optional[bool] = False,
+        language: Optional[str] = "it",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get MiFID questionnaire
+        """Get the MiFID II suitability questionnaire template
 
-        Get questionnaire template."""
+        Returns the structured MiFID II investor profiling questionnaire with all sections: investment experience, financial knowledge, risk tolerance, investment objectives, time horizon, and loss capacity. Each question includes type (single choice, multiple choice, slider), options with scores, and regulatory mapping. Used by the Dashboard client onboarding flow to render the questionnaire form."""
         _payload: Dict[str, Any] = {}
         if flat is not None:
             _payload["flat"] = flat
@@ -410,20 +382,21 @@ class AsyncProfilingAPI(AsyncBaseAPI):
     async def update(
         self,
         *,
+        client_id: str,
+        questionnaire: Optional[Dict[str, Any]] = None,
         classification: Optional[str] = None,
-        client_id: Optional[str] = None,
-        questionnaire: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Update profile"""
+        """Update an existing MiFID II profile
+
+        Modifies an existing profile's dimensions, risk category, or metadata. Creates an audit trail entry. Note: typically a new profile is created rather than updating an existing one, to preserve the historical record. Used for corrections."""
         _payload: Dict[str, Any] = {}
-        if classification is not None:
-            _payload["classification"] = classification
-        if client_id is not None:
-            _payload["client_id"] = client_id
+        _payload["client_id"] = client_id
         if questionnaire is not None:
             _payload["questionnaire"] = questionnaire
+        if classification is not None:
+            _payload["classification"] = classification
         return await self._call("profiling.update", params=_payload, options=options, context=context)
 
     async def validate_answers(
@@ -433,12 +406,9 @@ class AsyncProfilingAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Validate answers
+        """Validate questionnaire answers before profile creation
 
-        Validate questionnaire answers.
-
-        Args:
-        answers: Questionnaire answers"""
+        Validates a set of questionnaire answers against the question schema: checks required fields, valid option values, answer types, and logical consistency. Returns validation result with any errors or warnings. Used as a prerequisite step before profiling.create_profile to catch issues early."""
         _payload: Dict[str, Any] = {}
         _payload["answers"] = answers
         return await self._call("profiling.validate_answers", params=_payload, options=options, context=context)

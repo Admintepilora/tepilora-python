@@ -11,13 +11,13 @@ from typing import Any, Dict, List
 
 import pytest
 
-from conftest import build_minimal_params, _load_schema
+from conftest import build_all_params, build_minimal_params, _load_schema
 
 # Load schema at module level for parametrize
 SCHEMA = _load_schema()
 
 # Skip categories (internal only or not implemented)
-SKIP_CATEGORIES = {"audit"}
+SKIP_CATEGORIES = set()
 
 # Operations that use special endpoints (not V3 unified)
 SPECIAL_OPERATIONS = {"analytics.info", "analytics.list"}
@@ -111,6 +111,38 @@ class TestAllOperations:
 
         for pname in required_params:
             assert pname in sent_params, f"Required param '{pname}' missing in {action}"
+
+    @pytest.mark.parametrize("action,op", all_operations())
+    def test_operation_includes_all_declared_params(self, action: str, op: Dict[str, Any], mock_client):
+        """Verify wrappers accept and serialize every declared payload param."""
+        # Skip special operations that don't use V3 unified endpoint
+        if action in SPECIAL_OPERATIONS:
+            pytest.skip(f"{action} uses special endpoint")
+
+        category = op["category"]
+        method_name = get_method_name(op)
+        params = op.get("params", [])
+        expected_params = [p["name"] for p in params if p["name"] != "format"]
+
+        if not expected_params:
+            pytest.skip("No payload params")
+
+        namespace = getattr(mock_client, category)
+        method = getattr(namespace, method_name)
+        kwargs = build_all_params(params)
+
+        try:
+            method(**kwargs)
+        except Exception as e:
+            pytest.fail(f"Method {action} rejected full param payload: {type(e).__name__}: {e}")
+
+        call = mock_client._calls[-1]
+        sent_action = call["payload"].get("action")
+        sent_params = call["payload"].get("params", {})
+
+        assert sent_action == action, f"Expected action '{action}', got '{sent_action}'"
+        for pname in expected_params:
+            assert pname in sent_params, f"Declared param '{pname}' missing in {action}"
 
 
 class TestAllNamespaces:

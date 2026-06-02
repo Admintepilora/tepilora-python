@@ -17,66 +17,63 @@ class AlertsAPI(BaseAPI):
     def ack(
         self,
         *,
-        event_id: str,
-        ack: Optional[str] = None,
+        event_id: Optional[str] = None,
         id: Optional[str] = None,
         note: Optional[str] = None,
+        ack: Optional[bool] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Acknowledge alert
+        """Acknowledge a triggered alert event
 
-        Args:
-        event_id: Event ID"""
+        Marks a triggered alert event as acknowledged by the user. Acknowledged events are visually distinguished in the Dashboard and can be filtered out of the active alerts view. Used by the Dashboard alert notification handler."""
         _payload: Dict[str, Any] = {}
-        _payload["event_id"] = event_id
-        if ack is not None:
-            _payload["ack"] = ack
+        if event_id is not None:
+            _payload["event_id"] = event_id
         if id is not None:
             _payload["id"] = id
         if note is not None:
             _payload["note"] = note
+        if ack is not None:
+            _payload["ack"] = ack
         return self._call("alerts.ack", params=_payload, options=options, context=context)
 
     def create(
         self,
         *,
         name: str,
-        config: Optional[Dict[str, Any]] = None,
-        cooldown_seconds: Optional[str] = None,
-        delivery: Optional[str] = None,
+        config: Dict[str, Any],
+        rule_type: Optional[str] = None,
+        type_: Optional[str] = None,
         description: Optional[str] = None,
         enabled: Optional[bool] = True,
-        rule_type: Optional[str] = None,
+        delivery: Optional[Dict[str, Any]] = None,
+        cooldown_seconds: Optional[int] = None,
         severity: Optional[str] = None,
-        type_: Optional[str] = None,
-        visibility: Optional[str] = None,
+        visibility: Optional[str] = "private",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Create alert rule
+        """Create a new alert rule with conditions and delivery configuration
 
-        Args:
-        name: Alert name
-        enabled: Enable alert"""
+        Creates a new alert rule in the AlertRules MongoDB collection. An alert rule defines: trigger conditions (price threshold, portfolio drift, news keyword, macro event), evaluation frequency, severity level, cooldown period, and delivery channels (email, webhook, in-app notification). Supports rule types: price_alert, drift_alert, news_alert, macro_alert, custom. Used by the Dashboard alert builder and by automated monitoring workflows."""
         _payload: Dict[str, Any] = {}
         _payload["name"] = name
-        if config is not None:
-            _payload["config"] = config
-        if cooldown_seconds is not None:
-            _payload["cooldown_seconds"] = cooldown_seconds
-        if delivery is not None:
-            _payload["delivery"] = delivery
+        _payload["config"] = config
+        if rule_type is not None:
+            _payload["rule_type"] = rule_type
+        if type_ is not None:
+            _payload["type"] = type_
         if description is not None:
             _payload["description"] = description
         if enabled is not None:
             _payload["enabled"] = enabled
-        if rule_type is not None:
-            _payload["rule_type"] = rule_type
+        if delivery is not None:
+            _payload["delivery"] = delivery
+        if cooldown_seconds is not None:
+            _payload["cooldown_seconds"] = cooldown_seconds
         if severity is not None:
             _payload["severity"] = severity
-        if type_ is not None:
-            _payload["type"] = type_
         if visibility is not None:
             _payload["visibility"] = visibility
         return self._call("alerts.create", params=_payload, options=options, context=context)
@@ -84,45 +81,43 @@ class AlertsAPI(BaseAPI):
     def delete(
         self,
         *,
-        rule_id: str,
-        delete_events: Optional[str] = None,
+        rule_id: Optional[str] = None,
         id: Optional[str] = None,
         name: Optional[str] = None,
+        delete_events: Optional[bool] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Delete alert rule
+        """Delete an alert rule and optionally its event history
 
-        Args:
-        rule_id: Rule ID"""
+        Removes an alert rule. Optionally deletes associated event history (AlertEvents collection). Identifiable by rule_id, id, or name. Used by the Dashboard alerts management."""
         _payload: Dict[str, Any] = {}
-        _payload["rule_id"] = rule_id
-        if delete_events is not None:
-            _payload["delete_events"] = delete_events
+        if rule_id is not None:
+            _payload["rule_id"] = rule_id
         if id is not None:
             _payload["id"] = id
         if name is not None:
             _payload["name"] = name
+        if delete_events is not None:
+            _payload["delete_events"] = delete_events
         return self._call("alerts.delete", params=_payload, options=options, context=context)
 
     def evaluate(
         self,
         *,
-        rule_id: str,
+        rule_id: Optional[str] = None,
         id: Optional[str] = None,
         name: Optional[str] = None,
-        update_stats: Optional[str] = None,
+        update_stats: Optional[bool] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Evaluate alert
+        """Manually evaluate an alert rule against current data
 
-        Manually evaluate an alert rule.
-
-        Args:
-        rule_id: Rule ID"""
+        Triggers immediate evaluation of an alert rule against current market data, portfolio state, or news feed — without waiting for the scheduled evaluation cycle. Returns whether the alert condition is currently met, the evaluated values, and whether a notification would fire (respecting cooldown). Used for testing alert rules and by the Dashboard Test Alert button."""
         _payload: Dict[str, Any] = {}
-        _payload["rule_id"] = rule_id
+        if rule_id is not None:
+            _payload["rule_id"] = rule_id
         if id is not None:
             _payload["id"] = id
         if name is not None:
@@ -134,18 +129,18 @@ class AlertsAPI(BaseAPI):
     def get(
         self,
         *,
-        rule_id: str,
+        rule_id: Optional[str] = None,
         id: Optional[str] = None,
         name: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get alert rule
+        """Get full details for a specific alert rule
 
-        Args:
-        rule_id: Rule ID"""
+        Returns the complete alert rule definition including conditions, delivery config, evaluation history, and trigger statistics. Identifiable by rule_id, id, or name. Used by the Dashboard alert detail view."""
         _payload: Dict[str, Any] = {}
-        _payload["rule_id"] = rule_id
+        if rule_id is not None:
+            _payload["rule_id"] = rule_id
         if id is not None:
             _payload["id"] = id
         if name is not None:
@@ -155,58 +150,52 @@ class AlertsAPI(BaseAPI):
     def history(
         self,
         *,
-        ack: Optional[str] = None,
-        id: Optional[str] = None,
-        offset: Optional[int] = None,
         rule_id: Optional[str] = None,
-        limit: Optional[int] = 100,
+        id: Optional[str] = None,
         status: Optional[str] = None,
+        ack: Optional[bool] = None,
+        limit: Optional[int] = 50,
+        offset: Optional[int] = 0,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Alert history
+        """Get the event history for an alert rule
 
-        Get alert event history.
-
-        Args:
-        rule_id: Filter by rule
-        limit: Maximum results"""
+        Returns the chronological list of AlertEvents (triggers) for a specific alert rule. Each event includes: trigger timestamp, evaluated values, whether notification was delivered, delivery channel, and acknowledgment status. Used by the Dashboard alert history view."""
         _payload: Dict[str, Any] = {}
-        if ack is not None:
-            _payload["ack"] = ack
-        if id is not None:
-            _payload["id"] = id
-        if offset is not None:
-            _payload["offset"] = offset
         if rule_id is not None:
             _payload["rule_id"] = rule_id
-        if limit is not None:
-            _payload["limit"] = limit
+        if id is not None:
+            _payload["id"] = id
         if status is not None:
             _payload["status"] = status
+        if ack is not None:
+            _payload["ack"] = ack
+        if limit is not None:
+            _payload["limit"] = limit
+        if offset is not None:
+            _payload["offset"] = offset
         return self._call("alerts.history", params=_payload, options=options, context=context, response_format=response_format)
 
     def list(
         self,
         *,
         enabled: Optional[bool] = None,
-        limit: Optional[int] = 100,
-        offset: Optional[int] = None,
-        order: Optional[str] = None,
+        limit: Optional[int] = 50,
+        offset: Optional[int] = 0,
+        order: Optional[str] = "desc",
         rule_type: Optional[str] = None,
         search: Optional[str] = None,
-        sort: Optional[str] = None,
+        sort: Optional[str] = "createdAt",
         type_: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """List alert rules
+        """List all alert rules for the current user
 
-        Args:
-        enabled: Filter by enabled
-        limit: Maximum results"""
+        Returns all alert rules belonging to the authenticated user. Each rule shows: name, type, status (active/paused/triggered), last evaluated time, trigger count, and delivery configuration. Used by the Dashboard alerts management page."""
         _payload: Dict[str, Any] = {}
         if enabled is not None:
             _payload["enabled"] = enabled
@@ -229,87 +218,85 @@ class AlertsAPI(BaseAPI):
     def run(
         self,
         *,
-        dry_run: Optional[str] = None,
-        force: Optional[str] = None,
-        id: Optional[str] = None,
-        limit: Optional[int] = None,
-        name: Optional[str] = None,
         rule_id: Optional[str] = None,
+        id: Optional[str] = None,
+        name: Optional[str] = None,
         rule_type: Optional[str] = None,
         type_: Optional[str] = None,
+        limit: Optional[int] = 200,
+        dry_run: Optional[bool] = False,
+        force: Optional[bool] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Run all alerts
+        """Run the alert evaluation engine for all active rules
 
-        Evaluate all enabled alerts."""
+        Batch-evaluates all active alert rules for the current user. For each rule where conditions are met, generates an AlertEvent and triggers delivery (email/webhook/notification) if cooldown has elapsed. Returns a summary of evaluated rules, triggered alerts, and delivery status. Typically called by a scheduled cron job, not directly by users."""
         _payload: Dict[str, Any] = {}
-        if dry_run is not None:
-            _payload["dry_run"] = dry_run
-        if force is not None:
-            _payload["force"] = force
-        if id is not None:
-            _payload["id"] = id
-        if limit is not None:
-            _payload["limit"] = limit
-        if name is not None:
-            _payload["name"] = name
         if rule_id is not None:
             _payload["rule_id"] = rule_id
+        if id is not None:
+            _payload["id"] = id
+        if name is not None:
+            _payload["name"] = name
         if rule_type is not None:
             _payload["rule_type"] = rule_type
         if type_ is not None:
             _payload["type"] = type_
+        if limit is not None:
+            _payload["limit"] = limit
+        if dry_run is not None:
+            _payload["dry_run"] = dry_run
+        if force is not None:
+            _payload["force"] = force
         return self._call("alerts.run", params=_payload, options=options, context=context)
 
     def update(
         self,
         *,
-        rule_id: str,
-        config: Optional[Dict[str, Any]] = None,
-        cooldown_seconds: Optional[str] = None,
-        delivery: Optional[str] = None,
-        description: Optional[str] = None,
+        rule_id: Optional[str] = None,
         id: Optional[str] = None,
-        new_name: Optional[str] = None,
         name: Optional[str] = None,
-        enabled: Optional[bool] = None,
+        new_name: Optional[str] = None,
         rule_type: Optional[str] = None,
-        severity: Optional[str] = None,
         type_: Optional[str] = None,
+        config: Optional[Dict[str, Any]] = None,
+        description: Optional[str] = None,
+        enabled: Optional[bool] = None,
+        delivery: Optional[Dict[str, Any]] = None,
+        cooldown_seconds: Optional[int] = None,
+        severity: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Update alert rule
+        """Update an existing alert rule configuration
 
-        Args:
-        rule_id: Rule ID
-        name: New name
-        enabled: Enable/disable"""
+        Modifies an existing alert rule. Can update conditions, delivery channels, severity, cooldown, and enabled status. Used by the Dashboard alert editor."""
         _payload: Dict[str, Any] = {}
-        _payload["rule_id"] = rule_id
-        if config is not None:
-            _payload["config"] = config
-        if cooldown_seconds is not None:
-            _payload["cooldown_seconds"] = cooldown_seconds
-        if delivery is not None:
-            _payload["delivery"] = delivery
-        if description is not None:
-            _payload["description"] = description
+        if rule_id is not None:
+            _payload["rule_id"] = rule_id
         if id is not None:
             _payload["id"] = id
-        if new_name is not None:
-            _payload["new_name"] = new_name
         if name is not None:
             _payload["name"] = name
-        if enabled is not None:
-            _payload["enabled"] = enabled
+        if new_name is not None:
+            _payload["new_name"] = new_name
         if rule_type is not None:
             _payload["rule_type"] = rule_type
-        if severity is not None:
-            _payload["severity"] = severity
         if type_ is not None:
             _payload["type"] = type_
+        if config is not None:
+            _payload["config"] = config
+        if description is not None:
+            _payload["description"] = description
+        if enabled is not None:
+            _payload["enabled"] = enabled
+        if delivery is not None:
+            _payload["delivery"] = delivery
+        if cooldown_seconds is not None:
+            _payload["cooldown_seconds"] = cooldown_seconds
+        if severity is not None:
+            _payload["severity"] = severity
         return self._call("alerts.update", params=_payload, options=options, context=context)
 
 
@@ -320,66 +307,63 @@ class AsyncAlertsAPI(AsyncBaseAPI):
     async def ack(
         self,
         *,
-        event_id: str,
-        ack: Optional[str] = None,
+        event_id: Optional[str] = None,
         id: Optional[str] = None,
         note: Optional[str] = None,
+        ack: Optional[bool] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Acknowledge alert
+        """Acknowledge a triggered alert event
 
-        Args:
-        event_id: Event ID"""
+        Marks a triggered alert event as acknowledged by the user. Acknowledged events are visually distinguished in the Dashboard and can be filtered out of the active alerts view. Used by the Dashboard alert notification handler."""
         _payload: Dict[str, Any] = {}
-        _payload["event_id"] = event_id
-        if ack is not None:
-            _payload["ack"] = ack
+        if event_id is not None:
+            _payload["event_id"] = event_id
         if id is not None:
             _payload["id"] = id
         if note is not None:
             _payload["note"] = note
+        if ack is not None:
+            _payload["ack"] = ack
         return await self._call("alerts.ack", params=_payload, options=options, context=context)
 
     async def create(
         self,
         *,
         name: str,
-        config: Optional[Dict[str, Any]] = None,
-        cooldown_seconds: Optional[str] = None,
-        delivery: Optional[str] = None,
+        config: Dict[str, Any],
+        rule_type: Optional[str] = None,
+        type_: Optional[str] = None,
         description: Optional[str] = None,
         enabled: Optional[bool] = True,
-        rule_type: Optional[str] = None,
+        delivery: Optional[Dict[str, Any]] = None,
+        cooldown_seconds: Optional[int] = None,
         severity: Optional[str] = None,
-        type_: Optional[str] = None,
-        visibility: Optional[str] = None,
+        visibility: Optional[str] = "private",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Create alert rule
+        """Create a new alert rule with conditions and delivery configuration
 
-        Args:
-        name: Alert name
-        enabled: Enable alert"""
+        Creates a new alert rule in the AlertRules MongoDB collection. An alert rule defines: trigger conditions (price threshold, portfolio drift, news keyword, macro event), evaluation frequency, severity level, cooldown period, and delivery channels (email, webhook, in-app notification). Supports rule types: price_alert, drift_alert, news_alert, macro_alert, custom. Used by the Dashboard alert builder and by automated monitoring workflows."""
         _payload: Dict[str, Any] = {}
         _payload["name"] = name
-        if config is not None:
-            _payload["config"] = config
-        if cooldown_seconds is not None:
-            _payload["cooldown_seconds"] = cooldown_seconds
-        if delivery is not None:
-            _payload["delivery"] = delivery
+        _payload["config"] = config
+        if rule_type is not None:
+            _payload["rule_type"] = rule_type
+        if type_ is not None:
+            _payload["type"] = type_
         if description is not None:
             _payload["description"] = description
         if enabled is not None:
             _payload["enabled"] = enabled
-        if rule_type is not None:
-            _payload["rule_type"] = rule_type
+        if delivery is not None:
+            _payload["delivery"] = delivery
+        if cooldown_seconds is not None:
+            _payload["cooldown_seconds"] = cooldown_seconds
         if severity is not None:
             _payload["severity"] = severity
-        if type_ is not None:
-            _payload["type"] = type_
         if visibility is not None:
             _payload["visibility"] = visibility
         return await self._call("alerts.create", params=_payload, options=options, context=context)
@@ -387,45 +371,43 @@ class AsyncAlertsAPI(AsyncBaseAPI):
     async def delete(
         self,
         *,
-        rule_id: str,
-        delete_events: Optional[str] = None,
+        rule_id: Optional[str] = None,
         id: Optional[str] = None,
         name: Optional[str] = None,
+        delete_events: Optional[bool] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Delete alert rule
+        """Delete an alert rule and optionally its event history
 
-        Args:
-        rule_id: Rule ID"""
+        Removes an alert rule. Optionally deletes associated event history (AlertEvents collection). Identifiable by rule_id, id, or name. Used by the Dashboard alerts management."""
         _payload: Dict[str, Any] = {}
-        _payload["rule_id"] = rule_id
-        if delete_events is not None:
-            _payload["delete_events"] = delete_events
+        if rule_id is not None:
+            _payload["rule_id"] = rule_id
         if id is not None:
             _payload["id"] = id
         if name is not None:
             _payload["name"] = name
+        if delete_events is not None:
+            _payload["delete_events"] = delete_events
         return await self._call("alerts.delete", params=_payload, options=options, context=context)
 
     async def evaluate(
         self,
         *,
-        rule_id: str,
+        rule_id: Optional[str] = None,
         id: Optional[str] = None,
         name: Optional[str] = None,
-        update_stats: Optional[str] = None,
+        update_stats: Optional[bool] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Evaluate alert
+        """Manually evaluate an alert rule against current data
 
-        Manually evaluate an alert rule.
-
-        Args:
-        rule_id: Rule ID"""
+        Triggers immediate evaluation of an alert rule against current market data, portfolio state, or news feed — without waiting for the scheduled evaluation cycle. Returns whether the alert condition is currently met, the evaluated values, and whether a notification would fire (respecting cooldown). Used for testing alert rules and by the Dashboard Test Alert button."""
         _payload: Dict[str, Any] = {}
-        _payload["rule_id"] = rule_id
+        if rule_id is not None:
+            _payload["rule_id"] = rule_id
         if id is not None:
             _payload["id"] = id
         if name is not None:
@@ -437,18 +419,18 @@ class AsyncAlertsAPI(AsyncBaseAPI):
     async def get(
         self,
         *,
-        rule_id: str,
+        rule_id: Optional[str] = None,
         id: Optional[str] = None,
         name: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get alert rule
+        """Get full details for a specific alert rule
 
-        Args:
-        rule_id: Rule ID"""
+        Returns the complete alert rule definition including conditions, delivery config, evaluation history, and trigger statistics. Identifiable by rule_id, id, or name. Used by the Dashboard alert detail view."""
         _payload: Dict[str, Any] = {}
-        _payload["rule_id"] = rule_id
+        if rule_id is not None:
+            _payload["rule_id"] = rule_id
         if id is not None:
             _payload["id"] = id
         if name is not None:
@@ -458,58 +440,52 @@ class AsyncAlertsAPI(AsyncBaseAPI):
     async def history(
         self,
         *,
-        ack: Optional[str] = None,
-        id: Optional[str] = None,
-        offset: Optional[int] = None,
         rule_id: Optional[str] = None,
-        limit: Optional[int] = 100,
+        id: Optional[str] = None,
         status: Optional[str] = None,
+        ack: Optional[bool] = None,
+        limit: Optional[int] = 50,
+        offset: Optional[int] = 0,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Alert history
+        """Get the event history for an alert rule
 
-        Get alert event history.
-
-        Args:
-        rule_id: Filter by rule
-        limit: Maximum results"""
+        Returns the chronological list of AlertEvents (triggers) for a specific alert rule. Each event includes: trigger timestamp, evaluated values, whether notification was delivered, delivery channel, and acknowledgment status. Used by the Dashboard alert history view."""
         _payload: Dict[str, Any] = {}
-        if ack is not None:
-            _payload["ack"] = ack
-        if id is not None:
-            _payload["id"] = id
-        if offset is not None:
-            _payload["offset"] = offset
         if rule_id is not None:
             _payload["rule_id"] = rule_id
-        if limit is not None:
-            _payload["limit"] = limit
+        if id is not None:
+            _payload["id"] = id
         if status is not None:
             _payload["status"] = status
+        if ack is not None:
+            _payload["ack"] = ack
+        if limit is not None:
+            _payload["limit"] = limit
+        if offset is not None:
+            _payload["offset"] = offset
         return await self._call("alerts.history", params=_payload, options=options, context=context, response_format=response_format)
 
     async def list(
         self,
         *,
         enabled: Optional[bool] = None,
-        limit: Optional[int] = 100,
-        offset: Optional[int] = None,
-        order: Optional[str] = None,
+        limit: Optional[int] = 50,
+        offset: Optional[int] = 0,
+        order: Optional[str] = "desc",
         rule_type: Optional[str] = None,
         search: Optional[str] = None,
-        sort: Optional[str] = None,
+        sort: Optional[str] = "createdAt",
         type_: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """List alert rules
+        """List all alert rules for the current user
 
-        Args:
-        enabled: Filter by enabled
-        limit: Maximum results"""
+        Returns all alert rules belonging to the authenticated user. Each rule shows: name, type, status (active/paused/triggered), last evaluated time, trigger count, and delivery configuration. Used by the Dashboard alerts management page."""
         _payload: Dict[str, Any] = {}
         if enabled is not None:
             _payload["enabled"] = enabled
@@ -532,87 +508,85 @@ class AsyncAlertsAPI(AsyncBaseAPI):
     async def run(
         self,
         *,
-        dry_run: Optional[str] = None,
-        force: Optional[str] = None,
-        id: Optional[str] = None,
-        limit: Optional[int] = None,
-        name: Optional[str] = None,
         rule_id: Optional[str] = None,
+        id: Optional[str] = None,
+        name: Optional[str] = None,
         rule_type: Optional[str] = None,
         type_: Optional[str] = None,
+        limit: Optional[int] = 200,
+        dry_run: Optional[bool] = False,
+        force: Optional[bool] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Run all alerts
+        """Run the alert evaluation engine for all active rules
 
-        Evaluate all enabled alerts."""
+        Batch-evaluates all active alert rules for the current user. For each rule where conditions are met, generates an AlertEvent and triggers delivery (email/webhook/notification) if cooldown has elapsed. Returns a summary of evaluated rules, triggered alerts, and delivery status. Typically called by a scheduled cron job, not directly by users."""
         _payload: Dict[str, Any] = {}
-        if dry_run is not None:
-            _payload["dry_run"] = dry_run
-        if force is not None:
-            _payload["force"] = force
-        if id is not None:
-            _payload["id"] = id
-        if limit is not None:
-            _payload["limit"] = limit
-        if name is not None:
-            _payload["name"] = name
         if rule_id is not None:
             _payload["rule_id"] = rule_id
+        if id is not None:
+            _payload["id"] = id
+        if name is not None:
+            _payload["name"] = name
         if rule_type is not None:
             _payload["rule_type"] = rule_type
         if type_ is not None:
             _payload["type"] = type_
+        if limit is not None:
+            _payload["limit"] = limit
+        if dry_run is not None:
+            _payload["dry_run"] = dry_run
+        if force is not None:
+            _payload["force"] = force
         return await self._call("alerts.run", params=_payload, options=options, context=context)
 
     async def update(
         self,
         *,
-        rule_id: str,
-        config: Optional[Dict[str, Any]] = None,
-        cooldown_seconds: Optional[str] = None,
-        delivery: Optional[str] = None,
-        description: Optional[str] = None,
+        rule_id: Optional[str] = None,
         id: Optional[str] = None,
-        new_name: Optional[str] = None,
         name: Optional[str] = None,
-        enabled: Optional[bool] = None,
+        new_name: Optional[str] = None,
         rule_type: Optional[str] = None,
-        severity: Optional[str] = None,
         type_: Optional[str] = None,
+        config: Optional[Dict[str, Any]] = None,
+        description: Optional[str] = None,
+        enabled: Optional[bool] = None,
+        delivery: Optional[Dict[str, Any]] = None,
+        cooldown_seconds: Optional[int] = None,
+        severity: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Update alert rule
+        """Update an existing alert rule configuration
 
-        Args:
-        rule_id: Rule ID
-        name: New name
-        enabled: Enable/disable"""
+        Modifies an existing alert rule. Can update conditions, delivery channels, severity, cooldown, and enabled status. Used by the Dashboard alert editor."""
         _payload: Dict[str, Any] = {}
-        _payload["rule_id"] = rule_id
-        if config is not None:
-            _payload["config"] = config
-        if cooldown_seconds is not None:
-            _payload["cooldown_seconds"] = cooldown_seconds
-        if delivery is not None:
-            _payload["delivery"] = delivery
-        if description is not None:
-            _payload["description"] = description
+        if rule_id is not None:
+            _payload["rule_id"] = rule_id
         if id is not None:
             _payload["id"] = id
-        if new_name is not None:
-            _payload["new_name"] = new_name
         if name is not None:
             _payload["name"] = name
-        if enabled is not None:
-            _payload["enabled"] = enabled
+        if new_name is not None:
+            _payload["new_name"] = new_name
         if rule_type is not None:
             _payload["rule_type"] = rule_type
-        if severity is not None:
-            _payload["severity"] = severity
         if type_ is not None:
             _payload["type"] = type_
+        if config is not None:
+            _payload["config"] = config
+        if description is not None:
+            _payload["description"] = description
+        if enabled is not None:
+            _payload["enabled"] = enabled
+        if delivery is not None:
+            _payload["delivery"] = delivery
+        if cooldown_seconds is not None:
+            _payload["cooldown_seconds"] = cooldown_seconds
+        if severity is not None:
+            _payload["severity"] = severity
         return await self._call("alerts.update", params=_payload, options=options, context=context)
 
 

@@ -21,28 +21,23 @@ class AlternativesAPI(BaseAPI):
         date: str,
         flow_type: str,
         amount: float,
-        document_id: Optional[str] = None,
         description: Optional[str] = None,
+        document_id: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Add cash flow
+        """Record a cash flow event (capital call, distribution) for an alternative asset
 
-        Args:
-        asset_id: Asset ID
-        date: Cash flow date
-        flow_type: capital_call|distribution|fee
-        amount: Amount
-        description: Description"""
+        Records a cash flow event for an alternative asset: capital call (investor pays in), distribution (fund pays out), or recallable distribution. Each event includes date, amount, type, and optional notes. Cash flows are essential for IRR/TVPI/DPI calculations. Used by advisor workflows processing fund notices."""
         _payload: Dict[str, Any] = {}
         _payload["asset_id"] = asset_id
         _payload["date"] = date
         _payload["flow_type"] = flow_type
         _payload["amount"] = amount
-        if document_id is not None:
-            _payload["document_id"] = document_id
         if description is not None:
             _payload["description"] = description
+        if document_id is not None:
+            _payload["document_id"] = document_id
         return self._call("alternatives.cash_flow", params=_payload, options=options, context=context)
 
     def create(
@@ -50,49 +45,42 @@ class AlternativesAPI(BaseAPI):
         *,
         name: str,
         asset_type: str,
-        external_id: Optional[str] = None,
-        geography: Optional[str] = None,
         fund_name: Optional[str] = None,
         commitment: Optional[float] = None,
         currency: Optional[str] = "EUR",
-        notes: Optional[str] = None,
-        strategy: Optional[str] = None,
         vintage_year: Optional[int] = None,
         manager: Optional[str] = None,
+        strategy: Optional[str] = None,
+        geography: Optional[str] = None,
+        notes: Optional[str] = None,
+        external_id: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Create alternative asset
+        """Create a new alternative asset (PE, VC, real estate, etc.)
 
-        Args:
-        name: Asset name
-        asset_type: private_equity|real_estate|hedge_fund|private_credit|other
-        fund_name: Fund name
-        commitment: Total commitment
-        currency: Currency
-        vintage_year: Vintage year
-        manager: Manager name"""
+        Creates a new alternative asset record in the AlternativeAssets MongoDB collection. Alternative assets are illiquid investments not tracked by market data feeds: private equity, venture capital, real estate, hedge funds, infrastructure, private debt. Includes asset name, type, vintage year, committed capital, and custom metadata. Used by advisor workflows managing client allocations to alternatives."""
         _payload: Dict[str, Any] = {}
         _payload["name"] = name
         _payload["asset_type"] = asset_type
-        if external_id is not None:
-            _payload["external_id"] = external_id
-        if geography is not None:
-            _payload["geography"] = geography
         if fund_name is not None:
             _payload["fund_name"] = fund_name
         if commitment is not None:
             _payload["commitment"] = commitment
         if currency is not None:
             _payload["currency"] = currency
-        if notes is not None:
-            _payload["notes"] = notes
-        if strategy is not None:
-            _payload["strategy"] = strategy
         if vintage_year is not None:
             _payload["vintage_year"] = vintage_year
         if manager is not None:
             _payload["manager"] = manager
+        if strategy is not None:
+            _payload["strategy"] = strategy
+        if geography is not None:
+            _payload["geography"] = geography
+        if notes is not None:
+            _payload["notes"] = notes
+        if external_id is not None:
+            _payload["external_id"] = external_id
         return self._call("alternatives.create", params=_payload, options=options, context=context)
 
     def delete(
@@ -102,10 +90,9 @@ class AlternativesAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Delete alternative asset
+        """Delete an alternative asset record
 
-        Args:
-        asset_id: Asset ID"""
+        Permanently removes an alternative asset record from the AlternativeAssets MongoDB collection. Creates an audit trail entry for compliance tracking. The deletion is irreversible — all associated NAV history and cash flow records are also removed."""
         _payload: Dict[str, Any] = {}
         _payload["asset_id"] = asset_id
         return self._call("alternatives.delete", params=_payload, options=options, context=context)
@@ -119,12 +106,9 @@ class AlternativesAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get alternative asset
+        """Get full details for a specific alternative asset
 
-        Args:
-        asset_id: Asset ID
-        include_cash_flows: Include cash flows
-        include_nav_history: Include NAV history"""
+        Returns complete alternative asset record including all NAV history entries, cash flow history, and computed performance metrics."""
         _payload: Dict[str, Any] = {}
         _payload["asset_id"] = asset_id
         if include_cash_flows is not None:
@@ -137,35 +121,31 @@ class AlternativesAPI(BaseAPI):
         self,
         *,
         asset_type: Optional[str] = None,
-        offset: Optional[int] = None,
-        sort: Optional[str] = None,
         status: Optional[str] = None,
         search: Optional[str] = None,
         limit: Optional[int] = 50,
+        offset: Optional[int] = 0,
+        sort: Optional[str] = "createdAt",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """List alternative assets
+        """List all alternative assets for the current user
 
-        Args:
-        asset_type: Filter by type
-        status: Filter by status
-        search: Search in name
-        limit: Maximum results"""
+        Returns all alternative asset records. Each entry shows name, type, vintage, committed capital, current NAV, and IRR. Used by the Dashboard alternatives portfolio view."""
         _payload: Dict[str, Any] = {}
         if asset_type is not None:
             _payload["asset_type"] = asset_type
-        if offset is not None:
-            _payload["offset"] = offset
-        if sort is not None:
-            _payload["sort"] = sort
         if status is not None:
             _payload["status"] = status
         if search is not None:
             _payload["search"] = search
         if limit is not None:
             _payload["limit"] = limit
+        if offset is not None:
+            _payload["offset"] = offset
+        if sort is not None:
+            _payload["sort"] = sort
         return self._call("alternatives.list", params=_payload, options=options, context=context, response_format=response_format)
 
     def nav_update(
@@ -174,29 +154,25 @@ class AlternativesAPI(BaseAPI):
         asset_id: str,
         date: str,
         nav: float,
+        source: Optional[str] = "manual",
         document_id: Optional[str] = None,
         notes: Optional[str] = None,
-        source: Optional[str] = "manual",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Add NAV update
+        """Record a new NAV valuation for an alternative asset
 
-        Args:
-        asset_id: Asset ID
-        date: Valuation date
-        nav: NAV value
-        source: Source"""
+        Adds a new Net Asset Value data point to an alternative asset's valuation history. Alternative assets are valued periodically (monthly/quarterly) rather than daily. Each NAV update includes date, value, and optional notes. Automatically recalculates performance metrics. Used by advisor workflows when receiving periodic fund statements."""
         _payload: Dict[str, Any] = {}
         _payload["asset_id"] = asset_id
         _payload["date"] = date
         _payload["nav"] = nav
+        if source is not None:
+            _payload["source"] = source
         if document_id is not None:
             _payload["document_id"] = document_id
         if notes is not None:
             _payload["notes"] = notes
-        if source is not None:
-            _payload["source"] = source
         return self._call("alternatives.nav_update", params=_payload, options=options, context=context)
 
     def performance(
@@ -207,13 +183,9 @@ class AlternativesAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Calculate performance
+        """Calculate performance metrics (IRR, TVPI, DPI) for an alternative asset
 
-        Calculate IRR, TVPI, DPI, etc.
-
-        Args:
-        asset_id: Asset ID
-        as_of_date: As of date"""
+        Computes private market performance metrics from the cash flow and NAV history: IRR (Internal Rate of Return), TVPI (Total Value to Paid-In), DPI (Distributions to Paid-In), RVPI (Residual Value to Paid-In), and PME (Public Market Equivalent). These are the standard metrics for evaluating illiquid investments. Used by the Dashboard alternatives performance view."""
         _payload: Dict[str, Any] = {}
         _payload["asset_id"] = asset_id
         if as_of_date is not None:
@@ -227,12 +199,9 @@ class AlternativesAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Portfolio summary
+        """Get an aggregate summary across all alternative assets
 
-        Aggregated summary of all alternatives.
-
-        Args:
-        asset_type: Filter by type"""
+        Returns portfolio-level statistics across all alternative assets: total committed capital, total contributions, total distributions, total current NAV, total value, TVPI, DPI, RVPI, vintage year distribution, and asset type breakdown. Used by the Dashboard alternatives overview and by reporting modules."""
         _payload: Dict[str, Any] = {}
         if asset_type is not None:
             _payload["asset_type"] = asset_type
@@ -242,42 +211,38 @@ class AlternativesAPI(BaseAPI):
         self,
         *,
         asset_id: str,
-        commitment: Optional[str] = None,
-        geography: Optional[str] = None,
-        manager: Optional[str] = None,
         name: Optional[str] = None,
         fund_name: Optional[str] = None,
+        commitment: Optional[float] = None,
+        manager: Optional[str] = None,
+        strategy: Optional[str] = None,
+        geography: Optional[str] = None,
         notes: Optional[str] = None,
         status: Optional[str] = None,
-        strategy: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Update alternative asset
+        """Update alternative asset details
 
-        Args:
-        asset_id: Asset ID
-        name: New name
-        fund_name: New fund name
-        status: New status"""
+        Modifies an existing alternative asset record. Can update name, metadata, and status. Used by the Dashboard alternatives editor."""
         _payload: Dict[str, Any] = {}
         _payload["asset_id"] = asset_id
-        if commitment is not None:
-            _payload["commitment"] = commitment
-        if geography is not None:
-            _payload["geography"] = geography
-        if manager is not None:
-            _payload["manager"] = manager
         if name is not None:
             _payload["name"] = name
         if fund_name is not None:
             _payload["fund_name"] = fund_name
+        if commitment is not None:
+            _payload["commitment"] = commitment
+        if manager is not None:
+            _payload["manager"] = manager
+        if strategy is not None:
+            _payload["strategy"] = strategy
+        if geography is not None:
+            _payload["geography"] = geography
         if notes is not None:
             _payload["notes"] = notes
         if status is not None:
             _payload["status"] = status
-        if strategy is not None:
-            _payload["strategy"] = strategy
         return self._call("alternatives.update", params=_payload, options=options, context=context)
 
 
@@ -292,28 +257,23 @@ class AsyncAlternativesAPI(AsyncBaseAPI):
         date: str,
         flow_type: str,
         amount: float,
-        document_id: Optional[str] = None,
         description: Optional[str] = None,
+        document_id: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Add cash flow
+        """Record a cash flow event (capital call, distribution) for an alternative asset
 
-        Args:
-        asset_id: Asset ID
-        date: Cash flow date
-        flow_type: capital_call|distribution|fee
-        amount: Amount
-        description: Description"""
+        Records a cash flow event for an alternative asset: capital call (investor pays in), distribution (fund pays out), or recallable distribution. Each event includes date, amount, type, and optional notes. Cash flows are essential for IRR/TVPI/DPI calculations. Used by advisor workflows processing fund notices."""
         _payload: Dict[str, Any] = {}
         _payload["asset_id"] = asset_id
         _payload["date"] = date
         _payload["flow_type"] = flow_type
         _payload["amount"] = amount
-        if document_id is not None:
-            _payload["document_id"] = document_id
         if description is not None:
             _payload["description"] = description
+        if document_id is not None:
+            _payload["document_id"] = document_id
         return await self._call("alternatives.cash_flow", params=_payload, options=options, context=context)
 
     async def create(
@@ -321,49 +281,42 @@ class AsyncAlternativesAPI(AsyncBaseAPI):
         *,
         name: str,
         asset_type: str,
-        external_id: Optional[str] = None,
-        geography: Optional[str] = None,
         fund_name: Optional[str] = None,
         commitment: Optional[float] = None,
         currency: Optional[str] = "EUR",
-        notes: Optional[str] = None,
-        strategy: Optional[str] = None,
         vintage_year: Optional[int] = None,
         manager: Optional[str] = None,
+        strategy: Optional[str] = None,
+        geography: Optional[str] = None,
+        notes: Optional[str] = None,
+        external_id: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Create alternative asset
+        """Create a new alternative asset (PE, VC, real estate, etc.)
 
-        Args:
-        name: Asset name
-        asset_type: private_equity|real_estate|hedge_fund|private_credit|other
-        fund_name: Fund name
-        commitment: Total commitment
-        currency: Currency
-        vintage_year: Vintage year
-        manager: Manager name"""
+        Creates a new alternative asset record in the AlternativeAssets MongoDB collection. Alternative assets are illiquid investments not tracked by market data feeds: private equity, venture capital, real estate, hedge funds, infrastructure, private debt. Includes asset name, type, vintage year, committed capital, and custom metadata. Used by advisor workflows managing client allocations to alternatives."""
         _payload: Dict[str, Any] = {}
         _payload["name"] = name
         _payload["asset_type"] = asset_type
-        if external_id is not None:
-            _payload["external_id"] = external_id
-        if geography is not None:
-            _payload["geography"] = geography
         if fund_name is not None:
             _payload["fund_name"] = fund_name
         if commitment is not None:
             _payload["commitment"] = commitment
         if currency is not None:
             _payload["currency"] = currency
-        if notes is not None:
-            _payload["notes"] = notes
-        if strategy is not None:
-            _payload["strategy"] = strategy
         if vintage_year is not None:
             _payload["vintage_year"] = vintage_year
         if manager is not None:
             _payload["manager"] = manager
+        if strategy is not None:
+            _payload["strategy"] = strategy
+        if geography is not None:
+            _payload["geography"] = geography
+        if notes is not None:
+            _payload["notes"] = notes
+        if external_id is not None:
+            _payload["external_id"] = external_id
         return await self._call("alternatives.create", params=_payload, options=options, context=context)
 
     async def delete(
@@ -373,10 +326,9 @@ class AsyncAlternativesAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Delete alternative asset
+        """Delete an alternative asset record
 
-        Args:
-        asset_id: Asset ID"""
+        Permanently removes an alternative asset record from the AlternativeAssets MongoDB collection. Creates an audit trail entry for compliance tracking. The deletion is irreversible — all associated NAV history and cash flow records are also removed."""
         _payload: Dict[str, Any] = {}
         _payload["asset_id"] = asset_id
         return await self._call("alternatives.delete", params=_payload, options=options, context=context)
@@ -390,12 +342,9 @@ class AsyncAlternativesAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get alternative asset
+        """Get full details for a specific alternative asset
 
-        Args:
-        asset_id: Asset ID
-        include_cash_flows: Include cash flows
-        include_nav_history: Include NAV history"""
+        Returns complete alternative asset record including all NAV history entries, cash flow history, and computed performance metrics."""
         _payload: Dict[str, Any] = {}
         _payload["asset_id"] = asset_id
         if include_cash_flows is not None:
@@ -408,35 +357,31 @@ class AsyncAlternativesAPI(AsyncBaseAPI):
         self,
         *,
         asset_type: Optional[str] = None,
-        offset: Optional[int] = None,
-        sort: Optional[str] = None,
         status: Optional[str] = None,
         search: Optional[str] = None,
         limit: Optional[int] = 50,
+        offset: Optional[int] = 0,
+        sort: Optional[str] = "createdAt",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """List alternative assets
+        """List all alternative assets for the current user
 
-        Args:
-        asset_type: Filter by type
-        status: Filter by status
-        search: Search in name
-        limit: Maximum results"""
+        Returns all alternative asset records. Each entry shows name, type, vintage, committed capital, current NAV, and IRR. Used by the Dashboard alternatives portfolio view."""
         _payload: Dict[str, Any] = {}
         if asset_type is not None:
             _payload["asset_type"] = asset_type
-        if offset is not None:
-            _payload["offset"] = offset
-        if sort is not None:
-            _payload["sort"] = sort
         if status is not None:
             _payload["status"] = status
         if search is not None:
             _payload["search"] = search
         if limit is not None:
             _payload["limit"] = limit
+        if offset is not None:
+            _payload["offset"] = offset
+        if sort is not None:
+            _payload["sort"] = sort
         return await self._call("alternatives.list", params=_payload, options=options, context=context, response_format=response_format)
 
     async def nav_update(
@@ -445,29 +390,25 @@ class AsyncAlternativesAPI(AsyncBaseAPI):
         asset_id: str,
         date: str,
         nav: float,
+        source: Optional[str] = "manual",
         document_id: Optional[str] = None,
         notes: Optional[str] = None,
-        source: Optional[str] = "manual",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Add NAV update
+        """Record a new NAV valuation for an alternative asset
 
-        Args:
-        asset_id: Asset ID
-        date: Valuation date
-        nav: NAV value
-        source: Source"""
+        Adds a new Net Asset Value data point to an alternative asset's valuation history. Alternative assets are valued periodically (monthly/quarterly) rather than daily. Each NAV update includes date, value, and optional notes. Automatically recalculates performance metrics. Used by advisor workflows when receiving periodic fund statements."""
         _payload: Dict[str, Any] = {}
         _payload["asset_id"] = asset_id
         _payload["date"] = date
         _payload["nav"] = nav
+        if source is not None:
+            _payload["source"] = source
         if document_id is not None:
             _payload["document_id"] = document_id
         if notes is not None:
             _payload["notes"] = notes
-        if source is not None:
-            _payload["source"] = source
         return await self._call("alternatives.nav_update", params=_payload, options=options, context=context)
 
     async def performance(
@@ -478,13 +419,9 @@ class AsyncAlternativesAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Calculate performance
+        """Calculate performance metrics (IRR, TVPI, DPI) for an alternative asset
 
-        Calculate IRR, TVPI, DPI, etc.
-
-        Args:
-        asset_id: Asset ID
-        as_of_date: As of date"""
+        Computes private market performance metrics from the cash flow and NAV history: IRR (Internal Rate of Return), TVPI (Total Value to Paid-In), DPI (Distributions to Paid-In), RVPI (Residual Value to Paid-In), and PME (Public Market Equivalent). These are the standard metrics for evaluating illiquid investments. Used by the Dashboard alternatives performance view."""
         _payload: Dict[str, Any] = {}
         _payload["asset_id"] = asset_id
         if as_of_date is not None:
@@ -498,12 +435,9 @@ class AsyncAlternativesAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Portfolio summary
+        """Get an aggregate summary across all alternative assets
 
-        Aggregated summary of all alternatives.
-
-        Args:
-        asset_type: Filter by type"""
+        Returns portfolio-level statistics across all alternative assets: total committed capital, total contributions, total distributions, total current NAV, total value, TVPI, DPI, RVPI, vintage year distribution, and asset type breakdown. Used by the Dashboard alternatives overview and by reporting modules."""
         _payload: Dict[str, Any] = {}
         if asset_type is not None:
             _payload["asset_type"] = asset_type
@@ -513,42 +447,38 @@ class AsyncAlternativesAPI(AsyncBaseAPI):
         self,
         *,
         asset_id: str,
-        commitment: Optional[str] = None,
-        geography: Optional[str] = None,
-        manager: Optional[str] = None,
         name: Optional[str] = None,
         fund_name: Optional[str] = None,
+        commitment: Optional[float] = None,
+        manager: Optional[str] = None,
+        strategy: Optional[str] = None,
+        geography: Optional[str] = None,
         notes: Optional[str] = None,
         status: Optional[str] = None,
-        strategy: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Update alternative asset
+        """Update alternative asset details
 
-        Args:
-        asset_id: Asset ID
-        name: New name
-        fund_name: New fund name
-        status: New status"""
+        Modifies an existing alternative asset record. Can update name, metadata, and status. Used by the Dashboard alternatives editor."""
         _payload: Dict[str, Any] = {}
         _payload["asset_id"] = asset_id
-        if commitment is not None:
-            _payload["commitment"] = commitment
-        if geography is not None:
-            _payload["geography"] = geography
-        if manager is not None:
-            _payload["manager"] = manager
         if name is not None:
             _payload["name"] = name
         if fund_name is not None:
             _payload["fund_name"] = fund_name
+        if commitment is not None:
+            _payload["commitment"] = commitment
+        if manager is not None:
+            _payload["manager"] = manager
+        if strategy is not None:
+            _payload["strategy"] = strategy
+        if geography is not None:
+            _payload["geography"] = geography
         if notes is not None:
             _payload["notes"] = notes
         if status is not None:
             _payload["status"] = status
-        if strategy is not None:
-            _payload["strategy"] = strategy
         return await self._call("alternatives.update", params=_payload, options=options, context=context)
 
 

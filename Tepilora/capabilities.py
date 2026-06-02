@@ -21,7 +21,7 @@ from typing import Any, Dict, List, Optional, Union
 from .version import __version__
 
 
-_HIDDEN_CATEGORIES = {"audit"}
+_HIDDEN_CATEGORIES = set()
 
 
 def _is_public_op(op: Dict[str, Any]) -> bool:

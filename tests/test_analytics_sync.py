@@ -11,42 +11,33 @@ _HAS_PYARROW = importlib.util.find_spec("pyarrow") is not None
 
 class TestAnalyticsSync(unittest.TestCase):
     def test_analytics_list_and_info(self) -> None:
-        def handler(request: httpx.Request) -> httpx.Response:
-            if request.url.path == "/T-Api/v3/analytics/list":
-                payload = json.loads(request.content.decode("utf-8"))
-                self.assertEqual(payload, {})
-                return httpx.Response(
-                    200,
-                    json={
-                        "success": True,
-                        "action": "analytics.list",
-                        "data": {"functions": ["rolling_volatility"], "count": 1, "categories": ["single", "multi"]},
-                        "meta": {"request_id": "r1", "execution_time_ms": 1, "timestamp": "t"},
-                    },
-                )
+        info_data = {
+            "name": "rolling_volatility",
+            "category": "single",
+            "description": "Calculate rolling volatility.",
+            "docstring": "Docstring here",
+            "module": "analytics.single.volatility",
+            "parameters": {
+                "common": [{"name": "identifiers", "required": False, "oneOf": [{"type": "string"}, {"type": "array"}]}],
+                "specific": [{"name": "Period", "type": "integer", "required": False, "default": 265}],
+            },
+        }
+        list_data = {"functions": ["rolling_volatility"], "count": 1, "categories": ["single", "multi"]}
 
+        def handler(request: httpx.Request) -> httpx.Response:
+            payload = json.loads(request.content.decode("utf-8"))
+
+            # Unified endpoint (mixin methods: list, info)
+            if request.url.path == "/T-Api/v3":
+                action = payload.get("action", "")
+                if action == "analytics.list":
+                    return httpx.Response(200, json={"success": True, "action": action, "data": list_data, "meta": {}})
+                if action == "analytics.info":
+                    return httpx.Response(200, json={"success": True, "action": action, "data": info_data, "meta": {}})
+
+            # Dedicated endpoint (_info_cached, used by help())
             if request.url.path == "/T-Api/v3/analytics/info":
-                payload = json.loads(request.content.decode("utf-8"))
-                self.assertEqual(payload["function"], "rolling_volatility")
-                return httpx.Response(
-                    200,
-                    json={
-                        "success": True,
-                        "action": "analytics.info",
-                        "data": {
-                            "name": "rolling_volatility",
-                            "category": "single",
-                            "description": "Calculate rolling volatility.",
-                            "docstring": "Docstring here",
-                            "module": "analytics.single.volatility",
-                            "parameters": {
-                                "common": [{"name": "identifiers", "required": False, "oneOf": [{"type": "string"}, {"type": "array"}]}],
-                                "specific": [{"name": "Period", "type": "integer", "required": False, "default": 265}],
-                            },
-                        },
-                        "meta": {"request_id": "r1", "execution_time_ms": 1, "timestamp": "t"},
-                    },
-                )
+                return httpx.Response(200, json={"success": True, "action": "analytics.info", "data": info_data, "meta": {}})
 
             raise AssertionError(f"unexpected path {request.url.path}")
 
@@ -55,7 +46,7 @@ class TestAnalyticsSync(unittest.TestCase):
 
         listing = client.analytics.list()
         self.assertEqual(listing["count"], 1)
-        info = client.analytics.info("rolling_volatility")
+        info = client.analytics.info(function="rolling_volatility")
         self.assertEqual(info["name"], "rolling_volatility")
         help_text = client.analytics.help("rolling_volatility")
         self.assertIn("Period", help_text)

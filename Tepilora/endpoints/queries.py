@@ -24,15 +24,9 @@ class QueriesAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Copy query
+        """Duplicate a saved query with a new name
 
-        Copy query with new name.
-
-        Args:
-        name: Source query name
-        category: Query category
-        new_name: New query name
-        description: New description"""
+        Creates a copy of an existing saved query with a new name, preserving the full definition. Optionally updates the description. Used by the Dashboard for the Duplicate Query action and by workflows that create variations of existing screening strategies."""
         _payload: Dict[str, Any] = {}
         _payload["name"] = name
         _payload["category"] = category
@@ -49,13 +43,9 @@ class QueriesAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Delete query
+        """Delete a saved query by name and category
 
-        Delete saved query.
-
-        Args:
-        name: Query name
-        category: Query category"""
+        Permanently removes a saved query from the SavedQueries MongoDB collection. Automatically invalidates the associated cache entry. Used by the Dashboard Delete Query action."""
         _payload: Dict[str, Any] = {}
         _payload["name"] = name
         _payload["category"] = category
@@ -74,18 +64,9 @@ class QueriesAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Edit query
+        """Update an existing saved query definition
 
-        Update existing query.
-
-        Args:
-        name: Query name
-        category: Query category
-        definition: New query definition
-        items: New static items
-        expression: New expression
-        description: New description
-        tags: New tags"""
+        Modifies an existing saved query identified by name+category. Can update definition, items, expression, description, and tags. Automatically invalidates the query result cache. Used by the Dashboard query editor."""
         _payload: Dict[str, Any] = {}
         _payload["name"] = name
         _payload["category"] = category
@@ -108,21 +89,16 @@ class QueriesAPI(BaseAPI):
         query_id: Optional[str] = None,
         name: Optional[str] = None,
         category: Optional[str] = None,
+        limit: Optional[int] = 100,
+        offset: Optional[int] = 0,
         output_path: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Execute query
+        """Execute a saved query and return fresh results
 
-        Execute saved query and return results.
-
-        Args:
-        id: Query ID
-        query_id: Query ID (alias)
-        name: Query name
-        category: Query category
-        output_path: Output file path"""
+        Runs a saved query (by ID, name, or name+category) and returns the current results. For dynamic queries, re-evaluates the filter definition against current data. For static queries, returns the fixed identifier list with current metadata. Results are cached for 15 minutes. Supports multiple output formats. Used by the Dashboard to refresh query results and by scheduled alerting workflows."""
         _payload: Dict[str, Any] = {}
         if id is not None:
             _payload["id"] = id
@@ -132,6 +108,10 @@ class QueriesAPI(BaseAPI):
             _payload["name"] = name
         if category is not None:
             _payload["category"] = category
+        if limit is not None:
+            _payload["limit"] = limit
+        if offset is not None:
+            _payload["offset"] = offset
         if output_path is not None:
             _payload["output_path"] = output_path
         return self._call("queries.execute", params=_payload, options=options, context=context, response_format=response_format)
@@ -144,13 +124,9 @@ class QueriesAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get saved query
+        """Retrieve a saved query definition by name and category
 
-        Get query by name.
-
-        Args:
-        name: Query name
-        category: Query category"""
+        Returns the complete definition of a saved query identified by name+category pair. Includes type, definition body, metadata, and execution history summary. Used to inspect or clone a query before editing and by the Dashboard query detail view."""
         _payload: Dict[str, Any] = {}
         _payload["name"] = name
         _payload["category"] = category
@@ -160,24 +136,19 @@ class QueriesAPI(BaseAPI):
         self,
         *,
         category: Optional[str] = None,
-        limit: Optional[int] = 100,
+        limit: Optional[int] = 50,
         offset: Optional[int] = 0,
-        order: Optional[str] = None,
+        order: Optional[str] = "desc",
         search: Optional[str] = None,
-        sort: Optional[str] = None,
-        tags: Optional[str] = None,
+        sort: Optional[str] = "createdAt",
+        tags: Optional[List[Any]] = None,
         type_: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """List saved queries
+        """List all saved queries for the current user with filtering and pagination
 
-        List user's saved queries.
-
-        Args:
-        category: Filter by category
-        limit: Maximum results
-        offset: Pagination offset"""
+        Returns the saved queries belonging to the authenticated user from the SavedQueries MongoDB collection. Queries are reusable search/filter/screening definitions that can be executed on demand. Filterable by category, type (dynamic/static/expression), tags, and name search. Used by the Dashboard Saved Queries panel and by the AI assistant to list available screening strategies."""
         _payload: Dict[str, Any] = {}
         if category is not None:
             _payload["category"] = category
@@ -200,29 +171,25 @@ class QueriesAPI(BaseAPI):
     def preview(
         self,
         *,
+        category: str,
         action: Optional[str] = None,
-        category: Optional[str] = None,
-        definition: Optional[str] = None,
+        definition: Optional[Dict[str, Any]] = None,
         expression: Optional[str] = None,
-        items: Optional[str] = None,
+        items: Optional[List[Any]] = None,
         params: Optional[Dict[str, Any]] = None,
-        limit: Optional[int] = 10,
+        limit: Optional[int] = 50,
         type_: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Preview query
+        """Preview query results without saving the query
 
-        Preview query without saving.
-
-        Args:
-        limit: Maximum results"""
+        Executes a query definition on-the-fly without persisting it. Used to test and refine query parameters before saving. Returns a limited result set (default 10) for quick feedback. Used by the Dashboard query builder preview button."""
         _payload: Dict[str, Any] = {}
+        _payload["category"] = category
         if action is not None:
             _payload["action"] = action
-        if category is not None:
-            _payload["category"] = category
         if definition is not None:
             _payload["definition"] = definition
         if expression is not None:
@@ -252,20 +219,9 @@ class QueriesAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Save query
+        """Save a new query definition for later reuse
 
-        Save a new query.
-
-        Args:
-        name: Query name
-        category: Query category
-        type_: Query type: dynamic|static|expression
-        visibility: Visibility: private|workspace
-        definition: Query definition (for dynamic)
-        items: Static items (for static)
-        expression: Expression (for expression type)
-        description: Description
-        tags: Tags"""
+        Creates a new saved query in the SavedQueries MongoDB collection. Supports three query types: dynamic (filter definition re-evaluated each execution), static (fixed list of identifiers), and expression (computed formula). Includes name, category, visibility (private/workspace), description, and tags. Used by the Dashboard Save Query button and by the AI assistant when helping users create reusable screens."""
         _payload: Dict[str, Any] = {}
         _payload["name"] = name
         _payload["category"] = category
@@ -300,15 +256,9 @@ class AsyncQueriesAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Copy query
+        """Duplicate a saved query with a new name
 
-        Copy query with new name.
-
-        Args:
-        name: Source query name
-        category: Query category
-        new_name: New query name
-        description: New description"""
+        Creates a copy of an existing saved query with a new name, preserving the full definition. Optionally updates the description. Used by the Dashboard for the Duplicate Query action and by workflows that create variations of existing screening strategies."""
         _payload: Dict[str, Any] = {}
         _payload["name"] = name
         _payload["category"] = category
@@ -325,13 +275,9 @@ class AsyncQueriesAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Delete query
+        """Delete a saved query by name and category
 
-        Delete saved query.
-
-        Args:
-        name: Query name
-        category: Query category"""
+        Permanently removes a saved query from the SavedQueries MongoDB collection. Automatically invalidates the associated cache entry. Used by the Dashboard Delete Query action."""
         _payload: Dict[str, Any] = {}
         _payload["name"] = name
         _payload["category"] = category
@@ -350,18 +296,9 @@ class AsyncQueriesAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Edit query
+        """Update an existing saved query definition
 
-        Update existing query.
-
-        Args:
-        name: Query name
-        category: Query category
-        definition: New query definition
-        items: New static items
-        expression: New expression
-        description: New description
-        tags: New tags"""
+        Modifies an existing saved query identified by name+category. Can update definition, items, expression, description, and tags. Automatically invalidates the query result cache. Used by the Dashboard query editor."""
         _payload: Dict[str, Any] = {}
         _payload["name"] = name
         _payload["category"] = category
@@ -384,21 +321,16 @@ class AsyncQueriesAPI(AsyncBaseAPI):
         query_id: Optional[str] = None,
         name: Optional[str] = None,
         category: Optional[str] = None,
+        limit: Optional[int] = 100,
+        offset: Optional[int] = 0,
         output_path: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Execute query
+        """Execute a saved query and return fresh results
 
-        Execute saved query and return results.
-
-        Args:
-        id: Query ID
-        query_id: Query ID (alias)
-        name: Query name
-        category: Query category
-        output_path: Output file path"""
+        Runs a saved query (by ID, name, or name+category) and returns the current results. For dynamic queries, re-evaluates the filter definition against current data. For static queries, returns the fixed identifier list with current metadata. Results are cached for 15 minutes. Supports multiple output formats. Used by the Dashboard to refresh query results and by scheduled alerting workflows."""
         _payload: Dict[str, Any] = {}
         if id is not None:
             _payload["id"] = id
@@ -408,6 +340,10 @@ class AsyncQueriesAPI(AsyncBaseAPI):
             _payload["name"] = name
         if category is not None:
             _payload["category"] = category
+        if limit is not None:
+            _payload["limit"] = limit
+        if offset is not None:
+            _payload["offset"] = offset
         if output_path is not None:
             _payload["output_path"] = output_path
         return await self._call("queries.execute", params=_payload, options=options, context=context, response_format=response_format)
@@ -420,13 +356,9 @@ class AsyncQueriesAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get saved query
+        """Retrieve a saved query definition by name and category
 
-        Get query by name.
-
-        Args:
-        name: Query name
-        category: Query category"""
+        Returns the complete definition of a saved query identified by name+category pair. Includes type, definition body, metadata, and execution history summary. Used to inspect or clone a query before editing and by the Dashboard query detail view."""
         _payload: Dict[str, Any] = {}
         _payload["name"] = name
         _payload["category"] = category
@@ -436,24 +368,19 @@ class AsyncQueriesAPI(AsyncBaseAPI):
         self,
         *,
         category: Optional[str] = None,
-        limit: Optional[int] = 100,
+        limit: Optional[int] = 50,
         offset: Optional[int] = 0,
-        order: Optional[str] = None,
+        order: Optional[str] = "desc",
         search: Optional[str] = None,
-        sort: Optional[str] = None,
-        tags: Optional[str] = None,
+        sort: Optional[str] = "createdAt",
+        tags: Optional[List[Any]] = None,
         type_: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """List saved queries
+        """List all saved queries for the current user with filtering and pagination
 
-        List user's saved queries.
-
-        Args:
-        category: Filter by category
-        limit: Maximum results
-        offset: Pagination offset"""
+        Returns the saved queries belonging to the authenticated user from the SavedQueries MongoDB collection. Queries are reusable search/filter/screening definitions that can be executed on demand. Filterable by category, type (dynamic/static/expression), tags, and name search. Used by the Dashboard Saved Queries panel and by the AI assistant to list available screening strategies."""
         _payload: Dict[str, Any] = {}
         if category is not None:
             _payload["category"] = category
@@ -476,29 +403,25 @@ class AsyncQueriesAPI(AsyncBaseAPI):
     async def preview(
         self,
         *,
+        category: str,
         action: Optional[str] = None,
-        category: Optional[str] = None,
-        definition: Optional[str] = None,
+        definition: Optional[Dict[str, Any]] = None,
         expression: Optional[str] = None,
-        items: Optional[str] = None,
+        items: Optional[List[Any]] = None,
         params: Optional[Dict[str, Any]] = None,
-        limit: Optional[int] = 10,
+        limit: Optional[int] = 50,
         type_: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Preview query
+        """Preview query results without saving the query
 
-        Preview query without saving.
-
-        Args:
-        limit: Maximum results"""
+        Executes a query definition on-the-fly without persisting it. Used to test and refine query parameters before saving. Returns a limited result set (default 10) for quick feedback. Used by the Dashboard query builder preview button."""
         _payload: Dict[str, Any] = {}
+        _payload["category"] = category
         if action is not None:
             _payload["action"] = action
-        if category is not None:
-            _payload["category"] = category
         if definition is not None:
             _payload["definition"] = definition
         if expression is not None:
@@ -528,20 +451,9 @@ class AsyncQueriesAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Save query
+        """Save a new query definition for later reuse
 
-        Save a new query.
-
-        Args:
-        name: Query name
-        category: Query category
-        type_: Query type: dynamic|static|expression
-        visibility: Visibility: private|workspace
-        definition: Query definition (for dynamic)
-        items: Static items (for static)
-        expression: Expression (for expression type)
-        description: Description
-        tags: Tags"""
+        Creates a new saved query in the SavedQueries MongoDB collection. Supports three query types: dynamic (filter definition re-evaluated each execution), static (fixed list of identifiers), and expression (computed formula). Includes name, category, visibility (private/workspace), description, and tags. Used by the Dashboard Save Query button and by the AI assistant when helping users create reusable screens."""
         _payload: Dict[str, Any] = {}
         _payload["name"] = name
         _payload["category"] = category

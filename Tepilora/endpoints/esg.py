@@ -12,7 +12,7 @@ from ._base import AsyncBaseAPI, BaseAPI
 
 
 class EsgAPI(BaseAPI):
-    """Esg namespace: compare, get, portfolio, scores, screen, summary."""
+    """Esg namespace: compare, get, portfolio, screen, summary."""
 
     def compare(
         self,
@@ -21,12 +21,9 @@ class EsgAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Compare ESG
+        """Compare ESG profiles of multiple securities side by side
 
-        Compare ESG scores across portfolios.
-
-        Args:
-        portfolios: List of portfolio weights dicts"""
+        Returns a comparison table of ESG metrics for 2 or more securities. Each security shows overall ESG score, E/S/G pillar scores, controversy level, carbon intensity, and SFDR classification. Enables visual comparison for security selection based on sustainability criteria. Used by the Dashboard comparison view ESG tab."""
         _payload: Dict[str, Any] = {}
         _payload["portfolios"] = portfolios
         return self._call("esg.compare", params=_payload, options=options, context=context)
@@ -38,12 +35,9 @@ class EsgAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get ESG data
+        """Get ESG scores and ratings for a security
 
-        Get ESG scores for securities.
-
-        Args:
-        identifiers: List of TepiloraCodes"""
+        Returns Environmental, Social, and Governance (ESG) scores for a security. Includes overall ESG score, individual E/S/G pillar scores, controversy flags, carbon intensity, and ESG risk rating. Data sourced from Morningstar Sustainalytics. Used by the Dashboard ESG tab and by portfolio ESG analysis."""
         _payload: Dict[str, Any] = {}
         _payload["identifiers"] = identifiers
         return self._call("esg.get", params=_payload, options=options, context=context)
@@ -56,13 +50,9 @@ class EsgAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Portfolio ESG
+        """Calculate aggregate ESG metrics for a portfolio
 
-        Calculate weighted ESG score for portfolio. Use portfolio_id for saved portfolio or weights for inline.
-
-        Args:
-        portfolio_id: Portfolio ID (for saved portfolios)
-        weights: Inline weights {TepiloraCode: float}"""
+        Computes weighted-average ESG scores across all holdings in a portfolio. Accepts portfolio_id (auto-resolves weights from saved portfolio) or explicit weights dict. Returns portfolio-level ESG score, pillar breakdown, carbon footprint, controversy exposure, and SFDR alignment metrics. Used by the Dashboard portfolio ESG view and by reporting modules for ESG disclosure."""
         _payload: Dict[str, Any] = {}
         if portfolio_id is not None:
             _payload["portfolio_id"] = portfolio_id
@@ -70,31 +60,10 @@ class EsgAPI(BaseAPI):
             _payload["weights"] = weights
         return self._call("esg.portfolio", params=_payload, options=options, context=context)
 
-    def scores(
-        self,
-        *,
-        identifiers: Union[str, List[str]],
-        options: Optional[Dict[str, Any]] = None,
-        context: Optional[Dict[str, Any]] = None,
-    ) -> Any:
-        """Get ESG scores (alias of esg.get)
-
-        Alias for esg.get. Use esg.get instead.
-
-        .. deprecated:: 3.2.0
-            Use esg.get instead.
-
-        Args:
-        identifiers: List of TepiloraCodes"""
-        import warnings
-        warnings.warn("esg.scores is deprecated: Use esg.get instead.", DeprecationWarning, stacklevel=2)
-        _payload: Dict[str, Any] = {}
-        _payload["identifiers"] = identifiers
-        return self._call("esg.scores", params=_payload, options=options, context=context)
-
     def screen(
         self,
         *,
+        criteria: Optional[Dict[str, Any]] = None,
         universe: Optional[List[Any]] = None,
         min_sri: Optional[int] = None,
         max_sri: Optional[int] = None,
@@ -105,18 +74,12 @@ class EsgAPI(BaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """ESG screen
+        """Screen securities by ESG criteria and exclusion filters
 
-        Screen securities by ESG criteria.
-
-        Args:
-        universe: Universe of identifiers
-        min_sri: Minimum SRI score
-        max_sri: Maximum SRI score
-        min_esg_score: Minimum ESG score
-        sfdr_filter: SFDR article filter (list of articles, e.g. ['Article 8', 'Article 9'])
-        limit: Maximum results"""
+        Filters the securities universe by ESG criteria: minimum ESG score, pillar thresholds, controversy exclusions, sector exclusions (weapons, tobacco, gambling, fossil fuels), and SFDR article classification. Returns securities passing all ESG criteria with their scores. Used by ESG-conscious portfolio construction and by the Dashboard ESG screening view."""
         _payload: Dict[str, Any] = {}
+        if criteria is not None:
+            _payload["criteria"] = criteria
         if universe is not None:
             _payload["universe"] = universe
         if min_sri is not None:
@@ -135,24 +98,24 @@ class EsgAPI(BaseAPI):
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        filter: Optional[Dict[str, Any]] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """ESG summary
+        """Get a global summary of ESG coverage across the securities catalog
 
-        Aggregated ESG statistics.
-
-        Args:
-        identifiers: List of TepiloraCodes"""
+        Returns an aggregate snapshot of the entire securities catalog ESG coverage: total security count, count of securities with an SRI rating, and the SRI distribution histogram (by risk-level bucket). NOTE: this operation is catalog-wide, not per-security. Any provided `identifiers` are currently ignored by the handler. To get ESG data for specific securities, use esg.get. Used by the Dashboard ESG landing page and as an availability indicator before drilling into per-security data."""
         _payload: Dict[str, Any] = {}
         if identifiers is not None:
             _payload["identifiers"] = identifiers
+        if filter is not None:
+            _payload["filter"] = filter
         return self._call("esg.summary", params=_payload, options=options, context=context)
 
 
 
 class AsyncEsgAPI(AsyncBaseAPI):
-    """Esg namespace: compare, get, portfolio, scores, screen, summary."""
+    """Esg namespace: compare, get, portfolio, screen, summary."""
 
     async def compare(
         self,
@@ -161,12 +124,9 @@ class AsyncEsgAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Compare ESG
+        """Compare ESG profiles of multiple securities side by side
 
-        Compare ESG scores across portfolios.
-
-        Args:
-        portfolios: List of portfolio weights dicts"""
+        Returns a comparison table of ESG metrics for 2 or more securities. Each security shows overall ESG score, E/S/G pillar scores, controversy level, carbon intensity, and SFDR classification. Enables visual comparison for security selection based on sustainability criteria. Used by the Dashboard comparison view ESG tab."""
         _payload: Dict[str, Any] = {}
         _payload["portfolios"] = portfolios
         return await self._call("esg.compare", params=_payload, options=options, context=context)
@@ -178,12 +138,9 @@ class AsyncEsgAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get ESG data
+        """Get ESG scores and ratings for a security
 
-        Get ESG scores for securities.
-
-        Args:
-        identifiers: List of TepiloraCodes"""
+        Returns Environmental, Social, and Governance (ESG) scores for a security. Includes overall ESG score, individual E/S/G pillar scores, controversy flags, carbon intensity, and ESG risk rating. Data sourced from Morningstar Sustainalytics. Used by the Dashboard ESG tab and by portfolio ESG analysis."""
         _payload: Dict[str, Any] = {}
         _payload["identifiers"] = identifiers
         return await self._call("esg.get", params=_payload, options=options, context=context)
@@ -196,13 +153,9 @@ class AsyncEsgAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Portfolio ESG
+        """Calculate aggregate ESG metrics for a portfolio
 
-        Calculate weighted ESG score for portfolio. Use portfolio_id for saved portfolio or weights for inline.
-
-        Args:
-        portfolio_id: Portfolio ID (for saved portfolios)
-        weights: Inline weights {TepiloraCode: float}"""
+        Computes weighted-average ESG scores across all holdings in a portfolio. Accepts portfolio_id (auto-resolves weights from saved portfolio) or explicit weights dict. Returns portfolio-level ESG score, pillar breakdown, carbon footprint, controversy exposure, and SFDR alignment metrics. Used by the Dashboard portfolio ESG view and by reporting modules for ESG disclosure."""
         _payload: Dict[str, Any] = {}
         if portfolio_id is not None:
             _payload["portfolio_id"] = portfolio_id
@@ -210,31 +163,10 @@ class AsyncEsgAPI(AsyncBaseAPI):
             _payload["weights"] = weights
         return await self._call("esg.portfolio", params=_payload, options=options, context=context)
 
-    async def scores(
-        self,
-        *,
-        identifiers: Union[str, List[str]],
-        options: Optional[Dict[str, Any]] = None,
-        context: Optional[Dict[str, Any]] = None,
-    ) -> Any:
-        """Get ESG scores (alias of esg.get)
-
-        Alias for esg.get. Use esg.get instead.
-
-        .. deprecated:: 3.2.0
-            Use esg.get instead.
-
-        Args:
-        identifiers: List of TepiloraCodes"""
-        import warnings
-        warnings.warn("esg.scores is deprecated: Use esg.get instead.", DeprecationWarning, stacklevel=2)
-        _payload: Dict[str, Any] = {}
-        _payload["identifiers"] = identifiers
-        return await self._call("esg.scores", params=_payload, options=options, context=context)
-
     async def screen(
         self,
         *,
+        criteria: Optional[Dict[str, Any]] = None,
         universe: Optional[List[Any]] = None,
         min_sri: Optional[int] = None,
         max_sri: Optional[int] = None,
@@ -245,18 +177,12 @@ class AsyncEsgAPI(AsyncBaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """ESG screen
+        """Screen securities by ESG criteria and exclusion filters
 
-        Screen securities by ESG criteria.
-
-        Args:
-        universe: Universe of identifiers
-        min_sri: Minimum SRI score
-        max_sri: Maximum SRI score
-        min_esg_score: Minimum ESG score
-        sfdr_filter: SFDR article filter (list of articles, e.g. ['Article 8', 'Article 9'])
-        limit: Maximum results"""
+        Filters the securities universe by ESG criteria: minimum ESG score, pillar thresholds, controversy exclusions, sector exclusions (weapons, tobacco, gambling, fossil fuels), and SFDR article classification. Returns securities passing all ESG criteria with their scores. Used by ESG-conscious portfolio construction and by the Dashboard ESG screening view."""
         _payload: Dict[str, Any] = {}
+        if criteria is not None:
+            _payload["criteria"] = criteria
         if universe is not None:
             _payload["universe"] = universe
         if min_sri is not None:
@@ -275,18 +201,18 @@ class AsyncEsgAPI(AsyncBaseAPI):
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        filter: Optional[Dict[str, Any]] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """ESG summary
+        """Get a global summary of ESG coverage across the securities catalog
 
-        Aggregated ESG statistics.
-
-        Args:
-        identifiers: List of TepiloraCodes"""
+        Returns an aggregate snapshot of the entire securities catalog ESG coverage: total security count, count of securities with an SRI rating, and the SRI distribution histogram (by risk-level bucket). NOTE: this operation is catalog-wide, not per-security. Any provided `identifiers` are currently ignored by the handler. To get ESG data for specific securities, use esg.get. Used by the Dashboard ESG landing page and as an availability indicator before drilling into per-security data."""
         _payload: Dict[str, Any] = {}
         if identifiers is not None:
             _payload["identifiers"] = identifiers
+        if filter is not None:
+            _payload["filter"] = filter
         return await self._call("esg.summary", params=_payload, options=options, context=context)
 
 

@@ -18,28 +18,28 @@ class FhAPI(BaseAPI):
         self,
         *,
         identifiers: Union[str, List[str]],
-        end_date: Optional[str] = None,
-        start_date: Optional[str] = None,
         statement: Optional[str] = "all",
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Get financials
+        """Get structured financial statements (income, balance sheet, cash flow)
 
-        Income statement, balance sheet, cash flow.
+        Returns the three main financial statements in structured format: Income Statement (revenue, COGS, operating income, net income, EPS), Balance Sheet (total assets, equity, debt, cash), and Cash Flow Statement (operating, investing, financing cash flows, free cash flow). Data is organized by statement type with line items and time periods. Used by the Dashboard for financial statement views and by fundamental analysis workflows.
 
         Args:
-        identifiers: List of TepiloraCodes
-        statement: income|balance|cashflow|all"""
+        start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
+        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)"""
         _payload: Dict[str, Any] = {}
         _payload["identifiers"] = identifiers
-        if end_date is not None:
-            _payload["end_date"] = end_date
-        if start_date is not None:
-            _payload["start_date"] = start_date
         if statement is not None:
             _payload["statement"] = statement
+        if start_date is not None:
+            _payload["start_date"] = start_date
+        if end_date is not None:
+            _payload["end_date"] = end_date
         return self._call("fh.financials", params=_payload, options=options, context=context, response_format=response_format)
 
     def history(
@@ -47,18 +47,14 @@ class FhAPI(BaseAPI):
         *,
         identifier: str,
         columns: Optional[List[Any]] = None,
-        limit: Optional[int] = None,
+        limit: Optional[int] = 10,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Get fundamentals history
+        """Get the historical time series of fundamental metrics for a security
 
-        Historical fundamental data.
-
-        Args:
-        identifier: TepiloraCode or ISIN
-        columns: Columns to return"""
+        Returns the full time series of fundamentals data for a security, with quarterly or annual data points depending on the metric. Enables trend analysis of financial metrics over time (e.g. margin expansion, revenue growth trajectory, leverage changes). Supports column filtering and date range selection. Used by the Dashboard for fundamentals charts and by analytical workflows studying fundamental trends."""
         _payload: Dict[str, Any] = {}
         _payload["identifier"] = identifier
         if columns is not None:
@@ -74,9 +70,9 @@ class FhAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Column info
+        """Get metadata about available fundamentals data for a security
 
-        Get information about available columns."""
+        Returns information about what fundamentals data is available for a given security: column coverage (which of the 92 fields have data), data freshness (last update date), reporting frequency (quarterly/annual), number of historical periods available, and data source. Used to check data availability before querying and by the Dashboard to show/hide fundamentals sections based on coverage."""
         _payload: Dict[str, Any] = {}
         if identifier is not None:
             _payload["identifier"] = identifier
@@ -91,13 +87,12 @@ class FhAPI(BaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Get latest fundamentals
+        """Get the latest fundamental data snapshot for one or more securities
 
-        Get most recent fundamental data.
+        Returns the most recent fundamentals record for each security. Includes 92 columns from the FH parquet: revenue, net income, EPS, margins (gross, operating, net), profitability ratios (ROE, ROA, ROIC), leverage (debt-to-equity), liquidity (current ratio), growth rates (1Y/3Y/5Y), and valuation multiples (PE, PB, PS). Supports column filtering to request only specific metrics. Used by the Dashboard fundamentals tab, by the reporting module for fund sheet fundamentals section, and by the AI assistant for quick financial data queries.
 
-        Args:
-        identifiers: List of TepiloraCodes
-        columns: Columns to return"""
+        Examples:
+            >>> client.fh.latest(identifiers='US0378331005USDXNAS')"""
         _payload: Dict[str, Any] = {}
         _payload["identifiers"] = identifiers
         if columns is not None:
@@ -108,65 +103,65 @@ class FhAPI(BaseAPI):
         self,
         *,
         identifiers: Union[str, List[str]],
+        start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         columns: Optional[List[Any]] = None,
-        rt_policy: Optional[str] = None,
-        start_date: Optional[str] = None,
+        rt_policy: Optional[str] = "R_FIRST",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Load fundamentals
+        """Load raw fundamentals data from the FH parquet for a security
 
-        Load fundamental data for securities.
+        Returns the raw fundamentals history record from the FH (Fundamentals History) parquet file. Contains 92 columns of financial statement data from Morningstar: revenue, earnings, margins, ratios, growth rates, valuation multiples, and balance sheet items. Data is quarterly/annual depending on the metric. Used as the data foundation for fh.latest, fh.metrics, and fh.quality operations.
 
         Args:
-        identifiers: List of TepiloraCodes
-        columns: Columns to load"""
+        start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
+        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)"""
         _payload: Dict[str, Any] = {}
         _payload["identifiers"] = identifiers
+        if start_date is not None:
+            _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
         if columns is not None:
             _payload["columns"] = columns
         if rt_policy is not None:
             _payload["rt_policy"] = rt_policy
-        if start_date is not None:
-            _payload["start_date"] = start_date
         return self._call("fh.load", params=_payload, options=options, context=context, response_format=response_format)
 
     def metrics(
         self,
         *,
         identifiers: Union[str, List[str]],
-        end_date: Optional[str] = None,
-        metrics: Optional[List[Any]] = None,
-        output_columns: Optional[str] = None,
-        rt_policy: Optional[str] = None,
         start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        rt_policy: Optional[str] = "R_FIRST",
+        metrics: Optional[Any] = None,
+        output_columns: Optional[List[Any]] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Get derived metrics
+        """Get derived fundamental metrics grouped by financial category
 
-        Pre-calculated metrics (ROE, margins, etc.).
+        Returns pre-calculated fundamental metrics organized by category: margins (GrossMargin, OperatingMargin, EBITDAMargin, NetMargin), profitability (ROE, ROA, ROIC), liquidity (CurrentRatio, QuickRatio), leverage (DebtToEquity, FinancialLeverage), efficiency (DaysInSales, CashConversionCycle), and growth (RevenueGrowth1Y/3Y/5Y). Accepts a list of metric categories to return. Used by the Dashboard fundamentals overview and by factor models.
 
         Args:
-        identifiers: List of TepiloraCodes
-        metrics: Metric groups: margins|profitability|leverage|efficiency|growth"""
+        start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
+        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)"""
         _payload: Dict[str, Any] = {}
         _payload["identifiers"] = identifiers
+        if start_date is not None:
+            _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
+        if rt_policy is not None:
+            _payload["rt_policy"] = rt_policy
         if metrics is not None:
             _payload["metrics"] = metrics
         if output_columns is not None:
             _payload["output_columns"] = output_columns
-        if rt_policy is not None:
-            _payload["rt_policy"] = rt_policy
-        if start_date is not None:
-            _payload["start_date"] = start_date
         return self._call("fh.metrics", params=_payload, options=options, context=context, response_format=response_format)
 
     def quality(
@@ -177,12 +172,9 @@ class FhAPI(BaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Quality score
+        """Calculate a composite quality score (0-100) for a security based on fundamentals
 
-        Calculate quality score (0-100).
-
-        Args:
-        identifiers: List of TepiloraCodes"""
+        Computes a composite quality score from 0 to 100 based on multiple fundamental dimensions: profitability stability (ROE consistency), earnings quality (accruals ratio), balance sheet strength (leverage, liquidity), and growth sustainability. Higher scores indicate stronger fundamental quality. Used by the Dashboard for quality rankings, by screening workflows, and by factor-based portfolio construction."""
         _payload: Dict[str, Any] = {}
         _payload["identifiers"] = identifiers
         return self._call("fh.quality", params=_payload, options=options, context=context, response_format=response_format)
@@ -196,28 +188,28 @@ class AsyncFhAPI(AsyncBaseAPI):
         self,
         *,
         identifiers: Union[str, List[str]],
-        end_date: Optional[str] = None,
-        start_date: Optional[str] = None,
         statement: Optional[str] = "all",
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Get financials
+        """Get structured financial statements (income, balance sheet, cash flow)
 
-        Income statement, balance sheet, cash flow.
+        Returns the three main financial statements in structured format: Income Statement (revenue, COGS, operating income, net income, EPS), Balance Sheet (total assets, equity, debt, cash), and Cash Flow Statement (operating, investing, financing cash flows, free cash flow). Data is organized by statement type with line items and time periods. Used by the Dashboard for financial statement views and by fundamental analysis workflows.
 
         Args:
-        identifiers: List of TepiloraCodes
-        statement: income|balance|cashflow|all"""
+        start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
+        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)"""
         _payload: Dict[str, Any] = {}
         _payload["identifiers"] = identifiers
-        if end_date is not None:
-            _payload["end_date"] = end_date
-        if start_date is not None:
-            _payload["start_date"] = start_date
         if statement is not None:
             _payload["statement"] = statement
+        if start_date is not None:
+            _payload["start_date"] = start_date
+        if end_date is not None:
+            _payload["end_date"] = end_date
         return await self._call("fh.financials", params=_payload, options=options, context=context, response_format=response_format)
 
     async def history(
@@ -225,18 +217,14 @@ class AsyncFhAPI(AsyncBaseAPI):
         *,
         identifier: str,
         columns: Optional[List[Any]] = None,
-        limit: Optional[int] = None,
+        limit: Optional[int] = 10,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Get fundamentals history
+        """Get the historical time series of fundamental metrics for a security
 
-        Historical fundamental data.
-
-        Args:
-        identifier: TepiloraCode or ISIN
-        columns: Columns to return"""
+        Returns the full time series of fundamentals data for a security, with quarterly or annual data points depending on the metric. Enables trend analysis of financial metrics over time (e.g. margin expansion, revenue growth trajectory, leverage changes). Supports column filtering and date range selection. Used by the Dashboard for fundamentals charts and by analytical workflows studying fundamental trends."""
         _payload: Dict[str, Any] = {}
         _payload["identifier"] = identifier
         if columns is not None:
@@ -252,9 +240,9 @@ class AsyncFhAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Column info
+        """Get metadata about available fundamentals data for a security
 
-        Get information about available columns."""
+        Returns information about what fundamentals data is available for a given security: column coverage (which of the 92 fields have data), data freshness (last update date), reporting frequency (quarterly/annual), number of historical periods available, and data source. Used to check data availability before querying and by the Dashboard to show/hide fundamentals sections based on coverage."""
         _payload: Dict[str, Any] = {}
         if identifier is not None:
             _payload["identifier"] = identifier
@@ -269,13 +257,12 @@ class AsyncFhAPI(AsyncBaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Get latest fundamentals
+        """Get the latest fundamental data snapshot for one or more securities
 
-        Get most recent fundamental data.
+        Returns the most recent fundamentals record for each security. Includes 92 columns from the FH parquet: revenue, net income, EPS, margins (gross, operating, net), profitability ratios (ROE, ROA, ROIC), leverage (debt-to-equity), liquidity (current ratio), growth rates (1Y/3Y/5Y), and valuation multiples (PE, PB, PS). Supports column filtering to request only specific metrics. Used by the Dashboard fundamentals tab, by the reporting module for fund sheet fundamentals section, and by the AI assistant for quick financial data queries.
 
-        Args:
-        identifiers: List of TepiloraCodes
-        columns: Columns to return"""
+        Examples:
+            >>> await client.fh.latest(identifiers='US0378331005USDXNAS')"""
         _payload: Dict[str, Any] = {}
         _payload["identifiers"] = identifiers
         if columns is not None:
@@ -286,65 +273,65 @@ class AsyncFhAPI(AsyncBaseAPI):
         self,
         *,
         identifiers: Union[str, List[str]],
+        start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         columns: Optional[List[Any]] = None,
-        rt_policy: Optional[str] = None,
-        start_date: Optional[str] = None,
+        rt_policy: Optional[str] = "R_FIRST",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Load fundamentals
+        """Load raw fundamentals data from the FH parquet for a security
 
-        Load fundamental data for securities.
+        Returns the raw fundamentals history record from the FH (Fundamentals History) parquet file. Contains 92 columns of financial statement data from Morningstar: revenue, earnings, margins, ratios, growth rates, valuation multiples, and balance sheet items. Data is quarterly/annual depending on the metric. Used as the data foundation for fh.latest, fh.metrics, and fh.quality operations.
 
         Args:
-        identifiers: List of TepiloraCodes
-        columns: Columns to load"""
+        start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
+        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)"""
         _payload: Dict[str, Any] = {}
         _payload["identifiers"] = identifiers
+        if start_date is not None:
+            _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
         if columns is not None:
             _payload["columns"] = columns
         if rt_policy is not None:
             _payload["rt_policy"] = rt_policy
-        if start_date is not None:
-            _payload["start_date"] = start_date
         return await self._call("fh.load", params=_payload, options=options, context=context, response_format=response_format)
 
     async def metrics(
         self,
         *,
         identifiers: Union[str, List[str]],
-        end_date: Optional[str] = None,
-        metrics: Optional[List[Any]] = None,
-        output_columns: Optional[str] = None,
-        rt_policy: Optional[str] = None,
         start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        rt_policy: Optional[str] = "R_FIRST",
+        metrics: Optional[Any] = None,
+        output_columns: Optional[List[Any]] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Get derived metrics
+        """Get derived fundamental metrics grouped by financial category
 
-        Pre-calculated metrics (ROE, margins, etc.).
+        Returns pre-calculated fundamental metrics organized by category: margins (GrossMargin, OperatingMargin, EBITDAMargin, NetMargin), profitability (ROE, ROA, ROIC), liquidity (CurrentRatio, QuickRatio), leverage (DebtToEquity, FinancialLeverage), efficiency (DaysInSales, CashConversionCycle), and growth (RevenueGrowth1Y/3Y/5Y). Accepts a list of metric categories to return. Used by the Dashboard fundamentals overview and by factor models.
 
         Args:
-        identifiers: List of TepiloraCodes
-        metrics: Metric groups: margins|profitability|leverage|efficiency|growth"""
+        start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
+        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)"""
         _payload: Dict[str, Any] = {}
         _payload["identifiers"] = identifiers
+        if start_date is not None:
+            _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
+        if rt_policy is not None:
+            _payload["rt_policy"] = rt_policy
         if metrics is not None:
             _payload["metrics"] = metrics
         if output_columns is not None:
             _payload["output_columns"] = output_columns
-        if rt_policy is not None:
-            _payload["rt_policy"] = rt_policy
-        if start_date is not None:
-            _payload["start_date"] = start_date
         return await self._call("fh.metrics", params=_payload, options=options, context=context, response_format=response_format)
 
     async def quality(
@@ -355,12 +342,9 @@ class AsyncFhAPI(AsyncBaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Quality score
+        """Calculate a composite quality score (0-100) for a security based on fundamentals
 
-        Calculate quality score (0-100).
-
-        Args:
-        identifiers: List of TepiloraCodes"""
+        Computes a composite quality score from 0 to 100 based on multiple fundamental dimensions: profitability stability (ROE consistency), earnings quality (accruals ratio), balance sheet strength (leverage, liquidity), and growth sustainability. Higher scores indicate stronger fundamental quality. Used by the Dashboard for quality rankings, by screening workflows, and by factor-based portfolio construction."""
         _payload: Dict[str, Any] = {}
         _payload["identifiers"] = identifiers
         return await self._call("fh.quality", params=_payload, options=options, context=context, response_format=response_format)

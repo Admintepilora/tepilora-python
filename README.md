@@ -2,7 +2,7 @@
 
 Python SDK (sync + async) for Tepilora API v3.
 
-**244 operations** across **26 namespaces**, auto-generated from the registry.
+**262 operations** across **28 namespaces**, auto-generated from the registry.
 
 ## Install
 
@@ -53,15 +53,17 @@ asyncio.run(main())
 | `securities` | 12 | Search, filter, history, facets, MiFID, fees |
 | `news` | 7 | Search, latest, trending, details |
 | `publications` | 5 | Research reports and publications |
-| `portfolio` | 19 | CRUD, returns, attribution, optimization |
+| `portfolio` | 20 | CRUD, returns, attribution, optimization |
 | `analytics` | 68 | Rolling metrics, ratios, risk, factors |
 | `alerts` | 9 | Alert rules CRUD, evaluate, history |
 | `macro` | 6 | Economic indicators, calendar |
 | `stocks` | 9 | Technicals, screening, peers, signals |
 | `bonds` | 9 | Analyze, screen, ladder, curve, spread, lookup |
-| `options` | 7 | Pricing, Greeks, IV, strategies |
-| `esg` | 6 | ESG scores, screening, comparison |
-| `factors` | 8 | Fama-French, momentum, factor loading |
+| `options` | 6 | Pricing, Greeks, IV, strategies |
+| `esg` | 5 | ESG screening, comparison, portfolio analytics |
+| `factors` | 7 | Fama-French, momentum, factor risk models |
+| `evolution` | 12 | Feedback, voting, comments, moderation |
+| `reporting` | 8 | Tearsheets, fund sheets, templates, rendering |
 | `fh` | 7 | Fundamentals history, financials |
 | `clients` | 8 | B2B client management |
 | `profiling` | 10 | MiFID questionnaires, suitability |
@@ -85,7 +87,7 @@ asyncio.run(main())
 results = client.securities.search(query="MSCI World", limit=20)
 
 # Get details
-details = client.securities.description(identifier="IE00B4L5Y983EURXMIL")
+details = client.securities.details(identifier="IE00B4L5Y983EURXMIL")
 
 # Price history
 history = client.securities.history(
@@ -114,7 +116,7 @@ portfolio = client.portfolio.create(
 
 # Get returns
 returns = client.portfolio.returns(
-    id=portfolio["id"],
+    id=portfolio["portfolio"]["id"],
     start_date="2024-01-01",
     return_method="twr"
 )
@@ -262,5 +264,5 @@ except TepiloraAPIError as e:
 
 ```python
 import Tepilora
-print(Tepilora.__version__)  # 0.4.0
+print(Tepilora.__version__)  # 0.5.0
 ```

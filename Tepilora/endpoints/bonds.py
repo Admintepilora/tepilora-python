@@ -26,17 +26,12 @@ class BondsAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Analyze bond
+        """Analyze a bond: yield, duration, convexity, and cash flows
 
-        Calculate YTM, duration, convexity. coupon_rate and maturity_date auto-populated from metadata if missing.
+        Calculates comprehensive bond analytics: yield to maturity (YTM), Macaulay duration, modified duration, convexity, accrued interest, clean/dirty price conversion, and projected cash flow schedule. Auto-populates coupon rate, maturity date, and frequency from D_full.parquet metadata when available — user params always override. Supports all major day count conventions (ACT/ACT, 30/360, ACT/360, 30E/360). Used by the Dashboard bond detail page, by portfolio fixed-income analytics, and by the AI assistant for bond valuation.
 
         Args:
-        identifier: TepiloraCode or ISIN
-        face_value: Face/par value
-        coupon_rate: Coupon rate (decimal). Auto-populated from metadata if missing
-        maturity_date: Maturity date YYYY-MM-DD. Auto-populated from metadata if missing
-        frequency: Coupon frequency (1,2,4,12). Auto-populated from metadata if missing
-        day_count: Day count convention. Auto-populated from metadata if missing"""
+        identifier: Single security identifier: ISIN, TepiloraCode, or Bloomberg ticker"""
         _payload: Dict[str, Any] = {}
         _payload["identifier"] = identifier
         if face_value is not None:
@@ -60,14 +55,9 @@ class BondsAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Yield curve
+        """Get the current government yield curve for a currency
 
-        Get yield curve data. Currency auto-maps to country (EUR→Germany, USD→US, GBP→UK) unless country is specified.
-
-        Args:
-        currency: Currency
-        country: Override country (e.g. Italy for EUR)
-        date: As of date"""
+        Returns the current government bond yield curve for a given currency. Auto-maps currencies to benchmark issuers: EUR to Germany, USD to US, GBP to UK, JPY to Japan. Override with country parameter for specific issuers (e.g. Italy, France). Returns yields across standard maturities (3M, 6M, 1Y, 2Y, 3Y, 5Y, 7Y, 10Y, 20Y, 30Y). Data from TepiloraType=Yield securities in D_full.parquet. Used by the Dashboard bond analytics and by bond spread calculations."""
         _payload: Dict[str, Any] = {}
         if currency is not None:
             _payload["currency"] = currency
@@ -88,15 +78,12 @@ class BondsAPI(BaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Bond ladder
+        """Build a bond ladder with specified maturity rungs
 
-        Build a bond ladder.
+        Constructs a bond ladder portfolio: distributes investment across bonds with staggered maturity dates at regular intervals. Inputs: target maturities (e.g. 1Y, 2Y, 3Y, 5Y, 10Y), total investment amount, and optional constraints (min yield, max duration). Returns the suggested bond for each rung with analytics. Used by the Dashboard ladder builder and by advisory workflows for income-oriented clients.
 
         Args:
-        identifiers: List of TepiloraCodes
-        target_maturities: Target maturity years
-        investment_amount: Total investment amount
-        rungs: Number of rungs"""
+        identifiers: Optional list of security identifiers"""
         _payload: Dict[str, Any] = {}
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -117,13 +104,13 @@ class BondsAPI(BaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Fast bond metadata lookup
+        """Look up bond metadata from the D_full parquet without calculations
 
-        Returns bond metadata from D_full.parquet without calculations
+        Returns bond-specific metadata fields from D_full.parquet: coupon rate, maturity date, payment frequency, day count convention, bond type, issuer, issue currency, and maturity focus. No calculations performed — this is a pure metadata lookup. Supports single or batch identifier input. Used as a prerequisite check before bonds.analyze and by the Dashboard bond overview.
 
         Args:
-        identifier: Single bond identifier
-        identifiers: Multiple bond identifiers"""
+        identifier: Optional security identifier
+        identifiers: Optional list of security identifiers"""
         _payload: Dict[str, Any] = {}
         if identifier is not None:
             _payload["identifier"] = identifier
@@ -140,13 +127,12 @@ class BondsAPI(BaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Maturity distribution by bucket
+        """Calculate the maturity bucket distribution for a bond portfolio
 
-        Maturity distribution (0-1y, 1-3y, 3-5y, 5-7y, 7-10y, 10+y)
+        Distributes a bond portfolio across standard maturity buckets (0-1Y, 1-3Y, 3-5Y, 5-7Y, 7-10Y, 10-20Y, 20+Y) based on each bond's time to maturity and portfolio weight. Returns the percentage allocation per bucket. Used by the Dashboard bond portfolio composition chart and by reporting modules for fixed-income allocation visualization.
 
         Args:
-        identifiers: Bond identifiers
-        weights: Portfolio weights"""
+        identifiers: List of security identifiers"""
         _payload: Dict[str, Any] = {}
         _payload["identifiers"] = identifiers
         if weights is not None:
@@ -159,9 +145,9 @@ class BondsAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Bond metrics reference
+        """Catalog of available bond risk metric definitions
 
-        Available bond metric definitions and classifications."""
+        Returns the static catalog of risk metrics the library knows how to compute on a bond or a bond portfolio: duration (Macaulay, modified, effective), convexity, DV01 (dollar value of 1bp), key rate durations, and scenario analysis (parallel / steepener / flattener yield-curve shifts). Each entry carries the metric name and a short description. NOTE: this operation takes no identifier and returns no per-bond numeric values — to compute a metric for a specific bond use bonds.analyze, and for a portfolio-level aggregate use bonds.portfolio. Used by the Dashboard metric picker and by the AI assistant to enumerate available bond analytics."""
         _payload: Dict[str, Any] = {}
         return self._call("bonds.metrics", params=_payload, options=options, context=context)
 
@@ -175,14 +161,12 @@ class BondsAPI(BaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Bond portfolio analytics
+        """Calculate aggregate bond portfolio analytics
 
-        Portfolio-level bond analytics.
+        Computes weighted-average analytics across a bond portfolio: portfolio yield, portfolio duration (Macaulay and modified), portfolio convexity, weighted credit quality, maturity profile distribution, and total accrued interest. Accepts a list of bond identifiers with weights. Used by the Dashboard portfolio fixed-income view and by reporting modules.
 
         Args:
-        identifiers: List of TepiloraCodes
-        weights: Portfolio weights (list of floats, same order as identifiers)
-        include_duration: Include duration analysis"""
+        identifiers: Optional list of security identifiers"""
         _payload: Dict[str, Any] = {}
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -203,15 +187,9 @@ class BondsAPI(BaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Screen bonds
+        """Screen bonds by criteria: yield, duration, credit rating, maturity
 
-        Screen bonds by criteria. Returns all matching bonds by default.
-
-        Args:
-        criteria: Screening criteria
-        universe: Universe filter (e.g. TepiloraBondType, TepiloraBondIssuer)
-        rank_by: Metric to rank by (ytm, duration, etc.)
-        limit: Max results (default: all)"""
+        Filters the bond universe by quantitative criteria: yield range, duration range, credit rating, maturity bucket, issuer type (government, corporate, supranational), currency, and country. Returns bonds passing all criteria with their metadata and key metrics. Used by the Dashboard bond screener and by portfolio construction workflows selecting fixed-income instruments."""
         _payload: Dict[str, Any] = {}
         if criteria is not None:
             _payload["criteria"] = criteria
@@ -232,13 +210,12 @@ class BondsAPI(BaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Credit spread
+        """Calculate spread metrics for a bond relative to the benchmark curve
 
-        Calculate credit spread vs benchmark.
+        Computes spread measures for a bond versus the government benchmark curve: nominal spread (yield difference vs. same-maturity benchmark), Z-spread (constant spread over the zero-coupon curve), and asset swap spread. Requires the bond identifier and optionally a specific benchmark curve. Used by the Dashboard bond detail page and by credit analysis workflows.
 
         Args:
-        identifiers: List of TepiloraCodes
-        benchmark: Benchmark bond identifier"""
+        identifiers: List of security identifiers"""
         _payload: Dict[str, Any] = {}
         _payload["identifiers"] = identifiers
         if benchmark is not None:
@@ -262,17 +239,12 @@ class AsyncBondsAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Analyze bond
+        """Analyze a bond: yield, duration, convexity, and cash flows
 
-        Calculate YTM, duration, convexity. coupon_rate and maturity_date auto-populated from metadata if missing.
+        Calculates comprehensive bond analytics: yield to maturity (YTM), Macaulay duration, modified duration, convexity, accrued interest, clean/dirty price conversion, and projected cash flow schedule. Auto-populates coupon rate, maturity date, and frequency from D_full.parquet metadata when available — user params always override. Supports all major day count conventions (ACT/ACT, 30/360, ACT/360, 30E/360). Used by the Dashboard bond detail page, by portfolio fixed-income analytics, and by the AI assistant for bond valuation.
 
         Args:
-        identifier: TepiloraCode or ISIN
-        face_value: Face/par value
-        coupon_rate: Coupon rate (decimal). Auto-populated from metadata if missing
-        maturity_date: Maturity date YYYY-MM-DD. Auto-populated from metadata if missing
-        frequency: Coupon frequency (1,2,4,12). Auto-populated from metadata if missing
-        day_count: Day count convention. Auto-populated from metadata if missing"""
+        identifier: Single security identifier: ISIN, TepiloraCode, or Bloomberg ticker"""
         _payload: Dict[str, Any] = {}
         _payload["identifier"] = identifier
         if face_value is not None:
@@ -296,14 +268,9 @@ class AsyncBondsAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Yield curve
+        """Get the current government yield curve for a currency
 
-        Get yield curve data. Currency auto-maps to country (EUR→Germany, USD→US, GBP→UK) unless country is specified.
-
-        Args:
-        currency: Currency
-        country: Override country (e.g. Italy for EUR)
-        date: As of date"""
+        Returns the current government bond yield curve for a given currency. Auto-maps currencies to benchmark issuers: EUR to Germany, USD to US, GBP to UK, JPY to Japan. Override with country parameter for specific issuers (e.g. Italy, France). Returns yields across standard maturities (3M, 6M, 1Y, 2Y, 3Y, 5Y, 7Y, 10Y, 20Y, 30Y). Data from TepiloraType=Yield securities in D_full.parquet. Used by the Dashboard bond analytics and by bond spread calculations."""
         _payload: Dict[str, Any] = {}
         if currency is not None:
             _payload["currency"] = currency
@@ -324,15 +291,12 @@ class AsyncBondsAPI(AsyncBaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Bond ladder
+        """Build a bond ladder with specified maturity rungs
 
-        Build a bond ladder.
+        Constructs a bond ladder portfolio: distributes investment across bonds with staggered maturity dates at regular intervals. Inputs: target maturities (e.g. 1Y, 2Y, 3Y, 5Y, 10Y), total investment amount, and optional constraints (min yield, max duration). Returns the suggested bond for each rung with analytics. Used by the Dashboard ladder builder and by advisory workflows for income-oriented clients.
 
         Args:
-        identifiers: List of TepiloraCodes
-        target_maturities: Target maturity years
-        investment_amount: Total investment amount
-        rungs: Number of rungs"""
+        identifiers: Optional list of security identifiers"""
         _payload: Dict[str, Any] = {}
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -353,13 +317,13 @@ class AsyncBondsAPI(AsyncBaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Fast bond metadata lookup
+        """Look up bond metadata from the D_full parquet without calculations
 
-        Returns bond metadata from D_full.parquet without calculations
+        Returns bond-specific metadata fields from D_full.parquet: coupon rate, maturity date, payment frequency, day count convention, bond type, issuer, issue currency, and maturity focus. No calculations performed — this is a pure metadata lookup. Supports single or batch identifier input. Used as a prerequisite check before bonds.analyze and by the Dashboard bond overview.
 
         Args:
-        identifier: Single bond identifier
-        identifiers: Multiple bond identifiers"""
+        identifier: Optional security identifier
+        identifiers: Optional list of security identifiers"""
         _payload: Dict[str, Any] = {}
         if identifier is not None:
             _payload["identifier"] = identifier
@@ -376,13 +340,12 @@ class AsyncBondsAPI(AsyncBaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Maturity distribution by bucket
+        """Calculate the maturity bucket distribution for a bond portfolio
 
-        Maturity distribution (0-1y, 1-3y, 3-5y, 5-7y, 7-10y, 10+y)
+        Distributes a bond portfolio across standard maturity buckets (0-1Y, 1-3Y, 3-5Y, 5-7Y, 7-10Y, 10-20Y, 20+Y) based on each bond's time to maturity and portfolio weight. Returns the percentage allocation per bucket. Used by the Dashboard bond portfolio composition chart and by reporting modules for fixed-income allocation visualization.
 
         Args:
-        identifiers: Bond identifiers
-        weights: Portfolio weights"""
+        identifiers: List of security identifiers"""
         _payload: Dict[str, Any] = {}
         _payload["identifiers"] = identifiers
         if weights is not None:
@@ -395,9 +358,9 @@ class AsyncBondsAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Bond metrics reference
+        """Catalog of available bond risk metric definitions
 
-        Available bond metric definitions and classifications."""
+        Returns the static catalog of risk metrics the library knows how to compute on a bond or a bond portfolio: duration (Macaulay, modified, effective), convexity, DV01 (dollar value of 1bp), key rate durations, and scenario analysis (parallel / steepener / flattener yield-curve shifts). Each entry carries the metric name and a short description. NOTE: this operation takes no identifier and returns no per-bond numeric values — to compute a metric for a specific bond use bonds.analyze, and for a portfolio-level aggregate use bonds.portfolio. Used by the Dashboard metric picker and by the AI assistant to enumerate available bond analytics."""
         _payload: Dict[str, Any] = {}
         return await self._call("bonds.metrics", params=_payload, options=options, context=context)
 
@@ -411,14 +374,12 @@ class AsyncBondsAPI(AsyncBaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Bond portfolio analytics
+        """Calculate aggregate bond portfolio analytics
 
-        Portfolio-level bond analytics.
+        Computes weighted-average analytics across a bond portfolio: portfolio yield, portfolio duration (Macaulay and modified), portfolio convexity, weighted credit quality, maturity profile distribution, and total accrued interest. Accepts a list of bond identifiers with weights. Used by the Dashboard portfolio fixed-income view and by reporting modules.
 
         Args:
-        identifiers: List of TepiloraCodes
-        weights: Portfolio weights (list of floats, same order as identifiers)
-        include_duration: Include duration analysis"""
+        identifiers: Optional list of security identifiers"""
         _payload: Dict[str, Any] = {}
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -439,15 +400,9 @@ class AsyncBondsAPI(AsyncBaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Screen bonds
+        """Screen bonds by criteria: yield, duration, credit rating, maturity
 
-        Screen bonds by criteria. Returns all matching bonds by default.
-
-        Args:
-        criteria: Screening criteria
-        universe: Universe filter (e.g. TepiloraBondType, TepiloraBondIssuer)
-        rank_by: Metric to rank by (ytm, duration, etc.)
-        limit: Max results (default: all)"""
+        Filters the bond universe by quantitative criteria: yield range, duration range, credit rating, maturity bucket, issuer type (government, corporate, supranational), currency, and country. Returns bonds passing all criteria with their metadata and key metrics. Used by the Dashboard bond screener and by portfolio construction workflows selecting fixed-income instruments."""
         _payload: Dict[str, Any] = {}
         if criteria is not None:
             _payload["criteria"] = criteria
@@ -468,13 +423,12 @@ class AsyncBondsAPI(AsyncBaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Credit spread
+        """Calculate spread metrics for a bond relative to the benchmark curve
 
-        Calculate credit spread vs benchmark.
+        Computes spread measures for a bond versus the government benchmark curve: nominal spread (yield difference vs. same-maturity benchmark), Z-spread (constant spread over the zero-coupon curve), and asset swap spread. Requires the bond identifier and optionally a specific benchmark curve. Used by the Dashboard bond detail page and by credit analysis workflows.
 
         Args:
-        identifiers: List of TepiloraCodes
-        benchmark: Benchmark bond identifier"""
+        identifiers: List of security identifiers"""
         _payload: Dict[str, Any] = {}
         _payload["identifiers"] = identifiers
         if benchmark is not None:

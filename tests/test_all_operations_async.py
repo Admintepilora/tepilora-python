@@ -11,13 +11,13 @@ from typing import Any, Dict
 
 import pytest
 
-from conftest import build_minimal_params, _load_schema
+from conftest import build_all_params, build_minimal_params, _load_schema
 
 # Load schema at module level for parametrize
 SCHEMA = _load_schema()
 
 # Skip categories (internal only or not implemented)
-SKIP_CATEGORIES = {"audit"}
+SKIP_CATEGORIES = set()
 
 # Operations that use special endpoints (not V3 unified)
 SPECIAL_OPERATIONS = {"analytics.info", "analytics.list"}
@@ -104,6 +104,37 @@ class TestAllOperationsAsync:
         for pname in required_params:
             assert pname in sent_params, f"Required param '{pname}' missing in {action}"
 
+    @pytest.mark.parametrize("action,op", all_operations())
+    async def test_operation_includes_all_declared_params(self, action: str, op: Dict[str, Any], async_mock_client):
+        """Verify async wrappers accept and serialize every declared payload param."""
+        if action in SPECIAL_OPERATIONS:
+            pytest.skip(f"{action} uses special endpoint")
+
+        category = op["category"]
+        method_name = get_method_name(op)
+        params = op.get("params", [])
+        expected_params = [p["name"] for p in params if p["name"] != "format"]
+
+        if not expected_params:
+            pytest.skip("No payload params")
+
+        namespace = getattr(async_mock_client, category)
+        method = getattr(namespace, method_name)
+        kwargs = build_all_params(params)
+
+        try:
+            await method(**kwargs)
+        except Exception as e:
+            pytest.fail(f"Method {action} rejected full param payload: {type(e).__name__}: {e}")
+
+        call = async_mock_client._calls[-1]
+        sent_action = call["payload"].get("action")
+        sent_params = call["payload"].get("params", {})
+
+        assert sent_action == action, f"Expected action '{action}', got '{sent_action}'"
+        for pname in expected_params:
+            assert pname in sent_params, f"Declared param '{pname}' missing in {action}"
+
 
 class TestAllNamespacesAsync:
     """Test all namespaces are accessible on async client."""
@@ -184,7 +215,7 @@ class TestAnalyticsSpecialAsync:
     async def test_analytics_help_and_info(self, async_mock_client):
         """Test async analytics list/info/help/search methods are awaitable."""
         listing = await async_mock_client.analytics.list()
-        info = await async_mock_client.analytics.info("rolling_volatility")
+        info = await async_mock_client.analytics.info(function="rolling_volatility")
         help_text = await async_mock_client.analytics.help("rolling_volatility")
         matches = await async_mock_client.analytics.search("rolling")
 

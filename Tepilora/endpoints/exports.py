@@ -18,41 +18,27 @@ class ExportsAPI(BaseAPI):
         self,
         *,
         source: str,
-        output_format: Optional[str] = None,
-        export_format: Optional[str] = None,
-        params: Optional[Dict[str, Any]] = None,
         source_params: Optional[Dict[str, Any]] = None,
-        format: Optional[str] = "json",
         filename: Optional[str] = None,
         include_metadata: Optional[bool] = True,
         compression: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Export data
+        """Export data in multiple formats (JSON, CSV, XLSX, Parquet)
 
-        Export data to file format.
+        Converts operation results into the requested output format. Supports JSON (default), CSV, XLSX (Excel), and Parquet (zstd compressed). Accepts the output of any operation that returns tabular data. For XLSX, generates formatted worksheets with headers. For Parquet, uses zstd compression for efficient storage and cross-language interoperability. Used by the Dashboard for data download buttons and by batch workflows exporting results for external systems.
 
         Args:
-        source: Source action (e.g., 'securities.search')
-        output_format: Output format (alias for export_format)
-        source_params: Parameters for source action
-        format: json|csv|xlsx|parquet
-        filename: Output filename
-        include_metadata: Include metadata
-        compression: Compression (for parquet)"""
+        source: Export source: securities, portfolio, query, analytics, or factors.
+        source_params: Parameters passed to the source operation.
+        filename: Suggested filename without extension.
+        include_metadata: Include metadata in the export payload.
+        compression: Optional compression for binary formats."""
         _payload: Dict[str, Any] = {}
         _payload["source"] = source
-        if output_format is not None:
-            _payload["output_format"] = output_format
-        if export_format is not None:
-            _payload["export_format"] = export_format
-        if params is not None:
-            _payload["params"] = params
         if source_params is not None:
             _payload["source_params"] = source_params
-        if format is not None:
-            _payload["format"] = format
         if filename is not None:
             _payload["filename"] = filename
         if include_metadata is not None:
@@ -67,9 +53,12 @@ class ExportsAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """List formats
+        """List available export formats with their content types and descriptions
 
-        List supported export formats."""
+        Returns the list of supported export formats with metadata: format name, MIME content type, file extension, and a brief description. Used by the Dashboard to populate format selector dropdowns and by the API documentation to describe available output options.
+
+        Examples:
+            >>> client.exports.formats()"""
         _payload: Dict[str, Any] = {}
         return self._call("exports.formats", params=_payload, options=options, context=context)
 
@@ -82,41 +71,27 @@ class AsyncExportsAPI(AsyncBaseAPI):
         self,
         *,
         source: str,
-        output_format: Optional[str] = None,
-        export_format: Optional[str] = None,
-        params: Optional[Dict[str, Any]] = None,
         source_params: Optional[Dict[str, Any]] = None,
-        format: Optional[str] = "json",
         filename: Optional[str] = None,
         include_metadata: Optional[bool] = True,
         compression: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Export data
+        """Export data in multiple formats (JSON, CSV, XLSX, Parquet)
 
-        Export data to file format.
+        Converts operation results into the requested output format. Supports JSON (default), CSV, XLSX (Excel), and Parquet (zstd compressed). Accepts the output of any operation that returns tabular data. For XLSX, generates formatted worksheets with headers. For Parquet, uses zstd compression for efficient storage and cross-language interoperability. Used by the Dashboard for data download buttons and by batch workflows exporting results for external systems.
 
         Args:
-        source: Source action (e.g., 'securities.search')
-        output_format: Output format (alias for export_format)
-        source_params: Parameters for source action
-        format: json|csv|xlsx|parquet
-        filename: Output filename
-        include_metadata: Include metadata
-        compression: Compression (for parquet)"""
+        source: Export source: securities, portfolio, query, analytics, or factors.
+        source_params: Parameters passed to the source operation.
+        filename: Suggested filename without extension.
+        include_metadata: Include metadata in the export payload.
+        compression: Optional compression for binary formats."""
         _payload: Dict[str, Any] = {}
         _payload["source"] = source
-        if output_format is not None:
-            _payload["output_format"] = output_format
-        if export_format is not None:
-            _payload["export_format"] = export_format
-        if params is not None:
-            _payload["params"] = params
         if source_params is not None:
             _payload["source_params"] = source_params
-        if format is not None:
-            _payload["format"] = format
         if filename is not None:
             _payload["filename"] = filename
         if include_metadata is not None:
@@ -131,9 +106,12 @@ class AsyncExportsAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """List formats
+        """List available export formats with their content types and descriptions
 
-        List supported export formats."""
+        Returns the list of supported export formats with metadata: format name, MIME content type, file extension, and a brief description. Used by the Dashboard to populate format selector dropdowns and by the API documentation to describe available output options.
+
+        Examples:
+            >>> await client.exports.formats()"""
         _payload: Dict[str, Any] = {}
         return await self._call("exports.formats", params=_payload, options=options, context=context)
 

@@ -26,16 +26,9 @@ class AssetAllocationAPI(BaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Backtest model
+        """Backtest a strategic asset allocation model over historical data
 
-        Backtest model using portfolio returns engine.
-
-        Args:
-        model: Asset allocation model
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        rebalance_frequency: monthly|quarterly|annual|weekly
-        return_method: twr|mwr|modified_dietz"""
+        Simulates the historical performance of an asset allocation model using ETF proxy returns. Supports configurable rebalancing frequency (monthly, quarterly, annually) and return method (TWR, Modified Dietz). Returns: cumulative return series, annualized return, volatility, Sharpe, max drawdown, and calendar year returns. Used by the Dashboard backtest view for model validation."""
         _payload: Dict[str, Any] = {}
         _payload["model"] = model
         if start_date is not None:
@@ -59,15 +52,9 @@ class AssetAllocationAPI(BaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Compare multiple models
+        """Compare multiple asset allocation models side by side
 
-        Backtest and compare multiple asset allocation models.
-
-        Args:
-        models: List of asset allocation models
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        metrics: Metrics to include in comparison"""
+        Backtests and compares 2 or more asset allocation models over the same period. Returns comparative metrics (return, risk, Sharpe, max drawdown) and cumulative performance series for overlay charting. Used by the Dashboard model comparison view."""
         _payload: Dict[str, Any] = {}
         _payload["models"] = models
         if start_date is not None:
@@ -86,13 +73,9 @@ class AssetAllocationAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Decompose portfolio by asset class
+        """Decompose portfolio risk and return by asset class contribution
 
-        Map portfolio securities into asset classes (or model classes).
-
-        Args:
-        portfolio_id: Portfolio ID
-        model: Optional model for class mapping"""
+        Breaks down a portfolio's total return and risk into contributions from each asset class in the allocation model. Uses Brinson-style attribution at the asset class level. Returns: return contribution, risk contribution, diversification benefit, and marginal risk per asset class. Used by the Dashboard for the allocation attribution chart."""
         _payload: Dict[str, Any] = {}
         _payload["portfolio_id"] = portfolio_id
         if model is not None:
@@ -108,14 +91,9 @@ class AssetAllocationAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Calculate model drift
+        """Calculate weight drift from target allocation over time
 
-        Compare current portfolio weights vs model target allocation.
-
-        Args:
-        model: Asset allocation model
-        portfolio_id: Portfolio ID
-        tolerance: Absolute drift threshold"""
+        Tracks how an asset allocation model's actual weights drift from target weights over time due to differential asset class returns. Returns a time series of drift per asset class and total portfolio drift, along with suggested rebalancing triggers. Used by the Dashboard drift monitoring view and by rebalancing alert rules."""
         _payload: Dict[str, Any] = {}
         _payload["model"] = model
         _payload["portfolio_id"] = portfolio_id
@@ -136,17 +114,9 @@ class AssetAllocationAPI(BaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Efficient frontier
+        """Generate the efficient frontier for an asset allocation model
 
-        Compute efficient frontier from model class proxies.
-
-        Args:
-        model: Asset allocation model
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        points: Number of frontier points
-        cov_method: sample|ledoit_wolf|oas|ewma
-        rf: Risk-free rate"""
+        Computes the efficient frontier: a series of optimal portfolios ranging from minimum risk to maximum return. Returns N points (default 50) on the frontier, each with weights, expected return, and expected risk. Includes the tangency portfolio (max Sharpe) and minimum variance portfolio. Used by the Dashboard for the interactive efficient frontier chart."""
         _payload: Dict[str, Any] = {}
         _payload["model"] = model
         if start_date is not None:
@@ -171,21 +141,13 @@ class AssetAllocationAPI(BaseAPI):
         target_return: Optional[float] = None,
         rf: Optional[float] = 0.0,
         cov_method: Optional[str] = "ledoit_wolf",
+        solver_settings: Optional[Dict[str, Any]] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Optimize model allocation
+        """Optimize a strategic asset allocation model for a given objective
 
-        Run a single optimization for model classes and bounds.
-
-        Args:
-        model: Asset allocation model
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        objective: max_sharpe|min_risk|target_return|risk_parity
-        target_return: Target return for target_return objective
-        rf: Risk-free rate
-        cov_method: sample|ledoit_wolf|oas|ewma"""
+        Runs mean-variance optimization on an asset allocation model. Objectives: max_sharpe (maximize risk-adjusted return), min_risk (minimum variance), target_return (minimize risk for a target return), risk_parity (equal risk contribution). Returns optimal weights, expected return, expected risk, and efficient frontier position. Uses historical ETF proxy returns for estimation. Used by the Dashboard optimizer view."""
         _payload: Dict[str, Any] = {}
         _payload["model"] = model
         if start_date is not None:
@@ -200,6 +162,8 @@ class AssetAllocationAPI(BaseAPI):
             _payload["rf"] = rf
         if cov_method is not None:
             _payload["cov_method"] = cov_method
+        if solver_settings is not None:
+            _payload["solver_settings"] = solver_settings
         return self._call("asset_allocation.optimize", params=_payload, options=options, context=context)
 
     def risk_profile(
@@ -211,14 +175,9 @@ class AssetAllocationAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get risk profile template
+        """Get a MiFID-aligned asset allocation template for a risk level
 
-        Return static model template for MiFID SRI 1-7.
-
-        Args:
-        risk_level: MiFID SRI risk level 1-7
-        currency: Model currency
-        include_proxies: Include suggested proxy TepiloraCodes"""
+        Returns a pre-built strategic asset allocation template for a given MiFID risk level (1-7). Each template defines target weights across asset classes (equity, fixed income, alternatives, cash) and sub-classes, with ETF proxy suggestions. Templates are professionally designed starting points that can be customized. Used by the Dashboard asset allocation wizard for quick-start models."""
         _payload: Dict[str, Any] = {}
         _payload["risk_level"] = risk_level
         if currency is not None:
@@ -236,14 +195,9 @@ class AssetAllocationAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Stress test model
+        """Run custom stress scenarios on an asset allocation model
 
-        Apply deterministic class-level scenarios to model weights.
-
-        Args:
-        model: Asset allocation model
-        scenarios: Scenario names or custom definitions; accepts list and dict custom shocks
-        start_date: Start date (YYYY-MM-DD)"""
+        Applies user-defined stress scenarios to an asset allocation model and returns the estimated portfolio impact per scenario. Each scenario is a dict with a `name` and a `shocks` mapping asset-class name to shock (e.g. [{'name': 'mild_correction', 'shocks': {'Global Equity': -0.30, 'Euro Gov Bonds': 0.05}}]). The operation does NOT currently expose built-in scenario names — pass only custom shock dicts. For a portfolio-level stress that uses historical scenarios, see portfolio.stress."""
         _payload: Dict[str, Any] = {}
         _payload["model"] = model
         if scenarios is not None:
@@ -262,15 +216,9 @@ class AssetAllocationAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Suggest securities by class
+        """Suggest specific ETFs to implement an asset allocation model
 
-        Suggest securities for one or all model classes via securities.search.
-
-        Args:
-        model: Asset allocation model
-        class_name: Specific class name
-        filters: Optional filters for securities.search
-        limit: Max suggestions per class"""
+        For each asset class slot in an allocation model, suggests specific ETFs that best track the intended exposure. Selection criteria: tracking error, TER, AUM (liquidity), domicile preference (EU UCITS), and currency. Returns ranked suggestions per slot. Used by the Dashboard to convert an abstract allocation into a tradeable portfolio."""
         _payload: Dict[str, Any] = {}
         _payload["model"] = model
         if class_name is not None:
@@ -288,12 +236,9 @@ class AssetAllocationAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Validate asset allocation model
+        """Validate a strategic asset allocation model definition
 
-        Validate structure, weights, and proxy availability in D_full.parquet.
-
-        Args:
-        model: Asset allocation model"""
+        Validates an asset allocation model: checks that weights sum to 100%, all asset classes have ETF proxies, constraints are consistent, and the model is well-formed. Returns validation result with any errors or warnings. Must be called before optimize/backtest/frontier. Used by the Dashboard model builder as a pre-check."""
         _payload: Dict[str, Any] = {}
         _payload["model"] = model
         return self._call("asset_allocation.validate", params=_payload, options=options, context=context)
@@ -315,16 +260,9 @@ class AsyncAssetAllocationAPI(AsyncBaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Backtest model
+        """Backtest a strategic asset allocation model over historical data
 
-        Backtest model using portfolio returns engine.
-
-        Args:
-        model: Asset allocation model
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        rebalance_frequency: monthly|quarterly|annual|weekly
-        return_method: twr|mwr|modified_dietz"""
+        Simulates the historical performance of an asset allocation model using ETF proxy returns. Supports configurable rebalancing frequency (monthly, quarterly, annually) and return method (TWR, Modified Dietz). Returns: cumulative return series, annualized return, volatility, Sharpe, max drawdown, and calendar year returns. Used by the Dashboard backtest view for model validation."""
         _payload: Dict[str, Any] = {}
         _payload["model"] = model
         if start_date is not None:
@@ -348,15 +286,9 @@ class AsyncAssetAllocationAPI(AsyncBaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Compare multiple models
+        """Compare multiple asset allocation models side by side
 
-        Backtest and compare multiple asset allocation models.
-
-        Args:
-        models: List of asset allocation models
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        metrics: Metrics to include in comparison"""
+        Backtests and compares 2 or more asset allocation models over the same period. Returns comparative metrics (return, risk, Sharpe, max drawdown) and cumulative performance series for overlay charting. Used by the Dashboard model comparison view."""
         _payload: Dict[str, Any] = {}
         _payload["models"] = models
         if start_date is not None:
@@ -375,13 +307,9 @@ class AsyncAssetAllocationAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Decompose portfolio by asset class
+        """Decompose portfolio risk and return by asset class contribution
 
-        Map portfolio securities into asset classes (or model classes).
-
-        Args:
-        portfolio_id: Portfolio ID
-        model: Optional model for class mapping"""
+        Breaks down a portfolio's total return and risk into contributions from each asset class in the allocation model. Uses Brinson-style attribution at the asset class level. Returns: return contribution, risk contribution, diversification benefit, and marginal risk per asset class. Used by the Dashboard for the allocation attribution chart."""
         _payload: Dict[str, Any] = {}
         _payload["portfolio_id"] = portfolio_id
         if model is not None:
@@ -397,14 +325,9 @@ class AsyncAssetAllocationAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Calculate model drift
+        """Calculate weight drift from target allocation over time
 
-        Compare current portfolio weights vs model target allocation.
-
-        Args:
-        model: Asset allocation model
-        portfolio_id: Portfolio ID
-        tolerance: Absolute drift threshold"""
+        Tracks how an asset allocation model's actual weights drift from target weights over time due to differential asset class returns. Returns a time series of drift per asset class and total portfolio drift, along with suggested rebalancing triggers. Used by the Dashboard drift monitoring view and by rebalancing alert rules."""
         _payload: Dict[str, Any] = {}
         _payload["model"] = model
         _payload["portfolio_id"] = portfolio_id
@@ -425,17 +348,9 @@ class AsyncAssetAllocationAPI(AsyncBaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Efficient frontier
+        """Generate the efficient frontier for an asset allocation model
 
-        Compute efficient frontier from model class proxies.
-
-        Args:
-        model: Asset allocation model
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        points: Number of frontier points
-        cov_method: sample|ledoit_wolf|oas|ewma
-        rf: Risk-free rate"""
+        Computes the efficient frontier: a series of optimal portfolios ranging from minimum risk to maximum return. Returns N points (default 50) on the frontier, each with weights, expected return, and expected risk. Includes the tangency portfolio (max Sharpe) and minimum variance portfolio. Used by the Dashboard for the interactive efficient frontier chart."""
         _payload: Dict[str, Any] = {}
         _payload["model"] = model
         if start_date is not None:
@@ -460,21 +375,13 @@ class AsyncAssetAllocationAPI(AsyncBaseAPI):
         target_return: Optional[float] = None,
         rf: Optional[float] = 0.0,
         cov_method: Optional[str] = "ledoit_wolf",
+        solver_settings: Optional[Dict[str, Any]] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Optimize model allocation
+        """Optimize a strategic asset allocation model for a given objective
 
-        Run a single optimization for model classes and bounds.
-
-        Args:
-        model: Asset allocation model
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)
-        objective: max_sharpe|min_risk|target_return|risk_parity
-        target_return: Target return for target_return objective
-        rf: Risk-free rate
-        cov_method: sample|ledoit_wolf|oas|ewma"""
+        Runs mean-variance optimization on an asset allocation model. Objectives: max_sharpe (maximize risk-adjusted return), min_risk (minimum variance), target_return (minimize risk for a target return), risk_parity (equal risk contribution). Returns optimal weights, expected return, expected risk, and efficient frontier position. Uses historical ETF proxy returns for estimation. Used by the Dashboard optimizer view."""
         _payload: Dict[str, Any] = {}
         _payload["model"] = model
         if start_date is not None:
@@ -489,6 +396,8 @@ class AsyncAssetAllocationAPI(AsyncBaseAPI):
             _payload["rf"] = rf
         if cov_method is not None:
             _payload["cov_method"] = cov_method
+        if solver_settings is not None:
+            _payload["solver_settings"] = solver_settings
         return await self._call("asset_allocation.optimize", params=_payload, options=options, context=context)
 
     async def risk_profile(
@@ -500,14 +409,9 @@ class AsyncAssetAllocationAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get risk profile template
+        """Get a MiFID-aligned asset allocation template for a risk level
 
-        Return static model template for MiFID SRI 1-7.
-
-        Args:
-        risk_level: MiFID SRI risk level 1-7
-        currency: Model currency
-        include_proxies: Include suggested proxy TepiloraCodes"""
+        Returns a pre-built strategic asset allocation template for a given MiFID risk level (1-7). Each template defines target weights across asset classes (equity, fixed income, alternatives, cash) and sub-classes, with ETF proxy suggestions. Templates are professionally designed starting points that can be customized. Used by the Dashboard asset allocation wizard for quick-start models."""
         _payload: Dict[str, Any] = {}
         _payload["risk_level"] = risk_level
         if currency is not None:
@@ -525,14 +429,9 @@ class AsyncAssetAllocationAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Stress test model
+        """Run custom stress scenarios on an asset allocation model
 
-        Apply deterministic class-level scenarios to model weights.
-
-        Args:
-        model: Asset allocation model
-        scenarios: Scenario names or custom definitions; accepts list and dict custom shocks
-        start_date: Start date (YYYY-MM-DD)"""
+        Applies user-defined stress scenarios to an asset allocation model and returns the estimated portfolio impact per scenario. Each scenario is a dict with a `name` and a `shocks` mapping asset-class name to shock (e.g. [{'name': 'mild_correction', 'shocks': {'Global Equity': -0.30, 'Euro Gov Bonds': 0.05}}]). The operation does NOT currently expose built-in scenario names — pass only custom shock dicts. For a portfolio-level stress that uses historical scenarios, see portfolio.stress."""
         _payload: Dict[str, Any] = {}
         _payload["model"] = model
         if scenarios is not None:
@@ -551,15 +450,9 @@ class AsyncAssetAllocationAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Suggest securities by class
+        """Suggest specific ETFs to implement an asset allocation model
 
-        Suggest securities for one or all model classes via securities.search.
-
-        Args:
-        model: Asset allocation model
-        class_name: Specific class name
-        filters: Optional filters for securities.search
-        limit: Max suggestions per class"""
+        For each asset class slot in an allocation model, suggests specific ETFs that best track the intended exposure. Selection criteria: tracking error, TER, AUM (liquidity), domicile preference (EU UCITS), and currency. Returns ranked suggestions per slot. Used by the Dashboard to convert an abstract allocation into a tradeable portfolio."""
         _payload: Dict[str, Any] = {}
         _payload["model"] = model
         if class_name is not None:
@@ -577,12 +470,9 @@ class AsyncAssetAllocationAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Validate asset allocation model
+        """Validate a strategic asset allocation model definition
 
-        Validate structure, weights, and proxy availability in D_full.parquet.
-
-        Args:
-        model: Asset allocation model"""
+        Validates an asset allocation model: checks that weights sum to 100%, all asset classes have ETF proxies, constraints are consistent, and the model is well-formed. Returns validation result with any errors or warnings. Must be called before optimize/backtest/frontier. Used by the Dashboard model builder as a pre-check."""
         _payload: Dict[str, Any] = {}
         _payload["model"] = model
         return await self._call("asset_allocation.validate", params=_payload, options=options, context=context)

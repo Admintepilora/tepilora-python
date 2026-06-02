@@ -12,35 +12,35 @@ from ._base import AsyncBaseAPI, BaseAPI
 
 
 class FactorsAPI(BaseAPI):
-    """Factors namespace: get, list, loading, portfolio_exposure, risk_model, rolling_covariance, scenario, status."""
+    """Factors namespace: get, list, portfolio_exposure, risk_model, rolling_covariance, scenario, status."""
 
     def get(
         self,
         *,
         model: Optional[str] = "FF3",
-        frequency: Optional[str] = "daily",
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        frequency: Optional[str] = "daily",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Get factor data
+        """Get Fama-French factor returns data (FF3 or FF5 model)
+
+        Returns the daily factor return time series for the selected factor model: FF3 (Market, SMB, HML) or FF5 (Market, SMB, HML, RMW, CMA). Includes the risk-free rate (RF) series. Data is downloaded and cached from Kenneth French's data library. Supports date range filtering. Used as input for factor regression, factor attribution, and risk model construction.
 
         Args:
-        model: FF3|FF5|Carhart
-        frequency: Data frequency: daily|monthly
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
+        start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
+        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)"""
         _payload: Dict[str, Any] = {}
         if model is not None:
             _payload["model"] = model
-        if frequency is not None:
-            _payload["frequency"] = frequency
         if start_date is not None:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
+        if frequency is not None:
+            _payload["frequency"] = frequency
         return self._call("factors.get", params=_payload, options=options, context=context, response_format=response_format)
 
     def list(
@@ -49,91 +49,19 @@ class FactorsAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """List available factors"""
+        """List available factor models and their components
+
+        Returns the catalog of available factor models with their component factors: FF3 (3 factors), FF5 (5 factors), and any custom factor sets. Each factor shows name, description, and data availability range. Used by the Dashboard factor analysis selector."""
         _payload: Dict[str, Any] = {}
         return self._call("factors.list", params=_payload, options=options, context=context)
-
-    def loading(
-        self,
-        *,
-        annualize: Optional[str] = None,
-        benchmark: Optional[str] = None,
-        cov_method: Optional[str] = None,
-        force: Optional[str] = None,
-        frequency: Optional[str] = None,
-        id: Optional[str] = None,
-        identifiers: Optional[Union[str, List[str]]] = None,
-        include_statistics: Optional[bool] = None,
-        model: Optional[str] = "FF3",
-        output: Optional[str] = None,
-        period: Optional[int] = None,
-        portfolio_id: Optional[str] = None,
-        prices: Optional[str] = None,
-        scenarios: Optional[str] = None,
-        start_date: Optional[str] = None,
-        end_date: Optional[str] = None,
-        weights: Optional[str] = None,
-        options: Optional[Dict[str, Any]] = None,
-        context: Optional[Dict[str, Any]] = None,
-        response_format: Optional[str] = None,
-    ) -> Any:
-        """Load factor data (alias of factors.get)
-
-        Alias for factors.get. Use factors.get instead.
-
-        .. deprecated:: 3.2.0
-            Use factors.get instead.
-
-        Args:
-        model: FF3|FF5|Carhart
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        import warnings
-        warnings.warn("factors.loading is deprecated: Use factors.get instead.", DeprecationWarning, stacklevel=2)
-        _payload: Dict[str, Any] = {}
-        if annualize is not None:
-            _payload["annualize"] = annualize
-        if benchmark is not None:
-            _payload["benchmark"] = benchmark
-        if cov_method is not None:
-            _payload["cov_method"] = cov_method
-        if force is not None:
-            _payload["force"] = force
-        if frequency is not None:
-            _payload["frequency"] = frequency
-        if id is not None:
-            _payload["id"] = id
-        if identifiers is not None:
-            _payload["identifiers"] = identifiers
-        if include_statistics is not None:
-            _payload["include_statistics"] = include_statistics
-        if model is not None:
-            _payload["model"] = model
-        if output is not None:
-            _payload["output"] = output
-        if period is not None:
-            _payload["period"] = period
-        if portfolio_id is not None:
-            _payload["portfolio_id"] = portfolio_id
-        if prices is not None:
-            _payload["prices"] = prices
-        if scenarios is not None:
-            _payload["scenarios"] = scenarios
-        if start_date is not None:
-            _payload["start_date"] = start_date
-        if end_date is not None:
-            _payload["end_date"] = end_date
-        if weights is not None:
-            _payload["weights"] = weights
-        return self._call("factors.loading", params=_payload, options=options, context=context, response_format=response_format)
 
     def portfolio_exposure(
         self,
         *,
         portfolio_id: Optional[str] = None,
         id: Optional[str] = None,
-        prices: Optional[str] = None,
         weights: Optional[Dict[str, Any]] = None,
+        prices: Optional[Any] = None,
         benchmark: Optional[str] = None,
         model: Optional[str] = "FF5",
         period: Optional[int] = 252,
@@ -143,28 +71,22 @@ class FactorsAPI(BaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Portfolio factor exposure
+        """Calculate weighted factor exposure for a portfolio
 
-        Compute aggregated portfolio-level factor exposures from constituent holdings.
+        Computes portfolio-level factor exposures by aggregating individual security factor loadings weighted by portfolio weights. Returns the portfolio's net exposure to each factor (Market, SMB, HML, RMW, CMA), along with factor contribution to portfolio risk. Used by the Dashboard portfolio factor view and by risk-aware rebalancing workflows.
 
         Args:
-        portfolio_id: Portfolio ID
-        id: Alias for portfolio_id
-        weights: Weights dict {identifier: weight}
-        benchmark: Benchmark identifier
-        model: FF3|FF5|Carhart
-        period: Rolling window
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
+        start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
+        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)"""
         _payload: Dict[str, Any] = {}
         if portfolio_id is not None:
             _payload["portfolio_id"] = portfolio_id
         if id is not None:
             _payload["id"] = id
-        if prices is not None:
-            _payload["prices"] = prices
         if weights is not None:
             _payload["weights"] = weights
+        if prices is not None:
+            _payload["prices"] = prices
         if benchmark is not None:
             _payload["benchmark"] = benchmark
         if model is not None:
@@ -181,46 +103,41 @@ class FactorsAPI(BaseAPI):
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        prices: Optional[Any] = None,
         model: Optional[str] = "FF5",
         period: Optional[int] = 252,
-        cov_method: Optional[str] = "sample",
-        include_statistics: Optional[bool] = False,
-        prices: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        cov_method: Optional[str] = "sample",
+        include_statistics: Optional[bool] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Factor risk decomposition
+        """Build a factor risk model for a set of securities
 
-        Compute factor covariance and decompose security risk into systematic and specific components.
+        Constructs a factor risk model by regressing each security's returns against the selected factor model (FF3/FF5). Returns: factor loadings (betas) per security, factor covariance matrix, idiosyncratic risk, explained variance (R-squared), and optionally beta statistics (standard errors, t-stats, p-values). Supports multiple covariance estimation methods (sample, Ledoit-Wolf, OAS, EWMA). Used by portfolio risk decomposition and by the Dashboard factor exposure view.
 
         Args:
-        identifiers: Security identifier(s)
-        model: FF3|FF5|Carhart
-        period: Rolling window for covariance
-        cov_method: Covariance method: sample|ledoit_wolf|oas|ewma
-        include_statistics: Include SE/t-stats/p-values for betas
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
+        start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
+        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)"""
         _payload: Dict[str, Any] = {}
         if identifiers is not None:
             _payload["identifiers"] = identifiers
+        if prices is not None:
+            _payload["prices"] = prices
         if model is not None:
             _payload["model"] = model
         if period is not None:
             _payload["period"] = period
-        if cov_method is not None:
-            _payload["cov_method"] = cov_method
-        if include_statistics is not None:
-            _payload["include_statistics"] = include_statistics
-        if prices is not None:
-            _payload["prices"] = prices
         if start_date is not None:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
+        if cov_method is not None:
+            _payload["cov_method"] = cov_method
+        if include_statistics is not None:
+            _payload["include_statistics"] = include_statistics
         return self._call("factors.risk_model", params=_payload, options=options, context=context, response_format=response_format)
 
     def rolling_covariance(
@@ -228,52 +145,47 @@ class FactorsAPI(BaseAPI):
         *,
         model: Optional[str] = "FF5",
         period: Optional[int] = 126,
-        cov_method: Optional[str] = "sample",
-        output: Optional[str] = "correlation",
-        annualize: Optional[bool] = True,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        output: Optional[str] = "correlation",
+        cov_method: Optional[str] = "sample",
+        annualize: Optional[bool] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Rolling factor covariance
+        """Calculate rolling factor covariance matrix over time
 
-        Compute time-varying factor correlation/covariance matrices.
+        Computes the factor-factor covariance matrix over a rolling window, producing a time series of covariance snapshots. Reveals how factor correlations evolve over time (e.g. whether SMB and HML become more correlated during crises). Used by advanced risk analysis and by time-varying risk model construction.
 
         Args:
-        model: FF3|FF5|Carhart
-        period: Rolling window
-        cov_method: Covariance method: sample|ledoit_wolf|oas|ewma
-        output: correlation|covariance|both
-        annualize: Annualize covariance
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
+        start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
+        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)"""
         _payload: Dict[str, Any] = {}
         if model is not None:
             _payload["model"] = model
         if period is not None:
             _payload["period"] = period
-        if cov_method is not None:
-            _payload["cov_method"] = cov_method
-        if output is not None:
-            _payload["output"] = output
-        if annualize is not None:
-            _payload["annualize"] = annualize
         if start_date is not None:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
+        if output is not None:
+            _payload["output"] = output
+        if cov_method is not None:
+            _payload["cov_method"] = cov_method
+        if annualize is not None:
+            _payload["annualize"] = annualize
         return self._call("factors.rolling_covariance", params=_payload, options=options, context=context, response_format=response_format)
 
     def scenario(
         self,
         *,
-        scenarios: List[Any],
+        scenarios: Any,
         identifiers: Optional[Union[str, List[str]]] = None,
+        prices: Optional[Any] = None,
         portfolio_id: Optional[str] = None,
         id: Optional[str] = None,
-        prices: Optional[str] = None,
         weights: Optional[Dict[str, Any]] = None,
         model: Optional[str] = "FF5",
         period: Optional[int] = 252,
@@ -283,30 +195,23 @@ class FactorsAPI(BaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Factor scenario analysis
+        """Run factor-based stress scenarios on a portfolio
 
-        Stress test portfolio/securities with hypothetical factor shocks.
+        Applies hypothetical factor shock scenarios to estimate portfolio impact. Define scenarios as factor return assumptions (e.g. Market=-10%, SMB=+5%) and the model estimates the portfolio's expected return under each scenario using the factor loadings. Used by the Dashboard stress testing view and by risk management workflows.
 
         Args:
-        scenarios: List of scenario dicts or 'historical'
-        identifiers: Security identifier(s)
-        portfolio_id: Portfolio ID
-        id: Alias for portfolio_id
-        weights: Weights dict
-        model: FF3|FF5|Carhart
-        period: Regression window
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
+        start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
+        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)"""
         _payload: Dict[str, Any] = {}
         _payload["scenarios"] = scenarios
         if identifiers is not None:
             _payload["identifiers"] = identifiers
+        if prices is not None:
+            _payload["prices"] = prices
         if portfolio_id is not None:
             _payload["portfolio_id"] = portfolio_id
         if id is not None:
             _payload["id"] = id
-        if prices is not None:
-            _payload["prices"] = prices
         if weights is not None:
             _payload["weights"] = weights
         if model is not None:
@@ -326,9 +231,9 @@ class FactorsAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Factor data status
+        """Check the sync status and freshness of factor data
 
-        Get factor data freshness."""
+        Returns the current status of factor data: last sync date, data range, freshness (days since last update), and whether a sync is needed. Used by monitoring dashboards and as a prerequisite check before factor analysis."""
         _payload: Dict[str, Any] = {}
         if model is not None:
             _payload["model"] = model
@@ -337,35 +242,35 @@ class FactorsAPI(BaseAPI):
 
 
 class AsyncFactorsAPI(AsyncBaseAPI):
-    """Factors namespace: get, list, loading, portfolio_exposure, risk_model, rolling_covariance, scenario, status."""
+    """Factors namespace: get, list, portfolio_exposure, risk_model, rolling_covariance, scenario, status."""
 
     async def get(
         self,
         *,
         model: Optional[str] = "FF3",
-        frequency: Optional[str] = "daily",
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        frequency: Optional[str] = "daily",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Get factor data
+        """Get Fama-French factor returns data (FF3 or FF5 model)
+
+        Returns the daily factor return time series for the selected factor model: FF3 (Market, SMB, HML) or FF5 (Market, SMB, HML, RMW, CMA). Includes the risk-free rate (RF) series. Data is downloaded and cached from Kenneth French's data library. Supports date range filtering. Used as input for factor regression, factor attribution, and risk model construction.
 
         Args:
-        model: FF3|FF5|Carhart
-        frequency: Data frequency: daily|monthly
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
+        start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
+        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)"""
         _payload: Dict[str, Any] = {}
         if model is not None:
             _payload["model"] = model
-        if frequency is not None:
-            _payload["frequency"] = frequency
         if start_date is not None:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
+        if frequency is not None:
+            _payload["frequency"] = frequency
         return await self._call("factors.get", params=_payload, options=options, context=context, response_format=response_format)
 
     async def list(
@@ -374,91 +279,19 @@ class AsyncFactorsAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """List available factors"""
+        """List available factor models and their components
+
+        Returns the catalog of available factor models with their component factors: FF3 (3 factors), FF5 (5 factors), and any custom factor sets. Each factor shows name, description, and data availability range. Used by the Dashboard factor analysis selector."""
         _payload: Dict[str, Any] = {}
         return await self._call("factors.list", params=_payload, options=options, context=context)
-
-    async def loading(
-        self,
-        *,
-        annualize: Optional[str] = None,
-        benchmark: Optional[str] = None,
-        cov_method: Optional[str] = None,
-        force: Optional[str] = None,
-        frequency: Optional[str] = None,
-        id: Optional[str] = None,
-        identifiers: Optional[Union[str, List[str]]] = None,
-        include_statistics: Optional[bool] = None,
-        model: Optional[str] = "FF3",
-        output: Optional[str] = None,
-        period: Optional[int] = None,
-        portfolio_id: Optional[str] = None,
-        prices: Optional[str] = None,
-        scenarios: Optional[str] = None,
-        start_date: Optional[str] = None,
-        end_date: Optional[str] = None,
-        weights: Optional[str] = None,
-        options: Optional[Dict[str, Any]] = None,
-        context: Optional[Dict[str, Any]] = None,
-        response_format: Optional[str] = None,
-    ) -> Any:
-        """Load factor data (alias of factors.get)
-
-        Alias for factors.get. Use factors.get instead.
-
-        .. deprecated:: 3.2.0
-            Use factors.get instead.
-
-        Args:
-        model: FF3|FF5|Carhart
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
-        import warnings
-        warnings.warn("factors.loading is deprecated: Use factors.get instead.", DeprecationWarning, stacklevel=2)
-        _payload: Dict[str, Any] = {}
-        if annualize is not None:
-            _payload["annualize"] = annualize
-        if benchmark is not None:
-            _payload["benchmark"] = benchmark
-        if cov_method is not None:
-            _payload["cov_method"] = cov_method
-        if force is not None:
-            _payload["force"] = force
-        if frequency is not None:
-            _payload["frequency"] = frequency
-        if id is not None:
-            _payload["id"] = id
-        if identifiers is not None:
-            _payload["identifiers"] = identifiers
-        if include_statistics is not None:
-            _payload["include_statistics"] = include_statistics
-        if model is not None:
-            _payload["model"] = model
-        if output is not None:
-            _payload["output"] = output
-        if period is not None:
-            _payload["period"] = period
-        if portfolio_id is not None:
-            _payload["portfolio_id"] = portfolio_id
-        if prices is not None:
-            _payload["prices"] = prices
-        if scenarios is not None:
-            _payload["scenarios"] = scenarios
-        if start_date is not None:
-            _payload["start_date"] = start_date
-        if end_date is not None:
-            _payload["end_date"] = end_date
-        if weights is not None:
-            _payload["weights"] = weights
-        return await self._call("factors.loading", params=_payload, options=options, context=context, response_format=response_format)
 
     async def portfolio_exposure(
         self,
         *,
         portfolio_id: Optional[str] = None,
         id: Optional[str] = None,
-        prices: Optional[str] = None,
         weights: Optional[Dict[str, Any]] = None,
+        prices: Optional[Any] = None,
         benchmark: Optional[str] = None,
         model: Optional[str] = "FF5",
         period: Optional[int] = 252,
@@ -468,28 +301,22 @@ class AsyncFactorsAPI(AsyncBaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Portfolio factor exposure
+        """Calculate weighted factor exposure for a portfolio
 
-        Compute aggregated portfolio-level factor exposures from constituent holdings.
+        Computes portfolio-level factor exposures by aggregating individual security factor loadings weighted by portfolio weights. Returns the portfolio's net exposure to each factor (Market, SMB, HML, RMW, CMA), along with factor contribution to portfolio risk. Used by the Dashboard portfolio factor view and by risk-aware rebalancing workflows.
 
         Args:
-        portfolio_id: Portfolio ID
-        id: Alias for portfolio_id
-        weights: Weights dict {identifier: weight}
-        benchmark: Benchmark identifier
-        model: FF3|FF5|Carhart
-        period: Rolling window
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
+        start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
+        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)"""
         _payload: Dict[str, Any] = {}
         if portfolio_id is not None:
             _payload["portfolio_id"] = portfolio_id
         if id is not None:
             _payload["id"] = id
-        if prices is not None:
-            _payload["prices"] = prices
         if weights is not None:
             _payload["weights"] = weights
+        if prices is not None:
+            _payload["prices"] = prices
         if benchmark is not None:
             _payload["benchmark"] = benchmark
         if model is not None:
@@ -506,46 +333,41 @@ class AsyncFactorsAPI(AsyncBaseAPI):
         self,
         *,
         identifiers: Optional[Union[str, List[str]]] = None,
+        prices: Optional[Any] = None,
         model: Optional[str] = "FF5",
         period: Optional[int] = 252,
-        cov_method: Optional[str] = "sample",
-        include_statistics: Optional[bool] = False,
-        prices: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        cov_method: Optional[str] = "sample",
+        include_statistics: Optional[bool] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Factor risk decomposition
+        """Build a factor risk model for a set of securities
 
-        Compute factor covariance and decompose security risk into systematic and specific components.
+        Constructs a factor risk model by regressing each security's returns against the selected factor model (FF3/FF5). Returns: factor loadings (betas) per security, factor covariance matrix, idiosyncratic risk, explained variance (R-squared), and optionally beta statistics (standard errors, t-stats, p-values). Supports multiple covariance estimation methods (sample, Ledoit-Wolf, OAS, EWMA). Used by portfolio risk decomposition and by the Dashboard factor exposure view.
 
         Args:
-        identifiers: Security identifier(s)
-        model: FF3|FF5|Carhart
-        period: Rolling window for covariance
-        cov_method: Covariance method: sample|ledoit_wolf|oas|ewma
-        include_statistics: Include SE/t-stats/p-values for betas
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
+        start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
+        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)"""
         _payload: Dict[str, Any] = {}
         if identifiers is not None:
             _payload["identifiers"] = identifiers
+        if prices is not None:
+            _payload["prices"] = prices
         if model is not None:
             _payload["model"] = model
         if period is not None:
             _payload["period"] = period
-        if cov_method is not None:
-            _payload["cov_method"] = cov_method
-        if include_statistics is not None:
-            _payload["include_statistics"] = include_statistics
-        if prices is not None:
-            _payload["prices"] = prices
         if start_date is not None:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
+        if cov_method is not None:
+            _payload["cov_method"] = cov_method
+        if include_statistics is not None:
+            _payload["include_statistics"] = include_statistics
         return await self._call("factors.risk_model", params=_payload, options=options, context=context, response_format=response_format)
 
     async def rolling_covariance(
@@ -553,52 +375,47 @@ class AsyncFactorsAPI(AsyncBaseAPI):
         *,
         model: Optional[str] = "FF5",
         period: Optional[int] = 126,
-        cov_method: Optional[str] = "sample",
-        output: Optional[str] = "correlation",
-        annualize: Optional[bool] = True,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        output: Optional[str] = "correlation",
+        cov_method: Optional[str] = "sample",
+        annualize: Optional[bool] = True,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Rolling factor covariance
+        """Calculate rolling factor covariance matrix over time
 
-        Compute time-varying factor correlation/covariance matrices.
+        Computes the factor-factor covariance matrix over a rolling window, producing a time series of covariance snapshots. Reveals how factor correlations evolve over time (e.g. whether SMB and HML become more correlated during crises). Used by advanced risk analysis and by time-varying risk model construction.
 
         Args:
-        model: FF3|FF5|Carhart
-        period: Rolling window
-        cov_method: Covariance method: sample|ledoit_wolf|oas|ewma
-        output: correlation|covariance|both
-        annualize: Annualize covariance
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
+        start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
+        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)"""
         _payload: Dict[str, Any] = {}
         if model is not None:
             _payload["model"] = model
         if period is not None:
             _payload["period"] = period
-        if cov_method is not None:
-            _payload["cov_method"] = cov_method
-        if output is not None:
-            _payload["output"] = output
-        if annualize is not None:
-            _payload["annualize"] = annualize
         if start_date is not None:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
+        if output is not None:
+            _payload["output"] = output
+        if cov_method is not None:
+            _payload["cov_method"] = cov_method
+        if annualize is not None:
+            _payload["annualize"] = annualize
         return await self._call("factors.rolling_covariance", params=_payload, options=options, context=context, response_format=response_format)
 
     async def scenario(
         self,
         *,
-        scenarios: List[Any],
+        scenarios: Any,
         identifiers: Optional[Union[str, List[str]]] = None,
+        prices: Optional[Any] = None,
         portfolio_id: Optional[str] = None,
         id: Optional[str] = None,
-        prices: Optional[str] = None,
         weights: Optional[Dict[str, Any]] = None,
         model: Optional[str] = "FF5",
         period: Optional[int] = 252,
@@ -608,30 +425,23 @@ class AsyncFactorsAPI(AsyncBaseAPI):
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Factor scenario analysis
+        """Run factor-based stress scenarios on a portfolio
 
-        Stress test portfolio/securities with hypothetical factor shocks.
+        Applies hypothetical factor shock scenarios to estimate portfolio impact. Define scenarios as factor return assumptions (e.g. Market=-10%, SMB=+5%) and the model estimates the portfolio's expected return under each scenario using the factor loadings. Used by the Dashboard stress testing view and by risk management workflows.
 
         Args:
-        scenarios: List of scenario dicts or 'historical'
-        identifiers: Security identifier(s)
-        portfolio_id: Portfolio ID
-        id: Alias for portfolio_id
-        weights: Weights dict
-        model: FF3|FF5|Carhart
-        period: Regression window
-        start_date: Start date (YYYY-MM-DD)
-        end_date: End date (YYYY-MM-DD)"""
+        start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
+        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)"""
         _payload: Dict[str, Any] = {}
         _payload["scenarios"] = scenarios
         if identifiers is not None:
             _payload["identifiers"] = identifiers
+        if prices is not None:
+            _payload["prices"] = prices
         if portfolio_id is not None:
             _payload["portfolio_id"] = portfolio_id
         if id is not None:
             _payload["id"] = id
-        if prices is not None:
-            _payload["prices"] = prices
         if weights is not None:
             _payload["weights"] = weights
         if model is not None:
@@ -651,9 +461,9 @@ class AsyncFactorsAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Factor data status
+        """Check the sync status and freshness of factor data
 
-        Get factor data freshness."""
+        Returns the current status of factor data: last sync date, data range, freshness (days since last update), and whether a sync is needed. Used by monitoring dashboards and as a prerequisite check before factor analysis."""
         _payload: Dict[str, Any] = {}
         if model is not None:
             _payload["model"] = model

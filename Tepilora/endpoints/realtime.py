@@ -20,36 +20,39 @@ class RealtimeAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get realtime economic calendar
+        """Get today's economic calendar with scheduled macro events and data releases
 
-        Get current economic calendar events from realtime feed."""
+        Returns today's economic calendar from Redis DB 1, listing scheduled macroeconomic events and data releases (GDP, CPI, employment, central bank decisions, PMI, etc.). Each event includes: time, country, event name, importance level (low/medium/high), previous value, forecast consensus, and actual value (when released). Events are sorted chronologically. The importance filter allows focusing on market-moving releases only. Used by the Dashboard Market Snapshot page for the economic calendar sidebar, by the AI assistant for same-day macro event context, and by alert rules that trigger before/after high-importance releases.
+
+        Examples:
+            >>> client.realtime.calendar()"""
         _payload: Dict[str, Any] = {}
         return self._call("realtime.calendar", params=_payload, options=options, context=context)
 
     def chart(
         self,
         *,
-        symbol: Optional[str] = None,
-        identifier: Optional[str] = None,
+        symbol: Optional[str] = "",
         timeframe: Optional[str] = "1D",
+        identifier: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get realtime chart data
+        """Get realtime chart data and period performance
 
-        Get OHLC chart data for a symbol+timeframe or by TepiloraCode identifier.
+        Returns a clean V3 chart contract for market snapshot symbols using cached EOD history plus realtime quote merge. The response includes entries, last_price, currency and 1D/5D/1M/3M/6M/YTD/1Y/5Y/MAX period performance without diagnostic fields.
 
         Args:
-        symbol: Symbol identifier (required if no identifier)
-        identifier: TepiloraCode — resolves symbol automatically via rt:map:tc
-        timeframe: Timeframe: 1D, 5D, 1M, 1Y"""
+        symbol: Symbol for chart retrieval.
+        timeframe: Chart timeframe: 1D, 5D, 1M, 3M, 6M, YTD, 1Y, 5Y, MAX.
+        identifier: Optional TepiloraCode."""
         _payload: Dict[str, Any] = {}
         if symbol is not None:
             _payload["symbol"] = symbol
-        if identifier is not None:
-            _payload["identifier"] = identifier
         if timeframe is not None:
             _payload["timeframe"] = timeframe
+        if identifier is not None:
+            _payload["identifier"] = identifier
         return self._call("realtime.chart", params=_payload, options=options, context=context)
 
     def health(
@@ -58,29 +61,35 @@ class RealtimeAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get data source health status
+        """Check the health and freshness status of all realtime data sources
 
-        Get health status for all realtime data sources."""
+        Returns the health status of each realtime data category (fx, idx, cmd, crypto, rate, calendar) including: last update timestamp, staleness (seconds since last update), number of symbols tracked, and a health verdict (healthy/stale/down). A category is considered 'stale' if the last update exceeds the expected refresh interval (typically 60 seconds for market data, 300 seconds for calendar). Used by the Dashboard Market Snapshot page for data freshness indicators, by monitoring systems to detect pipeline failures, and as a prerequisite check before serving realtime data to users.
+
+        Examples:
+            >>> client.realtime.health()"""
         _payload: Dict[str, Any] = {}
         return self._call("realtime.health", params=_payload, options=options, context=context)
 
     def quote(
         self,
         *,
-        category: Optional[str] = None,
-        symbol: Optional[str] = None,
+        category: Optional[str] = "",
+        symbol: Optional[str] = "",
         identifier: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get single realtime quote
+        """Get a single realtime quote for a specific symbol within a market category
 
-        Get a single realtime quote by category+symbol or by TepiloraCode identifier.
+        Returns the latest realtime price data for a single symbol within a specified market category (fx, idx, cmd, crypto, rate). Data is sourced from Redis DB 1, populated by the realtime data pipeline from Investing.com feeds. Each quote includes: last price, change (absolute and percentage), bid/ask (when available), high/low, open, previous close, volume, and timestamp. The category parameter selects the market segment: 'fx' for currency pairs (EUR/USD, GBP/JPY), 'idx' for stock indices (S&P 500, DAX, FTSE), 'cmd' for commodities (Gold, Oil, Natural Gas), 'crypto' for cryptocurrencies (BTC, ETH), 'rate' for government bond yields (US 10Y, German Bund). Quotes are enriched with TepiloraCode via reverse rt:map:tc lookup, enabling fallback to securities.history for 1M/1Y charts. Used by the Dashboard Market Snapshot page for individual instrument detail and by the AI assistant for current market data.
 
         Args:
-        category: Asset category: idx, bond, fx, cmd, crypto, futures, stock (required if no identifier)
-        symbol: Symbol identifier e.g. DAX, EURUSD, BTC (required if no identifier)
-        identifier: TepiloraCode — resolves category+symbol automatically via rt:map:tc"""
+        category: Quote category.
+        symbol: Symbol inside the category.
+        identifier: Optional TepiloraCode.
+
+        Examples:
+            >>> client.realtime.quote(category='fx', symbol='EURUSD')"""
         _payload: Dict[str, Any] = {}
         if category is not None:
             _payload["category"] = category
@@ -97,12 +106,15 @@ class RealtimeAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get all realtime quotes
+        """Get all realtime quotes for a market category or all categories at once
 
-        Get all realtime quotes, optionally filtered by category.
+        Returns the latest realtime quotes for all instruments in one or all market categories. Without a category filter, returns the full universe across fx, idx, cmd, crypto, and rate. Each quote includes: symbol, last price, change, percentage change, bid/ask, high/low, open, previous close, and timestamp. Data is sourced from Redis DB 1 with sub-minute refresh from Investing.com feeds. Quotes are enriched with TepiloraCode via reverse rt:map:tc lookup. Used by the Dashboard Market Snapshot page for the full market overview tables (currencies grid, indices table, commodities strip, crypto ticker, bond yields curve) and by alert rules that monitor cross-market conditions.
 
         Args:
-        category: Filter by category: idx, bond, fx, cmd, crypto, futures, stock"""
+        category: Optional category filter for quotes.
+
+        Examples:
+            >>> client.realtime.quotes(category='fx')"""
         _payload: Dict[str, Any] = {}
         if category is not None:
             _payload["category"] = category
@@ -119,36 +131,39 @@ class AsyncRealtimeAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get realtime economic calendar
+        """Get today's economic calendar with scheduled macro events and data releases
 
-        Get current economic calendar events from realtime feed."""
+        Returns today's economic calendar from Redis DB 1, listing scheduled macroeconomic events and data releases (GDP, CPI, employment, central bank decisions, PMI, etc.). Each event includes: time, country, event name, importance level (low/medium/high), previous value, forecast consensus, and actual value (when released). Events are sorted chronologically. The importance filter allows focusing on market-moving releases only. Used by the Dashboard Market Snapshot page for the economic calendar sidebar, by the AI assistant for same-day macro event context, and by alert rules that trigger before/after high-importance releases.
+
+        Examples:
+            >>> await client.realtime.calendar()"""
         _payload: Dict[str, Any] = {}
         return await self._call("realtime.calendar", params=_payload, options=options, context=context)
 
     async def chart(
         self,
         *,
-        symbol: Optional[str] = None,
-        identifier: Optional[str] = None,
+        symbol: Optional[str] = "",
         timeframe: Optional[str] = "1D",
+        identifier: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get realtime chart data
+        """Get realtime chart data and period performance
 
-        Get OHLC chart data for a symbol+timeframe or by TepiloraCode identifier.
+        Returns a clean V3 chart contract for market snapshot symbols using cached EOD history plus realtime quote merge. The response includes entries, last_price, currency and 1D/5D/1M/3M/6M/YTD/1Y/5Y/MAX period performance without diagnostic fields.
 
         Args:
-        symbol: Symbol identifier (required if no identifier)
-        identifier: TepiloraCode — resolves symbol automatically via rt:map:tc
-        timeframe: Timeframe: 1D, 5D, 1M, 1Y"""
+        symbol: Symbol for chart retrieval.
+        timeframe: Chart timeframe: 1D, 5D, 1M, 3M, 6M, YTD, 1Y, 5Y, MAX.
+        identifier: Optional TepiloraCode."""
         _payload: Dict[str, Any] = {}
         if symbol is not None:
             _payload["symbol"] = symbol
-        if identifier is not None:
-            _payload["identifier"] = identifier
         if timeframe is not None:
             _payload["timeframe"] = timeframe
+        if identifier is not None:
+            _payload["identifier"] = identifier
         return await self._call("realtime.chart", params=_payload, options=options, context=context)
 
     async def health(
@@ -157,29 +172,35 @@ class AsyncRealtimeAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get data source health status
+        """Check the health and freshness status of all realtime data sources
 
-        Get health status for all realtime data sources."""
+        Returns the health status of each realtime data category (fx, idx, cmd, crypto, rate, calendar) including: last update timestamp, staleness (seconds since last update), number of symbols tracked, and a health verdict (healthy/stale/down). A category is considered 'stale' if the last update exceeds the expected refresh interval (typically 60 seconds for market data, 300 seconds for calendar). Used by the Dashboard Market Snapshot page for data freshness indicators, by monitoring systems to detect pipeline failures, and as a prerequisite check before serving realtime data to users.
+
+        Examples:
+            >>> await client.realtime.health()"""
         _payload: Dict[str, Any] = {}
         return await self._call("realtime.health", params=_payload, options=options, context=context)
 
     async def quote(
         self,
         *,
-        category: Optional[str] = None,
-        symbol: Optional[str] = None,
+        category: Optional[str] = "",
+        symbol: Optional[str] = "",
         identifier: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get single realtime quote
+        """Get a single realtime quote for a specific symbol within a market category
 
-        Get a single realtime quote by category+symbol or by TepiloraCode identifier.
+        Returns the latest realtime price data for a single symbol within a specified market category (fx, idx, cmd, crypto, rate). Data is sourced from Redis DB 1, populated by the realtime data pipeline from Investing.com feeds. Each quote includes: last price, change (absolute and percentage), bid/ask (when available), high/low, open, previous close, volume, and timestamp. The category parameter selects the market segment: 'fx' for currency pairs (EUR/USD, GBP/JPY), 'idx' for stock indices (S&P 500, DAX, FTSE), 'cmd' for commodities (Gold, Oil, Natural Gas), 'crypto' for cryptocurrencies (BTC, ETH), 'rate' for government bond yields (US 10Y, German Bund). Quotes are enriched with TepiloraCode via reverse rt:map:tc lookup, enabling fallback to securities.history for 1M/1Y charts. Used by the Dashboard Market Snapshot page for individual instrument detail and by the AI assistant for current market data.
 
         Args:
-        category: Asset category: idx, bond, fx, cmd, crypto, futures, stock (required if no identifier)
-        symbol: Symbol identifier e.g. DAX, EURUSD, BTC (required if no identifier)
-        identifier: TepiloraCode — resolves category+symbol automatically via rt:map:tc"""
+        category: Quote category.
+        symbol: Symbol inside the category.
+        identifier: Optional TepiloraCode.
+
+        Examples:
+            >>> await client.realtime.quote(category='fx', symbol='EURUSD')"""
         _payload: Dict[str, Any] = {}
         if category is not None:
             _payload["category"] = category
@@ -196,12 +217,15 @@ class AsyncRealtimeAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get all realtime quotes
+        """Get all realtime quotes for a market category or all categories at once
 
-        Get all realtime quotes, optionally filtered by category.
+        Returns the latest realtime quotes for all instruments in one or all market categories. Without a category filter, returns the full universe across fx, idx, cmd, crypto, and rate. Each quote includes: symbol, last price, change, percentage change, bid/ask, high/low, open, previous close, and timestamp. Data is sourced from Redis DB 1 with sub-minute refresh from Investing.com feeds. Quotes are enriched with TepiloraCode via reverse rt:map:tc lookup. Used by the Dashboard Market Snapshot page for the full market overview tables (currencies grid, indices table, commodities strip, crypto ticker, bond yields curve) and by alert rules that monitor cross-market conditions.
 
         Args:
-        category: Filter by category: idx, bond, fx, cmd, crypto, futures, stock"""
+        category: Optional category filter for quotes.
+
+        Examples:
+            >>> await client.realtime.quotes(category='fx')"""
         _payload: Dict[str, Any] = {}
         if category is not None:
             _payload["category"] = category

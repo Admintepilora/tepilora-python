@@ -18,22 +18,19 @@ class DataAPI(BaseAPI):
         self,
         *,
         identifier: str,
-        id: Optional[str] = None,
         fields: Optional[List[Any]] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get raw security data
+        """Get raw security data fields directly from the D parquet file
 
-        Raw data access for a security.
+        Low-level data access that returns raw fields from the D (Description) parquet for a given security. Unlike securities.details which returns a curated subset, data.security exposes all available columns without transformation. Used for internal tooling, data quality checks, and advanced use cases requiring fields not exposed by the higher-level securities operations.
 
         Args:
-        identifier: TepiloraCode or ISIN
-        fields: Fields to return"""
+        identifier: Single security identifier: ISIN, TepiloraCode, or Bloomberg ticker
+        fields: Optional list of fields to include in the response."""
         _payload: Dict[str, Any] = {}
         _payload["identifier"] = identifier
-        if id is not None:
-            _payload["id"] = id
         if fields is not None:
             _payload["fields"] = fields
         return self._call("data.security", params=_payload, options=options, context=context)
@@ -47,22 +44,19 @@ class AsyncDataAPI(AsyncBaseAPI):
         self,
         *,
         identifier: str,
-        id: Optional[str] = None,
         fields: Optional[List[Any]] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Get raw security data
+        """Get raw security data fields directly from the D parquet file
 
-        Raw data access for a security.
+        Low-level data access that returns raw fields from the D (Description) parquet for a given security. Unlike securities.details which returns a curated subset, data.security exposes all available columns without transformation. Used for internal tooling, data quality checks, and advanced use cases requiring fields not exposed by the higher-level securities operations.
 
         Args:
-        identifier: TepiloraCode or ISIN
-        fields: Fields to return"""
+        identifier: Single security identifier: ISIN, TepiloraCode, or Bloomberg ticker
+        fields: Optional list of fields to include in the response."""
         _payload: Dict[str, Any] = {}
         _payload["identifier"] = identifier
-        if id is not None:
-            _payload["id"] = id
         if fields is not None:
             _payload["fields"] = fields
         return await self._call("data.security", params=_payload, options=options, context=context)
