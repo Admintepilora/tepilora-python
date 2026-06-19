@@ -28,6 +28,7 @@ class SecuritiesAPI(BaseAPI):
         Returns the internal portfolio composition of a fund or ETF, broken down by: top holdings (name and weight), sector allocation (GICS sectors), country/region allocation, asset class allocation, and currency allocation. Data comes from the fund's latest portfolio disclosure. For stocks, returns empty. Used by the Dashboard security detail page for the composition tab and by the reporting module for fund sheet allocation charts.
 
         Args:
+        fields: Optional subset of breakdown dimensions to return, by short name. Valid values: AssetClass, Area, MacroArea, SubArea, Sector, Category, Type, BondType, BondIssuer, BondMaturityFocus, EquityCapFocus, CurrencyExposure, CurrencyHedging, CommoditySector, CommoditySubSector, Currency, Domicile, Exchange, LegalStructure, Replication. If omitted, all dimensions are returned.
         identifier: Optional security identifier
         identifiers: Optional list of security identifiers
 
@@ -428,6 +429,7 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
         Returns the internal portfolio composition of a fund or ETF, broken down by: top holdings (name and weight), sector allocation (GICS sectors), country/region allocation, asset class allocation, and currency allocation. Data comes from the fund's latest portfolio disclosure. For stocks, returns empty. Used by the Dashboard security detail page for the composition tab and by the reporting module for fund sheet allocation charts.
 
         Args:
+        fields: Optional subset of breakdown dimensions to return, by short name. Valid values: AssetClass, Area, MacroArea, SubArea, Sector, Category, Type, BondType, BondIssuer, BondMaturityFocus, EquityCapFocus, CurrencyExposure, CurrencyHedging, CommoditySector, CommoditySubSector, Currency, Domicile, Exchange, LegalStructure, Replication. If omitted, all dimensions are returned.
         identifier: Optional security identifier
         identifiers: Optional list of security identifiers
 

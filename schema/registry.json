@@ -1,5 +1,5 @@
 {
-  "version": "3.11.0",
+  "version": "3.12.0",
   "generated_by": "export_schema",
   "categories": [
     "alerts",
@@ -136,7 +136,10 @@
           "name": "cooldown_seconds",
           "type": "int",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "cooldownSeconds"
+          ]
         },
         {
           "name": "severity",
@@ -350,7 +353,10 @@
           "type": "int",
           "required": false,
           "description": "",
-          "default": 50
+          "default": 50,
+          "aliases": [
+            "maxTopics"
+          ]
         },
         {
           "name": "offset",
@@ -396,7 +402,10 @@
           "type": "int",
           "required": false,
           "description": "",
-          "default": 50
+          "default": 50,
+          "aliases": [
+            "maxTopics"
+          ]
         },
         {
           "name": "offset",
@@ -500,7 +509,10 @@
           "type": "int",
           "required": false,
           "description": "",
-          "default": 200
+          "default": 200,
+          "aliases": [
+            "maxTopics"
+          ]
         },
         {
           "name": "dry_run",
@@ -566,7 +578,10 @@
           "name": "new_name",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "newName"
+          ]
         },
         {
           "name": "rule_type",
@@ -608,7 +623,10 @@
           "name": "cooldown_seconds",
           "type": "int",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "cooldownSeconds"
+          ]
         },
         {
           "name": "severity",
@@ -904,7 +922,10 @@
           "type": "int",
           "required": false,
           "description": "",
-          "default": 50
+          "default": 50,
+          "aliases": [
+            "maxTopics"
+          ]
         },
         {
           "name": "offset",
@@ -1160,7 +1181,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -1190,13 +1215,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -1418,7 +1449,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -1448,13 +1483,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -1676,7 +1717,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -1706,13 +1751,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -1946,7 +1997,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "prices",
@@ -1964,19 +2019,29 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "total_return",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TR",
+            "totalReturn"
+          ]
         },
         {
           "name": "TR",
@@ -2018,7 +2083,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -2048,13 +2117,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -2276,7 +2351,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -2306,13 +2385,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -2534,7 +2619,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -2564,13 +2653,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -2792,7 +2887,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -2822,13 +2921,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -3050,7 +3155,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -3080,13 +3189,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -3308,7 +3423,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -3338,13 +3457,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -3566,7 +3691,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -3596,13 +3725,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -3824,7 +3959,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -3854,13 +3993,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -4082,7 +4227,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -4112,13 +4261,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -4340,7 +4495,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -4370,13 +4529,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -4598,7 +4763,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -4628,13 +4797,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -4856,7 +5031,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -4886,13 +5065,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -5114,7 +5299,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -5144,13 +5333,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -5372,7 +5567,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -5402,13 +5601,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -5630,7 +5835,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -5660,13 +5869,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -5942,7 +6157,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -5972,13 +6191,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -6200,7 +6425,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -6230,13 +6459,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -6458,7 +6693,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -6488,13 +6727,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -6716,7 +6961,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -6746,13 +6995,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -6974,7 +7229,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -7004,13 +7263,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -7232,7 +7497,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -7262,13 +7531,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -7490,7 +7765,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -7520,13 +7799,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -7748,7 +8033,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -7778,13 +8067,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -8006,7 +8301,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -8036,13 +8335,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -8264,7 +8569,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -8294,13 +8603,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -8522,7 +8837,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -8552,13 +8871,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -8780,7 +9105,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -8810,13 +9139,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -9038,7 +9373,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -9068,13 +9407,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -9296,7 +9641,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -9326,13 +9675,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -9554,7 +9909,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -9584,13 +9943,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -9812,7 +10177,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -9842,13 +10211,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -10070,7 +10445,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -10100,13 +10479,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -10328,7 +10713,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -10358,13 +10747,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -10586,7 +10981,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -10616,13 +11015,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -10844,7 +11249,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -10874,13 +11283,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -11102,7 +11517,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -11132,13 +11551,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -11360,7 +11785,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -11390,13 +11819,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -11618,7 +12053,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -11648,13 +12087,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -11876,7 +12321,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -11906,13 +12355,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -12134,7 +12589,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -12164,13 +12623,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -12392,7 +12857,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -12422,13 +12891,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -12650,7 +13125,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -12680,13 +13159,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -12908,7 +13393,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -12938,13 +13427,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -13166,7 +13661,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -13196,13 +13695,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -13424,7 +13929,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -13454,13 +13963,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -13682,7 +14197,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -13712,13 +14231,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -13940,7 +14465,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -13970,13 +14499,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -14198,7 +14733,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -14228,13 +14767,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -14456,7 +15001,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -14486,13 +15035,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -14714,7 +15269,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -14744,13 +15303,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -14972,7 +15537,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -15002,13 +15571,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -15230,7 +15805,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -15260,13 +15839,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -15488,7 +16073,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -15518,13 +16107,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -15746,7 +16341,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -15776,13 +16375,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -16004,7 +16609,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -16034,13 +16643,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -16262,7 +16877,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -16292,13 +16911,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -16520,7 +17145,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -16550,13 +17179,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -16778,7 +17413,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -16808,13 +17447,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -17036,7 +17681,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -17066,13 +17715,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -17294,7 +17949,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -17324,13 +17983,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -17552,7 +18217,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -17582,13 +18251,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -17810,7 +18485,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "query",
@@ -17840,13 +18519,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "TR",
@@ -18074,13 +18759,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "rebalance_frequency",
@@ -18093,7 +18784,10 @@
           "type": "string",
           "required": false,
           "description": "",
-          "default": "twr"
+          "default": "twr",
+          "aliases": [
+            "returnMethod"
+          ]
         }
       ],
       "required_params": [
@@ -18131,13 +18825,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "metrics",
@@ -18258,13 +18958,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "points",
@@ -18324,13 +19030,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "objective",
@@ -18454,7 +19166,10 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         }
       ],
       "required_params": [
@@ -18503,7 +19218,10 @@
           "type": "int",
           "required": false,
           "description": "",
-          "default": 5
+          "default": 5,
+          "aliases": [
+            "maxTopics"
+          ]
         }
       ],
       "required_params": [
@@ -18574,7 +19292,10 @@
           "type": "int",
           "required": false,
           "description": "",
-          "default": 50
+          "default": 50,
+          "aliases": [
+            "maxTopics"
+          ]
         }
       ],
       "required_params": [
@@ -18628,20 +19349,29 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": "Start date for time range queries (ISO 8601 YYYY-MM-DD)"
+          "description": "Start date for time range queries (ISO 8601 YYYY-MM-DD)",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": "End date for time range queries (ISO 8601 YYYY-MM-DD)"
+          "description": "End date for time range queries (ISO 8601 YYYY-MM-DD)",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "limit",
           "type": "int",
           "required": false,
           "description": "",
-          "default": 100
+          "default": 100,
+          "aliases": [
+            "maxTopics"
+          ]
         },
         {
           "name": "include_staging",
@@ -18924,7 +19654,10 @@
           "type": "int",
           "required": false,
           "description": "",
-          "default": 100
+          "default": 100,
+          "aliases": [
+            "maxTopics"
+          ]
         },
         {
           "name": "offset",
@@ -18969,7 +19702,10 @@
           "name": "fee_type",
           "type": "string",
           "required": true,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "feeType"
+          ]
         },
         {
           "name": "description",
@@ -19083,7 +19819,10 @@
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         }
       ],
       "required_params": [
@@ -19192,13 +19931,19 @@
           "name": "fee_type",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "feeType"
+          ]
         },
         {
           "name": "limit",
           "type": "int",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "maxTopics"
+          ]
         }
       ],
       "required_params": [],
@@ -19328,7 +20073,10 @@
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         }
       ],
       "required_params": [
@@ -19514,7 +20262,11 @@
           "name": "identifiers",
           "type": "list",
           "required": false,
-          "description": "Optional list of security identifiers"
+          "description": "Optional list of security identifiers",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "target_maturities",
@@ -19569,7 +20321,11 @@
           "name": "identifiers",
           "type": "list",
           "required": false,
-          "description": "Optional list of security identifiers"
+          "description": "Optional list of security identifiers",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         }
       ],
       "required_params": [],
@@ -19597,7 +20353,11 @@
           "name": "identifiers",
           "type": "list",
           "required": true,
-          "description": "List of security identifiers"
+          "description": "List of security identifiers",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "weights",
@@ -19650,7 +20410,11 @@
           "name": "identifiers",
           "type": "list",
           "required": false,
-          "description": "Optional list of security identifiers"
+          "description": "Optional list of security identifiers",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "weights",
@@ -19710,7 +20474,10 @@
           "name": "limit",
           "type": "int",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "maxTopics"
+          ]
         }
       ],
       "required_params": [],
@@ -19740,7 +20507,11 @@
           "name": "identifiers",
           "type": "list",
           "required": true,
-          "description": "List of security identifiers"
+          "description": "List of security identifiers",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "benchmark",
@@ -20024,7 +20795,10 @@
           "type": "int",
           "required": false,
           "description": "",
-          "default": 50
+          "default": 50,
+          "aliases": [
+            "maxTopics"
+          ]
         },
         {
           "name": "offset",
@@ -20079,7 +20853,10 @@
           "type": "bool",
           "required": false,
           "description": "",
-          "default": false
+          "default": false,
+          "aliases": [
+            "includeSummary"
+          ]
         }
       ],
       "required_params": [],
@@ -20239,7 +21016,10 @@
           "name": "identifier",
           "type": "string",
           "required": true,
-          "description": "Single security identifier: ISIN, TepiloraCode, or Bloomberg ticker"
+          "description": "Single security identifier: ISIN, TepiloraCode, or Bloomberg ticker",
+          "aliases": [
+            "id"
+          ]
         },
         {
           "name": "fields",
@@ -20423,7 +21203,11 @@
           "name": "identifiers",
           "type": "any",
           "required": true,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         }
       ],
       "required_params": [
@@ -20521,7 +21305,10 @@
           "type": "int",
           "required": false,
           "description": "",
-          "default": 100
+          "default": 100,
+          "aliases": [
+            "maxTopics"
+          ]
         }
       ],
       "required_params": [],
@@ -20554,7 +21341,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "filter",
@@ -20939,7 +21730,10 @@
           "type": "int",
           "required": false,
           "description": "",
-          "default": 50
+          "default": 50,
+          "aliases": [
+            "maxTopics"
+          ]
         },
         {
           "name": "offset",
@@ -21115,7 +21909,10 @@
           "type": "int",
           "required": false,
           "description": "",
-          "default": 50
+          "default": 50,
+          "aliases": [
+            "maxTopics"
+          ]
         }
       ],
       "required_params": [
@@ -21235,7 +22032,10 @@
           "name": "source_params",
           "type": "dict",
           "required": false,
-          "description": "Parameters passed to the source operation."
+          "description": "Parameters passed to the source operation.",
+          "aliases": [
+            "params"
+          ]
         },
         {
           "name": "filename",
@@ -21317,13 +22117,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": "Start date for time range queries (ISO 8601 YYYY-MM-DD)"
+          "description": "Start date for time range queries (ISO 8601 YYYY-MM-DD)",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": "End date for time range queries (ISO 8601 YYYY-MM-DD)"
+          "description": "End date for time range queries (ISO 8601 YYYY-MM-DD)",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "frequency",
@@ -21422,13 +22228,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": "Start date for time range queries (ISO 8601 YYYY-MM-DD)"
+          "description": "Start date for time range queries (ISO 8601 YYYY-MM-DD)",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": "End date for time range queries (ISO 8601 YYYY-MM-DD)"
+          "description": "End date for time range queries (ISO 8601 YYYY-MM-DD)",
+          "aliases": [
+            "endDate"
+          ]
         }
       ],
       "required_params": [],
@@ -21463,7 +22275,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "prices",
@@ -21489,13 +22305,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": "Start date for time range queries (ISO 8601 YYYY-MM-DD)"
+          "description": "Start date for time range queries (ISO 8601 YYYY-MM-DD)",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": "End date for time range queries (ISO 8601 YYYY-MM-DD)"
+          "description": "End date for time range queries (ISO 8601 YYYY-MM-DD)",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "cov_method",
@@ -21557,13 +22379,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": "Start date for time range queries (ISO 8601 YYYY-MM-DD)"
+          "description": "Start date for time range queries (ISO 8601 YYYY-MM-DD)",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": "End date for time range queries (ISO 8601 YYYY-MM-DD)"
+          "description": "End date for time range queries (ISO 8601 YYYY-MM-DD)",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "output",
@@ -21617,7 +22445,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "prices",
@@ -21667,13 +22499,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": "Start date for time range queries (ISO 8601 YYYY-MM-DD)"
+          "description": "Start date for time range queries (ISO 8601 YYYY-MM-DD)",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": "End date for time range queries (ISO 8601 YYYY-MM-DD)"
+          "description": "End date for time range queries (ISO 8601 YYYY-MM-DD)",
+          "aliases": [
+            "endDate"
+          ]
         }
       ],
       "required_params": [
@@ -21737,7 +22575,11 @@
           "name": "identifiers",
           "type": "any",
           "required": true,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "statement",
@@ -21750,13 +22592,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": "Start date for time range queries (ISO 8601 YYYY-MM-DD)"
+          "description": "Start date for time range queries (ISO 8601 YYYY-MM-DD)",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": "End date for time range queries (ISO 8601 YYYY-MM-DD)"
+          "description": "End date for time range queries (ISO 8601 YYYY-MM-DD)",
+          "aliases": [
+            "endDate"
+          ]
         }
       ],
       "required_params": [
@@ -21800,7 +22648,10 @@
           "type": "int",
           "required": false,
           "description": "",
-          "default": 10
+          "default": 10,
+          "aliases": [
+            "maxTopics"
+          ]
         }
       ],
       "required_params": [
@@ -21857,7 +22708,11 @@
           "name": "identifiers",
           "type": "any",
           "required": true,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "columns",
@@ -21900,19 +22755,29 @@
           "name": "identifiers",
           "type": "any",
           "required": true,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": "Start date for time range queries (ISO 8601 YYYY-MM-DD)"
+          "description": "Start date for time range queries (ISO 8601 YYYY-MM-DD)",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": "End date for time range queries (ISO 8601 YYYY-MM-DD)"
+          "description": "End date for time range queries (ISO 8601 YYYY-MM-DD)",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "columns",
@@ -21957,19 +22822,29 @@
           "name": "identifiers",
           "type": "any",
           "required": true,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": "Start date for time range queries (ISO 8601 YYYY-MM-DD)"
+          "description": "Start date for time range queries (ISO 8601 YYYY-MM-DD)",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": "End date for time range queries (ISO 8601 YYYY-MM-DD)"
+          "description": "End date for time range queries (ISO 8601 YYYY-MM-DD)",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "rt_policy",
@@ -22021,7 +22896,11 @@
           "name": "identifiers",
           "type": "any",
           "required": true,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         }
       ],
       "required_params": [
@@ -22054,32 +22933,47 @@
           "name": "from_date",
           "type": "string",
           "required": false,
-          "description": "Optional date in ISO 8601 format (YYYY-MM-DD)"
+          "description": "Optional date in ISO 8601 format (YYYY-MM-DD)",
+          "aliases": [
+            "fromDate"
+          ]
         },
         {
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": "Optional date in ISO 8601 format (YYYY-MM-DD)"
+          "description": "Optional date in ISO 8601 format (YYYY-MM-DD)",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "to_date",
           "type": "string",
           "required": false,
-          "description": "Optional date in ISO 8601 format (YYYY-MM-DD)"
+          "description": "Optional date in ISO 8601 format (YYYY-MM-DD)",
+          "aliases": [
+            "toDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": "Optional date in ISO 8601 format (YYYY-MM-DD)"
+          "description": "Optional date in ISO 8601 format (YYYY-MM-DD)",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "limit",
           "type": "int",
           "required": false,
           "description": "",
-          "default": 100
+          "default": 100,
+          "aliases": [
+            "maxTopics"
+          ]
         }
       ],
       "required_params": [],
@@ -22141,7 +23035,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "indicator",
@@ -22153,20 +23051,29 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": "Start date for time range queries (ISO 8601 YYYY-MM-DD)"
+          "description": "Start date for time range queries (ISO 8601 YYYY-MM-DD)",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": "End date for time range queries (ISO 8601 YYYY-MM-DD)"
+          "description": "End date for time range queries (ISO 8601 YYYY-MM-DD)",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "limit",
           "type": "int",
           "required": false,
           "description": "",
-          "default": 1000
+          "default": 1000,
+          "aliases": [
+            "maxTopics"
+          ]
         }
       ],
       "required_params": [],
@@ -22220,7 +23127,10 @@
           "type": "int",
           "required": false,
           "description": "",
-          "default": 100
+          "default": 100,
+          "aliases": [
+            "maxTopics"
+          ]
         }
       ],
       "required_params": [],
@@ -22263,7 +23173,11 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "indicator",
@@ -22282,7 +23196,10 @@
           "type": "int",
           "required": false,
           "description": "",
-          "default": 100
+          "default": 100,
+          "aliases": [
+            "maxTopics"
+          ]
         }
       ],
       "required_params": [],
@@ -22334,7 +23251,10 @@
           "type": "int",
           "required": false,
           "description": "",
-          "default": 50
+          "default": 50,
+          "aliases": [
+            "maxTopics"
+          ]
         }
       ],
       "required_params": [
@@ -22398,14 +23318,20 @@
           "type": "int",
           "required": false,
           "description": "",
-          "default": 50
+          "default": 50,
+          "aliases": [
+            "maxTopics"
+          ]
         },
         {
           "name": "force_refresh",
           "type": "bool",
           "required": false,
           "description": "",
-          "default": false
+          "default": false,
+          "aliases": [
+            "forceRefresh"
+          ]
         }
       ],
       "required_params": [],
@@ -22432,13 +23358,16 @@
       "params": [
         {
           "name": "search_key",
-          "type": "string",
+          "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "searchKey"
+          ]
         },
         {
           "name": "source",
-          "type": "string",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -22447,14 +23376,33 @@
           "type": "int",
           "required": false,
           "description": "",
-          "default": 20
+          "default": 20,
+          "aliases": [
+            "maxTopics"
+          ]
+        },
+        {
+          "name": "sort",
+          "type": "string",
+          "required": false,
+          "description": "",
+          "default": "date"
+        },
+        {
+          "name": "order",
+          "type": "string",
+          "required": false,
+          "description": "",
+          "default": "desc"
         }
       ],
       "required_params": [],
       "optional_params": [
         "search_key",
         "source",
-        "limit"
+        "limit",
+        "sort",
+        "order"
       ],
       "credits": 1,
       "tags": [],
@@ -22497,39 +23445,57 @@
           "name": "from_date",
           "type": "string",
           "required": false,
-          "description": "Optional date in ISO 8601 format (YYYY-MM-DD)"
+          "description": "Optional date in ISO 8601 format (YYYY-MM-DD)",
+          "aliases": [
+            "fromDate"
+          ]
         },
         {
           "name": "to_date",
           "type": "string",
           "required": false,
-          "description": "Optional date in ISO 8601 format (YYYY-MM-DD)"
+          "description": "Optional date in ISO 8601 format (YYYY-MM-DD)",
+          "aliases": [
+            "toDate"
+          ]
         },
         {
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": "Optional date in ISO 8601 format (YYYY-MM-DD)"
+          "description": "Optional date in ISO 8601 format (YYYY-MM-DD)",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": "Optional date in ISO 8601 format (YYYY-MM-DD)"
+          "description": "Optional date in ISO 8601 format (YYYY-MM-DD)",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "exclude_topics",
           "type": "bool",
           "required": false,
           "description": "",
-          "default": false
+          "default": false,
+          "aliases": [
+            "excludeTopics"
+          ]
         },
         {
           "name": "limit",
           "type": "int",
           "required": false,
           "description": "",
-          "default": 50
+          "default": 50,
+          "aliases": [
+            "maxTopics"
+          ]
         },
         {
           "name": "offset",
@@ -22542,7 +23508,8 @@
           "name": "sort",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "default": "date"
         },
         {
           "name": "order",
@@ -22596,25 +23563,43 @@
           "type": "int",
           "required": false,
           "description": "",
-          "default": 50
+          "default": 50,
+          "aliases": [
+            "maxTopics"
+          ]
         },
         {
           "name": "term_type",
           "type": "string",
           "required": false,
           "description": "",
-          "default": "all"
+          "default": "all",
+          "aliases": [
+            "termType"
+          ]
         },
         {
           "name": "finance_only",
           "type": "bool",
           "required": false,
           "description": "",
-          "default": false
+          "default": false,
+          "aliases": [
+            "financeOnly"
+          ]
         },
         {
           "name": "min_velocity",
           "type": "float",
+          "required": false,
+          "description": "",
+          "aliases": [
+            "minVelocity"
+          ]
+        },
+        {
+          "name": "filters",
+          "type": "dict",
           "required": false,
           "description": ""
         }
@@ -22624,7 +23609,8 @@
         "limit",
         "term_type",
         "finance_only",
-        "min_velocity"
+        "min_velocity",
+        "filters"
       ],
       "credits": 1,
       "tags": [],
@@ -22661,13 +23647,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": "Optional date in ISO 8601 format (YYYY-MM-DD)"
+          "description": "Optional date in ISO 8601 format (YYYY-MM-DD)",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": "Optional date in ISO 8601 format (YYYY-MM-DD)"
+          "description": "Optional date in ISO 8601 format (YYYY-MM-DD)",
+          "aliases": [
+            "endDate"
+          ]
         }
       ],
       "required_params": [
@@ -22703,20 +23695,29 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": "Optional date in ISO 8601 format (YYYY-MM-DD)"
+          "description": "Optional date in ISO 8601 format (YYYY-MM-DD)",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": "Optional date in ISO 8601 format (YYYY-MM-DD)"
+          "description": "Optional date in ISO 8601 format (YYYY-MM-DD)",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "limit",
           "type": "int",
           "required": false,
           "description": "",
-          "default": 168
+          "default": 168,
+          "aliases": [
+            "maxTopics"
+          ]
         }
       ],
       "required_params": [
@@ -23116,7 +24117,7 @@
         },
         {
           "name": "weights",
-          "type": "dict",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -23142,20 +24143,30 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "total_return",
           "type": "bool",
           "required": false,
           "description": "",
-          "default": false
+          "default": false,
+          "aliases": [
+            "TR",
+            "totalReturn"
+          ]
         },
         {
           "name": "user_prices",
@@ -23228,19 +24239,29 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "total_return",
           "type": "bool",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TR",
+            "totalReturn"
+          ]
         }
       ],
       "required_params": [
@@ -23279,7 +24300,7 @@
         },
         {
           "name": "weights",
-          "type": "dict",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -23296,6 +24317,12 @@
           "description": ""
         },
         {
+          "name": "base_currency",
+          "type": "string",
+          "required": false,
+          "description": "Portfolio base currency used for security price conversion."
+        },
+        {
           "name": "drifting",
           "type": "bool",
           "required": false,
@@ -23305,19 +24332,35 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
+        },
+        {
+          "name": "settings",
+          "type": "dict",
+          "required": false,
+          "description": "Optional portfolio settings. Currency keys are read from settings when no explicit currency is supplied."
         },
         {
           "name": "total_return",
           "type": "bool",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TR",
+            "totalReturn"
+          ]
         },
         {
           "name": "user_prices",
@@ -23332,9 +24375,11 @@
         "weights",
         "components",
         "currency",
+        "base_currency",
         "drifting",
         "start_date",
         "end_date",
+        "settings",
         "total_return",
         "user_prices"
       ],
@@ -23450,12 +24495,6 @@
           "description": ""
         },
         {
-          "name": "initial_weights",
-          "type": "dict",
-          "required": false,
-          "description": ""
-        },
-        {
           "name": "trades",
           "type": "list",
           "required": false,
@@ -23469,21 +24508,27 @@
         },
         {
           "name": "weights",
-          "type": "dict",
+          "type": "any",
           "required": false,
-          "description": ""
+          "description": "Portfolio weights. For fixed_weights and drifting_weights accepts either {TepiloraCode: weight}, a list of {'date': YYYY-MM-DD, 'weights': {...}}, or a date-keyed map {'YYYY-MM-DD': {...}}."
         },
         {
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "type",
@@ -23537,7 +24582,6 @@
         "currency",
         "holdings",
         "initial_cash",
-        "initial_weights",
         "trades",
         "values",
         "weights",
@@ -23609,19 +24653,28 @@
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "target_weights",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "targetWeights"
+          ]
         },
         {
           "name": "threshold",
@@ -23633,7 +24686,11 @@
           "name": "total_return",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TR",
+            "totalReturn"
+          ]
         },
         {
           "name": "user_prices",
@@ -23666,7 +24723,7 @@
       "category": "portfolio",
       "operation": "exposure",
       "summary": "Calculate portfolio exposure by sector, country, currency, or asset class",
-      "description": "Computes weighted portfolio exposure across a chosen dimension: sector (GICS), country, currency, or asset_class. Uses look-through analysis — resolves fund/ETF holdings to their underlying exposures. Returns exposure percentages per category. Used by the Dashboard portfolio composition pie charts and by compliance monitoring.",
+      "description": "Computes weighted portfolio exposure across a chosen exposure_type: sector (GICS), geography/region, currency, or asset_class. Uses look-through analysis — resolves fund/ETF holdings to their underlying exposures. Returns exposure percentages per category. Used by the Dashboard portfolio composition pie charts and by compliance monitoring.",
       "methodology_doc": "",
       "params": [
         {
@@ -23677,7 +24734,7 @@
         },
         {
           "name": "weights",
-          "type": "dict",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -23700,22 +24757,32 @@
           "description": ""
         },
         {
-          "name": "dimension",
+          "name": "exposure_type",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "default": "asset_class",
+          "aliases": [
+            "exposureType"
+          ]
         },
         {
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "currency",
@@ -23733,7 +24800,11 @@
           "name": "total_return",
           "type": "bool",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TR",
+            "totalReturn"
+          ]
         },
         {
           "name": "user_prices",
@@ -23749,7 +24820,7 @@
         "components",
         "date",
         "dimensions",
-        "dimension",
+        "exposure_type",
         "start_date",
         "end_date",
         "currency",
@@ -23837,7 +24908,10 @@
           "type": "int",
           "required": false,
           "description": "",
-          "default": 50
+          "default": 50,
+          "aliases": [
+            "maxTopics"
+          ]
         },
         {
           "name": "offset",
@@ -23893,7 +24967,11 @@
           "name": "identifiers",
           "type": "any",
           "required": true,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "settings",
@@ -23918,20 +24996,30 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "total_return",
           "type": "bool",
           "required": false,
           "description": "",
-          "default": false
+          "default": false,
+          "aliases": [
+            "TR",
+            "totalReturn"
+          ]
         },
         {
           "name": "currency",
@@ -23985,7 +25073,10 @@
           "name": "target_weights",
           "type": "dict",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "targetWeights"
+          ]
         },
         {
           "name": "costs",
@@ -24052,9 +25143,9 @@
         },
         {
           "name": "weights",
-          "type": "dict",
+          "type": "any",
           "required": false,
-          "description": ""
+          "description": "Ad-hoc portfolio weights. Accepts either {TepiloraCode: weight}, a list of {'date': YYYY-MM-DD, 'weights': {...}}, or a date-keyed map."
         },
         {
           "name": "components",
@@ -24183,6 +25274,15 @@
           "description": ""
         },
         {
+          "name": "returns_frequency",
+          "type": "any",
+          "required": false,
+          "description": "Output returns interval: daily, weekly, monthly, or annual.",
+          "aliases": [
+            "frequency"
+          ]
+        },
+        {
           "name": "settings",
           "type": "dict",
           "required": false,
@@ -24198,26 +25298,39 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "return_method",
           "type": "string",
           "required": false,
           "description": "",
-          "default": "twr"
+          "default": "twr",
+          "aliases": [
+            "returnMethod"
+          ]
         },
         {
           "name": "total_return",
           "type": "bool",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TR",
+            "totalReturn"
+          ]
         },
         {
           "name": "user_prices",
@@ -24251,6 +25364,7 @@
         "rebalance_effective",
         "rebalance_frequency",
         "rebalance_on",
+        "returns_frequency",
         "settings",
         "stale_policy",
         "start_date",
@@ -24424,7 +25538,11 @@
           "name": "shocks",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "customShocks",
+            "custom_shocks"
+          ]
         },
         {
           "name": "steps",
@@ -24477,7 +25595,7 @@
         },
         {
           "name": "weights",
-          "type": "dict",
+          "type": "any",
           "required": false,
           "description": ""
         },
@@ -24551,19 +25669,29 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "total_return",
           "type": "any",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TR",
+            "totalReturn"
+          ]
         }
       ],
       "required_params": [],
@@ -24674,6 +25802,18 @@
           "type": "dict",
           "required": false,
           "description": ""
+        },
+        {
+          "name": "currency",
+          "type": "string",
+          "required": false,
+          "description": "Portfolio reporting currency to store in settings."
+        },
+        {
+          "name": "base_currency",
+          "type": "string",
+          "required": false,
+          "description": "Portfolio base currency to store in settings."
         }
       ],
       "required_params": [
@@ -24684,7 +25824,9 @@
         "input_data",
         "benchmark",
         "description",
-        "settings"
+        "settings",
+        "currency",
+        "base_currency"
       ],
       "credits": 1,
       "tags": [],
@@ -24753,7 +25895,11 @@
           "name": "identifiers",
           "type": "list",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "portfolio_id",
@@ -24971,7 +26117,10 @@
           "type": "int",
           "required": false,
           "description": "",
-          "default": 50
+          "default": 50,
+          "aliases": [
+            "maxTopics"
+          ]
         },
         {
           "name": "offset",
@@ -25121,7 +26270,10 @@
           "type": "int",
           "required": false,
           "description": "",
-          "default": 50
+          "default": 50,
+          "aliases": [
+            "maxTopics"
+          ]
         }
       ],
       "required_params": [
@@ -25184,7 +26336,10 @@
           "type": "int",
           "required": false,
           "description": "",
-          "default": 50
+          "default": 50,
+          "aliases": [
+            "maxTopics"
+          ]
         }
       ],
       "required_params": [],
@@ -25231,7 +26386,10 @@
           "type": "int",
           "required": false,
           "description": "",
-          "default": 20
+          "default": 20,
+          "aliases": [
+            "maxTopics"
+          ]
         }
       ],
       "required_params": [],
@@ -25275,7 +26433,10 @@
           "type": "int",
           "required": false,
           "description": "",
-          "default": 50
+          "default": 50,
+          "aliases": [
+            "maxTopics"
+          ]
         },
         {
           "name": "offset",
@@ -25348,7 +26509,10 @@
           "name": "new_name",
           "type": "string",
           "required": true,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "newName"
+          ]
         },
         {
           "name": "description",
@@ -25495,7 +26659,10 @@
           "name": "query_id",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "queryId"
+          ]
         },
         {
           "name": "name",
@@ -25514,7 +26681,10 @@
           "type": "int",
           "required": false,
           "description": "",
-          "default": 100
+          "default": 100,
+          "aliases": [
+            "maxTopics"
+          ]
         },
         {
           "name": "offset",
@@ -25601,7 +26771,10 @@
           "type": "int",
           "required": false,
           "description": "",
-          "default": 50
+          "default": 50,
+          "aliases": [
+            "maxTopics"
+          ]
         },
         {
           "name": "offset",
@@ -25711,7 +26884,10 @@
           "type": "int",
           "required": false,
           "description": "",
-          "default": 50
+          "default": 50,
+          "aliases": [
+            "maxTopics"
+          ]
         },
         {
           "name": "type",
@@ -26041,13 +27217,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "risk_free_rate",
@@ -26185,13 +27367,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "benchmark_id",
@@ -26378,7 +27566,10 @@
           "type": "int",
           "required": false,
           "description": "Requested max results per type; legacy runtime caps to 20.",
-          "default": 5
+          "default": 5,
+          "aliases": [
+            "maxTopics"
+          ]
         },
         {
           "name": "include_recent",
@@ -26424,7 +27615,7 @@
           "name": "fields",
           "type": "list",
           "required": false,
-          "description": ""
+          "description": "Optional subset of breakdown dimensions to return, by short name. Valid values: AssetClass, Area, MacroArea, SubArea, Sector, Category, Type, BondType, BondIssuer, BondMaturityFocus, EquityCapFocus, CurrencyExposure, CurrencyHedging, CommoditySector, CommoditySubSector, Currency, Domicile, Exchange, LegalStructure, Replication. If omitted, all dimensions are returned."
         },
         {
           "name": "identifier",
@@ -26436,7 +27627,11 @@
           "name": "identifiers",
           "type": "list",
           "required": false,
-          "description": "Optional list of security identifiers"
+          "description": "Optional list of security identifiers",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         }
       ],
       "required_params": [],
@@ -26479,7 +27674,11 @@
           "name": "identifiers",
           "type": "list",
           "required": false,
-          "description": "Optional list of security identifiers"
+          "description": "Optional list of security identifiers",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         }
       ],
       "required_params": [],
@@ -26566,7 +27765,11 @@
           "name": "identifiers",
           "type": "list",
           "required": false,
-          "description": "Optional list of security identifiers"
+          "description": "Optional list of security identifiers",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         }
       ],
       "required_params": [],
@@ -26608,14 +27811,20 @@
           "name": "include_facets",
           "type": "bool",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "includeFacets"
+          ]
         },
         {
           "name": "limit",
           "type": "int",
           "required": false,
           "description": "",
-          "default": 50
+          "default": 50,
+          "aliases": [
+            "maxTopics"
+          ]
         },
         {
           "name": "offset",
@@ -26711,26 +27920,39 @@
           "name": "identifiers",
           "type": "any",
           "required": false,
-          "description": "Single TepiloraCode or list of TepiloraCodes."
+          "description": "Single TepiloraCode or list of TepiloraCodes.",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": "Start date for time range queries (ISO 8601 YYYY-MM-DD)"
+          "description": "Start date for time range queries (ISO 8601 YYYY-MM-DD)",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": "End date for time range queries (ISO 8601 YYYY-MM-DD)"
+          "description": "End date for time range queries (ISO 8601 YYYY-MM-DD)",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "limit",
           "type": "int",
           "required": false,
           "description": "Maximum number of rows per security.",
-          "default": 5000
+          "default": 5000,
+          "aliases": [
+            "maxTopics"
+          ]
         },
         {
           "name": "pivot",
@@ -26750,7 +27972,11 @@
           "type": "bool",
           "required": false,
           "description": "Return total return prices.",
-          "default": false
+          "default": false,
+          "aliases": [
+            "TR",
+            "totalReturn"
+          ]
         }
       ],
       "required_params": [],
@@ -26856,7 +28082,11 @@
           "name": "identifiers",
           "type": "list",
           "required": false,
-          "description": "Optional list of security identifiers"
+          "description": "Optional list of security identifiers",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         }
       ],
       "required_params": [],
@@ -26890,14 +28120,21 @@
           "name": "identifiers",
           "type": "list",
           "required": false,
-          "description": "Optional list of security identifiers"
+          "description": "Optional list of security identifiers",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "limit",
           "type": "int",
           "required": false,
           "description": "",
-          "default": 36
+          "default": 36,
+          "aliases": [
+            "maxTopics"
+          ]
         }
       ],
       "required_params": [],
@@ -26932,7 +28169,11 @@
           "name": "identifiers",
           "type": "list",
           "required": false,
-          "description": "Optional list of security identifiers"
+          "description": "Optional list of security identifiers",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         }
       ],
       "required_params": [],
@@ -26966,7 +28207,10 @@
           "name": "query_id",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "queryId"
+          ]
         },
         {
           "name": "query_name",
@@ -27009,7 +28253,10 @@
           "type": "int",
           "required": false,
           "description": "",
-          "default": 50
+          "default": 50,
+          "aliases": [
+            "maxTopics"
+          ]
         }
       ],
       "required_params": [],
@@ -27058,7 +28305,10 @@
           "type": "int",
           "required": false,
           "description": "",
-          "default": 50
+          "default": 50,
+          "aliases": [
+            "maxTopics"
+          ]
         },
         {
           "name": "offset",
@@ -27072,13 +28322,19 @@
           "type": "bool",
           "required": false,
           "description": "",
-          "default": false
+          "default": false,
+          "aliases": [
+            "includeFacets"
+          ]
         },
         {
           "name": "include_metrics",
           "type": "bool",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "includeMetrics"
+          ]
         },
         {
           "name": "sort",
@@ -27158,7 +28414,11 @@
           "name": "identifiers",
           "type": "list",
           "required": true,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "TepiloraCode",
+            "tepiloraCode"
+          ]
         },
         {
           "name": "metrics",
@@ -27256,7 +28516,10 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "prices",
@@ -27310,13 +28573,19 @@
           "type": "int",
           "required": false,
           "description": "",
-          "default": 20
+          "default": 20,
+          "aliases": [
+            "maxTopics"
+          ]
         },
         {
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         }
       ],
       "required_params": [
@@ -27367,13 +28636,19 @@
           "type": "int",
           "required": false,
           "description": "",
-          "default": 50
+          "default": 50,
+          "aliases": [
+            "maxTopics"
+          ]
         },
         {
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         }
       ],
       "required_params": [],
@@ -27420,13 +28695,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "prices",
@@ -27480,13 +28761,19 @@
           "name": "start_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "startDate"
+          ]
         },
         {
           "name": "end_date",
           "type": "string",
           "required": false,
-          "description": ""
+          "description": "",
+          "aliases": [
+            "endDate"
+          ]
         },
         {
           "name": "prices",

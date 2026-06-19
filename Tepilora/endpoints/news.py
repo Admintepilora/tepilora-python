@@ -52,9 +52,11 @@ class NewsAPI(BaseAPI):
     def latest(
         self,
         *,
-        search_key: Optional[str] = None,
-        source: Optional[str] = None,
+        search_key: Optional[Any] = None,
+        source: Optional[Any] = None,
         limit: Optional[int] = 20,
+        sort: Optional[str] = "date",
+        order: Optional[str] = "desc",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -72,6 +74,10 @@ class NewsAPI(BaseAPI):
             _payload["source"] = source
         if limit is not None:
             _payload["limit"] = limit
+        if sort is not None:
+            _payload["sort"] = sort
+        if order is not None:
+            _payload["order"] = order
         return self._call("news.latest", params=_payload, options=options, context=context, response_format=response_format)
 
     def search(
@@ -86,7 +92,7 @@ class NewsAPI(BaseAPI):
         exclude_topics: Optional[bool] = False,
         limit: Optional[int] = 50,
         offset: Optional[int] = 0,
-        sort: Optional[str] = None,
+        sort: Optional[str] = "date",
         order: Optional[str] = "desc",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
@@ -136,6 +142,7 @@ class NewsAPI(BaseAPI):
         term_type: Optional[str] = "all",
         finance_only: Optional[bool] = False,
         min_velocity: Optional[float] = None,
+        filters: Optional[Dict[str, Any]] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -155,6 +162,8 @@ class NewsAPI(BaseAPI):
             _payload["finance_only"] = finance_only
         if min_velocity is not None:
             _payload["min_velocity"] = min_velocity
+        if filters is not None:
+            _payload["filters"] = filters
         return self._call("news.trending", params=_payload, options=options, context=context, response_format=response_format)
 
     def trending_compare(
@@ -253,9 +262,11 @@ class AsyncNewsAPI(AsyncBaseAPI):
     async def latest(
         self,
         *,
-        search_key: Optional[str] = None,
-        source: Optional[str] = None,
+        search_key: Optional[Any] = None,
+        source: Optional[Any] = None,
         limit: Optional[int] = 20,
+        sort: Optional[str] = "date",
+        order: Optional[str] = "desc",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -273,6 +284,10 @@ class AsyncNewsAPI(AsyncBaseAPI):
             _payload["source"] = source
         if limit is not None:
             _payload["limit"] = limit
+        if sort is not None:
+            _payload["sort"] = sort
+        if order is not None:
+            _payload["order"] = order
         return await self._call("news.latest", params=_payload, options=options, context=context, response_format=response_format)
 
     async def search(
@@ -287,7 +302,7 @@ class AsyncNewsAPI(AsyncBaseAPI):
         exclude_topics: Optional[bool] = False,
         limit: Optional[int] = 50,
         offset: Optional[int] = 0,
-        sort: Optional[str] = None,
+        sort: Optional[str] = "date",
         order: Optional[str] = "desc",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
@@ -337,6 +352,7 @@ class AsyncNewsAPI(AsyncBaseAPI):
         term_type: Optional[str] = "all",
         finance_only: Optional[bool] = False,
         min_velocity: Optional[float] = None,
+        filters: Optional[Dict[str, Any]] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
@@ -356,6 +372,8 @@ class AsyncNewsAPI(AsyncBaseAPI):
             _payload["finance_only"] = finance_only
         if min_velocity is not None:
             _payload["min_velocity"] = min_velocity
+        if filters is not None:
+            _payload["filters"] = filters
         return await self._call("news.trending", params=_payload, options=options, context=context, response_format=response_format)
 
     async def trending_compare(

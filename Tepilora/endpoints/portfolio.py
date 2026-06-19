@@ -19,7 +19,7 @@ class PortfolioAPI(BaseAPI):
         *,
         benchmark_weights: Dict[str, Any],
         id: Optional[str] = None,
-        weights: Optional[Dict[str, Any]] = None,
+        weights: Optional[Any] = None,
         components: Optional[List[Any]] = None,
         currency: Optional[str] = None,
         drifting: Optional[bool] = None,
@@ -96,12 +96,14 @@ class PortfolioAPI(BaseAPI):
         self,
         *,
         id: Optional[str] = None,
-        weights: Optional[Dict[str, Any]] = None,
+        weights: Optional[Any] = None,
         components: Optional[List[Any]] = None,
         currency: Optional[str] = None,
+        base_currency: Optional[str] = None,
         drifting: Optional[bool] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        settings: Optional[Dict[str, Any]] = None,
         total_return: Optional[bool] = None,
         user_prices: Optional[Dict[str, Any]] = None,
         options: Optional[Dict[str, Any]] = None,
@@ -110,7 +112,11 @@ class PortfolioAPI(BaseAPI):
     ) -> Any:
         """Calculate the return contribution of each holding to total portfolio return
 
-        Decomposes total portfolio return into contributions from each holding. Each position's contribution equals its weight multiplied by its return. Returns a table of positions with individual return, weight, and contribution to total. Used by the Dashboard portfolio attribution view and by reporting modules."""
+        Decomposes total portfolio return into contributions from each holding. Each position's contribution equals its weight multiplied by its return. Returns a table of positions with individual return, weight, and contribution to total. Used by the Dashboard portfolio attribution view and by reporting modules.
+
+        Args:
+        base_currency: Portfolio base currency used for security price conversion.
+        settings: Optional portfolio settings. Currency keys are read from settings when no explicit currency is supplied."""
         _payload: Dict[str, Any] = {}
         if id is not None:
             _payload["id"] = id
@@ -120,12 +126,16 @@ class PortfolioAPI(BaseAPI):
             _payload["components"] = components
         if currency is not None:
             _payload["currency"] = currency
+        if base_currency is not None:
+            _payload["base_currency"] = base_currency
         if drifting is not None:
             _payload["drifting"] = drifting
         if start_date is not None:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
+        if settings is not None:
+            _payload["settings"] = settings
         if total_return is not None:
             _payload["total_return"] = total_return
         if user_prices is not None:
@@ -163,10 +173,9 @@ class PortfolioAPI(BaseAPI):
         currency: Optional[str] = None,
         holdings: Optional[List[Any]] = None,
         initial_cash: Optional[float] = None,
-        initial_weights: Optional[Dict[str, Any]] = None,
         trades: Optional[List[Any]] = None,
         values: Optional[List[Any]] = None,
-        weights: Optional[Dict[str, Any]] = None,
+        weights: Optional[Any] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         type_: Optional[str] = "Real",
@@ -180,7 +189,10 @@ class PortfolioAPI(BaseAPI):
     ) -> Any:
         """Create a new portfolio with specified input type and holdings
 
-        Creates a portfolio in the Portfolios MongoDB collection. Supports 5 input types: fixed_weights (static allocation percentages), drifting_weights (weights that drift with market returns), holdings (position snapshots with quantities at dates), values (position values at dates), and trades (transaction-level input). Each input type requires specific data: weights needs {TepiloraCode: weight}, holdings needs [{date, positions}], trades needs [{date, type, security, quantity, price}]. Optionally sets benchmark, description, visibility, and portfolio type (Real/Suggested/Simulation/Backtest/Model). Used by the Dashboard portfolio creation wizard and by workflow bridges."""
+        Creates a portfolio in the Portfolios MongoDB collection. Supports 5 input types: fixed_weights (static allocation percentages), drifting_weights (weights that drift with market returns), holdings (position snapshots with quantities at dates), values (position values at dates), and trades (transaction-level input). Each input type requires specific data: weights needs {TepiloraCode: weight}, holdings needs [{date, positions}], trades needs [{date, type, security, quantity, price}]. Optionally sets benchmark, description, visibility, and portfolio type (Real/Suggested/Simulation/Backtest/Model). Used by the Dashboard portfolio creation wizard and by workflow bridges.
+
+        Args:
+        weights: Portfolio weights. For fixed_weights and drifting_weights accepts either {TepiloraCode: weight}, a list of {'date': YYYY-MM-DD, 'weights': {...}}, or a date-keyed map {'YYYY-MM-DD': {...}}."""
         _payload: Dict[str, Any] = {}
         _payload["name"] = name
         _payload["input_type"] = input_type
@@ -200,8 +212,6 @@ class PortfolioAPI(BaseAPI):
             _payload["holdings"] = holdings
         if initial_cash is not None:
             _payload["initial_cash"] = initial_cash
-        if initial_weights is not None:
-            _payload["initial_weights"] = initial_weights
         if trades is not None:
             _payload["trades"] = trades
         if values is not None:
@@ -281,11 +291,11 @@ class PortfolioAPI(BaseAPI):
         self,
         *,
         id: Optional[str] = None,
-        weights: Optional[Dict[str, Any]] = None,
+        weights: Optional[Any] = None,
         components: Optional[List[Any]] = None,
         date: Optional[str] = None,
         dimensions: Optional[List[Any]] = None,
-        dimension: Optional[str] = None,
+        exposure_type: Optional[str] = "asset_class",
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         currency: Optional[str] = None,
@@ -298,7 +308,7 @@ class PortfolioAPI(BaseAPI):
     ) -> Any:
         """Calculate portfolio exposure by sector, country, currency, or asset class
 
-        Computes weighted portfolio exposure across a chosen dimension: sector (GICS), country, currency, or asset_class. Uses look-through analysis — resolves fund/ETF holdings to their underlying exposures. Returns exposure percentages per category. Used by the Dashboard portfolio composition pie charts and by compliance monitoring."""
+        Computes weighted portfolio exposure across a chosen exposure_type: sector (GICS), geography/region, currency, or asset_class. Uses look-through analysis — resolves fund/ETF holdings to their underlying exposures. Returns exposure percentages per category. Used by the Dashboard portfolio composition pie charts and by compliance monitoring."""
         _payload: Dict[str, Any] = {}
         if id is not None:
             _payload["id"] = id
@@ -310,8 +320,8 @@ class PortfolioAPI(BaseAPI):
             _payload["date"] = date
         if dimensions is not None:
             _payload["dimensions"] = dimensions
-        if dimension is not None:
-            _payload["dimension"] = dimension
+        if exposure_type is not None:
+            _payload["exposure_type"] = exposure_type
         if start_date is not None:
             _payload["start_date"] = start_date
         if end_date is not None:
@@ -454,7 +464,7 @@ class PortfolioAPI(BaseAPI):
         self,
         *,
         id: Optional[str] = None,
-        weights: Optional[Dict[str, Any]] = None,
+        weights: Optional[Any] = None,
         components: Optional[List[Any]] = None,
         holdings: Optional[List[Any]] = None,
         trades: Optional[List[Any]] = None,
@@ -476,6 +486,7 @@ class PortfolioAPI(BaseAPI):
         rebalance_effective: Optional[Any] = None,
         rebalance_frequency: Optional[Any] = None,
         rebalance_on: Optional[Any] = None,
+        returns_frequency: Optional[Any] = None,
         settings: Optional[Dict[str, Any]] = None,
         stale_policy: Optional[Any] = None,
         start_date: Optional[str] = None,
@@ -489,7 +500,11 @@ class PortfolioAPI(BaseAPI):
     ) -> Any:
         """Calculate portfolio return time series using TWR, MWR, or Modified Dietz
 
-        Computes the daily return time series for a portfolio using the selected return methodology: TWR (Time-Weighted Return, for benchmark comparison), MWR (Money-Weighted Return via XIRR, for actual investor experience), or Modified Dietz (fast MWR approximation). Supports fixed weights (periodic rebalancing at configurable frequency), drifting weights (buy-and-hold drift), and transaction-based input. Returns daily NAV series, cumulative return, and period statistics. Cash flow convention: negative = deposit, positive = withdrawal. Used by the Dashboard portfolio performance chart and by all portfolio analytics."""
+        Computes the daily return time series for a portfolio using the selected return methodology: TWR (Time-Weighted Return, for benchmark comparison), MWR (Money-Weighted Return via XIRR, for actual investor experience), or Modified Dietz (fast MWR approximation). Supports fixed weights (periodic rebalancing at configurable frequency), drifting weights (buy-and-hold drift), and transaction-based input. Returns daily NAV series, cumulative return, and period statistics. Cash flow convention: negative = deposit, positive = withdrawal. Used by the Dashboard portfolio performance chart and by all portfolio analytics.
+
+        Args:
+        weights: Ad-hoc portfolio weights. Accepts either {TepiloraCode: weight}, a list of {'date': YYYY-MM-DD, 'weights': {...}}, or a date-keyed map.
+        returns_frequency: Output returns interval: daily, weekly, monthly, or annual."""
         _payload: Dict[str, Any] = {}
         if id is not None:
             _payload["id"] = id
@@ -537,6 +552,8 @@ class PortfolioAPI(BaseAPI):
             _payload["rebalance_frequency"] = rebalance_frequency
         if rebalance_on is not None:
             _payload["rebalance_on"] = rebalance_on
+        if returns_frequency is not None:
+            _payload["returns_frequency"] = returns_frequency
         if settings is not None:
             _payload["settings"] = settings
         if stale_policy is not None:
@@ -650,7 +667,7 @@ class PortfolioAPI(BaseAPI):
         self,
         *,
         id: Optional[str] = None,
-        weights: Optional[Dict[str, Any]] = None,
+        weights: Optional[Any] = None,
         components: Optional[List[Any]] = None,
         holdings: Optional[List[Any]] = None,
         trades: Optional[List[Any]] = None,
@@ -736,12 +753,18 @@ class PortfolioAPI(BaseAPI):
         benchmark: Optional[str] = None,
         description: Optional[str] = None,
         settings: Optional[Dict[str, Any]] = None,
+        currency: Optional[str] = None,
+        base_currency: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
         """Update portfolio metadata or holdings
 
-        Modifies an existing portfolio. Can update name, description, input data (new weights/holdings), benchmark, and settings. Creates an audit trail entry. Used by the Dashboard portfolio editor."""
+        Modifies an existing portfolio. Can update name, description, input data (new weights/holdings), benchmark, and settings. Creates an audit trail entry. Used by the Dashboard portfolio editor.
+
+        Args:
+        currency: Portfolio reporting currency to store in settings.
+        base_currency: Portfolio base currency to store in settings."""
         _payload: Dict[str, Any] = {}
         _payload["id"] = id
         if name is not None:
@@ -754,6 +777,10 @@ class PortfolioAPI(BaseAPI):
             _payload["description"] = description
         if settings is not None:
             _payload["settings"] = settings
+        if currency is not None:
+            _payload["currency"] = currency
+        if base_currency is not None:
+            _payload["base_currency"] = base_currency
         return self._call("portfolio.update", params=_payload, options=options, context=context)
 
 
@@ -766,7 +793,7 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         *,
         benchmark_weights: Dict[str, Any],
         id: Optional[str] = None,
-        weights: Optional[Dict[str, Any]] = None,
+        weights: Optional[Any] = None,
         components: Optional[List[Any]] = None,
         currency: Optional[str] = None,
         drifting: Optional[bool] = None,
@@ -843,12 +870,14 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         self,
         *,
         id: Optional[str] = None,
-        weights: Optional[Dict[str, Any]] = None,
+        weights: Optional[Any] = None,
         components: Optional[List[Any]] = None,
         currency: Optional[str] = None,
+        base_currency: Optional[str] = None,
         drifting: Optional[bool] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
+        settings: Optional[Dict[str, Any]] = None,
         total_return: Optional[bool] = None,
         user_prices: Optional[Dict[str, Any]] = None,
         options: Optional[Dict[str, Any]] = None,
@@ -857,7 +886,11 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
     ) -> Any:
         """Calculate the return contribution of each holding to total portfolio return
 
-        Decomposes total portfolio return into contributions from each holding. Each position's contribution equals its weight multiplied by its return. Returns a table of positions with individual return, weight, and contribution to total. Used by the Dashboard portfolio attribution view and by reporting modules."""
+        Decomposes total portfolio return into contributions from each holding. Each position's contribution equals its weight multiplied by its return. Returns a table of positions with individual return, weight, and contribution to total. Used by the Dashboard portfolio attribution view and by reporting modules.
+
+        Args:
+        base_currency: Portfolio base currency used for security price conversion.
+        settings: Optional portfolio settings. Currency keys are read from settings when no explicit currency is supplied."""
         _payload: Dict[str, Any] = {}
         if id is not None:
             _payload["id"] = id
@@ -867,12 +900,16 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
             _payload["components"] = components
         if currency is not None:
             _payload["currency"] = currency
+        if base_currency is not None:
+            _payload["base_currency"] = base_currency
         if drifting is not None:
             _payload["drifting"] = drifting
         if start_date is not None:
             _payload["start_date"] = start_date
         if end_date is not None:
             _payload["end_date"] = end_date
+        if settings is not None:
+            _payload["settings"] = settings
         if total_return is not None:
             _payload["total_return"] = total_return
         if user_prices is not None:
@@ -910,10 +947,9 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         currency: Optional[str] = None,
         holdings: Optional[List[Any]] = None,
         initial_cash: Optional[float] = None,
-        initial_weights: Optional[Dict[str, Any]] = None,
         trades: Optional[List[Any]] = None,
         values: Optional[List[Any]] = None,
-        weights: Optional[Dict[str, Any]] = None,
+        weights: Optional[Any] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         type_: Optional[str] = "Real",
@@ -927,7 +963,10 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
     ) -> Any:
         """Create a new portfolio with specified input type and holdings
 
-        Creates a portfolio in the Portfolios MongoDB collection. Supports 5 input types: fixed_weights (static allocation percentages), drifting_weights (weights that drift with market returns), holdings (position snapshots with quantities at dates), values (position values at dates), and trades (transaction-level input). Each input type requires specific data: weights needs {TepiloraCode: weight}, holdings needs [{date, positions}], trades needs [{date, type, security, quantity, price}]. Optionally sets benchmark, description, visibility, and portfolio type (Real/Suggested/Simulation/Backtest/Model). Used by the Dashboard portfolio creation wizard and by workflow bridges."""
+        Creates a portfolio in the Portfolios MongoDB collection. Supports 5 input types: fixed_weights (static allocation percentages), drifting_weights (weights that drift with market returns), holdings (position snapshots with quantities at dates), values (position values at dates), and trades (transaction-level input). Each input type requires specific data: weights needs {TepiloraCode: weight}, holdings needs [{date, positions}], trades needs [{date, type, security, quantity, price}]. Optionally sets benchmark, description, visibility, and portfolio type (Real/Suggested/Simulation/Backtest/Model). Used by the Dashboard portfolio creation wizard and by workflow bridges.
+
+        Args:
+        weights: Portfolio weights. For fixed_weights and drifting_weights accepts either {TepiloraCode: weight}, a list of {'date': YYYY-MM-DD, 'weights': {...}}, or a date-keyed map {'YYYY-MM-DD': {...}}."""
         _payload: Dict[str, Any] = {}
         _payload["name"] = name
         _payload["input_type"] = input_type
@@ -947,8 +986,6 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
             _payload["holdings"] = holdings
         if initial_cash is not None:
             _payload["initial_cash"] = initial_cash
-        if initial_weights is not None:
-            _payload["initial_weights"] = initial_weights
         if trades is not None:
             _payload["trades"] = trades
         if values is not None:
@@ -1028,11 +1065,11 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         self,
         *,
         id: Optional[str] = None,
-        weights: Optional[Dict[str, Any]] = None,
+        weights: Optional[Any] = None,
         components: Optional[List[Any]] = None,
         date: Optional[str] = None,
         dimensions: Optional[List[Any]] = None,
-        dimension: Optional[str] = None,
+        exposure_type: Optional[str] = "asset_class",
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         currency: Optional[str] = None,
@@ -1045,7 +1082,7 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
     ) -> Any:
         """Calculate portfolio exposure by sector, country, currency, or asset class
 
-        Computes weighted portfolio exposure across a chosen dimension: sector (GICS), country, currency, or asset_class. Uses look-through analysis — resolves fund/ETF holdings to their underlying exposures. Returns exposure percentages per category. Used by the Dashboard portfolio composition pie charts and by compliance monitoring."""
+        Computes weighted portfolio exposure across a chosen exposure_type: sector (GICS), geography/region, currency, or asset_class. Uses look-through analysis — resolves fund/ETF holdings to their underlying exposures. Returns exposure percentages per category. Used by the Dashboard portfolio composition pie charts and by compliance monitoring."""
         _payload: Dict[str, Any] = {}
         if id is not None:
             _payload["id"] = id
@@ -1057,8 +1094,8 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
             _payload["date"] = date
         if dimensions is not None:
             _payload["dimensions"] = dimensions
-        if dimension is not None:
-            _payload["dimension"] = dimension
+        if exposure_type is not None:
+            _payload["exposure_type"] = exposure_type
         if start_date is not None:
             _payload["start_date"] = start_date
         if end_date is not None:
@@ -1201,7 +1238,7 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         self,
         *,
         id: Optional[str] = None,
-        weights: Optional[Dict[str, Any]] = None,
+        weights: Optional[Any] = None,
         components: Optional[List[Any]] = None,
         holdings: Optional[List[Any]] = None,
         trades: Optional[List[Any]] = None,
@@ -1223,6 +1260,7 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         rebalance_effective: Optional[Any] = None,
         rebalance_frequency: Optional[Any] = None,
         rebalance_on: Optional[Any] = None,
+        returns_frequency: Optional[Any] = None,
         settings: Optional[Dict[str, Any]] = None,
         stale_policy: Optional[Any] = None,
         start_date: Optional[str] = None,
@@ -1236,7 +1274,11 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
     ) -> Any:
         """Calculate portfolio return time series using TWR, MWR, or Modified Dietz
 
-        Computes the daily return time series for a portfolio using the selected return methodology: TWR (Time-Weighted Return, for benchmark comparison), MWR (Money-Weighted Return via XIRR, for actual investor experience), or Modified Dietz (fast MWR approximation). Supports fixed weights (periodic rebalancing at configurable frequency), drifting weights (buy-and-hold drift), and transaction-based input. Returns daily NAV series, cumulative return, and period statistics. Cash flow convention: negative = deposit, positive = withdrawal. Used by the Dashboard portfolio performance chart and by all portfolio analytics."""
+        Computes the daily return time series for a portfolio using the selected return methodology: TWR (Time-Weighted Return, for benchmark comparison), MWR (Money-Weighted Return via XIRR, for actual investor experience), or Modified Dietz (fast MWR approximation). Supports fixed weights (periodic rebalancing at configurable frequency), drifting weights (buy-and-hold drift), and transaction-based input. Returns daily NAV series, cumulative return, and period statistics. Cash flow convention: negative = deposit, positive = withdrawal. Used by the Dashboard portfolio performance chart and by all portfolio analytics.
+
+        Args:
+        weights: Ad-hoc portfolio weights. Accepts either {TepiloraCode: weight}, a list of {'date': YYYY-MM-DD, 'weights': {...}}, or a date-keyed map.
+        returns_frequency: Output returns interval: daily, weekly, monthly, or annual."""
         _payload: Dict[str, Any] = {}
         if id is not None:
             _payload["id"] = id
@@ -1284,6 +1326,8 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
             _payload["rebalance_frequency"] = rebalance_frequency
         if rebalance_on is not None:
             _payload["rebalance_on"] = rebalance_on
+        if returns_frequency is not None:
+            _payload["returns_frequency"] = returns_frequency
         if settings is not None:
             _payload["settings"] = settings
         if stale_policy is not None:
@@ -1397,7 +1441,7 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         self,
         *,
         id: Optional[str] = None,
-        weights: Optional[Dict[str, Any]] = None,
+        weights: Optional[Any] = None,
         components: Optional[List[Any]] = None,
         holdings: Optional[List[Any]] = None,
         trades: Optional[List[Any]] = None,
@@ -1483,12 +1527,18 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         benchmark: Optional[str] = None,
         description: Optional[str] = None,
         settings: Optional[Dict[str, Any]] = None,
+        currency: Optional[str] = None,
+        base_currency: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
         """Update portfolio metadata or holdings
 
-        Modifies an existing portfolio. Can update name, description, input data (new weights/holdings), benchmark, and settings. Creates an audit trail entry. Used by the Dashboard portfolio editor."""
+        Modifies an existing portfolio. Can update name, description, input data (new weights/holdings), benchmark, and settings. Creates an audit trail entry. Used by the Dashboard portfolio editor.
+
+        Args:
+        currency: Portfolio reporting currency to store in settings.
+        base_currency: Portfolio base currency to store in settings."""
         _payload: Dict[str, Any] = {}
         _payload["id"] = id
         if name is not None:
@@ -1501,6 +1551,10 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
             _payload["description"] = description
         if settings is not None:
             _payload["settings"] = settings
+        if currency is not None:
+            _payload["currency"] = currency
+        if base_currency is not None:
+            _payload["base_currency"] = base_currency
         return await self._call("portfolio.update", params=_payload, options=options, context=context)
 
 

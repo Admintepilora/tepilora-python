@@ -17,3 +17,6 @@ build/
 
 # Local secrets
 .env
+
+# Esempi generati da examples/render_curated_examples.py (rigenerabili dall OpenAPI)
+examples/tepilora_examples_*.py
