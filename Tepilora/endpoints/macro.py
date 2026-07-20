@@ -32,10 +32,12 @@ class MacroAPI(BaseAPI):
         Returns the schedule of upcoming macroeconomic data releases across all tracked countries and indicators. Each entry includes: indicator code, name, country, scheduled release date/time, importance level (low/medium/high), previous value, and forecast consensus. Filterable by country, importance, and date range. Differs from realtime.calendar (which shows today's events only) by providing a forward-looking schedule spanning days or weeks. Used by the Dashboard Macro page for the release calendar view and by research workflows planning around data releases.
 
         Args:
+        country: Optional country filter for calendar events.
         from_date: Optional date in ISO 8601 format (YYYY-MM-DD)
         start_date: Optional date in ISO 8601 format (YYYY-MM-DD)
         to_date: Optional date in ISO 8601 format (YYYY-MM-DD)
-        end_date: Optional date in ISO 8601 format (YYYY-MM-DD)"""
+        end_date: Optional date in ISO 8601 format (YYYY-MM-DD)
+        limit: Maximum number of calendar events to return."""
         _payload: Dict[str, Any] = {}
         if country is not None:
             _payload["country"] = country
@@ -85,8 +87,10 @@ class MacroAPI(BaseAPI):
         Returns the complete historical time series for a specific macroeconomic indicator identified by its code. Each data point includes: date, actual value, previous value, forecast consensus (when available), and revision flag. Supports date range filtering (start_date, end_date) and result limiting. Data frequency depends on the indicator (monthly for CPI, quarterly for GDP, etc.). The time series enables trend analysis, forecast accuracy assessment, and cross-indicator correlation studies. Used by the Dashboard Macro page for historical charts, by analytics workflows for macro factor models, and by the AI assistant for historical macro context.
 
         Args:
+        indicator: Legacy alias for identifier; provide a macro TepiloraCode.
         start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
         end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)
+        limit: Maximum number of historical rows to return.
 
         Examples:
             >>> client.macro.history(identifiers='MGDPQOQJAPI', limit=20)"""
@@ -119,6 +123,11 @@ class MacroAPI(BaseAPI):
 
         Returns the catalog of all available macroeconomic indicators with their metadata: indicator code, name, country, category (GDP, inflation, employment, trade, central bank, PMI, housing, consumer), frequency (monthly, quarterly, annual), unit, source, and data availability range. Filterable by country and category. Each indicator includes a coverage summary showing the date range and number of data points available. Used by the Dashboard Macro page for the indicator selector, by the AI assistant to discover which macro data is available before querying specific time series, and by research workflows building macro dashboards.
 
+        Args:
+        country: Optional country filter, matched case-insensitively against the macro indicator country name.
+        macro_area: Optional macro area filter such as Europe, Americas, or Asia.
+        limit: Maximum number of indicator metadata rows to return.
+
         Examples:
             >>> client.macro.indicators(limit=10)"""
         _payload: Dict[str, Any] = {}
@@ -145,6 +154,11 @@ class MacroAPI(BaseAPI):
         """Get the latest value and release details for macroeconomic indicators
 
         Returns the most recent data point for one or more macroeconomic indicators. Each result includes: indicator code, name, country, latest value, previous value, change, forecast consensus, actual vs. forecast surprise, release date, and next scheduled release date. Supports batch lookup of multiple indicators in a single call. Used by the Dashboard Market Snapshot page for the macro overview strip (GDP growth, CPI, unemployment at a glance), by the AI assistant for quick macro status queries, and by alert rules monitoring macro surprises.
+
+        Args:
+        indicator: Legacy alias for identifier; provide a macro TepiloraCode.
+        country: Optional country filter used when no specific indicator is requested.
+        limit: Maximum number of latest macro observations to return.
 
         Examples:
             >>> client.macro.latest(identifiers='MGDPQOQJAPI')"""
@@ -173,7 +187,12 @@ class MacroAPI(BaseAPI):
     ) -> Any:
         """Search macroeconomic indicators by name, country, or category
 
-        Full-text search across the macroeconomic indicators catalog. Accepts free-text queries (e.g. 'US GDP', 'German inflation', 'unemployment rate') and returns matching indicators with metadata. Results include indicator code, name, country, category, frequency, and a relevance score. Used by the Dashboard Macro page search bar, by the AI assistant for natural-language macro data discovery, and as a prerequisite step before calling macro.history or macro.latest with a specific indicator code."""
+        Full-text search across the macroeconomic indicators catalog. Accepts free-text queries (e.g. 'US GDP', 'German inflation', 'unemployment rate') and returns matching indicators with metadata. Results include indicator code, name, country, category, frequency, and a relevance score. Used by the Dashboard Macro page search bar, by the AI assistant for natural-language macro data discovery, and as a prerequisite step before calling macro.history or macro.latest with a specific indicator code.
+
+        Args:
+        query: Case-insensitive literal search text matched against macro indicator names.
+        country: Optional country filter applied after the text search.
+        limit: Maximum number of matching indicator metadata rows to return."""
         _payload: Dict[str, Any] = {}
         _payload["query"] = query
         if country is not None:
@@ -205,10 +224,12 @@ class AsyncMacroAPI(AsyncBaseAPI):
         Returns the schedule of upcoming macroeconomic data releases across all tracked countries and indicators. Each entry includes: indicator code, name, country, scheduled release date/time, importance level (low/medium/high), previous value, and forecast consensus. Filterable by country, importance, and date range. Differs from realtime.calendar (which shows today's events only) by providing a forward-looking schedule spanning days or weeks. Used by the Dashboard Macro page for the release calendar view and by research workflows planning around data releases.
 
         Args:
+        country: Optional country filter for calendar events.
         from_date: Optional date in ISO 8601 format (YYYY-MM-DD)
         start_date: Optional date in ISO 8601 format (YYYY-MM-DD)
         to_date: Optional date in ISO 8601 format (YYYY-MM-DD)
-        end_date: Optional date in ISO 8601 format (YYYY-MM-DD)"""
+        end_date: Optional date in ISO 8601 format (YYYY-MM-DD)
+        limit: Maximum number of calendar events to return."""
         _payload: Dict[str, Any] = {}
         if country is not None:
             _payload["country"] = country
@@ -258,8 +279,10 @@ class AsyncMacroAPI(AsyncBaseAPI):
         Returns the complete historical time series for a specific macroeconomic indicator identified by its code. Each data point includes: date, actual value, previous value, forecast consensus (when available), and revision flag. Supports date range filtering (start_date, end_date) and result limiting. Data frequency depends on the indicator (monthly for CPI, quarterly for GDP, etc.). The time series enables trend analysis, forecast accuracy assessment, and cross-indicator correlation studies. Used by the Dashboard Macro page for historical charts, by analytics workflows for macro factor models, and by the AI assistant for historical macro context.
 
         Args:
+        indicator: Legacy alias for identifier; provide a macro TepiloraCode.
         start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
         end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)
+        limit: Maximum number of historical rows to return.
 
         Examples:
             >>> await client.macro.history(identifiers='MGDPQOQJAPI', limit=20)"""
@@ -292,6 +315,11 @@ class AsyncMacroAPI(AsyncBaseAPI):
 
         Returns the catalog of all available macroeconomic indicators with their metadata: indicator code, name, country, category (GDP, inflation, employment, trade, central bank, PMI, housing, consumer), frequency (monthly, quarterly, annual), unit, source, and data availability range. Filterable by country and category. Each indicator includes a coverage summary showing the date range and number of data points available. Used by the Dashboard Macro page for the indicator selector, by the AI assistant to discover which macro data is available before querying specific time series, and by research workflows building macro dashboards.
 
+        Args:
+        country: Optional country filter, matched case-insensitively against the macro indicator country name.
+        macro_area: Optional macro area filter such as Europe, Americas, or Asia.
+        limit: Maximum number of indicator metadata rows to return.
+
         Examples:
             >>> await client.macro.indicators(limit=10)"""
         _payload: Dict[str, Any] = {}
@@ -318,6 +346,11 @@ class AsyncMacroAPI(AsyncBaseAPI):
         """Get the latest value and release details for macroeconomic indicators
 
         Returns the most recent data point for one or more macroeconomic indicators. Each result includes: indicator code, name, country, latest value, previous value, change, forecast consensus, actual vs. forecast surprise, release date, and next scheduled release date. Supports batch lookup of multiple indicators in a single call. Used by the Dashboard Market Snapshot page for the macro overview strip (GDP growth, CPI, unemployment at a glance), by the AI assistant for quick macro status queries, and by alert rules monitoring macro surprises.
+
+        Args:
+        indicator: Legacy alias for identifier; provide a macro TepiloraCode.
+        country: Optional country filter used when no specific indicator is requested.
+        limit: Maximum number of latest macro observations to return.
 
         Examples:
             >>> await client.macro.latest(identifiers='MGDPQOQJAPI')"""
@@ -346,7 +379,12 @@ class AsyncMacroAPI(AsyncBaseAPI):
     ) -> Any:
         """Search macroeconomic indicators by name, country, or category
 
-        Full-text search across the macroeconomic indicators catalog. Accepts free-text queries (e.g. 'US GDP', 'German inflation', 'unemployment rate') and returns matching indicators with metadata. Results include indicator code, name, country, category, frequency, and a relevance score. Used by the Dashboard Macro page search bar, by the AI assistant for natural-language macro data discovery, and as a prerequisite step before calling macro.history or macro.latest with a specific indicator code."""
+        Full-text search across the macroeconomic indicators catalog. Accepts free-text queries (e.g. 'US GDP', 'German inflation', 'unemployment rate') and returns matching indicators with metadata. Results include indicator code, name, country, category, frequency, and a relevance score. Used by the Dashboard Macro page search bar, by the AI assistant for natural-language macro data discovery, and as a prerequisite step before calling macro.history or macro.latest with a specific indicator code.
+
+        Args:
+        query: Case-insensitive literal search text matched against macro indicator names.
+        country: Optional country filter applied after the text search.
+        limit: Maximum number of matching indicator metadata rows to return."""
         _payload: Dict[str, Any] = {}
         _payload["query"] = query
         if country is not None:

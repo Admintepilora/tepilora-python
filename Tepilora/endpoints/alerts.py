@@ -26,7 +26,13 @@ class AlertsAPI(BaseAPI):
     ) -> Any:
         """Acknowledge a triggered alert event
 
-        Marks a triggered alert event as acknowledged by the user. Acknowledged events are visually distinguished in the Dashboard and can be filtered out of the active alerts view. Used by the Dashboard alert notification handler."""
+        Marks a triggered alert event as acknowledged by the user. Acknowledged events are visually distinguished in the Dashboard and can be filtered out of the active alerts view. Used by the Dashboard alert notification handler.
+
+        Args:
+        event_id: Alert event identifier to acknowledge.
+        id: Legacy alias for event_id.
+        note: Optional acknowledgement note.
+        ack: True to acknowledge the event; false to remove acknowledgement."""
         _payload: Dict[str, Any] = {}
         if event_id is not None:
             _payload["event_id"] = event_id
@@ -56,7 +62,19 @@ class AlertsAPI(BaseAPI):
     ) -> Any:
         """Create a new alert rule with conditions and delivery configuration
 
-        Creates a new alert rule in the AlertRules MongoDB collection. An alert rule defines: trigger conditions (price threshold, portfolio drift, news keyword, macro event), evaluation frequency, severity level, cooldown period, and delivery channels (email, webhook, in-app notification). Supports rule types: price_alert, drift_alert, news_alert, macro_alert, custom. Used by the Dashboard alert builder and by automated monitoring workflows."""
+        Creates a new alert rule in the AlertRules MongoDB collection. An alert rule defines its trigger condition (via config), severity, cooldown period, visibility, and optional delivery channels (email, webhook). Supports two rule types: 'metric_threshold' (fires when a computed metric crosses a threshold) and 'portfolio_drift' (fires when portfolio weights drift from targets). Used by the Dashboard alert builder and by automated monitoring workflows.
+
+        Args:
+        name: Human-readable name of the alert rule.
+        config: Rule configuration. metric_threshold requires 'function' and 'threshold' (optional 'operator', 'column', 'params'); portfolio_drift requires params.target_weights and params.start_date.
+        rule_type: Type of alert rule. 'metric_threshold' fires when a computed metric crosses a threshold; 'portfolio_drift' fires when portfolio weights drift from targets. Required; the legacy alias 'type' is also accepted.
+        type_: Legacy alias for rule_type; prefer rule_type.
+        description: Optional free-text description of what the rule monitors.
+        enabled: Whether the rule is active immediately after creation.
+        delivery: Delivery channels: optional 'webhook' ({url, headers?, timeout?}) and/or 'email' ({to, subject?}).
+        cooldown_seconds: Minimum seconds between consecutive firings of this rule.
+        severity: Severity label attached to fired alerts.
+        visibility: Who can see the rule: 'private' (creator only) or 'workspace' (shared with the workspace)."""
         _payload: Dict[str, Any] = {}
         _payload["name"] = name
         _payload["config"] = config
@@ -90,7 +108,13 @@ class AlertsAPI(BaseAPI):
     ) -> Any:
         """Delete an alert rule and optionally its event history
 
-        Removes an alert rule. Optionally deletes associated event history (AlertEvents collection). Identifiable by rule_id, id, or name. Used by the Dashboard alerts management."""
+        Removes an alert rule. Optionally deletes associated event history (AlertEvents collection). Identifiable by rule_id, id, or name. Used by the Dashboard alerts management.
+
+        Args:
+        rule_id: Alert rule identifier.
+        id: Legacy alias for rule_id.
+        name: Alert rule name used as an alternative lookup key.
+        delete_events: Whether to also delete event history for the rule."""
         _payload: Dict[str, Any] = {}
         if rule_id is not None:
             _payload["rule_id"] = rule_id
@@ -114,7 +138,13 @@ class AlertsAPI(BaseAPI):
     ) -> Any:
         """Manually evaluate an alert rule against current data
 
-        Triggers immediate evaluation of an alert rule against current market data, portfolio state, or news feed — without waiting for the scheduled evaluation cycle. Returns whether the alert condition is currently met, the evaluated values, and whether a notification would fire (respecting cooldown). Used for testing alert rules and by the Dashboard Test Alert button."""
+        Triggers immediate evaluation of an alert rule against current market data, portfolio state, or news feed — without waiting for the scheduled evaluation cycle. Returns whether the alert condition is currently met, the evaluated values, and whether a notification would fire (respecting cooldown). Used for testing alert rules and by the Dashboard Test Alert button.
+
+        Args:
+        rule_id: Alert rule identifier to evaluate.
+        id: Legacy alias for rule_id.
+        name: Alert rule name used as an alternative lookup key.
+        update_stats: Whether to update last evaluation metadata on the rule."""
         _payload: Dict[str, Any] = {}
         if rule_id is not None:
             _payload["rule_id"] = rule_id
@@ -137,7 +167,12 @@ class AlertsAPI(BaseAPI):
     ) -> Any:
         """Get full details for a specific alert rule
 
-        Returns the complete alert rule definition including conditions, delivery config, evaluation history, and trigger statistics. Identifiable by rule_id, id, or name. Used by the Dashboard alert detail view."""
+        Returns the complete alert rule definition including conditions, delivery config, evaluation history, and trigger statistics. Identifiable by rule_id, id, or name. Used by the Dashboard alert detail view.
+
+        Args:
+        rule_id: Alert rule identifier.
+        id: Legacy alias for rule_id.
+        name: Alert rule name used as an alternative lookup key."""
         _payload: Dict[str, Any] = {}
         if rule_id is not None:
             _payload["rule_id"] = rule_id
@@ -162,7 +197,15 @@ class AlertsAPI(BaseAPI):
     ) -> Any:
         """Get the event history for an alert rule
 
-        Returns the chronological list of AlertEvents (triggers) for a specific alert rule. Each event includes: trigger timestamp, evaluated values, whether notification was delivered, delivery channel, and acknowledgment status. Used by the Dashboard alert history view."""
+        Returns the chronological list of AlertEvents (triggers) for a specific alert rule. Each event includes: trigger timestamp, evaluated values, whether notification was delivered, delivery channel, and acknowledgment status. Used by the Dashboard alert history view.
+
+        Args:
+        rule_id: Optional alert rule identifier used to filter events.
+        id: Legacy alias for rule_id.
+        status: Optional delivery or evaluation status filter.
+        ack: Filter events by acknowledged state.
+        limit: Maximum number of alert events to return.
+        offset: Pagination offset."""
         _payload: Dict[str, Any] = {}
         if rule_id is not None:
             _payload["rule_id"] = rule_id
@@ -195,7 +238,17 @@ class AlertsAPI(BaseAPI):
     ) -> Any:
         """List all alert rules for the current user
 
-        Returns all alert rules belonging to the authenticated user. Each rule shows: name, type, status (active/paused/triggered), last evaluated time, trigger count, and delivery configuration. Used by the Dashboard alerts management page."""
+        Returns all alert rules belonging to the authenticated user. Each rule shows: name, type, status (active/paused/triggered), last evaluated time, trigger count, and delivery configuration. Used by the Dashboard alerts management page.
+
+        Args:
+        enabled: Filter alert rules by enabled status.
+        limit: Maximum number of alert rules to return.
+        offset: Pagination offset.
+        order: Sort order: asc or desc.
+        rule_type: Filter rules by alert type, such as metric_threshold or portfolio_drift.
+        search: Search text matched against alert names and descriptions.
+        sort: Field used to sort alert rules.
+        type_: Legacy alias for rule_type; prefer rule_type."""
         _payload: Dict[str, Any] = {}
         if enabled is not None:
             _payload["enabled"] = enabled
@@ -231,7 +284,17 @@ class AlertsAPI(BaseAPI):
     ) -> Any:
         """Run the alert evaluation engine for all active rules
 
-        Batch-evaluates all active alert rules for the current user. For each rule where conditions are met, generates an AlertEvent and triggers delivery (email/webhook/notification) if cooldown has elapsed. Returns a summary of evaluated rules, triggered alerts, and delivery status. Typically called by a scheduled cron job, not directly by users."""
+        Batch-evaluates all active alert rules for the current user. For each rule where conditions are met, generates an AlertEvent and triggers delivery (email/webhook/notification) if cooldown has elapsed. Returns a summary of evaluated rules, triggered alerts, and delivery status. Typically called by a scheduled cron job, not directly by users.
+
+        Args:
+        rule_id: Optional alert rule identifier; if omitted, matching active rules are processed.
+        id: Legacy alias for rule_id.
+        name: Optional alert rule name used as an alternative lookup key.
+        rule_type: Filter batch execution by alert rule type.
+        type_: Legacy alias for rule_type; prefer rule_type.
+        limit: Maximum number of rules to process.
+        dry_run: Evaluate rules without creating events or sending delivery notifications.
+        force: Ignore cooldown checks when running matching rules."""
         _payload: Dict[str, Any] = {}
         if rule_id is not None:
             _payload["rule_id"] = rule_id
@@ -271,7 +334,21 @@ class AlertsAPI(BaseAPI):
     ) -> Any:
         """Update an existing alert rule configuration
 
-        Modifies an existing alert rule. Can update conditions, delivery channels, severity, cooldown, and enabled status. Used by the Dashboard alert editor."""
+        Modifies an existing alert rule. Can update conditions, delivery channels, severity, cooldown, and enabled status. Used by the Dashboard alert editor.
+
+        Args:
+        rule_id: Alert rule identifier.
+        id: Legacy alias for rule_id.
+        name: Current alert rule name used as an alternative lookup key.
+        new_name: New alert rule name.
+        rule_type: Updated alert rule type, such as metric_threshold or portfolio_drift.
+        type_: Legacy alias for rule_type; prefer rule_type.
+        config: Updated rule configuration.
+        description: Updated free-text alert description.
+        enabled: Enable or disable the alert rule.
+        delivery: Updated delivery configuration for email or webhook notifications.
+        cooldown_seconds: Updated minimum seconds between consecutive firings.
+        severity: Updated severity label: info, warning, or critical."""
         _payload: Dict[str, Any] = {}
         if rule_id is not None:
             _payload["rule_id"] = rule_id
@@ -316,7 +393,13 @@ class AsyncAlertsAPI(AsyncBaseAPI):
     ) -> Any:
         """Acknowledge a triggered alert event
 
-        Marks a triggered alert event as acknowledged by the user. Acknowledged events are visually distinguished in the Dashboard and can be filtered out of the active alerts view. Used by the Dashboard alert notification handler."""
+        Marks a triggered alert event as acknowledged by the user. Acknowledged events are visually distinguished in the Dashboard and can be filtered out of the active alerts view. Used by the Dashboard alert notification handler.
+
+        Args:
+        event_id: Alert event identifier to acknowledge.
+        id: Legacy alias for event_id.
+        note: Optional acknowledgement note.
+        ack: True to acknowledge the event; false to remove acknowledgement."""
         _payload: Dict[str, Any] = {}
         if event_id is not None:
             _payload["event_id"] = event_id
@@ -346,7 +429,19 @@ class AsyncAlertsAPI(AsyncBaseAPI):
     ) -> Any:
         """Create a new alert rule with conditions and delivery configuration
 
-        Creates a new alert rule in the AlertRules MongoDB collection. An alert rule defines: trigger conditions (price threshold, portfolio drift, news keyword, macro event), evaluation frequency, severity level, cooldown period, and delivery channels (email, webhook, in-app notification). Supports rule types: price_alert, drift_alert, news_alert, macro_alert, custom. Used by the Dashboard alert builder and by automated monitoring workflows."""
+        Creates a new alert rule in the AlertRules MongoDB collection. An alert rule defines its trigger condition (via config), severity, cooldown period, visibility, and optional delivery channels (email, webhook). Supports two rule types: 'metric_threshold' (fires when a computed metric crosses a threshold) and 'portfolio_drift' (fires when portfolio weights drift from targets). Used by the Dashboard alert builder and by automated monitoring workflows.
+
+        Args:
+        name: Human-readable name of the alert rule.
+        config: Rule configuration. metric_threshold requires 'function' and 'threshold' (optional 'operator', 'column', 'params'); portfolio_drift requires params.target_weights and params.start_date.
+        rule_type: Type of alert rule. 'metric_threshold' fires when a computed metric crosses a threshold; 'portfolio_drift' fires when portfolio weights drift from targets. Required; the legacy alias 'type' is also accepted.
+        type_: Legacy alias for rule_type; prefer rule_type.
+        description: Optional free-text description of what the rule monitors.
+        enabled: Whether the rule is active immediately after creation.
+        delivery: Delivery channels: optional 'webhook' ({url, headers?, timeout?}) and/or 'email' ({to, subject?}).
+        cooldown_seconds: Minimum seconds between consecutive firings of this rule.
+        severity: Severity label attached to fired alerts.
+        visibility: Who can see the rule: 'private' (creator only) or 'workspace' (shared with the workspace)."""
         _payload: Dict[str, Any] = {}
         _payload["name"] = name
         _payload["config"] = config
@@ -380,7 +475,13 @@ class AsyncAlertsAPI(AsyncBaseAPI):
     ) -> Any:
         """Delete an alert rule and optionally its event history
 
-        Removes an alert rule. Optionally deletes associated event history (AlertEvents collection). Identifiable by rule_id, id, or name. Used by the Dashboard alerts management."""
+        Removes an alert rule. Optionally deletes associated event history (AlertEvents collection). Identifiable by rule_id, id, or name. Used by the Dashboard alerts management.
+
+        Args:
+        rule_id: Alert rule identifier.
+        id: Legacy alias for rule_id.
+        name: Alert rule name used as an alternative lookup key.
+        delete_events: Whether to also delete event history for the rule."""
         _payload: Dict[str, Any] = {}
         if rule_id is not None:
             _payload["rule_id"] = rule_id
@@ -404,7 +505,13 @@ class AsyncAlertsAPI(AsyncBaseAPI):
     ) -> Any:
         """Manually evaluate an alert rule against current data
 
-        Triggers immediate evaluation of an alert rule against current market data, portfolio state, or news feed — without waiting for the scheduled evaluation cycle. Returns whether the alert condition is currently met, the evaluated values, and whether a notification would fire (respecting cooldown). Used for testing alert rules and by the Dashboard Test Alert button."""
+        Triggers immediate evaluation of an alert rule against current market data, portfolio state, or news feed — without waiting for the scheduled evaluation cycle. Returns whether the alert condition is currently met, the evaluated values, and whether a notification would fire (respecting cooldown). Used for testing alert rules and by the Dashboard Test Alert button.
+
+        Args:
+        rule_id: Alert rule identifier to evaluate.
+        id: Legacy alias for rule_id.
+        name: Alert rule name used as an alternative lookup key.
+        update_stats: Whether to update last evaluation metadata on the rule."""
         _payload: Dict[str, Any] = {}
         if rule_id is not None:
             _payload["rule_id"] = rule_id
@@ -427,7 +534,12 @@ class AsyncAlertsAPI(AsyncBaseAPI):
     ) -> Any:
         """Get full details for a specific alert rule
 
-        Returns the complete alert rule definition including conditions, delivery config, evaluation history, and trigger statistics. Identifiable by rule_id, id, or name. Used by the Dashboard alert detail view."""
+        Returns the complete alert rule definition including conditions, delivery config, evaluation history, and trigger statistics. Identifiable by rule_id, id, or name. Used by the Dashboard alert detail view.
+
+        Args:
+        rule_id: Alert rule identifier.
+        id: Legacy alias for rule_id.
+        name: Alert rule name used as an alternative lookup key."""
         _payload: Dict[str, Any] = {}
         if rule_id is not None:
             _payload["rule_id"] = rule_id
@@ -452,7 +564,15 @@ class AsyncAlertsAPI(AsyncBaseAPI):
     ) -> Any:
         """Get the event history for an alert rule
 
-        Returns the chronological list of AlertEvents (triggers) for a specific alert rule. Each event includes: trigger timestamp, evaluated values, whether notification was delivered, delivery channel, and acknowledgment status. Used by the Dashboard alert history view."""
+        Returns the chronological list of AlertEvents (triggers) for a specific alert rule. Each event includes: trigger timestamp, evaluated values, whether notification was delivered, delivery channel, and acknowledgment status. Used by the Dashboard alert history view.
+
+        Args:
+        rule_id: Optional alert rule identifier used to filter events.
+        id: Legacy alias for rule_id.
+        status: Optional delivery or evaluation status filter.
+        ack: Filter events by acknowledged state.
+        limit: Maximum number of alert events to return.
+        offset: Pagination offset."""
         _payload: Dict[str, Any] = {}
         if rule_id is not None:
             _payload["rule_id"] = rule_id
@@ -485,7 +605,17 @@ class AsyncAlertsAPI(AsyncBaseAPI):
     ) -> Any:
         """List all alert rules for the current user
 
-        Returns all alert rules belonging to the authenticated user. Each rule shows: name, type, status (active/paused/triggered), last evaluated time, trigger count, and delivery configuration. Used by the Dashboard alerts management page."""
+        Returns all alert rules belonging to the authenticated user. Each rule shows: name, type, status (active/paused/triggered), last evaluated time, trigger count, and delivery configuration. Used by the Dashboard alerts management page.
+
+        Args:
+        enabled: Filter alert rules by enabled status.
+        limit: Maximum number of alert rules to return.
+        offset: Pagination offset.
+        order: Sort order: asc or desc.
+        rule_type: Filter rules by alert type, such as metric_threshold or portfolio_drift.
+        search: Search text matched against alert names and descriptions.
+        sort: Field used to sort alert rules.
+        type_: Legacy alias for rule_type; prefer rule_type."""
         _payload: Dict[str, Any] = {}
         if enabled is not None:
             _payload["enabled"] = enabled
@@ -521,7 +651,17 @@ class AsyncAlertsAPI(AsyncBaseAPI):
     ) -> Any:
         """Run the alert evaluation engine for all active rules
 
-        Batch-evaluates all active alert rules for the current user. For each rule where conditions are met, generates an AlertEvent and triggers delivery (email/webhook/notification) if cooldown has elapsed. Returns a summary of evaluated rules, triggered alerts, and delivery status. Typically called by a scheduled cron job, not directly by users."""
+        Batch-evaluates all active alert rules for the current user. For each rule where conditions are met, generates an AlertEvent and triggers delivery (email/webhook/notification) if cooldown has elapsed. Returns a summary of evaluated rules, triggered alerts, and delivery status. Typically called by a scheduled cron job, not directly by users.
+
+        Args:
+        rule_id: Optional alert rule identifier; if omitted, matching active rules are processed.
+        id: Legacy alias for rule_id.
+        name: Optional alert rule name used as an alternative lookup key.
+        rule_type: Filter batch execution by alert rule type.
+        type_: Legacy alias for rule_type; prefer rule_type.
+        limit: Maximum number of rules to process.
+        dry_run: Evaluate rules without creating events or sending delivery notifications.
+        force: Ignore cooldown checks when running matching rules."""
         _payload: Dict[str, Any] = {}
         if rule_id is not None:
             _payload["rule_id"] = rule_id
@@ -561,7 +701,21 @@ class AsyncAlertsAPI(AsyncBaseAPI):
     ) -> Any:
         """Update an existing alert rule configuration
 
-        Modifies an existing alert rule. Can update conditions, delivery channels, severity, cooldown, and enabled status. Used by the Dashboard alert editor."""
+        Modifies an existing alert rule. Can update conditions, delivery channels, severity, cooldown, and enabled status. Used by the Dashboard alert editor.
+
+        Args:
+        rule_id: Alert rule identifier.
+        id: Legacy alias for rule_id.
+        name: Current alert rule name used as an alternative lookup key.
+        new_name: New alert rule name.
+        rule_type: Updated alert rule type, such as metric_threshold or portfolio_drift.
+        type_: Legacy alias for rule_type; prefer rule_type.
+        config: Updated rule configuration.
+        description: Updated free-text alert description.
+        enabled: Enable or disable the alert rule.
+        delivery: Updated delivery configuration for email or webhook notifications.
+        cooldown_seconds: Updated minimum seconds between consecutive firings.
+        severity: Updated severity label: info, warning, or critical."""
         _payload: Dict[str, Any] = {}
         if rule_id is not None:
             _payload["rule_id"] = rule_id

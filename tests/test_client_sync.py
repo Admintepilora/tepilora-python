@@ -1,4 +1,7 @@
+import io
 import json
+import os
+import tempfile
 import unittest
 
 import httpx
@@ -134,3 +137,123 @@ class TestTepiloraClientSync(unittest.TestCase):
         client = TepiloraClient(api_key="k", base_url="http://testserver", transport=transport)
         data = client.securities.search(query="MSCI ETF", limit=2)
         self.assertIn("securities", data)
+
+    def test_attachments_upload_uses_multipart_for_file_inputs(self) -> None:
+        expected_payloads = [b"bytes payload", b"path payload", b"stream payload"]
+
+        def handler(request: httpx.Request) -> httpx.Response:
+            expected = expected_payloads.pop(0)
+            self.assertEqual(request.method, "POST")
+            self.assertEqual(request.url.path, "/T-Api/v3/attachments/upload")
+            self.assertIn("multipart/form-data", request.headers.get("Content-Type", ""))
+            self.assertNotIn("application/json", request.headers.get("Content-Type", ""))
+            body = request.content
+            self.assertIn(b'name="file"; filename="notes.txt"', body)
+            self.assertIn(b'name="filename"', body)
+            self.assertIn(b"notes.txt", body)
+            self.assertIn(b'name="source"', body)
+            self.assertIn(b"pytest", body)
+            self.assertIn(expected, body)
+            return httpx.Response(
+                200,
+                json={
+                    "success": True,
+                    "action": "attachments.upload",
+                    "data": {"attachment": {"fileId": "att_1"}},
+                    "meta": {},
+                },
+            )
+
+        transport = httpx.MockTransport(handler)
+        client = TepiloraClient(api_key="k", base_url="http://testserver", transport=transport)
+
+        data = client.attachments.upload(
+            file=b"bytes payload",
+            filename="notes.txt",
+            mime_type="text/plain",
+            source="pytest",
+        )
+        self.assertEqual(data["attachment"]["fileId"], "att_1")
+
+        tmp_name = ""
+        try:
+            with tempfile.NamedTemporaryFile(delete=False) as tmp:
+                tmp.write(b"path payload")
+                tmp_name = tmp.name
+            client.attachments.upload(
+                file=tmp_name,
+                filename="notes.txt",
+                mime_type="text/plain",
+                source="pytest",
+            )
+        finally:
+            if tmp_name:
+                os.unlink(tmp_name)
+
+        client.attachments.upload(
+            file=io.BytesIO(b"stream payload"),
+            filename="notes.txt",
+            mime_type="text/plain",
+            source="pytest",
+        )
+        self.assertEqual(expected_payloads, [])
+
+    def test_attachments_companions_remain_json(self) -> None:
+        expected_actions = [
+            "attachments.list",
+            "attachments.info",
+            "attachments.rename",
+            "attachments.read",
+            "attachments.delete",
+        ]
+
+        def handler(request: httpx.Request) -> httpx.Response:
+            action = expected_actions.pop(0)
+            self.assertEqual(request.method, "POST")
+            self.assertEqual(request.url.path, "/T-Api/v3")
+            self.assertEqual(request.headers.get("Content-Type"), "application/json")
+            payload = json.loads(request.content.decode("utf-8"))
+            self.assertEqual(payload["action"], action)
+            self.assertNotIn(b"multipart/form-data", request.content)
+            return httpx.Response(
+                200,
+                json={
+                    "success": True,
+                    "action": action,
+                    "data": {"ok": True},
+                    "meta": {},
+                },
+            )
+
+        transport = httpx.MockTransport(handler)
+        client = TepiloraClient(api_key="k", base_url="http://testserver", transport=transport)
+        self.assertEqual(client.attachments.list()["ok"], True)
+        self.assertEqual(client.attachments.info(file_id="att_1")["ok"], True)
+        self.assertEqual(client.attachments.rename(file_id="att_1", name="renamed.txt")["ok"], True)
+        self.assertEqual(client.attachments.read(file_id="att_1", max_chars=100)["ok"], True)
+        self.assertEqual(client.attachments.delete(file_id="att_1")["ok"], True)
+        self.assertEqual(expected_actions, [])
+
+    def test_attachments_download_returns_bytes_from_binary_endpoint(self) -> None:
+        def handler(request: httpx.Request) -> httpx.Response:
+            self.assertEqual(request.method, "POST")
+            self.assertEqual(request.url.path, "/T-Api/v3/attachments/download")
+            self.assertEqual(request.headers.get("Accept"), "application/octet-stream")
+            payload = json.loads(request.content.decode("utf-8"))
+            self.assertEqual(payload, {"file_id": "att_1"})
+            return httpx.Response(
+                200,
+                headers={
+                    "Content-Type": "application/pdf",
+                    "Content-Disposition": 'attachment; filename="statement.pdf"',
+                    "X-Tepilora-Request-Id": "r1",
+                },
+                content=b"%PDF-1.4\n",
+            )
+
+        transport = httpx.MockTransport(handler)
+        client = TepiloraClient(api_key="k", base_url="http://testserver", transport=transport)
+
+        data = client.attachments.download(file_id="att_1")
+
+        self.assertEqual(data, b"%PDF-1.4\n")

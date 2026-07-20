@@ -24,14 +24,15 @@ class SearchAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Unified cross-module search across securities, news, and publications
+        """Unified cross-module search across securities, news, portfolios, commands, and optional publications
 
-        Federated search that queries all three content modules (securities, news, publications) in a single call and merges results by relevance. Returns a mixed result set with items tagged by source type. The types parameter filters which modules to include. Used by the Dashboard universal search bar and by the AI assistant for broad discovery queries.
+        Federated search for the Dashboard command palette and broad discovery queries. By default it searches securities, news, user portfolios, and navigation commands; publications are searched only when included in the types parameter. Results are returned in source-specific buckets with total counts and query timing.
 
         Args:
         query: Search query string.
-        types: Types to search; defaults to all supported sources.
+        types: Types to search; defaults to securities, news, portfolios, and commands.
         limit: Requested max results per type; legacy runtime caps to 20.
+        include_recent: When the query is empty, include the recent-search bucket in the response.
 
         Examples:
             >>> client.search.global_search(query='Apple', limit=5)"""
@@ -61,14 +62,15 @@ class AsyncSearchAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Unified cross-module search across securities, news, and publications
+        """Unified cross-module search across securities, news, portfolios, commands, and optional publications
 
-        Federated search that queries all three content modules (securities, news, publications) in a single call and merges results by relevance. Returns a mixed result set with items tagged by source type. The types parameter filters which modules to include. Used by the Dashboard universal search bar and by the AI assistant for broad discovery queries.
+        Federated search for the Dashboard command palette and broad discovery queries. By default it searches securities, news, user portfolios, and navigation commands; publications are searched only when included in the types parameter. Results are returned in source-specific buckets with total counts and query timing.
 
         Args:
         query: Search query string.
-        types: Types to search; defaults to all supported sources.
+        types: Types to search; defaults to securities, news, portfolios, and commands.
         limit: Requested max results per type; legacy runtime caps to 20.
+        include_recent: When the query is empty, include the recent-search bucket in the response.
 
         Examples:
             >>> await client.search.global_search(query='Apple', limit=5)"""

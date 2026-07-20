@@ -81,6 +81,10 @@ class SecuritiesAPI(BaseAPI):
 
         Returns the distinct values and document counts for specified metadata fields across the securities universe. Supports pre-filtering to get facet counts within a subset. Common facet fields: TepiloraType, TepiloraArea, TepiloraAssetClass, TepiloraCategory, Currency, ManagementCompany. Essential for building cascading filter UIs. Used by the Dashboard Securities page for the filter sidebar.
 
+        Args:
+        fields: Metadata fields to compute facets for.
+        filters: Pre-filters applied before counting, so facet counts reflect the filtered subset.
+
         Examples:
             >>> client.securities.facets(fields=['TepiloraType'])"""
         _payload: Dict[str, Any] = {}
@@ -135,7 +139,10 @@ class SecuritiesAPI(BaseAPI):
         Structured filtering of the securities universe by metadata field values, without full-text search. Requires at least one filter. Returns matching securities with metadata. Supports sort, group_by deduplication, preferred_currency, and faceted aggregations. Better than securities.search for programmatic screening. Used by the Dashboard for pre-built category screens, by asset allocation modules for ETF proxy discovery, and by screening workflows.
 
         Args:
+        filters: Required Tepilora metadata filters used to select securities without text search.
+        include_facets: Whether to include aggregation facets for the filtered universe.
         offset: Pagination offset
+        group_by: Optional deduplication field; commonly TepiloraParentId to keep one share class per fund family.
         preferred_currency: Optional ISO 4217 currency code"""
         _payload: Dict[str, Any] = {}
         _payload["filters"] = filters
@@ -235,6 +242,7 @@ class SecuritiesAPI(BaseAPI):
 
         Args:
         identifier: Single security identifier: ISIN, TepiloraCode, or Bloomberg ticker
+        filters: Optional metadata filters applied after resolving the identifier.
 
         Examples:
             >>> client.securities.lookup(identifier='IE00B4L5Y983EURXMIL')
@@ -337,7 +345,17 @@ class SecuritiesAPI(BaseAPI):
     ) -> Any:
         """Screen the securities universe by quantitative analytics criteria and rank results
 
-        Advanced quantitative screening combining universe filtering with analytics-based criteria. First defines a universe, then applies quantitative criteria (e.g. volatility < 15%, Sharpe > 1.0). Securities passing all criteria are ranked by the specified metric. Supports saved queries for reusable strategies. This is the most computationally intensive securities operation. Used by the Dashboard for advanced screening and by asset allocation modules for ETF proxy selection."""
+        Advanced quantitative screening combining universe filtering with analytics-based criteria. First defines a universe, then applies quantitative criteria (e.g. volatility < 15%, Sharpe > 1.0). Securities passing all criteria are ranked by the specified metric. Supports saved queries for reusable strategies. This is the most computationally intensive securities operation. Used by the Dashboard for advanced screening and by asset allocation modules for ETF proxy selection.
+
+        Args:
+        universe: Direct securities universe filter, optionally including a query key for full-text search.
+        query_id: Saved securities query identifier used to load the candidate universe.
+        query_name: Saved securities query name used as an alternative to query_id.
+        criteria: Metric threshold rules applied after candidate metrics are calculated.
+        metrics: Analytics or metadata metrics to calculate for screening.
+        rank_by: Single metric or weighted metric map used to rank matching securities.
+        benchmark: Benchmark TepiloraCode used for metrics that require a reference series, such as beta.
+        period: Rolling lookback period in trading days for analytics metrics."""
         _payload: Dict[str, Any] = {}
         if universe is not None:
             _payload["universe"] = universe
@@ -381,7 +399,11 @@ class SecuritiesAPI(BaseAPI):
         Full-text search across the securities universe (ETFs, funds, stocks, bonds, indices) powered by Tantivy search engine. Accepts free-text queries and returns matching securities with metadata including Name, ISIN, TepiloraCode, TepiloraType, Currency, TepiloraRating, TER, AUM. Supports field-based filters, faceted aggregations, sort by key metrics, and deduplication via group_by=TepiloraParentId. Used by the Dashboard Securities page, by the AI assistant for security discovery, and by workflow bridges for cross-module composition.
 
         Args:
+        filters: Optional Tepilora metadata filters applied together with the text query.
         offset: Pagination offset
+        include_facets: Whether to include aggregation facets for UI filters.
+        include_metrics: Whether to enrich results with available TER, AUM, rating, and parent-family metrics.
+        group_by: Optional deduplication field; commonly TepiloraParentId to keep one share class per fund family.
         preferred_currency: Optional ISO 4217 currency code
 
         Examples:
@@ -482,6 +504,10 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
 
         Returns the distinct values and document counts for specified metadata fields across the securities universe. Supports pre-filtering to get facet counts within a subset. Common facet fields: TepiloraType, TepiloraArea, TepiloraAssetClass, TepiloraCategory, Currency, ManagementCompany. Essential for building cascading filter UIs. Used by the Dashboard Securities page for the filter sidebar.
 
+        Args:
+        fields: Metadata fields to compute facets for.
+        filters: Pre-filters applied before counting, so facet counts reflect the filtered subset.
+
         Examples:
             >>> await client.securities.facets(fields=['TepiloraType'])"""
         _payload: Dict[str, Any] = {}
@@ -536,7 +562,10 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
         Structured filtering of the securities universe by metadata field values, without full-text search. Requires at least one filter. Returns matching securities with metadata. Supports sort, group_by deduplication, preferred_currency, and faceted aggregations. Better than securities.search for programmatic screening. Used by the Dashboard for pre-built category screens, by asset allocation modules for ETF proxy discovery, and by screening workflows.
 
         Args:
+        filters: Required Tepilora metadata filters used to select securities without text search.
+        include_facets: Whether to include aggregation facets for the filtered universe.
         offset: Pagination offset
+        group_by: Optional deduplication field; commonly TepiloraParentId to keep one share class per fund family.
         preferred_currency: Optional ISO 4217 currency code"""
         _payload: Dict[str, Any] = {}
         _payload["filters"] = filters
@@ -636,6 +665,7 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
 
         Args:
         identifier: Single security identifier: ISIN, TepiloraCode, or Bloomberg ticker
+        filters: Optional metadata filters applied after resolving the identifier.
 
         Examples:
             >>> await client.securities.lookup(identifier='IE00B4L5Y983EURXMIL')
@@ -738,7 +768,17 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
     ) -> Any:
         """Screen the securities universe by quantitative analytics criteria and rank results
 
-        Advanced quantitative screening combining universe filtering with analytics-based criteria. First defines a universe, then applies quantitative criteria (e.g. volatility < 15%, Sharpe > 1.0). Securities passing all criteria are ranked by the specified metric. Supports saved queries for reusable strategies. This is the most computationally intensive securities operation. Used by the Dashboard for advanced screening and by asset allocation modules for ETF proxy selection."""
+        Advanced quantitative screening combining universe filtering with analytics-based criteria. First defines a universe, then applies quantitative criteria (e.g. volatility < 15%, Sharpe > 1.0). Securities passing all criteria are ranked by the specified metric. Supports saved queries for reusable strategies. This is the most computationally intensive securities operation. Used by the Dashboard for advanced screening and by asset allocation modules for ETF proxy selection.
+
+        Args:
+        universe: Direct securities universe filter, optionally including a query key for full-text search.
+        query_id: Saved securities query identifier used to load the candidate universe.
+        query_name: Saved securities query name used as an alternative to query_id.
+        criteria: Metric threshold rules applied after candidate metrics are calculated.
+        metrics: Analytics or metadata metrics to calculate for screening.
+        rank_by: Single metric or weighted metric map used to rank matching securities.
+        benchmark: Benchmark TepiloraCode used for metrics that require a reference series, such as beta.
+        period: Rolling lookback period in trading days for analytics metrics."""
         _payload: Dict[str, Any] = {}
         if universe is not None:
             _payload["universe"] = universe
@@ -782,7 +822,11 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
         Full-text search across the securities universe (ETFs, funds, stocks, bonds, indices) powered by Tantivy search engine. Accepts free-text queries and returns matching securities with metadata including Name, ISIN, TepiloraCode, TepiloraType, Currency, TepiloraRating, TER, AUM. Supports field-based filters, faceted aggregations, sort by key metrics, and deduplication via group_by=TepiloraParentId. Used by the Dashboard Securities page, by the AI assistant for security discovery, and by workflow bridges for cross-module composition.
 
         Args:
+        filters: Optional Tepilora metadata filters applied together with the text query.
         offset: Pagination offset
+        include_facets: Whether to include aggregation facets for UI filters.
+        include_metrics: Whether to enrich results with available TER, AUM, rating, and parent-family metrics.
+        group_by: Optional deduplication field; commonly TepiloraParentId to keep one share class per fund family.
         preferred_currency: Optional ISO 4217 currency code
 
         Examples:

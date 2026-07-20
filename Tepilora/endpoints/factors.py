@@ -30,8 +30,10 @@ class FactorsAPI(BaseAPI):
         Returns the daily factor return time series for the selected factor model: FF3 (Market, SMB, HML) or FF5 (Market, SMB, HML, RMW, CMA). Includes the risk-free rate (RF) series. Data is downloaded and cached from Kenneth French's data library. Supports date range filtering. Used as input for factor regression, factor attribution, and risk model construction.
 
         Args:
+        model: Factor model to return: FF3, FF5, MOM, or another supported local model.
         start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
-        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)"""
+        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)
+        frequency: Factor data frequency requested from the local factor store."""
         _payload: Dict[str, Any] = {}
         if model is not None:
             _payload["model"] = model
@@ -76,6 +78,9 @@ class FactorsAPI(BaseAPI):
         Computes portfolio-level factor exposures by aggregating individual security factor loadings weighted by portfolio weights. Returns the portfolio's net exposure to each factor (Market, SMB, HML, RMW, CMA), along with factor contribution to portfolio risk. Used by the Dashboard portfolio factor view and by risk-aware rebalancing workflows.
 
         Args:
+        benchmark: Optional benchmark identifier used as market comparison for portfolio factor exposure.
+        model: Factor model used to estimate portfolio exposure.
+        period: Lookback window, in trading observations, used for factor exposure estimation.
         start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
         end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)"""
         _payload: Dict[str, Any] = {}
@@ -119,8 +124,12 @@ class FactorsAPI(BaseAPI):
         Constructs a factor risk model by regressing each security's returns against the selected factor model (FF3/FF5). Returns: factor loadings (betas) per security, factor covariance matrix, idiosyncratic risk, explained variance (R-squared), and optionally beta statistics (standard errors, t-stats, p-values). Supports multiple covariance estimation methods (sample, Ledoit-Wolf, OAS, EWMA). Used by portfolio risk decomposition and by the Dashboard factor exposure view.
 
         Args:
+        model: Factor model used for regressions and covariance estimation.
+        period: Lookback window, in trading observations, used for return and factor estimation.
         start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
-        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)"""
+        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)
+        cov_method: Covariance estimator to use for factor covariance: sample, ledoit_wolf, oas, or ewma.
+        include_statistics: Include regression diagnostics such as standard errors, t-statistics, and p-values."""
         _payload: Dict[str, Any] = {}
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -159,8 +168,13 @@ class FactorsAPI(BaseAPI):
         Computes the factor-factor covariance matrix over a rolling window, producing a time series of covariance snapshots. Reveals how factor correlations evolve over time (e.g. whether SMB and HML become more correlated during crises). Used by advanced risk analysis and by time-varying risk model construction.
 
         Args:
+        model: Factor model whose factor covariance is calculated.
+        period: Rolling lookback window, in trading observations.
         start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
-        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)"""
+        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)
+        output: Matrix output type: correlation or covariance.
+        cov_method: Covariance estimator to use: sample, ledoit_wolf, oas, or ewma.
+        annualize: Annualize covariance values using the factor data frequency."""
         _payload: Dict[str, Any] = {}
         if model is not None:
             _payload["model"] = model
@@ -200,6 +214,9 @@ class FactorsAPI(BaseAPI):
         Applies hypothetical factor shock scenarios to estimate portfolio impact. Define scenarios as factor return assumptions (e.g. Market=-10%, SMB=+5%) and the model estimates the portfolio's expected return under each scenario using the factor loadings. Used by the Dashboard stress testing view and by risk management workflows.
 
         Args:
+        scenarios: Scenario definitions with factor shocks, keyed by scenario name or supplied as a list.
+        model: Factor model used to map scenario shocks to portfolio or security impact.
+        period: Lookback window, in trading observations, used for factor loading estimation.
         start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
         end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)"""
         _payload: Dict[str, Any] = {}
@@ -233,7 +250,10 @@ class FactorsAPI(BaseAPI):
     ) -> Any:
         """Check the sync status and freshness of factor data
 
-        Returns the current status of factor data: last sync date, data range, freshness (days since last update), and whether a sync is needed. Used by monitoring dashboards and as a prerequisite check before factor analysis."""
+        Returns the current status of factor data: last sync date, data range, freshness (days since last update), and whether a sync is needed. Used by monitoring dashboards and as a prerequisite check before factor analysis.
+
+        Args:
+        model: Optional factor model to inspect. When omitted, returns status for all models."""
         _payload: Dict[str, Any] = {}
         if model is not None:
             _payload["model"] = model
@@ -260,8 +280,10 @@ class AsyncFactorsAPI(AsyncBaseAPI):
         Returns the daily factor return time series for the selected factor model: FF3 (Market, SMB, HML) or FF5 (Market, SMB, HML, RMW, CMA). Includes the risk-free rate (RF) series. Data is downloaded and cached from Kenneth French's data library. Supports date range filtering. Used as input for factor regression, factor attribution, and risk model construction.
 
         Args:
+        model: Factor model to return: FF3, FF5, MOM, or another supported local model.
         start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
-        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)"""
+        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)
+        frequency: Factor data frequency requested from the local factor store."""
         _payload: Dict[str, Any] = {}
         if model is not None:
             _payload["model"] = model
@@ -306,6 +328,9 @@ class AsyncFactorsAPI(AsyncBaseAPI):
         Computes portfolio-level factor exposures by aggregating individual security factor loadings weighted by portfolio weights. Returns the portfolio's net exposure to each factor (Market, SMB, HML, RMW, CMA), along with factor contribution to portfolio risk. Used by the Dashboard portfolio factor view and by risk-aware rebalancing workflows.
 
         Args:
+        benchmark: Optional benchmark identifier used as market comparison for portfolio factor exposure.
+        model: Factor model used to estimate portfolio exposure.
+        period: Lookback window, in trading observations, used for factor exposure estimation.
         start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
         end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)"""
         _payload: Dict[str, Any] = {}
@@ -349,8 +374,12 @@ class AsyncFactorsAPI(AsyncBaseAPI):
         Constructs a factor risk model by regressing each security's returns against the selected factor model (FF3/FF5). Returns: factor loadings (betas) per security, factor covariance matrix, idiosyncratic risk, explained variance (R-squared), and optionally beta statistics (standard errors, t-stats, p-values). Supports multiple covariance estimation methods (sample, Ledoit-Wolf, OAS, EWMA). Used by portfolio risk decomposition and by the Dashboard factor exposure view.
 
         Args:
+        model: Factor model used for regressions and covariance estimation.
+        period: Lookback window, in trading observations, used for return and factor estimation.
         start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
-        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)"""
+        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)
+        cov_method: Covariance estimator to use for factor covariance: sample, ledoit_wolf, oas, or ewma.
+        include_statistics: Include regression diagnostics such as standard errors, t-statistics, and p-values."""
         _payload: Dict[str, Any] = {}
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -389,8 +418,13 @@ class AsyncFactorsAPI(AsyncBaseAPI):
         Computes the factor-factor covariance matrix over a rolling window, producing a time series of covariance snapshots. Reveals how factor correlations evolve over time (e.g. whether SMB and HML become more correlated during crises). Used by advanced risk analysis and by time-varying risk model construction.
 
         Args:
+        model: Factor model whose factor covariance is calculated.
+        period: Rolling lookback window, in trading observations.
         start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
-        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)"""
+        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)
+        output: Matrix output type: correlation or covariance.
+        cov_method: Covariance estimator to use: sample, ledoit_wolf, oas, or ewma.
+        annualize: Annualize covariance values using the factor data frequency."""
         _payload: Dict[str, Any] = {}
         if model is not None:
             _payload["model"] = model
@@ -430,6 +464,9 @@ class AsyncFactorsAPI(AsyncBaseAPI):
         Applies hypothetical factor shock scenarios to estimate portfolio impact. Define scenarios as factor return assumptions (e.g. Market=-10%, SMB=+5%) and the model estimates the portfolio's expected return under each scenario using the factor loadings. Used by the Dashboard stress testing view and by risk management workflows.
 
         Args:
+        scenarios: Scenario definitions with factor shocks, keyed by scenario name or supplied as a list.
+        model: Factor model used to map scenario shocks to portfolio or security impact.
+        period: Lookback window, in trading observations, used for factor loading estimation.
         start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
         end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)"""
         _payload: Dict[str, Any] = {}
@@ -463,7 +500,10 @@ class AsyncFactorsAPI(AsyncBaseAPI):
     ) -> Any:
         """Check the sync status and freshness of factor data
 
-        Returns the current status of factor data: last sync date, data range, freshness (days since last update), and whether a sync is needed. Used by monitoring dashboards and as a prerequisite check before factor analysis."""
+        Returns the current status of factor data: last sync date, data range, freshness (days since last update), and whether a sync is needed. Used by monitoring dashboards and as a prerequisite check before factor analysis.
+
+        Args:
+        model: Optional factor model to inspect. When omitted, returns status for all models."""
         _payload: Dict[str, Any] = {}
         if model is not None:
             _payload["model"] = model

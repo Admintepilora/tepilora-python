@@ -26,7 +26,10 @@ class QueriesAPI(BaseAPI):
     ) -> Any:
         """Duplicate a saved query with a new name
 
-        Creates a copy of an existing saved query with a new name, preserving the full definition. Optionally updates the description. Used by the Dashboard for the Duplicate Query action and by workflows that create variations of existing screening strategies."""
+        Creates a copy of an existing saved query with a new name, preserving the full definition. Optionally updates the description. Used by the Dashboard for the Duplicate Query action and by workflows that create variations of existing screening strategies.
+
+        Args:
+        new_name: Name assigned to the copied saved query."""
         _payload: Dict[str, Any] = {}
         _payload["name"] = name
         _payload["category"] = category
@@ -66,7 +69,12 @@ class QueriesAPI(BaseAPI):
     ) -> Any:
         """Update an existing saved query definition
 
-        Modifies an existing saved query identified by name+category. Can update definition, items, expression, description, and tags. Automatically invalidates the query result cache. Used by the Dashboard query editor."""
+        Modifies an existing saved query identified by name+category. Can update definition, items, expression, description, and tags. Automatically invalidates the query result cache. Used by the Dashboard query editor.
+
+        Args:
+        definition: Replacement dynamic query definition, usually containing query text and filters.
+        items: Replacement fixed TepiloraCode or identifier list for static saved queries.
+        expression: Replacement composite query expression combining saved query names with set operators."""
         _payload: Dict[str, Any] = {}
         _payload["name"] = name
         _payload["category"] = category
@@ -98,7 +106,11 @@ class QueriesAPI(BaseAPI):
     ) -> Any:
         """Execute a saved query and return fresh results
 
-        Runs a saved query (by ID, name, or name+category) and returns the current results. For dynamic queries, re-evaluates the filter definition against current data. For static queries, returns the fixed identifier list with current metadata. Results are cached for 15 minutes. Supports multiple output formats. Used by the Dashboard to refresh query results and by scheduled alerting workflows."""
+        Runs a saved query (by ID, name, or name+category) and returns the current results. For dynamic queries, re-evaluates the filter definition against current data. For static queries, returns the fixed identifier list with current metadata. Results are cached for 15 minutes. Supports multiple output formats. Used by the Dashboard to refresh query results and by scheduled alerting workflows.
+
+        Args:
+        query_id: Saved query identifier to execute; equivalent to id when both are accepted by the handler.
+        output_path: Optional server-side file path used when exporting query execution results."""
         _payload: Dict[str, Any] = {}
         if id is not None:
             _payload["id"] = id
@@ -148,7 +160,10 @@ class QueriesAPI(BaseAPI):
     ) -> Any:
         """List all saved queries for the current user with filtering and pagination
 
-        Returns the saved queries belonging to the authenticated user from the SavedQueries MongoDB collection. Queries are reusable search/filter/screening definitions that can be executed on demand. Filterable by category, type (dynamic/static/expression), tags, and name search. Used by the Dashboard Saved Queries panel and by the AI assistant to list available screening strategies."""
+        Returns the saved queries belonging to the authenticated user from the SavedQueries MongoDB collection. Queries are reusable search/filter/screening definitions that can be executed on demand. Filterable by category, type (dynamic/static/expression), tags, and name search. Used by the Dashboard Saved Queries panel and by the AI assistant to list available screening strategies.
+
+        Args:
+        search: Case-insensitive search term applied to saved query names."""
         _payload: Dict[str, Any] = {}
         if category is not None:
             _payload["category"] = category
@@ -185,7 +200,14 @@ class QueriesAPI(BaseAPI):
     ) -> Any:
         """Preview query results without saving the query
 
-        Executes a query definition on-the-fly without persisting it. Used to test and refine query parameters before saving. Returns a limited result set (default 10) for quick feedback. Used by the Dashboard query builder preview button."""
+        Executes a query definition on-the-fly without persisting it. Used to test and refine query parameters before saving. Returns a limited result set (default 50) for quick feedback. Used by the Dashboard query builder preview button.
+
+        Args:
+        action: Operation action to execute for preview when passing raw params.
+        definition: Dynamic query definition to preview without saving.
+        expression: Composite saved-query expression to preview without saving.
+        items: Static TepiloraCode list to preview without saving.
+        params: Raw action parameters to preview through the selected operation action."""
         _payload: Dict[str, Any] = {}
         _payload["category"] = category
         if action is not None:
@@ -221,7 +243,13 @@ class QueriesAPI(BaseAPI):
     ) -> Any:
         """Save a new query definition for later reuse
 
-        Creates a new saved query in the SavedQueries MongoDB collection. Supports three query types: dynamic (filter definition re-evaluated each execution), static (fixed list of identifiers), and expression (computed formula). Includes name, category, visibility (private/workspace), description, and tags. Used by the Dashboard Save Query button and by the AI assistant when helping users create reusable screens."""
+        Creates a new saved query in the SavedQueries MongoDB collection. Supports three query types: dynamic (filter definition re-evaluated each execution), static (fixed list of identifiers), and expression (computed formula). Includes name, category, visibility (private/workspace), description, and tags. Used by the Dashboard Save Query button and by the AI assistant when helping users create reusable screens.
+
+        Args:
+        visibility: Saved query visibility scope: private for the current user or workspace for shared workspace queries.
+        definition: Dynamic query definition, usually containing query text and filters.
+        items: Fixed TepiloraCode or identifier list for static saved queries.
+        expression: Composite query expression combining saved query names with set operators."""
         _payload: Dict[str, Any] = {}
         _payload["name"] = name
         _payload["category"] = category
@@ -258,7 +286,10 @@ class AsyncQueriesAPI(AsyncBaseAPI):
     ) -> Any:
         """Duplicate a saved query with a new name
 
-        Creates a copy of an existing saved query with a new name, preserving the full definition. Optionally updates the description. Used by the Dashboard for the Duplicate Query action and by workflows that create variations of existing screening strategies."""
+        Creates a copy of an existing saved query with a new name, preserving the full definition. Optionally updates the description. Used by the Dashboard for the Duplicate Query action and by workflows that create variations of existing screening strategies.
+
+        Args:
+        new_name: Name assigned to the copied saved query."""
         _payload: Dict[str, Any] = {}
         _payload["name"] = name
         _payload["category"] = category
@@ -298,7 +329,12 @@ class AsyncQueriesAPI(AsyncBaseAPI):
     ) -> Any:
         """Update an existing saved query definition
 
-        Modifies an existing saved query identified by name+category. Can update definition, items, expression, description, and tags. Automatically invalidates the query result cache. Used by the Dashboard query editor."""
+        Modifies an existing saved query identified by name+category. Can update definition, items, expression, description, and tags. Automatically invalidates the query result cache. Used by the Dashboard query editor.
+
+        Args:
+        definition: Replacement dynamic query definition, usually containing query text and filters.
+        items: Replacement fixed TepiloraCode or identifier list for static saved queries.
+        expression: Replacement composite query expression combining saved query names with set operators."""
         _payload: Dict[str, Any] = {}
         _payload["name"] = name
         _payload["category"] = category
@@ -330,7 +366,11 @@ class AsyncQueriesAPI(AsyncBaseAPI):
     ) -> Any:
         """Execute a saved query and return fresh results
 
-        Runs a saved query (by ID, name, or name+category) and returns the current results. For dynamic queries, re-evaluates the filter definition against current data. For static queries, returns the fixed identifier list with current metadata. Results are cached for 15 minutes. Supports multiple output formats. Used by the Dashboard to refresh query results and by scheduled alerting workflows."""
+        Runs a saved query (by ID, name, or name+category) and returns the current results. For dynamic queries, re-evaluates the filter definition against current data. For static queries, returns the fixed identifier list with current metadata. Results are cached for 15 minutes. Supports multiple output formats. Used by the Dashboard to refresh query results and by scheduled alerting workflows.
+
+        Args:
+        query_id: Saved query identifier to execute; equivalent to id when both are accepted by the handler.
+        output_path: Optional server-side file path used when exporting query execution results."""
         _payload: Dict[str, Any] = {}
         if id is not None:
             _payload["id"] = id
@@ -380,7 +420,10 @@ class AsyncQueriesAPI(AsyncBaseAPI):
     ) -> Any:
         """List all saved queries for the current user with filtering and pagination
 
-        Returns the saved queries belonging to the authenticated user from the SavedQueries MongoDB collection. Queries are reusable search/filter/screening definitions that can be executed on demand. Filterable by category, type (dynamic/static/expression), tags, and name search. Used by the Dashboard Saved Queries panel and by the AI assistant to list available screening strategies."""
+        Returns the saved queries belonging to the authenticated user from the SavedQueries MongoDB collection. Queries are reusable search/filter/screening definitions that can be executed on demand. Filterable by category, type (dynamic/static/expression), tags, and name search. Used by the Dashboard Saved Queries panel and by the AI assistant to list available screening strategies.
+
+        Args:
+        search: Case-insensitive search term applied to saved query names."""
         _payload: Dict[str, Any] = {}
         if category is not None:
             _payload["category"] = category
@@ -417,7 +460,14 @@ class AsyncQueriesAPI(AsyncBaseAPI):
     ) -> Any:
         """Preview query results without saving the query
 
-        Executes a query definition on-the-fly without persisting it. Used to test and refine query parameters before saving. Returns a limited result set (default 10) for quick feedback. Used by the Dashboard query builder preview button."""
+        Executes a query definition on-the-fly without persisting it. Used to test and refine query parameters before saving. Returns a limited result set (default 50) for quick feedback. Used by the Dashboard query builder preview button.
+
+        Args:
+        action: Operation action to execute for preview when passing raw params.
+        definition: Dynamic query definition to preview without saving.
+        expression: Composite saved-query expression to preview without saving.
+        items: Static TepiloraCode list to preview without saving.
+        params: Raw action parameters to preview through the selected operation action."""
         _payload: Dict[str, Any] = {}
         _payload["category"] = category
         if action is not None:
@@ -453,7 +503,13 @@ class AsyncQueriesAPI(AsyncBaseAPI):
     ) -> Any:
         """Save a new query definition for later reuse
 
-        Creates a new saved query in the SavedQueries MongoDB collection. Supports three query types: dynamic (filter definition re-evaluated each execution), static (fixed list of identifiers), and expression (computed formula). Includes name, category, visibility (private/workspace), description, and tags. Used by the Dashboard Save Query button and by the AI assistant when helping users create reusable screens."""
+        Creates a new saved query in the SavedQueries MongoDB collection. Supports three query types: dynamic (filter definition re-evaluated each execution), static (fixed list of identifiers), and expression (computed formula). Includes name, category, visibility (private/workspace), description, and tags. Used by the Dashboard Save Query button and by the AI assistant when helping users create reusable screens.
+
+        Args:
+        visibility: Saved query visibility scope: private for the current user or workspace for shared workspace queries.
+        definition: Dynamic query definition, usually containing query text and filters.
+        items: Fixed TepiloraCode or identifier list for static saved queries.
+        expression: Composite query expression combining saved query names with set operators."""
         _payload: Dict[str, Any] = {}
         _payload["name"] = name
         _payload["category"] = category

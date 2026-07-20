@@ -28,7 +28,14 @@ class AlternativesAPI(BaseAPI):
     ) -> Any:
         """Record a cash flow event (capital call, distribution) for an alternative asset
 
-        Records a cash flow event for an alternative asset: capital call (investor pays in), distribution (fund pays out), or recallable distribution. Each event includes date, amount, type, and optional notes. Cash flows are essential for IRR/TVPI/DPI calculations. Used by advisor workflows processing fund notices."""
+        Records a cash flow event for an alternative asset: capital call (investor pays in), distribution (fund pays out), or recallable distribution. Each event includes date, amount, type, and optional notes. Cash flows are essential for IRR/TVPI/DPI calculations. Used by advisor workflows processing fund notices.
+
+        Args:
+        asset_id: Alternative asset id receiving the cash-flow event.
+        date: Cash-flow date in YYYY-MM-DD format.
+        flow_type: Cash-flow type validated by the alternatives core.
+        amount: Cash-flow amount; sign is normalized by type in the core.
+        document_id: Optional source document id linked to the cash-flow event."""
         _payload: Dict[str, Any] = {}
         _payload["asset_id"] = asset_id
         _payload["date"] = date
@@ -59,7 +66,18 @@ class AlternativesAPI(BaseAPI):
     ) -> Any:
         """Create a new alternative asset (PE, VC, real estate, etc.)
 
-        Creates a new alternative asset record in the AlternativeAssets MongoDB collection. Alternative assets are illiquid investments not tracked by market data feeds: private equity, venture capital, real estate, hedge funds, infrastructure, private debt. Includes asset name, type, vintage year, committed capital, and custom metadata. Used by advisor workflows managing client allocations to alternatives."""
+        Creates a new alternative asset record in the AlternativeAssets MongoDB collection. Alternative assets are illiquid investments not tracked by market data feeds: private equity, venture capital, real estate, hedge funds, infrastructure, private debt. Includes asset name, type, vintage year, committed capital, and custom metadata. Used by advisor workflows managing client allocations to alternatives.
+
+        Args:
+        asset_type: Alternative asset type validated by the alternatives core.
+        fund_name: Underlying fund or vehicle name, when different from the asset name.
+        commitment: Committed capital amount for the alternative investment.
+        vintage_year: Fund vintage year.
+        manager: Investment manager or general partner name.
+        strategy: Investment strategy or mandate.
+        geography: Primary investment geography.
+        notes: Free-form notes stored with the asset record.
+        external_id: External system identifier used for reconciliation."""
         _payload: Dict[str, Any] = {}
         _payload["name"] = name
         _payload["asset_type"] = asset_type
@@ -92,7 +110,10 @@ class AlternativesAPI(BaseAPI):
     ) -> Any:
         """Delete an alternative asset record
 
-        Permanently removes an alternative asset record from the AlternativeAssets MongoDB collection. Creates an audit trail entry for compliance tracking. The deletion is irreversible — all associated NAV history and cash flow records are also removed."""
+        Permanently removes an alternative asset record from the AlternativeAssets MongoDB collection. Creates an audit trail entry for compliance tracking. The deletion is irreversible — all associated NAV history and cash flow records are also removed.
+
+        Args:
+        asset_id: Alternative asset id to archive."""
         _payload: Dict[str, Any] = {}
         _payload["asset_id"] = asset_id
         return self._call("alternatives.delete", params=_payload, options=options, context=context)
@@ -108,7 +129,12 @@ class AlternativesAPI(BaseAPI):
     ) -> Any:
         """Get full details for a specific alternative asset
 
-        Returns complete alternative asset record including all NAV history entries, cash flow history, and computed performance metrics."""
+        Returns complete alternative asset record including all NAV history entries, cash flow history, and computed performance metrics.
+
+        Args:
+        asset_id: Alternative asset id to retrieve.
+        include_cash_flows: Include embedded cash-flow history in the response.
+        include_nav_history: Include embedded NAV history in the response."""
         _payload: Dict[str, Any] = {}
         _payload["asset_id"] = asset_id
         if include_cash_flows is not None:
@@ -132,7 +158,11 @@ class AlternativesAPI(BaseAPI):
     ) -> Any:
         """List all alternative assets for the current user
 
-        Returns all alternative asset records. Each entry shows name, type, vintage, committed capital, current NAV, and IRR. Used by the Dashboard alternatives portfolio view."""
+        Returns all alternative asset records. Each entry shows name, type, vintage, committed capital, current NAV, and IRR. Used by the Dashboard alternatives portfolio view.
+
+        Args:
+        asset_type: Optional asset-type filter validated by the alternatives core.
+        search: Text search applied to alternative asset records."""
         _payload: Dict[str, Any] = {}
         if asset_type is not None:
             _payload["asset_type"] = asset_type
@@ -162,7 +192,15 @@ class AlternativesAPI(BaseAPI):
     ) -> Any:
         """Record a new NAV valuation for an alternative asset
 
-        Adds a new Net Asset Value data point to an alternative asset's valuation history. Alternative assets are valued periodically (monthly/quarterly) rather than daily. Each NAV update includes date, value, and optional notes. Automatically recalculates performance metrics. Used by advisor workflows when receiving periodic fund statements."""
+        Adds a new Net Asset Value data point to an alternative asset's valuation history. Alternative assets are valued periodically (monthly/quarterly) rather than daily. Each NAV update includes date, value, and optional notes. Automatically recalculates performance metrics. Used by advisor workflows when receiving periodic fund statements.
+
+        Args:
+        asset_id: Alternative asset id receiving the NAV update.
+        date: NAV observation date in YYYY-MM-DD format.
+        nav: Net asset value amount.
+        source: NAV source; invalid values are normalized to manual by the core.
+        document_id: Optional document id backing the NAV update.
+        notes: Optional notes for the valuation update."""
         _payload: Dict[str, Any] = {}
         _payload["asset_id"] = asset_id
         _payload["date"] = date
@@ -185,7 +223,11 @@ class AlternativesAPI(BaseAPI):
     ) -> Any:
         """Calculate performance metrics (IRR, TVPI, DPI) for an alternative asset
 
-        Computes private market performance metrics from the cash flow and NAV history: IRR (Internal Rate of Return), TVPI (Total Value to Paid-In), DPI (Distributions to Paid-In), RVPI (Residual Value to Paid-In), and PME (Public Market Equivalent). These are the standard metrics for evaluating illiquid investments. Used by the Dashboard alternatives performance view."""
+        Computes private market performance metrics from the cash flow and NAV history: IRR (Internal Rate of Return), TVPI (Total Value to Paid-In), DPI (Distributions to Paid-In), RVPI (Residual Value to Paid-In), and PME (Public Market Equivalent). These are the standard metrics for evaluating illiquid investments. Used by the Dashboard alternatives performance view.
+
+        Args:
+        asset_id: Alternative asset id for performance calculation.
+        as_of_date: Optional performance calculation date in YYYY-MM-DD format."""
         _payload: Dict[str, Any] = {}
         _payload["asset_id"] = asset_id
         if as_of_date is not None:
@@ -201,7 +243,10 @@ class AlternativesAPI(BaseAPI):
     ) -> Any:
         """Get an aggregate summary across all alternative assets
 
-        Returns portfolio-level statistics across all alternative assets: total committed capital, total contributions, total distributions, total current NAV, total value, TVPI, DPI, RVPI, vintage year distribution, and asset type breakdown. Used by the Dashboard alternatives overview and by reporting modules."""
+        Returns portfolio-level statistics across all alternative assets: total committed capital, total contributions, total distributions, total current NAV, total value, TVPI, DPI, RVPI, vintage year distribution, and asset type breakdown. Used by the Dashboard alternatives overview and by reporting modules.
+
+        Args:
+        asset_type: Optional asset-type filter validated by the alternatives core."""
         _payload: Dict[str, Any] = {}
         if asset_type is not None:
             _payload["asset_type"] = asset_type
@@ -224,7 +269,16 @@ class AlternativesAPI(BaseAPI):
     ) -> Any:
         """Update alternative asset details
 
-        Modifies an existing alternative asset record. Can update name, metadata, and status. Used by the Dashboard alternatives editor."""
+        Modifies an existing alternative asset record. Can update name, metadata, and status. Used by the Dashboard alternatives editor.
+
+        Args:
+        asset_id: Alternative asset id to update.
+        fund_name: Updated underlying fund or vehicle name.
+        commitment: Updated committed capital amount.
+        manager: Updated investment manager or general partner name.
+        strategy: Updated investment strategy or mandate.
+        geography: Updated primary investment geography.
+        notes: Updated free-form notes for the asset record."""
         _payload: Dict[str, Any] = {}
         _payload["asset_id"] = asset_id
         if name is not None:
@@ -264,7 +318,14 @@ class AsyncAlternativesAPI(AsyncBaseAPI):
     ) -> Any:
         """Record a cash flow event (capital call, distribution) for an alternative asset
 
-        Records a cash flow event for an alternative asset: capital call (investor pays in), distribution (fund pays out), or recallable distribution. Each event includes date, amount, type, and optional notes. Cash flows are essential for IRR/TVPI/DPI calculations. Used by advisor workflows processing fund notices."""
+        Records a cash flow event for an alternative asset: capital call (investor pays in), distribution (fund pays out), or recallable distribution. Each event includes date, amount, type, and optional notes. Cash flows are essential for IRR/TVPI/DPI calculations. Used by advisor workflows processing fund notices.
+
+        Args:
+        asset_id: Alternative asset id receiving the cash-flow event.
+        date: Cash-flow date in YYYY-MM-DD format.
+        flow_type: Cash-flow type validated by the alternatives core.
+        amount: Cash-flow amount; sign is normalized by type in the core.
+        document_id: Optional source document id linked to the cash-flow event."""
         _payload: Dict[str, Any] = {}
         _payload["asset_id"] = asset_id
         _payload["date"] = date
@@ -295,7 +356,18 @@ class AsyncAlternativesAPI(AsyncBaseAPI):
     ) -> Any:
         """Create a new alternative asset (PE, VC, real estate, etc.)
 
-        Creates a new alternative asset record in the AlternativeAssets MongoDB collection. Alternative assets are illiquid investments not tracked by market data feeds: private equity, venture capital, real estate, hedge funds, infrastructure, private debt. Includes asset name, type, vintage year, committed capital, and custom metadata. Used by advisor workflows managing client allocations to alternatives."""
+        Creates a new alternative asset record in the AlternativeAssets MongoDB collection. Alternative assets are illiquid investments not tracked by market data feeds: private equity, venture capital, real estate, hedge funds, infrastructure, private debt. Includes asset name, type, vintage year, committed capital, and custom metadata. Used by advisor workflows managing client allocations to alternatives.
+
+        Args:
+        asset_type: Alternative asset type validated by the alternatives core.
+        fund_name: Underlying fund or vehicle name, when different from the asset name.
+        commitment: Committed capital amount for the alternative investment.
+        vintage_year: Fund vintage year.
+        manager: Investment manager or general partner name.
+        strategy: Investment strategy or mandate.
+        geography: Primary investment geography.
+        notes: Free-form notes stored with the asset record.
+        external_id: External system identifier used for reconciliation."""
         _payload: Dict[str, Any] = {}
         _payload["name"] = name
         _payload["asset_type"] = asset_type
@@ -328,7 +400,10 @@ class AsyncAlternativesAPI(AsyncBaseAPI):
     ) -> Any:
         """Delete an alternative asset record
 
-        Permanently removes an alternative asset record from the AlternativeAssets MongoDB collection. Creates an audit trail entry for compliance tracking. The deletion is irreversible — all associated NAV history and cash flow records are also removed."""
+        Permanently removes an alternative asset record from the AlternativeAssets MongoDB collection. Creates an audit trail entry for compliance tracking. The deletion is irreversible — all associated NAV history and cash flow records are also removed.
+
+        Args:
+        asset_id: Alternative asset id to archive."""
         _payload: Dict[str, Any] = {}
         _payload["asset_id"] = asset_id
         return await self._call("alternatives.delete", params=_payload, options=options, context=context)
@@ -344,7 +419,12 @@ class AsyncAlternativesAPI(AsyncBaseAPI):
     ) -> Any:
         """Get full details for a specific alternative asset
 
-        Returns complete alternative asset record including all NAV history entries, cash flow history, and computed performance metrics."""
+        Returns complete alternative asset record including all NAV history entries, cash flow history, and computed performance metrics.
+
+        Args:
+        asset_id: Alternative asset id to retrieve.
+        include_cash_flows: Include embedded cash-flow history in the response.
+        include_nav_history: Include embedded NAV history in the response."""
         _payload: Dict[str, Any] = {}
         _payload["asset_id"] = asset_id
         if include_cash_flows is not None:
@@ -368,7 +448,11 @@ class AsyncAlternativesAPI(AsyncBaseAPI):
     ) -> Any:
         """List all alternative assets for the current user
 
-        Returns all alternative asset records. Each entry shows name, type, vintage, committed capital, current NAV, and IRR. Used by the Dashboard alternatives portfolio view."""
+        Returns all alternative asset records. Each entry shows name, type, vintage, committed capital, current NAV, and IRR. Used by the Dashboard alternatives portfolio view.
+
+        Args:
+        asset_type: Optional asset-type filter validated by the alternatives core.
+        search: Text search applied to alternative asset records."""
         _payload: Dict[str, Any] = {}
         if asset_type is not None:
             _payload["asset_type"] = asset_type
@@ -398,7 +482,15 @@ class AsyncAlternativesAPI(AsyncBaseAPI):
     ) -> Any:
         """Record a new NAV valuation for an alternative asset
 
-        Adds a new Net Asset Value data point to an alternative asset's valuation history. Alternative assets are valued periodically (monthly/quarterly) rather than daily. Each NAV update includes date, value, and optional notes. Automatically recalculates performance metrics. Used by advisor workflows when receiving periodic fund statements."""
+        Adds a new Net Asset Value data point to an alternative asset's valuation history. Alternative assets are valued periodically (monthly/quarterly) rather than daily. Each NAV update includes date, value, and optional notes. Automatically recalculates performance metrics. Used by advisor workflows when receiving periodic fund statements.
+
+        Args:
+        asset_id: Alternative asset id receiving the NAV update.
+        date: NAV observation date in YYYY-MM-DD format.
+        nav: Net asset value amount.
+        source: NAV source; invalid values are normalized to manual by the core.
+        document_id: Optional document id backing the NAV update.
+        notes: Optional notes for the valuation update."""
         _payload: Dict[str, Any] = {}
         _payload["asset_id"] = asset_id
         _payload["date"] = date
@@ -421,7 +513,11 @@ class AsyncAlternativesAPI(AsyncBaseAPI):
     ) -> Any:
         """Calculate performance metrics (IRR, TVPI, DPI) for an alternative asset
 
-        Computes private market performance metrics from the cash flow and NAV history: IRR (Internal Rate of Return), TVPI (Total Value to Paid-In), DPI (Distributions to Paid-In), RVPI (Residual Value to Paid-In), and PME (Public Market Equivalent). These are the standard metrics for evaluating illiquid investments. Used by the Dashboard alternatives performance view."""
+        Computes private market performance metrics from the cash flow and NAV history: IRR (Internal Rate of Return), TVPI (Total Value to Paid-In), DPI (Distributions to Paid-In), RVPI (Residual Value to Paid-In), and PME (Public Market Equivalent). These are the standard metrics for evaluating illiquid investments. Used by the Dashboard alternatives performance view.
+
+        Args:
+        asset_id: Alternative asset id for performance calculation.
+        as_of_date: Optional performance calculation date in YYYY-MM-DD format."""
         _payload: Dict[str, Any] = {}
         _payload["asset_id"] = asset_id
         if as_of_date is not None:
@@ -437,7 +533,10 @@ class AsyncAlternativesAPI(AsyncBaseAPI):
     ) -> Any:
         """Get an aggregate summary across all alternative assets
 
-        Returns portfolio-level statistics across all alternative assets: total committed capital, total contributions, total distributions, total current NAV, total value, TVPI, DPI, RVPI, vintage year distribution, and asset type breakdown. Used by the Dashboard alternatives overview and by reporting modules."""
+        Returns portfolio-level statistics across all alternative assets: total committed capital, total contributions, total distributions, total current NAV, total value, TVPI, DPI, RVPI, vintage year distribution, and asset type breakdown. Used by the Dashboard alternatives overview and by reporting modules.
+
+        Args:
+        asset_type: Optional asset-type filter validated by the alternatives core."""
         _payload: Dict[str, Any] = {}
         if asset_type is not None:
             _payload["asset_type"] = asset_type
@@ -460,7 +559,16 @@ class AsyncAlternativesAPI(AsyncBaseAPI):
     ) -> Any:
         """Update alternative asset details
 
-        Modifies an existing alternative asset record. Can update name, metadata, and status. Used by the Dashboard alternatives editor."""
+        Modifies an existing alternative asset record. Can update name, metadata, and status. Used by the Dashboard alternatives editor.
+
+        Args:
+        asset_id: Alternative asset id to update.
+        fund_name: Updated underlying fund or vehicle name.
+        commitment: Updated committed capital amount.
+        manager: Updated investment manager or general partner name.
+        strategy: Updated investment strategy or mandate.
+        geography: Updated primary investment geography.
+        notes: Updated free-form notes for the asset record."""
         _payload: Dict[str, Any] = {}
         _payload["asset_id"] = asset_id
         if name is not None:

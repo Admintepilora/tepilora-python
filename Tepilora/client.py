@@ -52,6 +52,86 @@ def _sanitize_params(value: Any) -> Any:
     return value
 
 
+def _multipart_form_value(value: Any) -> str:
+    """Convert a form field value to the string representation used by multipart."""
+    sanitized = _sanitize_params(value)
+    if isinstance(sanitized, (dict, list)):
+        return json.dumps(sanitized, cls=_TepiloraJSONEncoder)
+    if isinstance(sanitized, bool):
+        return "true" if sanitized else "false"
+    return str(sanitized)
+
+
+def _read_file_content(value: Any) -> Any:
+    """Return multipart-safe file content from path, bytes, or file-like input."""
+    if isinstance(value, (bytes, bytearray, memoryview)):
+        return bytes(value)
+    if isinstance(value, (str, os.PathLike)):
+        with open(os.fspath(value), "rb") as fh:
+            return fh.read()
+    read = getattr(value, "read", None)
+    if callable(read):
+        content = read()
+        if isinstance(content, str):
+            return content.encode("utf-8")
+        if isinstance(content, (bytearray, memoryview)):
+            return bytes(content)
+        return content
+    return value
+
+
+def _multipart_filename(field_name: str, value: Any, params: Mapping[str, Any]) -> str:
+    """Choose a stable filename for a multipart file field."""
+    for key in (f"{field_name}_filename", "filename"):
+        candidate = params.get(key)
+        if isinstance(candidate, str) and candidate:
+            return candidate
+    if isinstance(value, (str, os.PathLike)):
+        return os.path.basename(os.fspath(value))
+    return field_name
+
+
+def _multipart_mime_type(field_name: str, params: Mapping[str, Any]) -> Optional[str]:
+    """Return a declared MIME type when the registry has a companion field."""
+    for key in (f"{field_name}_mime_type", "mime_type"):
+        candidate = params.get(key)
+        if isinstance(candidate, str) and candidate:
+            return candidate
+    return None
+
+
+def _build_multipart_payload(
+    params: Optional[Dict[str, Any]],
+    file_fields: Tuple[str, ...],
+) -> Tuple[Dict[str, str], Dict[str, Any]]:
+    """Split operation params into multipart form fields and file fields."""
+    payload = dict(params or {})
+    file_field_set = set(file_fields)
+    data = {
+        key: _multipart_form_value(value)
+        for key, value in payload.items()
+        if key not in file_field_set and value is not None
+    }
+    files: Dict[str, Any] = {}
+    for field_name in file_fields:
+        if field_name not in payload or payload[field_name] is None:
+            raise ValueError(f"{field_name} is required for multipart upload")
+        raw_value = payload[field_name]
+        filename = _multipart_filename(field_name, raw_value, payload)
+        content = _read_file_content(raw_value)
+        mime_type = _multipart_mime_type(field_name, payload)
+        files[field_name] = (filename, content, mime_type) if mime_type else (filename, content)
+    return data, files
+
+
+def _typed_rest_path_for_action(action: str) -> str:
+    """Return the typed REST path for an action like 'attachments.upload'."""
+    if "." not in action:
+        raise ValueError(f"Invalid action for typed REST endpoint: {action!r}")
+    category, operation = action.split(".", 1)
+    return f"{V3_PREFIX}/{category}/{operation}"
+
+
 def _normalize_base_url(base_url: str) -> str:
     return base_url.rstrip("/")
 
@@ -311,6 +391,7 @@ class TepiloraClient:
             AlertsAPI,
             AlternativesAPI,
             AssetAllocationAPI,
+            AttachmentsAPI,
             AuditAPI,
             BillingAPI,
             BondsAPI,
@@ -343,6 +424,7 @@ class TepiloraClient:
         self.alternatives = AlternativesAPI(self)
         self.analytics = AnalyticsAPI(self)
         self.asset_allocation = AssetAllocationAPI(self)
+        self.attachments = AttachmentsAPI(self)
         self.audit = AuditAPI(self)
         self.billing = BillingAPI(self)
         self.bonds = BondsAPI(self)
@@ -543,6 +625,155 @@ class TepiloraClient:
             )
         raise TepiloraAPIError(message="Request failed after retries")
 
+    def call_multipart(
+        self,
+        action: str,
+        *,
+        params: Optional[Dict[str, Any]] = None,
+        file_fields: Tuple[str, ...],
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+        response_format: Optional[str] = None,
+    ) -> Union[V3Response, V3BinaryResponse]:
+        request_options = dict(options or {})
+        if response_format is not None and "format" not in request_options:
+            request_options["format"] = response_format
+
+        unsupported_options = sorted(set(request_options) - {"format"})
+        if unsupported_options:
+            joined = ", ".join(unsupported_options)
+            raise ValueError(f"Multipart typed endpoints support only the 'format' option, got: {joined}")
+        if context is not None:
+            raise ValueError("Multipart typed endpoints do not support request context")
+
+        query_params: Dict[str, Any] = {}
+        accept_headers: Dict[str, str] = {}
+        effective_format = request_options.get("format")
+        if isinstance(effective_format, str) and effective_format.strip():
+            query_params["format"] = effective_format
+            accept_headers["Accept"] = _format_to_accept(effective_format)
+
+        data, files = _build_multipart_payload(params, file_fields)
+        path = _typed_rest_path_for_action(action)
+        max_retries = self._config.max_retries
+        for attempt in range(max_retries + 1):
+            logger.debug("V3 multipart call: %s", action)
+            response = self._client.request(
+                "POST",
+                path,
+                params={**query_params, **self._config.auth_query()} or None,
+                data=data or None,
+                files=files,
+                headers=accept_headers or None,
+            )
+            logger.debug("V3 multipart response: %d", response.status_code)
+            self._update_credits_from_headers(response.headers)
+            _check_sdk_version(response.headers)
+            if _should_retry_status(response.status_code, self._config.retry_status_codes) and attempt < max_retries:
+                retry_after = _parse_retry_after(response.headers) if response.status_code == 429 else None
+                delay = retry_after if retry_after is not None else _compute_backoff(self._config.retry_backoff, attempt)
+                if delay < 0:
+                    delay = 0.0
+                logger.warning(
+                    "Retrying %s %s in %.2fs (attempt %d/%d) due to status %d",
+                    "POST",
+                    path,
+                    delay,
+                    attempt + 1,
+                    max_retries,
+                    response.status_code,
+                )
+                response.close()
+                time.sleep(delay)
+                continue
+            _raise_for_error_response(response)
+
+            if _is_json_response(response):
+                payload = response.json()
+                if not isinstance(payload, dict):
+                    raise TepiloraAPIError(message="Unexpected non-object JSON response from v3 endpoint")
+                return V3Response.from_dict(payload)
+
+            content = response.content
+            ctype = _content_type(response)
+            fmt = str(effective_format or "binary")
+            return V3BinaryResponse(
+                action=action,
+                format=fmt,
+                content_type=ctype,
+                content=content,
+                meta=_parse_binary_meta(response.headers),
+                headers=dict(response.headers),
+            )
+        raise TepiloraAPIError(message="Request failed after retries")
+
+    def call_binary(
+        self,
+        action: str,
+        *,
+        params: Optional[Dict[str, Any]] = None,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+    ) -> V3BinaryResponse:
+        request_options = dict(options or {})
+        if request_options:
+            joined = ", ".join(sorted(request_options))
+            raise ValueError(f"Binary typed endpoints do not support request options, got: {joined}")
+        if context is not None:
+            raise ValueError("Binary typed endpoints do not support request context")
+
+        path = _typed_rest_path_for_action(action)
+        headers = {"Accept": "application/octet-stream"}
+        sanitized_params = _sanitize_params(params or {})
+        max_retries = self._config.max_retries
+        for attempt in range(max_retries + 1):
+            logger.debug("V3 binary call: %s", action)
+            response = self._client.request(
+                "POST",
+                path,
+                params=self._config.auth_query() or None,
+                json=sanitized_params,
+                headers=headers,
+            )
+            logger.debug("V3 binary response: %d", response.status_code)
+            self._update_credits_from_headers(response.headers)
+            _check_sdk_version(response.headers)
+            if _should_retry_status(response.status_code, self._config.retry_status_codes) and attempt < max_retries:
+                retry_after = _parse_retry_after(response.headers) if response.status_code == 429 else None
+                delay = retry_after if retry_after is not None else _compute_backoff(self._config.retry_backoff, attempt)
+                if delay < 0:
+                    delay = 0.0
+                logger.warning(
+                    "Retrying %s %s in %.2fs (attempt %d/%d) due to status %d",
+                    "POST",
+                    path,
+                    delay,
+                    attempt + 1,
+                    max_retries,
+                    response.status_code,
+                )
+                response.close()
+                time.sleep(delay)
+                continue
+            _raise_for_error_response(response)
+
+            if _is_json_response(response):
+                payload = response.json()
+                raise TepiloraAPIError(
+                    message="Expected binary response, got JSON",
+                    error_data=payload if isinstance(payload, dict) else {"response": payload},
+                )
+
+            return V3BinaryResponse(
+                action=action,
+                format="binary",
+                content_type=_content_type(response),
+                content=response.content,
+                meta=_parse_binary_meta(response.headers),
+                headers=dict(response.headers),
+            )
+        raise TepiloraAPIError(message="Request failed after retries")
+
     # Option 3: suggest upgrade for unknown namespaces
     def __getattr__(self, name: str) -> Any:
         if not name.startswith("_"):
@@ -567,6 +798,45 @@ class TepiloraClient:
         if not resp.success:
             raise TepiloraAPIError(message="V3 action returned success=false", error_data={"response": resp})
         return resp.data
+
+    def call_multipart_data(
+        self,
+        action: str,
+        *,
+        params: Optional[Dict[str, Any]] = None,
+        file_fields: Tuple[str, ...],
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+        response_format: Optional[str] = None,
+    ) -> Any:
+        resp = self.call_multipart(
+            action,
+            params=params,
+            file_fields=file_fields,
+            options=options,
+            context=context,
+            response_format=response_format,
+        )
+        if isinstance(resp, V3BinaryResponse):
+            return resp.content
+        if not resp.success:
+            raise TepiloraAPIError(message="V3 action returned success=false", error_data={"response": resp})
+        return resp.data
+
+    def call_binary_data(
+        self,
+        action: str,
+        *,
+        params: Optional[Dict[str, Any]] = None,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+    ) -> bytes:
+        return self.call_binary(
+            action,
+            params=params,
+            options=options,
+            context=context,
+        ).content
 
     def call_arrow_ipc_stream(
         self,
@@ -638,6 +908,7 @@ class AsyncTepiloraClient:
             AsyncAlertsAPI,
             AsyncAlternativesAPI,
             AsyncAssetAllocationAPI,
+            AsyncAttachmentsAPI,
             AsyncAuditAPI,
             AsyncBillingAPI,
             AsyncBondsAPI,
@@ -670,6 +941,7 @@ class AsyncTepiloraClient:
         self.alternatives = AsyncAlternativesAPI(self)
         self.analytics = AsyncAnalyticsAPI(self)
         self.asset_allocation = AsyncAssetAllocationAPI(self)
+        self.attachments = AsyncAttachmentsAPI(self)
         self.audit = AsyncAuditAPI(self)
         self.billing = AsyncBillingAPI(self)
         self.bonds = AsyncBondsAPI(self)
@@ -924,6 +1196,211 @@ class AsyncTepiloraClient:
             )
         raise TepiloraAPIError(message="Request failed after retries")
 
+    async def call_multipart(
+        self,
+        action: str,
+        *,
+        params: Optional[Dict[str, Any]] = None,
+        file_fields: Tuple[str, ...],
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+        response_format: Optional[str] = None,
+    ) -> Union[V3Response, V3BinaryResponse]:
+        if self._semaphore is None:
+            return await self._call_multipart_with_retries(
+                action,
+                params=params,
+                file_fields=file_fields,
+                options=options,
+                context=context,
+                response_format=response_format,
+            )
+        async with self._semaphore:
+            return await self._call_multipart_with_retries(
+                action,
+                params=params,
+                file_fields=file_fields,
+                options=options,
+                context=context,
+                response_format=response_format,
+            )
+
+    async def _call_multipart_with_retries(
+        self,
+        action: str,
+        *,
+        params: Optional[Dict[str, Any]] = None,
+        file_fields: Tuple[str, ...],
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+        response_format: Optional[str] = None,
+    ) -> Union[V3Response, V3BinaryResponse]:
+        import asyncio
+
+        request_options = dict(options or {})
+        if response_format is not None and "format" not in request_options:
+            request_options["format"] = response_format
+
+        unsupported_options = sorted(set(request_options) - {"format"})
+        if unsupported_options:
+            joined = ", ".join(unsupported_options)
+            raise ValueError(f"Multipart typed endpoints support only the 'format' option, got: {joined}")
+        if context is not None:
+            raise ValueError("Multipart typed endpoints do not support request context")
+
+        query_params: Dict[str, Any] = {}
+        accept_headers: Dict[str, str] = {}
+        effective_format = request_options.get("format")
+        if isinstance(effective_format, str) and effective_format.strip():
+            query_params["format"] = effective_format
+            accept_headers["Accept"] = _format_to_accept(effective_format)
+
+        data, files = _build_multipart_payload(params, file_fields)
+        path = _typed_rest_path_for_action(action)
+        max_retries = self._config.max_retries
+        for attempt in range(max_retries + 1):
+            logger.debug("V3 multipart call: %s", action)
+            response = await self._client.request(
+                "POST",
+                path,
+                params={**query_params, **self._config.auth_query()} or None,
+                data=data or None,
+                files=files,
+                headers=accept_headers or None,
+            )
+            logger.debug("V3 multipart response: %d", response.status_code)
+            self._update_credits_from_headers(response.headers)
+            _check_sdk_version(response.headers)
+            if _should_retry_status(response.status_code, self._config.retry_status_codes) and attempt < max_retries:
+                retry_after = _parse_retry_after(response.headers) if response.status_code == 429 else None
+                delay = retry_after if retry_after is not None else _compute_backoff(self._config.retry_backoff, attempt)
+                if delay < 0:
+                    delay = 0.0
+                logger.warning(
+                    "Retrying %s %s in %.2fs (attempt %d/%d) due to status %d",
+                    "POST",
+                    path,
+                    delay,
+                    attempt + 1,
+                    max_retries,
+                    response.status_code,
+                )
+                await response.aclose()
+                await asyncio.sleep(delay)
+                continue
+            _raise_for_error_response(response)
+
+            if _is_json_response(response):
+                payload = response.json()
+                if not isinstance(payload, dict):
+                    raise TepiloraAPIError(message="Unexpected non-object JSON response from v3 endpoint")
+                return V3Response.from_dict(payload)
+
+            content = response.content
+            ctype = _content_type(response)
+            fmt = str(effective_format or "binary")
+            return V3BinaryResponse(
+                action=action,
+                format=fmt,
+                content_type=ctype,
+                content=content,
+                meta=_parse_binary_meta(response.headers),
+                headers=dict(response.headers),
+            )
+        raise TepiloraAPIError(message="Request failed after retries")
+
+    async def call_binary(
+        self,
+        action: str,
+        *,
+        params: Optional[Dict[str, Any]] = None,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+    ) -> V3BinaryResponse:
+        if self._semaphore is None:
+            return await self._call_binary_with_retries(
+                action,
+                params=params,
+                options=options,
+                context=context,
+            )
+        async with self._semaphore:
+            return await self._call_binary_with_retries(
+                action,
+                params=params,
+                options=options,
+                context=context,
+            )
+
+    async def _call_binary_with_retries(
+        self,
+        action: str,
+        *,
+        params: Optional[Dict[str, Any]] = None,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+    ) -> V3BinaryResponse:
+        import asyncio
+
+        request_options = dict(options or {})
+        if request_options:
+            joined = ", ".join(sorted(request_options))
+            raise ValueError(f"Binary typed endpoints do not support request options, got: {joined}")
+        if context is not None:
+            raise ValueError("Binary typed endpoints do not support request context")
+
+        path = _typed_rest_path_for_action(action)
+        headers = {"Accept": "application/octet-stream"}
+        sanitized_params = _sanitize_params(params or {})
+        max_retries = self._config.max_retries
+        for attempt in range(max_retries + 1):
+            logger.debug("V3 binary call: %s", action)
+            response = await self._client.request(
+                "POST",
+                path,
+                params=self._config.auth_query() or None,
+                json=sanitized_params,
+                headers=headers,
+            )
+            logger.debug("V3 binary response: %d", response.status_code)
+            self._update_credits_from_headers(response.headers)
+            _check_sdk_version(response.headers)
+            if _should_retry_status(response.status_code, self._config.retry_status_codes) and attempt < max_retries:
+                retry_after = _parse_retry_after(response.headers) if response.status_code == 429 else None
+                delay = retry_after if retry_after is not None else _compute_backoff(self._config.retry_backoff, attempt)
+                if delay < 0:
+                    delay = 0.0
+                logger.warning(
+                    "Retrying %s %s in %.2fs (attempt %d/%d) due to status %d",
+                    "POST",
+                    path,
+                    delay,
+                    attempt + 1,
+                    max_retries,
+                    response.status_code,
+                )
+                await response.aclose()
+                await asyncio.sleep(delay)
+                continue
+            _raise_for_error_response(response)
+
+            if _is_json_response(response):
+                payload = response.json()
+                raise TepiloraAPIError(
+                    message="Expected binary response, got JSON",
+                    error_data=payload if isinstance(payload, dict) else {"response": payload},
+                )
+
+            return V3BinaryResponse(
+                action=action,
+                format="binary",
+                content_type=_content_type(response),
+                content=response.content,
+                meta=_parse_binary_meta(response.headers),
+                headers=dict(response.headers),
+            )
+        raise TepiloraAPIError(message="Request failed after retries")
+
     # Option 3: suggest upgrade for unknown namespaces
     def __getattr__(self, name: str) -> Any:
         if not name.startswith("_"):
@@ -948,6 +1425,46 @@ class AsyncTepiloraClient:
         if not resp.success:
             raise TepiloraAPIError(message="V3 action returned success=false", error_data={"response": resp})
         return resp.data
+
+    async def call_multipart_data(
+        self,
+        action: str,
+        *,
+        params: Optional[Dict[str, Any]] = None,
+        file_fields: Tuple[str, ...],
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+        response_format: Optional[str] = None,
+    ) -> Any:
+        resp = await self.call_multipart(
+            action,
+            params=params,
+            file_fields=file_fields,
+            options=options,
+            context=context,
+            response_format=response_format,
+        )
+        if isinstance(resp, V3BinaryResponse):
+            return resp.content
+        if not resp.success:
+            raise TepiloraAPIError(message="V3 action returned success=false", error_data={"response": resp})
+        return resp.data
+
+    async def call_binary_data(
+        self,
+        action: str,
+        *,
+        params: Optional[Dict[str, Any]] = None,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+    ) -> bytes:
+        response = await self.call_binary(
+            action,
+            params=params,
+            options=options,
+            context=context,
+        )
+        return response.content
 
     async def call_arrow_ipc_stream(
         self,

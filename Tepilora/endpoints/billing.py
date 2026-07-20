@@ -25,7 +25,10 @@ class BillingAPI(BaseAPI):
     ) -> Any:
         """Aggregate billing data for revenue reporting and analytics
 
-        Computes aggregate billing statistics for a single client: total fees, record count, breakdown by fee type, by billing period, and by portfolio. Used by the Dashboard billing summary and by advisor fee reporting."""
+        Computes aggregate billing statistics for a single client: total fees, record count, breakdown by fee type, by billing period, and by portfolio. Used by the Dashboard billing summary and by advisor fee reporting.
+
+        Args:
+        year: Optional billing year to aggregate; defaults to the current year when omitted."""
         _payload: Dict[str, Any] = {}
         _payload["client_id"] = client_id
         if year is not None:
@@ -47,7 +50,16 @@ class BillingAPI(BaseAPI):
     ) -> Any:
         """Calculate fees for a given AUM using a fee schedule
 
-        Computes the fee amount for a given Assets Under Management (AUM) value using a referenced fee schedule. Supports tiered fee structures (breakpoints), flat fees, percentage-based fees, and performance fees with high-water mark. Accepts a fee_schedule ID (auto-resolves from FeeSchedules MongoDB collection) or inline fee parameters. Returns fee amount, effective rate, tier breakdown, and annualized cost. Used by the Dashboard fee calculator and by portfolio cost analysis."""
+        Computes the fee amount for a given Assets Under Management (AUM) value using a referenced fee schedule. Supports tiered fee structures (breakpoints), flat fees, percentage-based fees, and performance fees with high-water mark. Accepts a fee_schedule ID (auto-resolves from FeeSchedules MongoDB collection) or inline fee parameters. Returns fee amount, effective rate, tier breakdown, and annualized cost. Used by the Dashboard fee calculator and by portfolio cost analysis.
+
+        Args:
+        fee_schedule: Fee schedule id/name or inline fee schedule definition.
+        aum: Assets under management used for AUM, tiered, or performance fees.
+        portfolio_return: Portfolio return over the billing period for performance fees.
+        benchmark_return: Benchmark return over the billing period for over-benchmark performance fees.
+        high_water_mark: Previous high-water mark for high-water-mark performance fees.
+        period_start: Billing period start date in YYYY-MM-DD format.
+        period_end: Billing period end date in YYYY-MM-DD format."""
         _payload: Dict[str, Any] = {}
         _payload["fee_schedule"] = fee_schedule
         if aum is not None:
@@ -85,7 +97,20 @@ class BillingAPI(BaseAPI):
     ) -> Any:
         """Create a billing record (invoice/charge) for a client
 
-        Records a billing event in the BillingRecords MongoDB collection: the fee amount charged, the fee schedule used, the AUM at calculation time, the billing period, and the client/portfolio reference. Used by automated billing cycles and by the Dashboard manual billing."""
+        Records a billing event in the BillingRecords MongoDB collection: the fee amount charged, the fee schedule used, the AUM at calculation time, the billing period, and the client/portfolio reference. Used by automated billing cycles and by the Dashboard manual billing.
+
+        Args:
+        fee_schedule_id: Fee schedule id used to calculate the billing record.
+        period_start: Billing period start date in YYYY-MM-DD format.
+        period_end: Billing period end date in YYYY-MM-DD format.
+        aum_start: Assets under management at period start.
+        aum_end: Assets under management at period end.
+        aum_average: Average assets under management over the billing period.
+        aum: Assets under management fallback used for fee calculation.
+        portfolio_return: Portfolio return over the billing period for performance fees.
+        benchmark_return: Benchmark return over the billing period for performance fees.
+        high_water_mark: Previous high-water mark for performance fee calculation.
+        notes: Optional notes attached to the billing record."""
         _payload: Dict[str, Any] = {}
         _payload["client_id"] = client_id
         _payload["fee_schedule_id"] = fee_schedule_id
@@ -128,7 +153,10 @@ class BillingAPI(BaseAPI):
     ) -> Any:
         """List billing records with filters for client, period, and status
 
-        Returns billing records filterable by client, portfolio, date range, and status (pending/paid/cancelled). Used by the Dashboard billing history and by financial reporting workflows."""
+        Returns billing records filterable by client, portfolio, date range, and status (pending/paid/cancelled). Used by the Dashboard billing history and by financial reporting workflows.
+
+        Args:
+        year: Optional billing year filter."""
         _payload: Dict[str, Any] = {}
         if client_id is not None:
             _payload["client_id"] = client_id
@@ -173,7 +201,26 @@ class BillingAPI(BaseAPI):
     ) -> Any:
         """Create a new fee schedule definition
 
-        Creates a fee schedule in the FeeSchedules MongoDB collection. Defines the fee structure: type (flat, tiered, percentage, performance), breakpoints, rates, billing frequency (monthly/quarterly/annually), and high-water mark rules. Used by the Dashboard fee schedule builder."""
+        Creates a fee schedule in the FeeSchedules MongoDB collection. Defines the fee structure: type (flat, tiered, percentage, performance), breakpoints, rates, billing frequency (monthly/quarterly/annually), and high-water mark rules. Used by the Dashboard fee schedule builder.
+
+        Args:
+        fee_type: Fee schedule type validated by the billing core.
+        frequency: Billing frequency validated by the billing core; defaults to quarterly when omitted.
+        aum_rate: AUM fee rate as a decimal, required for aum_percentage fee schedules.
+        rate: Alias rate used by the core for AUM or performance fees.
+        aum_calculation_method: AUM calculation method validated for aum_percentage fee schedules.
+        minimum_fee: Optional minimum fee amount applied to the schedule.
+        maximum_fee: Optional maximum fee amount applied to the schedule.
+        flat_amount: Flat fee amount, required for flat fee schedules.
+        amount: Alias amount used by the core for flat fee schedules.
+        tiers: Tier definitions required for tiered fee schedules.
+        tiered_method: Tier calculation method; the current core stores the supplied value.
+        performance_rate: Performance fee rate as a decimal, required for performance fee schedules.
+        performance_method: Performance fee method validated by the billing core.
+        hurdle_rate: Annual hurdle rate for performance fee calculations.
+        benchmark_code: Benchmark identifier used by over-benchmark performance fee schedules.
+        crystallization_frequency: Performance fee crystallization frequency stored with the schedule.
+        effective_date: Schedule effective date in YYYY-MM-DD format."""
         _payload: Dict[str, Any] = {}
         _payload["name"] = name
         _payload["fee_type"] = fee_type
@@ -260,7 +307,10 @@ class BillingAPI(BaseAPI):
     ) -> Any:
         """List all fee schedules for the current user
 
-        Returns all fee schedule definitions. Each entry shows name, type, summary rate, and linked client count. Used by the Dashboard fee schedules management page."""
+        Returns all fee schedule definitions. Each entry shows name, type, summary rate, and linked client count. Used by the Dashboard fee schedules management page.
+
+        Args:
+        fee_type: Optional fee type filter; accepted values match stored fee schedule types."""
         _payload: Dict[str, Any] = {}
         if fee_type is not None:
             _payload["fee_type"] = fee_type
@@ -294,7 +344,22 @@ class BillingAPI(BaseAPI):
     ) -> Any:
         """Update a fee schedule definition
 
-        Modifies an existing fee schedule. Can update rates, tiers, billing frequency, and metadata. Creates an audit trail entry."""
+        Modifies an existing fee schedule. Can update rates, tiers, billing frequency, and metadata. Creates an audit trail entry.
+
+        Args:
+        frequency: Updated billing frequency; schedule_update stores the supplied value.
+        aum_rate: Updated AUM fee rate as a decimal.
+        aum_calculation_method: Updated AUM calculation method stored with the schedule.
+        minimum_fee: Updated minimum fee amount.
+        maximum_fee: Updated maximum fee amount.
+        flat_amount: Updated flat fee amount.
+        tiers: Updated tier definitions for tiered fee schedules.
+        tiered_method: Updated tier calculation method.
+        performance_rate: Updated performance fee rate as a decimal.
+        performance_method: Updated performance fee method stored with the schedule.
+        hurdle_rate: Updated annual hurdle rate for performance fees.
+        benchmark_code: Updated benchmark identifier for over-benchmark performance fees.
+        effective_date: Updated schedule effective date in YYYY-MM-DD format."""
         _payload: Dict[str, Any] = {}
         _payload["id"] = id
         if name is not None:
@@ -343,7 +408,11 @@ class BillingAPI(BaseAPI):
     ) -> Any:
         """Simulate fee impact on portfolio returns over a period
 
-        Projects the cumulative impact of fees on portfolio returns over a specified period. Compares gross vs. net returns, showing the fee drag on performance. Supports multiple fee structures for comparison. Used by the Dashboard fee impact simulator and by advisor workflows comparing fee proposals."""
+        Projects the cumulative impact of fees on portfolio returns over a specified period. Compares gross vs. net returns, showing the fee drag on performance. Supports multiple fee structures for comparison. Used by the Dashboard fee impact simulator and by advisor workflows comparing fee proposals.
+
+        Args:
+        fee_schedule: Fee schedule id/name or inline fee schedule definition to simulate.
+        scenarios: AUM and return scenarios to evaluate; defaults are generated when omitted."""
         _payload: Dict[str, Any] = {}
         _payload["fee_schedule"] = fee_schedule
         if scenarios is not None:
@@ -366,7 +435,10 @@ class AsyncBillingAPI(AsyncBaseAPI):
     ) -> Any:
         """Aggregate billing data for revenue reporting and analytics
 
-        Computes aggregate billing statistics for a single client: total fees, record count, breakdown by fee type, by billing period, and by portfolio. Used by the Dashboard billing summary and by advisor fee reporting."""
+        Computes aggregate billing statistics for a single client: total fees, record count, breakdown by fee type, by billing period, and by portfolio. Used by the Dashboard billing summary and by advisor fee reporting.
+
+        Args:
+        year: Optional billing year to aggregate; defaults to the current year when omitted."""
         _payload: Dict[str, Any] = {}
         _payload["client_id"] = client_id
         if year is not None:
@@ -388,7 +460,16 @@ class AsyncBillingAPI(AsyncBaseAPI):
     ) -> Any:
         """Calculate fees for a given AUM using a fee schedule
 
-        Computes the fee amount for a given Assets Under Management (AUM) value using a referenced fee schedule. Supports tiered fee structures (breakpoints), flat fees, percentage-based fees, and performance fees with high-water mark. Accepts a fee_schedule ID (auto-resolves from FeeSchedules MongoDB collection) or inline fee parameters. Returns fee amount, effective rate, tier breakdown, and annualized cost. Used by the Dashboard fee calculator and by portfolio cost analysis."""
+        Computes the fee amount for a given Assets Under Management (AUM) value using a referenced fee schedule. Supports tiered fee structures (breakpoints), flat fees, percentage-based fees, and performance fees with high-water mark. Accepts a fee_schedule ID (auto-resolves from FeeSchedules MongoDB collection) or inline fee parameters. Returns fee amount, effective rate, tier breakdown, and annualized cost. Used by the Dashboard fee calculator and by portfolio cost analysis.
+
+        Args:
+        fee_schedule: Fee schedule id/name or inline fee schedule definition.
+        aum: Assets under management used for AUM, tiered, or performance fees.
+        portfolio_return: Portfolio return over the billing period for performance fees.
+        benchmark_return: Benchmark return over the billing period for over-benchmark performance fees.
+        high_water_mark: Previous high-water mark for high-water-mark performance fees.
+        period_start: Billing period start date in YYYY-MM-DD format.
+        period_end: Billing period end date in YYYY-MM-DD format."""
         _payload: Dict[str, Any] = {}
         _payload["fee_schedule"] = fee_schedule
         if aum is not None:
@@ -426,7 +507,20 @@ class AsyncBillingAPI(AsyncBaseAPI):
     ) -> Any:
         """Create a billing record (invoice/charge) for a client
 
-        Records a billing event in the BillingRecords MongoDB collection: the fee amount charged, the fee schedule used, the AUM at calculation time, the billing period, and the client/portfolio reference. Used by automated billing cycles and by the Dashboard manual billing."""
+        Records a billing event in the BillingRecords MongoDB collection: the fee amount charged, the fee schedule used, the AUM at calculation time, the billing period, and the client/portfolio reference. Used by automated billing cycles and by the Dashboard manual billing.
+
+        Args:
+        fee_schedule_id: Fee schedule id used to calculate the billing record.
+        period_start: Billing period start date in YYYY-MM-DD format.
+        period_end: Billing period end date in YYYY-MM-DD format.
+        aum_start: Assets under management at period start.
+        aum_end: Assets under management at period end.
+        aum_average: Average assets under management over the billing period.
+        aum: Assets under management fallback used for fee calculation.
+        portfolio_return: Portfolio return over the billing period for performance fees.
+        benchmark_return: Benchmark return over the billing period for performance fees.
+        high_water_mark: Previous high-water mark for performance fee calculation.
+        notes: Optional notes attached to the billing record."""
         _payload: Dict[str, Any] = {}
         _payload["client_id"] = client_id
         _payload["fee_schedule_id"] = fee_schedule_id
@@ -469,7 +563,10 @@ class AsyncBillingAPI(AsyncBaseAPI):
     ) -> Any:
         """List billing records with filters for client, period, and status
 
-        Returns billing records filterable by client, portfolio, date range, and status (pending/paid/cancelled). Used by the Dashboard billing history and by financial reporting workflows."""
+        Returns billing records filterable by client, portfolio, date range, and status (pending/paid/cancelled). Used by the Dashboard billing history and by financial reporting workflows.
+
+        Args:
+        year: Optional billing year filter."""
         _payload: Dict[str, Any] = {}
         if client_id is not None:
             _payload["client_id"] = client_id
@@ -514,7 +611,26 @@ class AsyncBillingAPI(AsyncBaseAPI):
     ) -> Any:
         """Create a new fee schedule definition
 
-        Creates a fee schedule in the FeeSchedules MongoDB collection. Defines the fee structure: type (flat, tiered, percentage, performance), breakpoints, rates, billing frequency (monthly/quarterly/annually), and high-water mark rules. Used by the Dashboard fee schedule builder."""
+        Creates a fee schedule in the FeeSchedules MongoDB collection. Defines the fee structure: type (flat, tiered, percentage, performance), breakpoints, rates, billing frequency (monthly/quarterly/annually), and high-water mark rules. Used by the Dashboard fee schedule builder.
+
+        Args:
+        fee_type: Fee schedule type validated by the billing core.
+        frequency: Billing frequency validated by the billing core; defaults to quarterly when omitted.
+        aum_rate: AUM fee rate as a decimal, required for aum_percentage fee schedules.
+        rate: Alias rate used by the core for AUM or performance fees.
+        aum_calculation_method: AUM calculation method validated for aum_percentage fee schedules.
+        minimum_fee: Optional minimum fee amount applied to the schedule.
+        maximum_fee: Optional maximum fee amount applied to the schedule.
+        flat_amount: Flat fee amount, required for flat fee schedules.
+        amount: Alias amount used by the core for flat fee schedules.
+        tiers: Tier definitions required for tiered fee schedules.
+        tiered_method: Tier calculation method; the current core stores the supplied value.
+        performance_rate: Performance fee rate as a decimal, required for performance fee schedules.
+        performance_method: Performance fee method validated by the billing core.
+        hurdle_rate: Annual hurdle rate for performance fee calculations.
+        benchmark_code: Benchmark identifier used by over-benchmark performance fee schedules.
+        crystallization_frequency: Performance fee crystallization frequency stored with the schedule.
+        effective_date: Schedule effective date in YYYY-MM-DD format."""
         _payload: Dict[str, Any] = {}
         _payload["name"] = name
         _payload["fee_type"] = fee_type
@@ -601,7 +717,10 @@ class AsyncBillingAPI(AsyncBaseAPI):
     ) -> Any:
         """List all fee schedules for the current user
 
-        Returns all fee schedule definitions. Each entry shows name, type, summary rate, and linked client count. Used by the Dashboard fee schedules management page."""
+        Returns all fee schedule definitions. Each entry shows name, type, summary rate, and linked client count. Used by the Dashboard fee schedules management page.
+
+        Args:
+        fee_type: Optional fee type filter; accepted values match stored fee schedule types."""
         _payload: Dict[str, Any] = {}
         if fee_type is not None:
             _payload["fee_type"] = fee_type
@@ -635,7 +754,22 @@ class AsyncBillingAPI(AsyncBaseAPI):
     ) -> Any:
         """Update a fee schedule definition
 
-        Modifies an existing fee schedule. Can update rates, tiers, billing frequency, and metadata. Creates an audit trail entry."""
+        Modifies an existing fee schedule. Can update rates, tiers, billing frequency, and metadata. Creates an audit trail entry.
+
+        Args:
+        frequency: Updated billing frequency; schedule_update stores the supplied value.
+        aum_rate: Updated AUM fee rate as a decimal.
+        aum_calculation_method: Updated AUM calculation method stored with the schedule.
+        minimum_fee: Updated minimum fee amount.
+        maximum_fee: Updated maximum fee amount.
+        flat_amount: Updated flat fee amount.
+        tiers: Updated tier definitions for tiered fee schedules.
+        tiered_method: Updated tier calculation method.
+        performance_rate: Updated performance fee rate as a decimal.
+        performance_method: Updated performance fee method stored with the schedule.
+        hurdle_rate: Updated annual hurdle rate for performance fees.
+        benchmark_code: Updated benchmark identifier for over-benchmark performance fees.
+        effective_date: Updated schedule effective date in YYYY-MM-DD format."""
         _payload: Dict[str, Any] = {}
         _payload["id"] = id
         if name is not None:
@@ -684,7 +818,11 @@ class AsyncBillingAPI(AsyncBaseAPI):
     ) -> Any:
         """Simulate fee impact on portfolio returns over a period
 
-        Projects the cumulative impact of fees on portfolio returns over a specified period. Compares gross vs. net returns, showing the fee drag on performance. Supports multiple fee structures for comparison. Used by the Dashboard fee impact simulator and by advisor workflows comparing fee proposals."""
+        Projects the cumulative impact of fees on portfolio returns over a specified period. Compares gross vs. net returns, showing the fee drag on performance. Supports multiple fee structures for comparison. Used by the Dashboard fee impact simulator and by advisor workflows comparing fee proposals.
+
+        Args:
+        fee_schedule: Fee schedule id/name or inline fee schedule definition to simulate.
+        scenarios: AUM and return scenarios to evaluate; defaults are generated when omitted."""
         _payload: Dict[str, Any] = {}
         _payload["fee_schedule"] = fee_schedule
         if scenarios is not None:

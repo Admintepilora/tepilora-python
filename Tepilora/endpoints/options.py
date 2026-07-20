@@ -29,7 +29,16 @@ class OptionsAPI(BaseAPI):
     ) -> Any:
         """Calculate all option Greeks (delta, gamma, theta, vega, rho)
 
-        Computes the full set of option sensitivity measures (Greeks) using the Black-Scholes model: Delta (price sensitivity to underlying), Gamma (delta sensitivity), Theta (time decay per day), Vega (volatility sensitivity), and Rho (interest rate sensitivity). Pure mathematical calculation. Used by the Dashboard options analysis view, by hedging workflows, and by risk management."""
+        Computes the full set of option sensitivity measures (Greeks) using the Black-Scholes model: Delta (price sensitivity to underlying), Gamma (delta sensitivity), Theta (time decay per day), Vega (volatility sensitivity), and Rho (interest rate sensitivity). Pure mathematical calculation. Used by the Dashboard options analysis view, by hedging workflows, and by risk management.
+
+        Args:
+        spot: Current underlying spot price.
+        strike: Option strike price.
+        time_to_expiry: Time to option expiry in years.
+        volatility: Annualized volatility as a decimal.
+        option_type: Option side to price or analyze.
+        risk_free_rate: Annualized continuously compounded risk-free rate as a decimal.
+        dividend_yield: Annualized continuous dividend yield as a decimal."""
         _payload: Dict[str, Any] = {}
         _payload["spot"] = spot
         _payload["strike"] = strike
@@ -58,7 +67,16 @@ class OptionsAPI(BaseAPI):
     ) -> Any:
         """Calculate implied volatility from an observed option market price
 
-        Reverse-engineers the implied volatility from an observed market price using Newton-Raphson iteration on the Black-Scholes model. Given the market price, spot, strike, time to expiry, and risk-free rate, finds the volatility that produces the observed price. Returns implied volatility as annualized decimal. Used for volatility surface construction and by the Dashboard options analysis."""
+        Reverse-engineers the implied volatility from an observed market price using Newton-Raphson iteration on the Black-Scholes model. Given the market price, spot, strike, time to expiry, and risk-free rate, finds the volatility that produces the observed price. Returns implied volatility as annualized decimal. Used for volatility surface construction and by the Dashboard options analysis.
+
+        Args:
+        market_price: Observed option market price used to solve implied volatility.
+        spot: Current underlying spot price.
+        strike: Option strike price.
+        time_to_expiry: Time to option expiry in years.
+        option_type: Option side to price or analyze.
+        risk_free_rate: Annualized continuously compounded risk-free rate as a decimal.
+        dividend_yield: Annualized continuous dividend yield as a decimal."""
         _payload: Dict[str, Any] = {}
         _payload["market_price"] = market_price
         _payload["spot"] = spot
@@ -84,7 +102,13 @@ class OptionsAPI(BaseAPI):
     ) -> Any:
         """Generate the payoff diagram data for an option or strategy at expiry
 
-        Calculates the profit/loss at expiration across a range of underlying prices for a single option or multi-leg strategy. Returns an array of (underlying_price, payoff) pairs suitable for charting. Shows breakeven points, max profit, max loss zones. Used by the Dashboard to render interactive payoff diagrams."""
+        Calculates the profit/loss at expiration across a range of underlying prices for a single option or multi-leg strategy. Returns an array of (underlying_price, payoff) pairs suitable for charting. Shows breakeven points, max profit, max loss zones. Used by the Dashboard to render interactive payoff diagrams.
+
+        Args:
+        legs: Option or stock legs used to calculate payoff at expiry.
+        spot_range: Optional minimum and maximum underlying prices for the payoff x-axis. If omitted, spot defines a 70%-130% range.
+        spot: Current underlying spot price. Required when no spot_range is supplied, and for custom strategy leg analysis.
+        num_points: Number of points to generate in the payoff diagram."""
         _payload: Dict[str, Any] = {}
         _payload["legs"] = legs
         if spot_range is not None:
@@ -110,7 +134,16 @@ class OptionsAPI(BaseAPI):
     ) -> Any:
         """Price a European option using the Black-Scholes model
 
-        Calculates the theoretical price of a European call or put option using the Black-Scholes-Merton model. Inputs: spot price (S), strike price (K), time to expiry (T in years), risk-free rate (r), volatility (sigma), and optional dividend yield. Returns option price, intrinsic value, and time value. Pure mathematical calculation — no database lookup required. Used by the Dashboard options pricer and by strategy analysis workflows."""
+        Calculates the theoretical price of a European call or put option using the Black-Scholes-Merton model. Inputs: spot price (S), strike price (K), time to expiry (T in years), risk-free rate (r), volatility (sigma), and optional dividend yield. Returns option price, intrinsic value, and time value. Pure mathematical calculation — no database lookup required. Used by the Dashboard options pricer and by strategy analysis workflows.
+
+        Args:
+        spot: Current underlying spot price.
+        strike: Option strike price.
+        time_to_expiry: Time to option expiry in years.
+        volatility: Annualized volatility as a decimal.
+        option_type: Option side to price or analyze.
+        risk_free_rate: Annualized continuously compounded risk-free rate as a decimal.
+        dividend_yield: Annualized continuous dividend yield as a decimal."""
         _payload: Dict[str, Any] = {}
         _payload["spot"] = spot
         _payload["strike"] = strike
@@ -139,11 +172,11 @@ class OptionsAPI(BaseAPI):
     def strategy(
         self,
         *,
-        strategy_type: str,
-        spot: float,
-        volatility: float,
-        time_to_expiry: float,
+        strategy_type: Optional[str] = None,
         legs: Optional[List[Any]] = None,
+        spot: Optional[float] = None,
+        volatility: Optional[float] = 0.2,
+        time_to_expiry: Optional[float] = None,
         risk_free_rate: Optional[float] = 0.03,
         dividend_yield: Optional[float] = 0.0,
         options: Optional[Dict[str, Any]] = None,
@@ -151,14 +184,27 @@ class OptionsAPI(BaseAPI):
     ) -> Any:
         """Analyze a multi-leg option strategy with combined Greeks and payoff
 
-        Analyzes a custom multi-leg option strategy (straddle, strangle, spread, butterfly, condor, etc.). Each leg specifies option type, strike, quantity, and position (long/short). Returns combined Greeks, net premium, max profit, max loss, breakeven points, and probability of profit. Also supports named strategies via strategy_type parameter. Used by the Dashboard strategy builder."""
+        Analyzes a custom multi-leg option strategy (straddle, strangle, spread, butterfly, condor, etc.). Each leg specifies option type, strike, quantity, and position (long/short). Returns combined Greeks, net premium, max profit, max loss, breakeven points, and probability of profit. Also supports named strategies via strategy_type parameter. Used by the Dashboard strategy builder.
+
+        Args:
+        strategy_type: Optional predefined strategy template name. If provided without legs, the operation returns strategy information only.
+        legs: Optional custom option or stock legs. Required when strategy_type is not supplied.
+        spot: Current underlying spot price. Required when no spot_range is supplied, and for custom strategy leg analysis.
+        volatility: Annualized volatility as a decimal.
+        time_to_expiry: Optional time to option expiry in years. Used to calculate missing leg premiums when volatility is available.
+        risk_free_rate: Annualized continuously compounded risk-free rate as a decimal.
+        dividend_yield: Annualized continuous dividend yield as a decimal."""
         _payload: Dict[str, Any] = {}
-        _payload["strategy_type"] = strategy_type
-        _payload["spot"] = spot
-        _payload["volatility"] = volatility
-        _payload["time_to_expiry"] = time_to_expiry
+        if strategy_type is not None:
+            _payload["strategy_type"] = strategy_type
         if legs is not None:
             _payload["legs"] = legs
+        if spot is not None:
+            _payload["spot"] = spot
+        if volatility is not None:
+            _payload["volatility"] = volatility
+        if time_to_expiry is not None:
+            _payload["time_to_expiry"] = time_to_expiry
         if risk_free_rate is not None:
             _payload["risk_free_rate"] = risk_free_rate
         if dividend_yield is not None:
@@ -185,7 +231,16 @@ class AsyncOptionsAPI(AsyncBaseAPI):
     ) -> Any:
         """Calculate all option Greeks (delta, gamma, theta, vega, rho)
 
-        Computes the full set of option sensitivity measures (Greeks) using the Black-Scholes model: Delta (price sensitivity to underlying), Gamma (delta sensitivity), Theta (time decay per day), Vega (volatility sensitivity), and Rho (interest rate sensitivity). Pure mathematical calculation. Used by the Dashboard options analysis view, by hedging workflows, and by risk management."""
+        Computes the full set of option sensitivity measures (Greeks) using the Black-Scholes model: Delta (price sensitivity to underlying), Gamma (delta sensitivity), Theta (time decay per day), Vega (volatility sensitivity), and Rho (interest rate sensitivity). Pure mathematical calculation. Used by the Dashboard options analysis view, by hedging workflows, and by risk management.
+
+        Args:
+        spot: Current underlying spot price.
+        strike: Option strike price.
+        time_to_expiry: Time to option expiry in years.
+        volatility: Annualized volatility as a decimal.
+        option_type: Option side to price or analyze.
+        risk_free_rate: Annualized continuously compounded risk-free rate as a decimal.
+        dividend_yield: Annualized continuous dividend yield as a decimal."""
         _payload: Dict[str, Any] = {}
         _payload["spot"] = spot
         _payload["strike"] = strike
@@ -214,7 +269,16 @@ class AsyncOptionsAPI(AsyncBaseAPI):
     ) -> Any:
         """Calculate implied volatility from an observed option market price
 
-        Reverse-engineers the implied volatility from an observed market price using Newton-Raphson iteration on the Black-Scholes model. Given the market price, spot, strike, time to expiry, and risk-free rate, finds the volatility that produces the observed price. Returns implied volatility as annualized decimal. Used for volatility surface construction and by the Dashboard options analysis."""
+        Reverse-engineers the implied volatility from an observed market price using Newton-Raphson iteration on the Black-Scholes model. Given the market price, spot, strike, time to expiry, and risk-free rate, finds the volatility that produces the observed price. Returns implied volatility as annualized decimal. Used for volatility surface construction and by the Dashboard options analysis.
+
+        Args:
+        market_price: Observed option market price used to solve implied volatility.
+        spot: Current underlying spot price.
+        strike: Option strike price.
+        time_to_expiry: Time to option expiry in years.
+        option_type: Option side to price or analyze.
+        risk_free_rate: Annualized continuously compounded risk-free rate as a decimal.
+        dividend_yield: Annualized continuous dividend yield as a decimal."""
         _payload: Dict[str, Any] = {}
         _payload["market_price"] = market_price
         _payload["spot"] = spot
@@ -240,7 +304,13 @@ class AsyncOptionsAPI(AsyncBaseAPI):
     ) -> Any:
         """Generate the payoff diagram data for an option or strategy at expiry
 
-        Calculates the profit/loss at expiration across a range of underlying prices for a single option or multi-leg strategy. Returns an array of (underlying_price, payoff) pairs suitable for charting. Shows breakeven points, max profit, max loss zones. Used by the Dashboard to render interactive payoff diagrams."""
+        Calculates the profit/loss at expiration across a range of underlying prices for a single option or multi-leg strategy. Returns an array of (underlying_price, payoff) pairs suitable for charting. Shows breakeven points, max profit, max loss zones. Used by the Dashboard to render interactive payoff diagrams.
+
+        Args:
+        legs: Option or stock legs used to calculate payoff at expiry.
+        spot_range: Optional minimum and maximum underlying prices for the payoff x-axis. If omitted, spot defines a 70%-130% range.
+        spot: Current underlying spot price. Required when no spot_range is supplied, and for custom strategy leg analysis.
+        num_points: Number of points to generate in the payoff diagram."""
         _payload: Dict[str, Any] = {}
         _payload["legs"] = legs
         if spot_range is not None:
@@ -266,7 +336,16 @@ class AsyncOptionsAPI(AsyncBaseAPI):
     ) -> Any:
         """Price a European option using the Black-Scholes model
 
-        Calculates the theoretical price of a European call or put option using the Black-Scholes-Merton model. Inputs: spot price (S), strike price (K), time to expiry (T in years), risk-free rate (r), volatility (sigma), and optional dividend yield. Returns option price, intrinsic value, and time value. Pure mathematical calculation — no database lookup required. Used by the Dashboard options pricer and by strategy analysis workflows."""
+        Calculates the theoretical price of a European call or put option using the Black-Scholes-Merton model. Inputs: spot price (S), strike price (K), time to expiry (T in years), risk-free rate (r), volatility (sigma), and optional dividend yield. Returns option price, intrinsic value, and time value. Pure mathematical calculation — no database lookup required. Used by the Dashboard options pricer and by strategy analysis workflows.
+
+        Args:
+        spot: Current underlying spot price.
+        strike: Option strike price.
+        time_to_expiry: Time to option expiry in years.
+        volatility: Annualized volatility as a decimal.
+        option_type: Option side to price or analyze.
+        risk_free_rate: Annualized continuously compounded risk-free rate as a decimal.
+        dividend_yield: Annualized continuous dividend yield as a decimal."""
         _payload: Dict[str, Any] = {}
         _payload["spot"] = spot
         _payload["strike"] = strike
@@ -295,11 +374,11 @@ class AsyncOptionsAPI(AsyncBaseAPI):
     async def strategy(
         self,
         *,
-        strategy_type: str,
-        spot: float,
-        volatility: float,
-        time_to_expiry: float,
+        strategy_type: Optional[str] = None,
         legs: Optional[List[Any]] = None,
+        spot: Optional[float] = None,
+        volatility: Optional[float] = 0.2,
+        time_to_expiry: Optional[float] = None,
         risk_free_rate: Optional[float] = 0.03,
         dividend_yield: Optional[float] = 0.0,
         options: Optional[Dict[str, Any]] = None,
@@ -307,14 +386,27 @@ class AsyncOptionsAPI(AsyncBaseAPI):
     ) -> Any:
         """Analyze a multi-leg option strategy with combined Greeks and payoff
 
-        Analyzes a custom multi-leg option strategy (straddle, strangle, spread, butterfly, condor, etc.). Each leg specifies option type, strike, quantity, and position (long/short). Returns combined Greeks, net premium, max profit, max loss, breakeven points, and probability of profit. Also supports named strategies via strategy_type parameter. Used by the Dashboard strategy builder."""
+        Analyzes a custom multi-leg option strategy (straddle, strangle, spread, butterfly, condor, etc.). Each leg specifies option type, strike, quantity, and position (long/short). Returns combined Greeks, net premium, max profit, max loss, breakeven points, and probability of profit. Also supports named strategies via strategy_type parameter. Used by the Dashboard strategy builder.
+
+        Args:
+        strategy_type: Optional predefined strategy template name. If provided without legs, the operation returns strategy information only.
+        legs: Optional custom option or stock legs. Required when strategy_type is not supplied.
+        spot: Current underlying spot price. Required when no spot_range is supplied, and for custom strategy leg analysis.
+        volatility: Annualized volatility as a decimal.
+        time_to_expiry: Optional time to option expiry in years. Used to calculate missing leg premiums when volatility is available.
+        risk_free_rate: Annualized continuously compounded risk-free rate as a decimal.
+        dividend_yield: Annualized continuous dividend yield as a decimal."""
         _payload: Dict[str, Any] = {}
-        _payload["strategy_type"] = strategy_type
-        _payload["spot"] = spot
-        _payload["volatility"] = volatility
-        _payload["time_to_expiry"] = time_to_expiry
+        if strategy_type is not None:
+            _payload["strategy_type"] = strategy_type
         if legs is not None:
             _payload["legs"] = legs
+        if spot is not None:
+            _payload["spot"] = spot
+        if volatility is not None:
+            _payload["volatility"] = volatility
+        if time_to_expiry is not None:
+            _payload["time_to_expiry"] = time_to_expiry
         if risk_free_rate is not None:
             _payload["risk_free_rate"] = risk_free_rate
         if dividend_yield is not None:

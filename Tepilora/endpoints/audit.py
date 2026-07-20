@@ -26,7 +26,12 @@ class AuditAPI(BaseAPI):
     ) -> Any:
         """Get the audit history for a specific entity (portfolio, client, query)
 
-        Returns the chronological audit trail for a specific entity identified by its ID. Shows all operations performed on that entity: creation, modifications, deletions, access events. Each entry includes timestamp, action, user, and change details. Used by the Dashboard for entity history views (e.g. 'who modified this portfolio and when') and by compliance workflows tracking data lineage."""
+        Returns the chronological audit trail for a specific entity identified by its ID. Shows all operations performed on that entity: creation, modifications, deletions, access events. Each entry includes timestamp, action, user, and change details. Used by the Dashboard for entity history views (e.g. 'who modified this portfolio and when') and by compliance workflows tracking data lineage.
+
+        Args:
+        entity_type: Entity type whose audit history should be returned.
+        entity_id: Entity identifier whose audit history should be returned.
+        limit: Maximum number of history events to return."""
         _payload: Dict[str, Any] = {}
         _payload["entity_type"] = entity_type
         _payload["entity_id"] = entity_id
@@ -54,8 +59,14 @@ class AuditAPI(BaseAPI):
         Searches the audit trail (JSONL + Parquet storage) for recorded API operations. Filterable by action (e.g. 'portfolio.create'), user apikey, date range, success/failure status, and free-text search on parameters. Returns each audit entry with timestamp, action, user, parameters, result status, duration, and credits consumed. Used for compliance reporting, usage analytics, debugging failed operations, and billing reconciliation.
 
         Args:
+        action: Optional action filter, for example portfolio.create or securities.search.
+        entity_type: Optional entity type filter, such as portfolio, client, alert, or query.
+        entity_id: Optional entity identifier filter.
+        user_name: Optional user name or account identifier filter.
         start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
-        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)"""
+        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)
+        limit: Maximum number of audit events to return.
+        include_staging: Include recent JSONL staging files in addition to archived Parquet audit data."""
         _payload: Dict[str, Any] = {}
         if action is not None:
             _payload["action"] = action
@@ -92,7 +103,12 @@ class AsyncAuditAPI(AsyncBaseAPI):
     ) -> Any:
         """Get the audit history for a specific entity (portfolio, client, query)
 
-        Returns the chronological audit trail for a specific entity identified by its ID. Shows all operations performed on that entity: creation, modifications, deletions, access events. Each entry includes timestamp, action, user, and change details. Used by the Dashboard for entity history views (e.g. 'who modified this portfolio and when') and by compliance workflows tracking data lineage."""
+        Returns the chronological audit trail for a specific entity identified by its ID. Shows all operations performed on that entity: creation, modifications, deletions, access events. Each entry includes timestamp, action, user, and change details. Used by the Dashboard for entity history views (e.g. 'who modified this portfolio and when') and by compliance workflows tracking data lineage.
+
+        Args:
+        entity_type: Entity type whose audit history should be returned.
+        entity_id: Entity identifier whose audit history should be returned.
+        limit: Maximum number of history events to return."""
         _payload: Dict[str, Any] = {}
         _payload["entity_type"] = entity_type
         _payload["entity_id"] = entity_id
@@ -120,8 +136,14 @@ class AsyncAuditAPI(AsyncBaseAPI):
         Searches the audit trail (JSONL + Parquet storage) for recorded API operations. Filterable by action (e.g. 'portfolio.create'), user apikey, date range, success/failure status, and free-text search on parameters. Returns each audit entry with timestamp, action, user, parameters, result status, duration, and credits consumed. Used for compliance reporting, usage analytics, debugging failed operations, and billing reconciliation.
 
         Args:
+        action: Optional action filter, for example portfolio.create or securities.search.
+        entity_type: Optional entity type filter, such as portfolio, client, alert, or query.
+        entity_id: Optional entity identifier filter.
+        user_name: Optional user name or account identifier filter.
         start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
-        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)"""
+        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)
+        limit: Maximum number of audit events to return.
+        include_staging: Include recent JSONL staging files in addition to archived Parquet audit data."""
         _payload: Dict[str, Any] = {}
         if action is not None:
             _payload["action"] = action

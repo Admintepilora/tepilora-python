@@ -23,7 +23,10 @@ class NewsAPI(BaseAPI):
     ) -> Any:
         """Get full article details and content by URL
 
-        Retrieves the complete article content and metadata for a single news article identified by its URL. Returns the full text (when available from the source), headline, author, publication date, source, extracted topics and entities, and related article links. Used when a user clicks on a headline in the news list to read the full article within the Dashboard, avoiding external navigation. If the source does not provide full text via RSS/API, returns the available summary with a link to the original source."""
+        Retrieves the complete article content and metadata for a single news article identified by its URL. Returns the full text (when available from the source), headline, author, publication date, source, extracted topics and entities, and related article links. Used when a user clicks on a headline in the news list to read the full article within the Dashboard, avoiding external navigation. If the source does not provide full text via RSS/API, returns the available summary with a link to the original source.
+
+        Args:
+        url: Canonical article URL to retrieve from the indexed news archive."""
         _payload: Dict[str, Any] = {}
         _payload["url"] = url
         return self._call("news.details", params=_payload, options=options, context=context)
@@ -39,7 +42,12 @@ class NewsAPI(BaseAPI):
     ) -> Any:
         """Get available news sources and topic categories for filtering
 
-        Returns the aggregated facets (distinct values and counts) for news metadata fields: sources, topics, entities, and categories. Used to populate filter dropdowns and chips in the news search UI. Shows which sources are available, which topics are trending, and which entities appear most frequently. Supports optional force_refresh to bypass the cache and get fresh counts. Essential for building a faceted search experience where users can drill down into specific sources or topics."""
+        Returns the aggregated facets (distinct values and counts) for news metadata fields: sources, topics, entities, and categories. Used to populate filter dropdowns and chips in the news search UI. Shows which sources are available, which topics are trending, and which entities appear most frequently. Supports optional force_refresh to bypass the cache and get fresh counts. Essential for building a faceted search experience where users can drill down into specific sources or topics.
+
+        Args:
+        fields: Metadata fields to aggregate for news filters; defaults are handled by the core facets function.
+        limit: Maximum number of values to return per facet field.
+        force_refresh: Bypass any cached facet counts and recompute from the current index."""
         _payload: Dict[str, Any] = {}
         if fields is not None:
             _payload["fields"] = fields
@@ -64,6 +72,13 @@ class NewsAPI(BaseAPI):
         """Get the most recently published financial news articles
 
         Returns the most recently indexed news articles in reverse chronological order. Optionally filterable by news source or search key for quick topic-specific feeds. Each article includes headline, source name, publication timestamp, URL, and extracted entities (companies, indices, sectors mentioned). Ideal for building a live news ticker, a 'latest headlines' widget, or a source-specific news feed. Used by the Dashboard News page for the default latest headlines view and by the Market Snapshot page for the news sidebar.
+
+        Args:
+        search_key: Optional topic or ticker-like search key used to filter latest articles.
+        source: Optional news source filter; accepts one source or a list of sources.
+        limit: Maximum number of latest articles to return before the core cap is applied.
+        sort: Sort field passed to news.search; use date for chronological sorting or relevance for text score.
+        order: Sort order for date sorting; desc returns newest articles first.
 
         Examples:
             >>> client.news.latest(limit=5)"""
@@ -103,10 +118,12 @@ class NewsAPI(BaseAPI):
         Full-text search across the financial news database powered by Tantivy search engine. Indexes articles from major financial news sources (Bloomberg, Reuters, Financial Times, CNBC, MarketWatch, local financial media). Supports advanced query syntax (AND, OR, phrases), date range filtering, source filtering, and topic exclusion. Returns article headline, source, publication date, URL, matched topics/entities, and relevance score. Results are paginated and sortable by date or relevance. Used by the Dashboard News page as the primary news search, by the AI assistant for news context grounding, and by alert rules that monitor specific topics or entities.
 
         Args:
+        filters: Optional structured filters, currently including searchKey/search_key and source.
         from_date: Optional date in ISO 8601 format (YYYY-MM-DD)
         to_date: Optional date in ISO 8601 format (YYYY-MM-DD)
         start_date: Optional date in ISO 8601 format (YYYY-MM-DD)
         end_date: Optional date in ISO 8601 format (YYYY-MM-DD)
+        exclude_topics: When true, remove articles matching excluded dashboard topics before pagination.
 
         Examples:
             >>> client.news.search(query='inflation', limit=5)"""
@@ -151,6 +168,13 @@ class NewsAPI(BaseAPI):
 
         Identifies terms, entities (companies, indices, currencies), and topics that are trending in financial news right now. Uses velocity-based detection: measures how rapidly the frequency of a term is increasing compared to its historical baseline. Returns each trending term with its current velocity score, article count, term type (entity vs. keyword), and sample headlines. Filterable by term type and minimum velocity threshold. Finance-only mode excludes generic trending topics and focuses on market-relevant terms. Used by the Dashboard News page for the 'Trending Now' widget and by the AI assistant to understand current market narrative.
 
+        Args:
+        limit: Maximum number of trending terms to return.
+        term_type: Type of trending term to include; all keeps every supported term type.
+        finance_only: When true, restrict trending terms to finance-relevant topics.
+        min_velocity: Optional minimum velocity score required for a term to be returned.
+        filters: Optional trending filters forwarded to the trending engine.
+
         Examples:
             >>> client.news.trending(limit=10, finance_only=True)"""
         _payload: Dict[str, Any] = {}
@@ -181,6 +205,7 @@ class NewsAPI(BaseAPI):
         Compares the trending velocity of 2 or more terms over the same time period. Returns aligned time series for each term, enabling visual comparison of media attention across topics. Each term's series includes velocity score, article count, and normalized intensity. Ideal for building comparison charts, detecting narrative rotation, and grounding AI-assisted market commentary.
 
         Args:
+        terms: Terms whose trending trajectories should be compared on the same timeline.
         start_date: Optional date in ISO 8601 format (YYYY-MM-DD)
         end_date: Optional date in ISO 8601 format (YYYY-MM-DD)"""
         _payload: Dict[str, Any] = {}
@@ -207,6 +232,7 @@ class NewsAPI(BaseAPI):
         Tracks how a specific term's trending velocity has evolved over time. Returns a time series of velocity scores and article counts for the given term across the specified date range. Useful for understanding whether a topic is gaining or losing momentum in financial media over days or weeks. Enables trend-over-time charts and comparative analysis of media attention cycles. Used by the Dashboard for detailed trending term analysis and by research workflows studying narrative shifts.
 
         Args:
+        term: Single term whose historical trending trajectory should be returned.
         start_date: Optional date in ISO 8601 format (YYYY-MM-DD)
         end_date: Optional date in ISO 8601 format (YYYY-MM-DD)"""
         _payload: Dict[str, Any] = {}
@@ -233,7 +259,10 @@ class AsyncNewsAPI(AsyncBaseAPI):
     ) -> Any:
         """Get full article details and content by URL
 
-        Retrieves the complete article content and metadata for a single news article identified by its URL. Returns the full text (when available from the source), headline, author, publication date, source, extracted topics and entities, and related article links. Used when a user clicks on a headline in the news list to read the full article within the Dashboard, avoiding external navigation. If the source does not provide full text via RSS/API, returns the available summary with a link to the original source."""
+        Retrieves the complete article content and metadata for a single news article identified by its URL. Returns the full text (when available from the source), headline, author, publication date, source, extracted topics and entities, and related article links. Used when a user clicks on a headline in the news list to read the full article within the Dashboard, avoiding external navigation. If the source does not provide full text via RSS/API, returns the available summary with a link to the original source.
+
+        Args:
+        url: Canonical article URL to retrieve from the indexed news archive."""
         _payload: Dict[str, Any] = {}
         _payload["url"] = url
         return await self._call("news.details", params=_payload, options=options, context=context)
@@ -249,7 +278,12 @@ class AsyncNewsAPI(AsyncBaseAPI):
     ) -> Any:
         """Get available news sources and topic categories for filtering
 
-        Returns the aggregated facets (distinct values and counts) for news metadata fields: sources, topics, entities, and categories. Used to populate filter dropdowns and chips in the news search UI. Shows which sources are available, which topics are trending, and which entities appear most frequently. Supports optional force_refresh to bypass the cache and get fresh counts. Essential for building a faceted search experience where users can drill down into specific sources or topics."""
+        Returns the aggregated facets (distinct values and counts) for news metadata fields: sources, topics, entities, and categories. Used to populate filter dropdowns and chips in the news search UI. Shows which sources are available, which topics are trending, and which entities appear most frequently. Supports optional force_refresh to bypass the cache and get fresh counts. Essential for building a faceted search experience where users can drill down into specific sources or topics.
+
+        Args:
+        fields: Metadata fields to aggregate for news filters; defaults are handled by the core facets function.
+        limit: Maximum number of values to return per facet field.
+        force_refresh: Bypass any cached facet counts and recompute from the current index."""
         _payload: Dict[str, Any] = {}
         if fields is not None:
             _payload["fields"] = fields
@@ -274,6 +308,13 @@ class AsyncNewsAPI(AsyncBaseAPI):
         """Get the most recently published financial news articles
 
         Returns the most recently indexed news articles in reverse chronological order. Optionally filterable by news source or search key for quick topic-specific feeds. Each article includes headline, source name, publication timestamp, URL, and extracted entities (companies, indices, sectors mentioned). Ideal for building a live news ticker, a 'latest headlines' widget, or a source-specific news feed. Used by the Dashboard News page for the default latest headlines view and by the Market Snapshot page for the news sidebar.
+
+        Args:
+        search_key: Optional topic or ticker-like search key used to filter latest articles.
+        source: Optional news source filter; accepts one source or a list of sources.
+        limit: Maximum number of latest articles to return before the core cap is applied.
+        sort: Sort field passed to news.search; use date for chronological sorting or relevance for text score.
+        order: Sort order for date sorting; desc returns newest articles first.
 
         Examples:
             >>> await client.news.latest(limit=5)"""
@@ -313,10 +354,12 @@ class AsyncNewsAPI(AsyncBaseAPI):
         Full-text search across the financial news database powered by Tantivy search engine. Indexes articles from major financial news sources (Bloomberg, Reuters, Financial Times, CNBC, MarketWatch, local financial media). Supports advanced query syntax (AND, OR, phrases), date range filtering, source filtering, and topic exclusion. Returns article headline, source, publication date, URL, matched topics/entities, and relevance score. Results are paginated and sortable by date or relevance. Used by the Dashboard News page as the primary news search, by the AI assistant for news context grounding, and by alert rules that monitor specific topics or entities.
 
         Args:
+        filters: Optional structured filters, currently including searchKey/search_key and source.
         from_date: Optional date in ISO 8601 format (YYYY-MM-DD)
         to_date: Optional date in ISO 8601 format (YYYY-MM-DD)
         start_date: Optional date in ISO 8601 format (YYYY-MM-DD)
         end_date: Optional date in ISO 8601 format (YYYY-MM-DD)
+        exclude_topics: When true, remove articles matching excluded dashboard topics before pagination.
 
         Examples:
             >>> await client.news.search(query='inflation', limit=5)"""
@@ -361,6 +404,13 @@ class AsyncNewsAPI(AsyncBaseAPI):
 
         Identifies terms, entities (companies, indices, currencies), and topics that are trending in financial news right now. Uses velocity-based detection: measures how rapidly the frequency of a term is increasing compared to its historical baseline. Returns each trending term with its current velocity score, article count, term type (entity vs. keyword), and sample headlines. Filterable by term type and minimum velocity threshold. Finance-only mode excludes generic trending topics and focuses on market-relevant terms. Used by the Dashboard News page for the 'Trending Now' widget and by the AI assistant to understand current market narrative.
 
+        Args:
+        limit: Maximum number of trending terms to return.
+        term_type: Type of trending term to include; all keeps every supported term type.
+        finance_only: When true, restrict trending terms to finance-relevant topics.
+        min_velocity: Optional minimum velocity score required for a term to be returned.
+        filters: Optional trending filters forwarded to the trending engine.
+
         Examples:
             >>> await client.news.trending(limit=10, finance_only=True)"""
         _payload: Dict[str, Any] = {}
@@ -391,6 +441,7 @@ class AsyncNewsAPI(AsyncBaseAPI):
         Compares the trending velocity of 2 or more terms over the same time period. Returns aligned time series for each term, enabling visual comparison of media attention across topics. Each term's series includes velocity score, article count, and normalized intensity. Ideal for building comparison charts, detecting narrative rotation, and grounding AI-assisted market commentary.
 
         Args:
+        terms: Terms whose trending trajectories should be compared on the same timeline.
         start_date: Optional date in ISO 8601 format (YYYY-MM-DD)
         end_date: Optional date in ISO 8601 format (YYYY-MM-DD)"""
         _payload: Dict[str, Any] = {}
@@ -417,6 +468,7 @@ class AsyncNewsAPI(AsyncBaseAPI):
         Tracks how a specific term's trending velocity has evolved over time. Returns a time series of velocity scores and article counts for the given term across the specified date range. Useful for understanding whether a topic is gaining or losing momentum in financial media over days or weeks. Enables trend-over-time charts and comparative analysis of media attention cycles. Used by the Dashboard for detailed trending term analysis and by research workflows studying narrative shifts.
 
         Args:
+        term: Single term whose historical trending trajectory should be returned.
         start_date: Optional date in ISO 8601 format (YYYY-MM-DD)
         end_date: Optional date in ISO 8601 format (YYYY-MM-DD)"""
         _payload: Dict[str, Any] = {}
