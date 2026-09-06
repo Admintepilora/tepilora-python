@@ -14972,9 +14972,8 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                             'summary': 'Get ESG scores and ratings for a security',
                             'description': 'Returns Environmental, Social, and Governance (ESG) scores for a security. '
                                            'Includes overall ESG score, individual E/S/G pillar scores, controversy '
-                                           'flags, carbon intensity, and ESG risk rating. Data sourced from '
-                                           'Morningstar Sustainalytics. Used by the Dashboard ESG tab and by portfolio '
-                                           'ESG analysis.',
+                                           'flags, carbon intensity, and ESG risk rating. Used by the Dashboard ESG '
+                                           'tab and by portfolio ESG analysis.',
                             'methodology_doc': '',
                             'params': [{'name': 'identifiers',
                                         'type': 'any',
@@ -16045,11 +16044,11 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                             'operation': 'load',
                             'summary': 'Load raw fundamentals data from the FH parquet for a security',
                             'description': 'Returns the raw fundamentals history record from the FH (Fundamentals '
-                                           'History) parquet file. Contains 92 columns of financial statement data '
-                                           'from Morningstar: revenue, earnings, margins, ratios, growth rates, '
-                                           'valuation multiples, and balance sheet items. Data is quarterly/annual '
-                                           'depending on the metric. Used as the data foundation for fh.latest, '
-                                           'fh.metrics, and fh.quality operations.',
+                                           'History) parquet file. Contains 92 columns of financial statement data, '
+                                           'including revenue, earnings, margins, ratios, growth rates, valuation '
+                                           'multiples, and balance sheet items. Data is quarterly/annual depending on '
+                                           'the metric. Used as the data foundation for fh.latest, fh.metrics, and '
+                                           'fh.quality operations.',
                             'methodology_doc': '',
                             'params': [{'name': 'identifiers',
                                         'type': 'any',

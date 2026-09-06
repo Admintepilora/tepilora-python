@@ -37,7 +37,7 @@ class EsgAPI(BaseAPI):
     ) -> Any:
         """Get ESG scores and ratings for a security
 
-        Returns Environmental, Social, and Governance (ESG) scores for a security. Includes overall ESG score, individual E/S/G pillar scores, controversy flags, carbon intensity, and ESG risk rating. Data sourced from Morningstar Sustainalytics. Used by the Dashboard ESG tab and by portfolio ESG analysis."""
+        Returns Environmental, Social, and Governance (ESG) scores for a security. Includes overall ESG score, individual E/S/G pillar scores, controversy flags, carbon intensity, and ESG risk rating. Used by the Dashboard ESG tab and by portfolio ESG analysis."""
         _payload: Dict[str, Any] = {}
         _payload["identifiers"] = identifiers
         return self._call("esg.get", params=_payload, options=options, context=context)
@@ -140,7 +140,7 @@ class AsyncEsgAPI(AsyncBaseAPI):
     ) -> Any:
         """Get ESG scores and ratings for a security
 
-        Returns Environmental, Social, and Governance (ESG) scores for a security. Includes overall ESG score, individual E/S/G pillar scores, controversy flags, carbon intensity, and ESG risk rating. Data sourced from Morningstar Sustainalytics. Used by the Dashboard ESG tab and by portfolio ESG analysis."""
+        Returns Environmental, Social, and Governance (ESG) scores for a security. Includes overall ESG score, individual E/S/G pillar scores, controversy flags, carbon intensity, and ESG risk rating. Used by the Dashboard ESG tab and by portfolio ESG analysis."""
         _payload: Dict[str, Any] = {}
         _payload["identifiers"] = identifiers
         return await self._call("esg.get", params=_payload, options=options, context=context)

@@ -113,7 +113,7 @@ class FhAPI(BaseAPI):
     ) -> Any:
         """Load raw fundamentals data from the FH parquet for a security
 
-        Returns the raw fundamentals history record from the FH (Fundamentals History) parquet file. Contains 92 columns of financial statement data from Morningstar: revenue, earnings, margins, ratios, growth rates, valuation multiples, and balance sheet items. Data is quarterly/annual depending on the metric. Used as the data foundation for fh.latest, fh.metrics, and fh.quality operations.
+        Returns the raw fundamentals history record from the FH (Fundamentals History) parquet file. Contains 92 columns of financial statement data, including revenue, earnings, margins, ratios, growth rates, valuation multiples, and balance sheet items. Data is quarterly/annual depending on the metric. Used as the data foundation for fh.latest, fh.metrics, and fh.quality operations.
 
         Args:
         start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
@@ -283,7 +283,7 @@ class AsyncFhAPI(AsyncBaseAPI):
     ) -> Any:
         """Load raw fundamentals data from the FH parquet for a security
 
-        Returns the raw fundamentals history record from the FH (Fundamentals History) parquet file. Contains 92 columns of financial statement data from Morningstar: revenue, earnings, margins, ratios, growth rates, valuation multiples, and balance sheet items. Data is quarterly/annual depending on the metric. Used as the data foundation for fh.latest, fh.metrics, and fh.quality operations.
+        Returns the raw fundamentals history record from the FH (Fundamentals History) parquet file. Contains 92 columns of financial statement data, including revenue, earnings, margins, ratios, growth rates, valuation multiples, and balance sheet items. Data is quarterly/annual depending on the metric. Used as the data foundation for fh.latest, fh.metrics, and fh.quality operations.
 
         Args:
         start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
