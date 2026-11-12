@@ -25,7 +25,7 @@ class ClientsAPI(BaseAPI):
     ) -> Any:
         """Link a portfolio to a client
 
-        Associates an existing portfolio with a client entity. A portfolio can be linked to one client, but a client can have multiple portfolios. Used by advisor workflows when assigning model portfolios to clients."""
+        Associates an existing portfolio_id with a client identified by client_id or id. A client can have multiple linked portfolios."""
         _payload: Dict[str, Any] = {}
         if client_id is not None:
             _payload["client_id"] = client_id
@@ -52,7 +52,16 @@ class ClientsAPI(BaseAPI):
     ) -> Any:
         """Create a new client entity
 
-        Creates a new client record in the Clients MongoDB collection. A client represents an individual investor or entity managed by an advisor. Includes name, email, phone, tax ID, MiFID profile reference, risk tolerance, and custom metadata. Clients can be linked to portfolios via clients.assign_portfolio. Used by advisor CRM workflows and by the Dashboard client management page."""
+        Creates a new client record in the Clients MongoDB collection for the authenticated advisor. Accepted fields are name, client_type (or type alias), contact details such as email and phone, tags, external_id, notes, optional members for family or trust clients, and visibility. Clients can be linked to portfolios via clients.assign_portfolio.
+
+        Args:
+        client_type: Canonical client type used for validation and storage.
+        type_: Alias for client_type, accepted for clients that send a generic type field.
+        contact: Optional contact details such as email and phone.
+        external_id: External CRM or advisor-system identifier for this client.
+        notes: Free-form advisor notes stored on the client record.
+        members: Optional member records for family or trust clients.
+        visibility: Client visibility scope for the current advisor or workspace."""
         _payload: Dict[str, Any] = {}
         _payload["name"] = name
         if client_type is not None:
@@ -83,7 +92,7 @@ class ClientsAPI(BaseAPI):
     ) -> Any:
         """Delete a client and optionally their linked data
 
-        Removes a client record from the Clients collection. Optionally cascades to unlink associated portfolios and archive MiFID profiles. Creates an audit trail entry. Used by the Dashboard client management."""
+        Archives a client record identified by client_id or id. The operation marks the client as archived instead of removing the stored document."""
         _payload: Dict[str, Any] = {}
         if client_id is not None:
             _payload["client_id"] = client_id
@@ -102,7 +111,10 @@ class ClientsAPI(BaseAPI):
     ) -> Any:
         """Get full details for a specific client
 
-        Returns the complete client record including personal info, linked portfolios, MiFID profile reference, risk parameters, and all custom metadata. Used by the Dashboard client detail page."""
+        Returns a client record identified by client_id or id, including stored contact details, tags, external_id, notes, members, visibility, and optionally linked portfolios when include_portfolios is true.
+
+        Args:
+        include_portfolios: Whether to include portfolios linked to the client in the response."""
         _payload: Dict[str, Any] = {}
         if client_id is not None:
             _payload["client_id"] = client_id
@@ -130,7 +142,15 @@ class ClientsAPI(BaseAPI):
     ) -> Any:
         """List all clients for the current advisor with filtering
 
-        Returns paginated list of client records belonging to the authenticated advisor. Filterable by name search and sortable by creation date or name. Each entry includes client ID, name, email, linked portfolio count, and MiFID profile status. Used by the Dashboard client list page."""
+        Returns a paginated list of client records visible to the authenticated advisor. Supports search across client and member names, status and tag filters, client_type (or type alias) filtering, sorting by createdAt, updatedAt, or name, and asc/desc ordering.
+
+        Args:
+        search: Case-insensitive search text matched against client and member names.
+        status: Client lifecycle status to include in the result set.
+        client_type: Filter by canonical client type.
+        type_: Alias for client_type, accepted for clients that send a generic type field.
+        sort: Field used to sort the paginated client list.
+        order: Sort direction for the client list."""
         _payload: Dict[str, Any] = {}
         if search is not None:
             _payload["search"] = search
@@ -164,7 +184,10 @@ class ClientsAPI(BaseAPI):
     ) -> Any:
         """List all portfolios linked to a specific client
 
-        Returns all portfolios associated with a given client ID, including portfolio metadata (name, type, creation date, last modified, current value summary). Used by the Dashboard client detail page to show the client's portfolio overview."""
+        Returns portfolios linked to a client identified by client_id or id. Set include_summary to include summary metrics for each linked portfolio.
+
+        Args:
+        include_summary: Whether to include summary metrics for each linked portfolio."""
         _payload: Dict[str, Any] = {}
         if client_id is not None:
             _payload["client_id"] = client_id
@@ -184,7 +207,7 @@ class ClientsAPI(BaseAPI):
     ) -> Any:
         """Remove a portfolio link from a client
 
-        Removes the association between a portfolio and a client without deleting either entity. Used when reassigning portfolios or during client offboarding."""
+        Removes the association for a portfolio identified by portfolio_id or id without deleting the portfolio or client record."""
         _payload: Dict[str, Any] = {}
         if portfolio_id is not None:
             _payload["portfolio_id"] = portfolio_id
@@ -211,7 +234,16 @@ class ClientsAPI(BaseAPI):
     ) -> Any:
         """Update client details
 
-        Modifies an existing client record. Can update name, contact info, risk parameters, and custom metadata. Creates an audit trail entry. Used by the Dashboard client edit form."""
+        Updates an existing client record identified by client_id or id. Accepted update fields are name, client_type (or type alias), contact details, tags, external_id, notes, members, and status.
+
+        Args:
+        client_type: Updated canonical client type.
+        type_: Alias for client_type, accepted for clients that send a generic type field.
+        contact: Replacement contact details such as email and phone.
+        external_id: Updated external CRM or advisor-system identifier.
+        notes: Updated free-form advisor notes stored on the client record.
+        members: Replacement member records for family or trust clients.
+        status: Updated lifecycle status for the client record."""
         _payload: Dict[str, Any] = {}
         if client_id is not None:
             _payload["client_id"] = client_id
@@ -253,7 +285,7 @@ class AsyncClientsAPI(AsyncBaseAPI):
     ) -> Any:
         """Link a portfolio to a client
 
-        Associates an existing portfolio with a client entity. A portfolio can be linked to one client, but a client can have multiple portfolios. Used by advisor workflows when assigning model portfolios to clients."""
+        Associates an existing portfolio_id with a client identified by client_id or id. A client can have multiple linked portfolios."""
         _payload: Dict[str, Any] = {}
         if client_id is not None:
             _payload["client_id"] = client_id
@@ -280,7 +312,16 @@ class AsyncClientsAPI(AsyncBaseAPI):
     ) -> Any:
         """Create a new client entity
 
-        Creates a new client record in the Clients MongoDB collection. A client represents an individual investor or entity managed by an advisor. Includes name, email, phone, tax ID, MiFID profile reference, risk tolerance, and custom metadata. Clients can be linked to portfolios via clients.assign_portfolio. Used by advisor CRM workflows and by the Dashboard client management page."""
+        Creates a new client record in the Clients MongoDB collection for the authenticated advisor. Accepted fields are name, client_type (or type alias), contact details such as email and phone, tags, external_id, notes, optional members for family or trust clients, and visibility. Clients can be linked to portfolios via clients.assign_portfolio.
+
+        Args:
+        client_type: Canonical client type used for validation and storage.
+        type_: Alias for client_type, accepted for clients that send a generic type field.
+        contact: Optional contact details such as email and phone.
+        external_id: External CRM or advisor-system identifier for this client.
+        notes: Free-form advisor notes stored on the client record.
+        members: Optional member records for family or trust clients.
+        visibility: Client visibility scope for the current advisor or workspace."""
         _payload: Dict[str, Any] = {}
         _payload["name"] = name
         if client_type is not None:
@@ -311,7 +352,7 @@ class AsyncClientsAPI(AsyncBaseAPI):
     ) -> Any:
         """Delete a client and optionally their linked data
 
-        Removes a client record from the Clients collection. Optionally cascades to unlink associated portfolios and archive MiFID profiles. Creates an audit trail entry. Used by the Dashboard client management."""
+        Archives a client record identified by client_id or id. The operation marks the client as archived instead of removing the stored document."""
         _payload: Dict[str, Any] = {}
         if client_id is not None:
             _payload["client_id"] = client_id
@@ -330,7 +371,10 @@ class AsyncClientsAPI(AsyncBaseAPI):
     ) -> Any:
         """Get full details for a specific client
 
-        Returns the complete client record including personal info, linked portfolios, MiFID profile reference, risk parameters, and all custom metadata. Used by the Dashboard client detail page."""
+        Returns a client record identified by client_id or id, including stored contact details, tags, external_id, notes, members, visibility, and optionally linked portfolios when include_portfolios is true.
+
+        Args:
+        include_portfolios: Whether to include portfolios linked to the client in the response."""
         _payload: Dict[str, Any] = {}
         if client_id is not None:
             _payload["client_id"] = client_id
@@ -358,7 +402,15 @@ class AsyncClientsAPI(AsyncBaseAPI):
     ) -> Any:
         """List all clients for the current advisor with filtering
 
-        Returns paginated list of client records belonging to the authenticated advisor. Filterable by name search and sortable by creation date or name. Each entry includes client ID, name, email, linked portfolio count, and MiFID profile status. Used by the Dashboard client list page."""
+        Returns a paginated list of client records visible to the authenticated advisor. Supports search across client and member names, status and tag filters, client_type (or type alias) filtering, sorting by createdAt, updatedAt, or name, and asc/desc ordering.
+
+        Args:
+        search: Case-insensitive search text matched against client and member names.
+        status: Client lifecycle status to include in the result set.
+        client_type: Filter by canonical client type.
+        type_: Alias for client_type, accepted for clients that send a generic type field.
+        sort: Field used to sort the paginated client list.
+        order: Sort direction for the client list."""
         _payload: Dict[str, Any] = {}
         if search is not None:
             _payload["search"] = search
@@ -392,7 +444,10 @@ class AsyncClientsAPI(AsyncBaseAPI):
     ) -> Any:
         """List all portfolios linked to a specific client
 
-        Returns all portfolios associated with a given client ID, including portfolio metadata (name, type, creation date, last modified, current value summary). Used by the Dashboard client detail page to show the client's portfolio overview."""
+        Returns portfolios linked to a client identified by client_id or id. Set include_summary to include summary metrics for each linked portfolio.
+
+        Args:
+        include_summary: Whether to include summary metrics for each linked portfolio."""
         _payload: Dict[str, Any] = {}
         if client_id is not None:
             _payload["client_id"] = client_id
@@ -412,7 +467,7 @@ class AsyncClientsAPI(AsyncBaseAPI):
     ) -> Any:
         """Remove a portfolio link from a client
 
-        Removes the association between a portfolio and a client without deleting either entity. Used when reassigning portfolios or during client offboarding."""
+        Removes the association for a portfolio identified by portfolio_id or id without deleting the portfolio or client record."""
         _payload: Dict[str, Any] = {}
         if portfolio_id is not None:
             _payload["portfolio_id"] = portfolio_id
@@ -439,7 +494,16 @@ class AsyncClientsAPI(AsyncBaseAPI):
     ) -> Any:
         """Update client details
 
-        Modifies an existing client record. Can update name, contact info, risk parameters, and custom metadata. Creates an audit trail entry. Used by the Dashboard client edit form."""
+        Updates an existing client record identified by client_id or id. Accepted update fields are name, client_type (or type alias), contact details, tags, external_id, notes, members, and status.
+
+        Args:
+        client_type: Updated canonical client type.
+        type_: Alias for client_type, accepted for clients that send a generic type field.
+        contact: Replacement contact details such as email and phone.
+        external_id: Updated external CRM or advisor-system identifier.
+        notes: Updated free-form advisor notes stored on the client record.
+        members: Replacement member records for family or trust clients.
+        status: Updated lifecycle status for the client record."""
         _payload: Dict[str, Any] = {}
         if client_id is not None:
             _payload["client_id"] = client_id

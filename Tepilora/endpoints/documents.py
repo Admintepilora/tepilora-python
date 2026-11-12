@@ -22,7 +22,7 @@ class DocumentsAPI(BaseAPI):
     ) -> Any:
         """Check which document parsing capabilities are available on this server
 
-        Returns the availability status of document parsing dependencies: pdfplumber (PDF text extraction), PyMuPDF (PDF rendering), pytesseract (OCR), and openpyxl (Excel parsing). Each dependency reports installed/available status. Used by the Dashboard to show/hide document upload features based on server capabilities and by health checks to verify the parsing pipeline."""
+        Returns the availability status of document parsing dependencies: pdfplumber (PDF text extraction), PyMuPDF (PDF rendering), pytesseract (OCR), and openpyxl. Each dependency reports installed/available status. Note that openpyxl being installed does not make Excel parsing available: documents.parse accepts PDF only, and no operation in this category reads a spreadsheet today. Used by the Dashboard to show/hide document upload features based on server capabilities and by health checks to verify the parsing pipeline."""
         _payload: Dict[str, Any] = {}
         return self._call("documents.capabilities", params=_payload, options=options, context=context)
 
@@ -51,9 +51,9 @@ class DocumentsAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Parse and extract structured data from PDF and Excel financial documents
+        """Parse and extract structured data from a PDF financial document
 
-        Extracts structured data from uploaded financial documents (PDF portfolio statements, Excel holdings files, fund factsheets). Uses multiple extraction strategies: tabular extraction for structured PDFs (pdfplumber), OCR fallback for scanned documents (pytesseract), and native parsing for Excel/CSV. Returns extracted positions (security name, ISIN, quantity, value, weight) in a normalized format ready for portfolio creation. Used by the Dashboard document upload flow and by client onboarding workflows."""
+        Extracts structured data from an uploaded PDF financial document. **PDF only**: any other extension is rejected with 'Unsupported file type'. Recognises five document types — capital call notice, quarterly statement, bank statement, brokerage statement, fund factsheet — using tabular extraction (pdfplumber) with an OCR fallback for scanned pages when pytesseract is installed. Returns the extracted fields plus a confidence score; a brokerage statement yields holdings (security name, ISIN, quantity, value) usable to build a portfolio, though turning them into one is a separate, explicit step. file_path must resolve inside the working directory or /tmp — uploaded files are reachable, arbitrary filesystem paths are not. Used by the Dashboard document upload flow and by client onboarding workflows."""
         _payload: Dict[str, Any] = {}
         _payload["file_path"] = file_path
         if document_type is not None:
@@ -91,7 +91,7 @@ class AsyncDocumentsAPI(AsyncBaseAPI):
     ) -> Any:
         """Check which document parsing capabilities are available on this server
 
-        Returns the availability status of document parsing dependencies: pdfplumber (PDF text extraction), PyMuPDF (PDF rendering), pytesseract (OCR), and openpyxl (Excel parsing). Each dependency reports installed/available status. Used by the Dashboard to show/hide document upload features based on server capabilities and by health checks to verify the parsing pipeline."""
+        Returns the availability status of document parsing dependencies: pdfplumber (PDF text extraction), PyMuPDF (PDF rendering), pytesseract (OCR), and openpyxl. Each dependency reports installed/available status. Note that openpyxl being installed does not make Excel parsing available: documents.parse accepts PDF only, and no operation in this category reads a spreadsheet today. Used by the Dashboard to show/hide document upload features based on server capabilities and by health checks to verify the parsing pipeline."""
         _payload: Dict[str, Any] = {}
         return await self._call("documents.capabilities", params=_payload, options=options, context=context)
 
@@ -120,9 +120,9 @@ class AsyncDocumentsAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Parse and extract structured data from PDF and Excel financial documents
+        """Parse and extract structured data from a PDF financial document
 
-        Extracts structured data from uploaded financial documents (PDF portfolio statements, Excel holdings files, fund factsheets). Uses multiple extraction strategies: tabular extraction for structured PDFs (pdfplumber), OCR fallback for scanned documents (pytesseract), and native parsing for Excel/CSV. Returns extracted positions (security name, ISIN, quantity, value, weight) in a normalized format ready for portfolio creation. Used by the Dashboard document upload flow and by client onboarding workflows."""
+        Extracts structured data from an uploaded PDF financial document. **PDF only**: any other extension is rejected with 'Unsupported file type'. Recognises five document types — capital call notice, quarterly statement, bank statement, brokerage statement, fund factsheet — using tabular extraction (pdfplumber) with an OCR fallback for scanned pages when pytesseract is installed. Returns the extracted fields plus a confidence score; a brokerage statement yields holdings (security name, ISIN, quantity, value) usable to build a portfolio, though turning them into one is a separate, explicit step. file_path must resolve inside the working directory or /tmp — uploaded files are reachable, arbitrary filesystem paths are not. Used by the Dashboard document upload flow and by client onboarding workflows."""
         _payload: Dict[str, Any] = {}
         _payload["file_path"] = file_path
         if document_type is not None:

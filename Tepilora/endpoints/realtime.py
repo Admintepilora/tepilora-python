@@ -61,9 +61,9 @@ class RealtimeAPI(BaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Check the health and freshness status of all realtime data sources
+        """Check the health of the realtime data feed
 
-        Returns the health status of each realtime data category (fx, idx, cmd, crypto, rate, calendar) including: last update timestamp, staleness (seconds since last update), number of symbols tracked, and a health verdict (healthy/stale/down). A category is considered 'stale' if the last update exceeds the expected refresh interval (typically 60 seconds for market data, 300 seconds for calendar). Used by the Dashboard Market Snapshot page for data freshness indicators, by monitoring systems to detect pipeline failures, and as a prerequisite check before serving realtime data to users.
+        Returns the health of the realtime data feed as one aggregated entry: sources has the single key "aggregated". Only feeds that report ok or error count; feeds on standby or without a report are ignored. status is error if any counted feed is in error, otherwise ok if any is ok, otherwise unknown; last_ok is the oldest last successful update among the counted feeds (null if none); fails is their maximum failure count. _meta.last_poll is the last poll time. Individual feeds are not named. Used by the Dashboard Market Snapshot page for data freshness indicators and by monitoring.
 
         Examples:
             >>> client.realtime.health()"""
@@ -81,7 +81,7 @@ class RealtimeAPI(BaseAPI):
     ) -> Any:
         """Get a single realtime quote for a specific symbol within a market category
 
-        Returns the latest realtime price data for a single symbol within a specified market category (fx, idx, cmd, crypto, rate). Data is sourced from Redis DB 1, populated by the realtime data pipeline from Investing.com feeds. Each quote includes: last price, change (absolute and percentage), bid/ask (when available), high/low, open, previous close, volume, and timestamp. The category parameter selects the market segment: 'fx' for currency pairs (EUR/USD, GBP/JPY), 'idx' for stock indices (S&P 500, DAX, FTSE), 'cmd' for commodities (Gold, Oil, Natural Gas), 'crypto' for cryptocurrencies (BTC, ETH), 'rate' for government bond yields (US 10Y, German Bund). Quotes are enriched with TepiloraCode via reverse rt:map:tc lookup, enabling fallback to securities.history for 1M/1Y charts. Used by the Dashboard Market Snapshot page for individual instrument detail and by the AI assistant for current market data.
+        Returns the latest realtime price data for a single symbol within a specified market category (fx, idx, cmd, crypto, rate). Data is sourced from Redis DB 1, populated by the realtime data pipeline. Each quote includes: last price, change (absolute and percentage), bid/ask (when available), high/low, open, previous close, volume, and timestamp. The category parameter selects the market segment: 'fx' for currency pairs (EUR/USD, GBP/JPY), 'idx' for stock indices (S&P 500, DAX, FTSE), 'cmd' for commodities (Gold, Oil, Natural Gas), 'crypto' for cryptocurrencies (BTC, ETH), 'rate' for government bond yields (US 10Y, German Bund). Quotes are enriched with TepiloraCode via reverse rt:map:tc lookup, enabling fallback to securities.history for 1M/1Y charts. Used by the Dashboard Market Snapshot page for individual instrument detail and by the AI assistant for current market data.
 
         Args:
         category: Quote category.
@@ -108,7 +108,7 @@ class RealtimeAPI(BaseAPI):
     ) -> Any:
         """Get all realtime quotes for a market category or all categories at once
 
-        Returns the latest realtime quotes for all instruments in one or all market categories. Without a category filter, returns the full universe across fx, idx, cmd, crypto, and rate. Each quote includes: symbol, last price, change, percentage change, bid/ask, high/low, open, previous close, and timestamp. Data is sourced from Redis DB 1 with sub-minute refresh from Investing.com feeds. Quotes are enriched with TepiloraCode via reverse rt:map:tc lookup. Used by the Dashboard Market Snapshot page for the full market overview tables (currencies grid, indices table, commodities strip, crypto ticker, bond yields curve) and by alert rules that monitor cross-market conditions.
+        Returns the latest realtime quotes for all instruments in one or all market categories. Without a category filter, returns the full universe across fx, idx, cmd, crypto, and rate. Each quote includes: symbol, last price, change, percentage change, bid/ask, high/low, open, previous close, and timestamp. Data is sourced from Redis DB 1 with sub-minute refresh. Quotes are enriched with TepiloraCode via reverse rt:map:tc lookup. Used by the Dashboard Market Snapshot page for the full market overview tables (currencies grid, indices table, commodities strip, crypto ticker, bond yields curve) and by alert rules that monitor cross-market conditions.
 
         Args:
         category: Optional category filter for quotes.
@@ -172,9 +172,9 @@ class AsyncRealtimeAPI(AsyncBaseAPI):
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Check the health and freshness status of all realtime data sources
+        """Check the health of the realtime data feed
 
-        Returns the health status of each realtime data category (fx, idx, cmd, crypto, rate, calendar) including: last update timestamp, staleness (seconds since last update), number of symbols tracked, and a health verdict (healthy/stale/down). A category is considered 'stale' if the last update exceeds the expected refresh interval (typically 60 seconds for market data, 300 seconds for calendar). Used by the Dashboard Market Snapshot page for data freshness indicators, by monitoring systems to detect pipeline failures, and as a prerequisite check before serving realtime data to users.
+        Returns the health of the realtime data feed as one aggregated entry: sources has the single key "aggregated". Only feeds that report ok or error count; feeds on standby or without a report are ignored. status is error if any counted feed is in error, otherwise ok if any is ok, otherwise unknown; last_ok is the oldest last successful update among the counted feeds (null if none); fails is their maximum failure count. _meta.last_poll is the last poll time. Individual feeds are not named. Used by the Dashboard Market Snapshot page for data freshness indicators and by monitoring.
 
         Examples:
             >>> await client.realtime.health()"""
@@ -192,7 +192,7 @@ class AsyncRealtimeAPI(AsyncBaseAPI):
     ) -> Any:
         """Get a single realtime quote for a specific symbol within a market category
 
-        Returns the latest realtime price data for a single symbol within a specified market category (fx, idx, cmd, crypto, rate). Data is sourced from Redis DB 1, populated by the realtime data pipeline from Investing.com feeds. Each quote includes: last price, change (absolute and percentage), bid/ask (when available), high/low, open, previous close, volume, and timestamp. The category parameter selects the market segment: 'fx' for currency pairs (EUR/USD, GBP/JPY), 'idx' for stock indices (S&P 500, DAX, FTSE), 'cmd' for commodities (Gold, Oil, Natural Gas), 'crypto' for cryptocurrencies (BTC, ETH), 'rate' for government bond yields (US 10Y, German Bund). Quotes are enriched with TepiloraCode via reverse rt:map:tc lookup, enabling fallback to securities.history for 1M/1Y charts. Used by the Dashboard Market Snapshot page for individual instrument detail and by the AI assistant for current market data.
+        Returns the latest realtime price data for a single symbol within a specified market category (fx, idx, cmd, crypto, rate). Data is sourced from Redis DB 1, populated by the realtime data pipeline. Each quote includes: last price, change (absolute and percentage), bid/ask (when available), high/low, open, previous close, volume, and timestamp. The category parameter selects the market segment: 'fx' for currency pairs (EUR/USD, GBP/JPY), 'idx' for stock indices (S&P 500, DAX, FTSE), 'cmd' for commodities (Gold, Oil, Natural Gas), 'crypto' for cryptocurrencies (BTC, ETH), 'rate' for government bond yields (US 10Y, German Bund). Quotes are enriched with TepiloraCode via reverse rt:map:tc lookup, enabling fallback to securities.history for 1M/1Y charts. Used by the Dashboard Market Snapshot page for individual instrument detail and by the AI assistant for current market data.
 
         Args:
         category: Quote category.
@@ -219,7 +219,7 @@ class AsyncRealtimeAPI(AsyncBaseAPI):
     ) -> Any:
         """Get all realtime quotes for a market category or all categories at once
 
-        Returns the latest realtime quotes for all instruments in one or all market categories. Without a category filter, returns the full universe across fx, idx, cmd, crypto, and rate. Each quote includes: symbol, last price, change, percentage change, bid/ask, high/low, open, previous close, and timestamp. Data is sourced from Redis DB 1 with sub-minute refresh from Investing.com feeds. Quotes are enriched with TepiloraCode via reverse rt:map:tc lookup. Used by the Dashboard Market Snapshot page for the full market overview tables (currencies grid, indices table, commodities strip, crypto ticker, bond yields curve) and by alert rules that monitor cross-market conditions.
+        Returns the latest realtime quotes for all instruments in one or all market categories. Without a category filter, returns the full universe across fx, idx, cmd, crypto, and rate. Each quote includes: symbol, last price, change, percentage change, bid/ask, high/low, open, previous close, and timestamp. Data is sourced from Redis DB 1 with sub-minute refresh. Quotes are enriched with TepiloraCode via reverse rt:map:tc lookup. Used by the Dashboard Market Snapshot page for the full market overview tables (currencies grid, indices table, commodities strip, crypto ticker, bond yields curve) and by alert rules that monitor cross-market conditions.
 
         Args:
         category: Optional category filter for quotes.

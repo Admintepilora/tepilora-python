@@ -27,7 +27,7 @@ class DataAPI(BaseAPI):
         Low-level data access that returns raw fields from the D (Description) parquet for a given security. Unlike securities.details which returns a curated subset, data.security exposes all available columns without transformation. Used for internal tooling, data quality checks, and advanced use cases requiring fields not exposed by the higher-level securities operations.
 
         Args:
-        identifier: Single security identifier: ISIN, TepiloraCode, or Bloomberg ticker
+        identifier: Single security identifier: ISIN, TepiloraCode, or exchange ticker
         fields: Optional list of fields to include in the response."""
         _payload: Dict[str, Any] = {}
         _payload["identifier"] = identifier
@@ -53,7 +53,7 @@ class AsyncDataAPI(AsyncBaseAPI):
         Low-level data access that returns raw fields from the D (Description) parquet for a given security. Unlike securities.details which returns a curated subset, data.security exposes all available columns without transformation. Used for internal tooling, data quality checks, and advanced use cases requiring fields not exposed by the higher-level securities operations.
 
         Args:
-        identifier: Single security identifier: ISIN, TepiloraCode, or Bloomberg ticker
+        identifier: Single security identifier: ISIN, TepiloraCode, or exchange ticker
         fields: Optional list of fields to include in the response."""
         _payload: Dict[str, Any] = {}
         _payload["identifier"] = identifier

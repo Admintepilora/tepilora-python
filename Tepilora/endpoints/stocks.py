@@ -25,7 +25,10 @@ class StocksAPI(BaseAPI):
     ) -> Any:
         """Compare multiple stocks side by side across key metrics
 
-        Returns a comparison table for 2 or more stocks across: price performance (1M/3M/6M/1Y), valuation (PE, PB, dividend yield), fundamentals (margins, ROE, revenue growth), and technicals (RSI, momentum score). Each metric shows the value per stock plus a ranking. Used by the Dashboard stock comparison view."""
+        Returns a comparison table for 2 or more stocks across: price performance (1M/3M/6M/1Y), valuation (PE, PB, dividend yield), fundamentals (margins, ROE, revenue growth), and technicals (RSI, momentum score). Each metric shows the value per stock plus a ranking. Used by the Dashboard stock comparison view.
+
+        Args:
+        metrics: Metric groups to include in the stock comparison."""
         _payload: Dict[str, Any] = {}
         _payload["identifiers"] = identifiers
         if metrics is not None:
@@ -72,7 +75,10 @@ class StocksAPI(BaseAPI):
     ) -> Any:
         """Calculate price momentum scores and signals for stocks
 
-        Computes momentum indicators: absolute momentum (returns over 1M, 3M, 6M, 12M periods), relative momentum (vs. benchmark or peer group), momentum score (composite ranking), and trend strength indicators. Used by momentum-based screening strategies and by the Dashboard momentum analysis view."""
+        Computes momentum indicators: absolute momentum (returns over 1M, 3M, 6M, 12M periods), relative momentum (vs. benchmark or peer group), momentum score (composite ranking), and trend strength indicators. Used by momentum-based screening strategies and by the Dashboard momentum analysis view.
+
+        Args:
+        lookback_periods: Momentum lookback windows, in trading days."""
         _payload: Dict[str, Any] = {}
         if identifier is not None:
             _payload["identifier"] = identifier
@@ -97,7 +103,10 @@ class StocksAPI(BaseAPI):
     ) -> Any:
         """Find peer companies in the same sector and industry
 
-        Identifies peer companies for a given stock based on sector, industry, market cap tier, and geographic region. Returns peer list with key comparison metrics: market cap, PE, revenue, margins, and performance. Used by the Dashboard peers comparison tab and by relative valuation workflows."""
+        Identifies peer companies for a given stock based on sector, industry, market cap tier, and geographic region. Returns peer list with key comparison metrics: market cap, PE, revenue, margins, and performance. Used by the Dashboard peers comparison tab and by relative valuation workflows.
+
+        Args:
+        metrics: Peer-comparison metrics to calculate for the target stock and its peers."""
         _payload: Dict[str, Any] = {}
         _payload["identifier"] = identifier
         if metrics is not None:
@@ -122,7 +131,12 @@ class StocksAPI(BaseAPI):
     ) -> Any:
         """Screen stocks by technical and fundamental criteria
 
-        Filters the stock universe by combined technical (RSI range, MA crossover, MACD signal) and fundamental (PE ratio, market cap, dividend yield) criteria. Returns stocks matching all criteria with their current indicator values. Used by the Dashboard stock screener."""
+        Filters the stock universe by combined technical (RSI range, MA crossover, MACD signal) and fundamental (PE ratio, market cap, dividend yield) criteria. Returns stocks matching all criteria with their current indicator values. Used by the Dashboard stock screener.
+
+        Args:
+        universe: Optional stock-universe filters, combined with the stock-only universe enforced by the handler.
+        criteria: Screening criteria keyed by technical or fundamental metric, with min/max bounds.
+        rank_by: Metric used to rank matching stocks after filtering."""
         _payload: Dict[str, Any] = {}
         if universe is not None:
             _payload["universe"] = universe
@@ -150,7 +164,10 @@ class StocksAPI(BaseAPI):
     ) -> Any:
         """Generate buy/sell/hold signals from technical indicators
 
-        Produces consolidated trading signals from multiple technical indicators: MA crossover signals, RSI overbought/oversold, MACD crossover, Bollinger Band breakout, and volume confirmation. Each signal includes direction (buy/sell/hold), strength (strong/moderate/weak), and the contributing indicators. Used by the Dashboard signal summary and by alert rule conditions."""
+        Produces consolidated trading signals from multiple technical indicators: MA crossover signals, RSI overbought/oversold, MACD crossover, Bollinger Band breakout, and volume confirmation. Each signal includes direction (buy/sell/hold), strength (strong/moderate/weak), and the contributing indicators. Used by the Dashboard signal summary and by alert rule conditions.
+
+        Args:
+        strategies: Technical signal strategies to evaluate for the stock."""
         _payload: Dict[str, Any] = {}
         if identifier is not None:
             _payload["identifier"] = identifier
@@ -179,14 +196,25 @@ class StocksAPI(BaseAPI):
         macd_slow: Optional[int] = 26,
         macd_signal: Optional[int] = 9,
         bb_period: Optional[int] = 20,
-        bb_std: Optional[int] = 2,
+        bb_std: Optional[float] = 2.0,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
         """Calculate technical analysis indicators for a stock or ETF
 
-        Computes standard technical analysis indicators from price history: moving averages (SMA, EMA, WMA for configurable periods), RSI (Relative Strength Index), MACD (Moving Average Convergence Divergence with signal and histogram), Bollinger Bands, ATR (Average True Range), Stochastic Oscillator, and OBV (On-Balance Volume). Accepts TepiloraCode or user-provided price data. Used by the Dashboard technical analysis view and by algorithmic screening workflows."""
+        Computes standard technical analysis indicators from price history: moving averages (SMA, EMA, WMA for configurable periods), RSI (Relative Strength Index), MACD (Moving Average Convergence Divergence with signal and histogram), Bollinger Bands, ATR (Average True Range), Stochastic Oscillator, and OBV (On-Balance Volume). Accepts TepiloraCode or user-provided price data. Used by the Dashboard technical analysis view and by algorithmic screening workflows.
+
+        Args:
+        indicators: Technical indicators to calculate from the stock price series.
+        sma_periods: Simple moving average windows, in trading days.
+        ema_periods: Exponential moving average windows, in trading days.
+        rsi_period: RSI lookback window, in trading days.
+        macd_fast: Fast exponential moving average window for MACD.
+        macd_slow: Slow exponential moving average window for MACD.
+        macd_signal: Signal line exponential moving average window for MACD.
+        bb_period: Bollinger Bands moving average window, in trading days.
+        bb_std: Number of standard deviations used for Bollinger Bands."""
         _payload: Dict[str, Any] = {}
         if identifier is not None:
             _payload["identifier"] = identifier
@@ -247,7 +275,10 @@ class AsyncStocksAPI(AsyncBaseAPI):
     ) -> Any:
         """Compare multiple stocks side by side across key metrics
 
-        Returns a comparison table for 2 or more stocks across: price performance (1M/3M/6M/1Y), valuation (PE, PB, dividend yield), fundamentals (margins, ROE, revenue growth), and technicals (RSI, momentum score). Each metric shows the value per stock plus a ranking. Used by the Dashboard stock comparison view."""
+        Returns a comparison table for 2 or more stocks across: price performance (1M/3M/6M/1Y), valuation (PE, PB, dividend yield), fundamentals (margins, ROE, revenue growth), and technicals (RSI, momentum score). Each metric shows the value per stock plus a ranking. Used by the Dashboard stock comparison view.
+
+        Args:
+        metrics: Metric groups to include in the stock comparison."""
         _payload: Dict[str, Any] = {}
         _payload["identifiers"] = identifiers
         if metrics is not None:
@@ -294,7 +325,10 @@ class AsyncStocksAPI(AsyncBaseAPI):
     ) -> Any:
         """Calculate price momentum scores and signals for stocks
 
-        Computes momentum indicators: absolute momentum (returns over 1M, 3M, 6M, 12M periods), relative momentum (vs. benchmark or peer group), momentum score (composite ranking), and trend strength indicators. Used by momentum-based screening strategies and by the Dashboard momentum analysis view."""
+        Computes momentum indicators: absolute momentum (returns over 1M, 3M, 6M, 12M periods), relative momentum (vs. benchmark or peer group), momentum score (composite ranking), and trend strength indicators. Used by momentum-based screening strategies and by the Dashboard momentum analysis view.
+
+        Args:
+        lookback_periods: Momentum lookback windows, in trading days."""
         _payload: Dict[str, Any] = {}
         if identifier is not None:
             _payload["identifier"] = identifier
@@ -319,7 +353,10 @@ class AsyncStocksAPI(AsyncBaseAPI):
     ) -> Any:
         """Find peer companies in the same sector and industry
 
-        Identifies peer companies for a given stock based on sector, industry, market cap tier, and geographic region. Returns peer list with key comparison metrics: market cap, PE, revenue, margins, and performance. Used by the Dashboard peers comparison tab and by relative valuation workflows."""
+        Identifies peer companies for a given stock based on sector, industry, market cap tier, and geographic region. Returns peer list with key comparison metrics: market cap, PE, revenue, margins, and performance. Used by the Dashboard peers comparison tab and by relative valuation workflows.
+
+        Args:
+        metrics: Peer-comparison metrics to calculate for the target stock and its peers."""
         _payload: Dict[str, Any] = {}
         _payload["identifier"] = identifier
         if metrics is not None:
@@ -344,7 +381,12 @@ class AsyncStocksAPI(AsyncBaseAPI):
     ) -> Any:
         """Screen stocks by technical and fundamental criteria
 
-        Filters the stock universe by combined technical (RSI range, MA crossover, MACD signal) and fundamental (PE ratio, market cap, dividend yield) criteria. Returns stocks matching all criteria with their current indicator values. Used by the Dashboard stock screener."""
+        Filters the stock universe by combined technical (RSI range, MA crossover, MACD signal) and fundamental (PE ratio, market cap, dividend yield) criteria. Returns stocks matching all criteria with their current indicator values. Used by the Dashboard stock screener.
+
+        Args:
+        universe: Optional stock-universe filters, combined with the stock-only universe enforced by the handler.
+        criteria: Screening criteria keyed by technical or fundamental metric, with min/max bounds.
+        rank_by: Metric used to rank matching stocks after filtering."""
         _payload: Dict[str, Any] = {}
         if universe is not None:
             _payload["universe"] = universe
@@ -372,7 +414,10 @@ class AsyncStocksAPI(AsyncBaseAPI):
     ) -> Any:
         """Generate buy/sell/hold signals from technical indicators
 
-        Produces consolidated trading signals from multiple technical indicators: MA crossover signals, RSI overbought/oversold, MACD crossover, Bollinger Band breakout, and volume confirmation. Each signal includes direction (buy/sell/hold), strength (strong/moderate/weak), and the contributing indicators. Used by the Dashboard signal summary and by alert rule conditions."""
+        Produces consolidated trading signals from multiple technical indicators: MA crossover signals, RSI overbought/oversold, MACD crossover, Bollinger Band breakout, and volume confirmation. Each signal includes direction (buy/sell/hold), strength (strong/moderate/weak), and the contributing indicators. Used by the Dashboard signal summary and by alert rule conditions.
+
+        Args:
+        strategies: Technical signal strategies to evaluate for the stock."""
         _payload: Dict[str, Any] = {}
         if identifier is not None:
             _payload["identifier"] = identifier
@@ -401,14 +446,25 @@ class AsyncStocksAPI(AsyncBaseAPI):
         macd_slow: Optional[int] = 26,
         macd_signal: Optional[int] = 9,
         bb_period: Optional[int] = 20,
-        bb_std: Optional[int] = 2,
+        bb_std: Optional[float] = 2.0,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
         """Calculate technical analysis indicators for a stock or ETF
 
-        Computes standard technical analysis indicators from price history: moving averages (SMA, EMA, WMA for configurable periods), RSI (Relative Strength Index), MACD (Moving Average Convergence Divergence with signal and histogram), Bollinger Bands, ATR (Average True Range), Stochastic Oscillator, and OBV (On-Balance Volume). Accepts TepiloraCode or user-provided price data. Used by the Dashboard technical analysis view and by algorithmic screening workflows."""
+        Computes standard technical analysis indicators from price history: moving averages (SMA, EMA, WMA for configurable periods), RSI (Relative Strength Index), MACD (Moving Average Convergence Divergence with signal and histogram), Bollinger Bands, ATR (Average True Range), Stochastic Oscillator, and OBV (On-Balance Volume). Accepts TepiloraCode or user-provided price data. Used by the Dashboard technical analysis view and by algorithmic screening workflows.
+
+        Args:
+        indicators: Technical indicators to calculate from the stock price series.
+        sma_periods: Simple moving average windows, in trading days.
+        ema_periods: Exponential moving average windows, in trading days.
+        rsi_period: RSI lookback window, in trading days.
+        macd_fast: Fast exponential moving average window for MACD.
+        macd_slow: Slow exponential moving average window for MACD.
+        macd_signal: Signal line exponential moving average window for MACD.
+        bb_period: Bollinger Bands moving average window, in trading days.
+        bb_std: Number of standard deviations used for Bollinger Bands."""
         _payload: Dict[str, Any] = {}
         if identifier is not None:
             _payload["identifier"] = identifier

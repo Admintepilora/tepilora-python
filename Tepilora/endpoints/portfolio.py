@@ -12,7 +12,32 @@ from ._base import AsyncBaseAPI, BaseAPI
 
 
 class PortfolioAPI(BaseAPI):
-    """Portfolio namespace: attribution, compare, contribution, costs, create, delete, drift, exposure, get, list, optimize, rebalance, returns, share, shares, solver_info, stress, tearsheet, unshare, update."""
+    """Portfolio namespace: accept_proposal, attribution, compare, contribution, costs, create, delete, drift, exposure, get, list, optimize, rebalance, returns, share, shares, solver_info, stress, tearsheet, unshare, update."""
+
+    def accept_proposal(
+        self,
+        *,
+        proposal_id: str,
+        effective_date: Optional[str] = None,
+        note: Optional[str] = None,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+    ) -> Any:
+        """Accept a proposal so its weights become the portfolio target weights
+
+        Applies the weights of a proposal (a Suggested portfolio produced by portfolio.optimize with id) to the Real portfolio it started from, from a given effective date. The target portfolio is not a parameter: it is the one recorded inside the proposal, so the weights cannot be applied to the wrong portfolio. effective_date cannot precede the proposal as_of_date, since the weights were chosen on data available up to that date. The accepted weights are appended to the portfolio target_weight_sets, an append-only history of the decisions taken by the user: it answers 'what had you decided to hold, at that date'. Previous entries are never rewritten. The operation is idempotent: accepting the same proposal again returns the entry already written instead of adding a second one, and two concurrent calls write one entry, not two. It is not a transaction — the weights and the proposal status live in two documents — but the weights are written first, so an interruption can only leave a proposal still pending whose weights are already recorded, which the next call repairs; it can never leave a proposal marked accepted with no weights behind it. Note that target weights are the decided allocation, not the executed one: what the user actually holds may differ because of price moves, liquidity, and time to market, and that difference is reported by portfolio.drift.
+
+        Args:
+        proposal_id: Identifier of the proposal to accept (the id of a Suggested portfolio).
+        effective_date: Date from which the accepted weights apply (YYYY-MM-DD). Defaults to the proposal as_of_date.
+        note: Free-text note stored alongside the accepted weights."""
+        _payload: Dict[str, Any] = {}
+        _payload["proposal_id"] = proposal_id
+        if effective_date is not None:
+            _payload["effective_date"] = effective_date
+        if note is not None:
+            _payload["note"] = note
+        return self._call("portfolio.accept_proposal", params=_payload, options=options, context=context)
 
     def attribution(
         self,
@@ -33,7 +58,13 @@ class PortfolioAPI(BaseAPI):
     ) -> Any:
         """Run Brinson performance attribution analysis vs. a benchmark
 
-        Performs Brinson-Hood-Beebower attribution analysis comparing portfolio returns against a benchmark. Decomposes the excess return into: allocation effect (over/underweight in asset classes), selection effect (security selection within asset classes), and interaction effect. Requires benchmark_weights. Returns multi-period attribution with cumulative effects. Used by the Dashboard attribution view and by advisor performance reporting."""
+        Performs Brinson-Hood-Beebower attribution analysis comparing portfolio returns against a benchmark. Decomposes the excess return into: allocation effect (over/underweight in asset classes), selection effect (security selection within asset classes), and interaction effect. Requires benchmark_weights. Returns multi-period attribution with cumulative effects. Used by the Dashboard attribution view and by advisor performance reporting.
+
+        Args:
+        benchmark_weights: Benchmark target weights used as attribution reference.
+        components: Optional component list used instead of a saved portfolio or simple weights.
+        drifting: Whether ad-hoc weights should drift with asset returns instead of staying rebalanced.
+        user_prices: Optional caller-supplied price series keyed by TepiloraCode."""
         _payload: Dict[str, Any] = {}
         _payload["benchmark_weights"] = benchmark_weights
         if id is not None:
@@ -73,7 +104,13 @@ class PortfolioAPI(BaseAPI):
     ) -> Any:
         """Compare performance and risk metrics across multiple portfolios
 
-        Side-by-side comparison of 2 or more portfolios over the same period. Returns: performance comparison (return, volatility, Sharpe, max drawdown per portfolio), cumulative return overlay series, difference series, and optional exposure comparison. Used by the Dashboard portfolio comparison view."""
+        Side-by-side comparison of 2 or more portfolios over the same period. With format=dict, rows preserves request order and gives each portfolio dated NAV points plus metric, exposure, and correlation deltas against baseline_index=0. Historical name-keyed fields remain for compatibility. The rows representation is available only with format=dict. With fewer than 260 daily returns, cagr, sharpe, and sortino are null; rows[].metrics.annualized_return_reason and the corresponding comparison entry explain that threshold. The reason is null after the threshold; a ratio can still be null when its denominator is undefined. Used by the Dashboard portfolio comparison view.
+
+        Args:
+        portfolios: Portfolio definitions to compare. Each item is either inline weights ({name, weights, start_date?, end_date?, drifting?}) or a reference to a saved portfolio ({id, label?, as_of_date?}), whose weights are resolved server-side at as_of_date so both sides of the comparison are read at the same date.
+        exposure_dimensions: Optional exposure dimensions to compare when include_exposure is true.
+        include_exposure: Whether to include exposure comparison in addition to performance metrics.
+        metrics: Metric names to compute for each portfolio."""
         _payload: Dict[str, Any] = {}
         _payload["portfolios"] = portfolios
         if currency is not None:
@@ -115,8 +152,11 @@ class PortfolioAPI(BaseAPI):
         Decomposes total portfolio return into contributions from each holding. Each position's contribution equals its weight multiplied by its return. Returns a table of positions with individual return, weight, and contribution to total. Used by the Dashboard portfolio attribution view and by reporting modules.
 
         Args:
+        components: Optional component list used instead of a saved portfolio or simple weights.
         base_currency: Portfolio base currency used for security price conversion.
-        settings: Optional portfolio settings. Currency keys are read from settings when no explicit currency is supplied."""
+        drifting: Whether ad-hoc weights should drift with asset returns instead of staying rebalanced.
+        settings: Optional portfolio settings. Currency keys are read from settings when no explicit currency is supplied.
+        user_prices: Optional caller-supplied price series keyed by TepiloraCode."""
         _payload: Dict[str, Any] = {}
         if id is not None:
             _payload["id"] = id
@@ -153,7 +193,10 @@ class PortfolioAPI(BaseAPI):
     ) -> Any:
         """Analyze the total cost structure of a portfolio (TER, trading costs)
 
-        Computes the total cost of ownership for a portfolio: weighted-average TER across holdings, estimated trading costs for rebalancing, and total annual cost as percentage of portfolio value. Used by the Dashboard cost analysis view and by fee comparison workflows."""
+        Computes weighted fund TER from securities metadata; this operation does not estimate trading costs. TER values are decimal fractions (0.002 means 0.2%). Unknown TER is null per security with a reason, never zero. If any TER is missing, `weighted_ter`, `total_annual_cost`, and `annual_cost_absolute` are null; `known_weighted_ter`, `covered_weight`, and `uncovered_weight` describe the partial result.
+
+        Args:
+        portfolio_value: Optional portfolio notional used to convert percentage costs into annual absolute cost."""
         _payload: Dict[str, Any] = {}
         _payload["weights"] = weights
         if portfolio_value is not None:
@@ -189,10 +232,24 @@ class PortfolioAPI(BaseAPI):
     ) -> Any:
         """Create a new portfolio with specified input type and holdings
 
-        Creates a portfolio in the Portfolios MongoDB collection. Supports 5 input types: fixed_weights (static allocation percentages), drifting_weights (weights that drift with market returns), holdings (position snapshots with quantities at dates), values (position values at dates), and trades (transaction-level input). Each input type requires specific data: weights needs {TepiloraCode: weight}, holdings needs [{date, positions}], trades needs [{date, type, security, quantity, price}]. Optionally sets benchmark, description, visibility, and portfolio type (Real/Suggested/Simulation/Backtest/Model). Used by the Dashboard portfolio creation wizard and by workflow bridges.
+        Creates a portfolio in the Portfolios MongoDB collection. Supports 5 input types: fixed_weights, drifting_weights, holdings, values, and trades. Weights accept {TepiloraCode: weight}; holdings accept flat [{identifier, quantity, date}] rows or nested [{date, positions: [{security, shares}]}] snapshots. Flat identifiers are resolved to TepiloraCode and saved as nested snapshots; nested security requires TepiloraCode. Trades accept [{date, type, security, quantity, price}]. Optionally sets benchmark, description, visibility, and portfolio type (Real/Suggested/Simulation/Backtest/Model). Used by the Dashboard portfolio creation wizard and workflow bridges.
 
         Args:
-        weights: Portfolio weights. For fixed_weights and drifting_weights accepts either {TepiloraCode: weight}, a list of {'date': YYYY-MM-DD, 'weights': {...}}, or a date-keyed map {'YYYY-MM-DD': {...}}."""
+        input_type: Portfolio input model: fixed_weights, drifting_weights, holdings, values, or trades.
+        allow_negative_cash: Allow generated cash components to become negative during input normalization.
+        allow_short: Allow short security weights or negative positions.
+        auto_cash: Automatically add a cash component when weights do not sum to one.
+        base_currency: Base currency used to convert portfolio series before analytics.
+        components: Component-based portfolio input with security and cash components.
+        holdings: Holdings for input_type=holdings: flat {identifier, quantity, date} rows or dated {date, positions: [{security, shares}]} snapshots. Positive numeric quantities are required; flat identifiers resolve to TepiloraCode, nested security requires TepiloraCode, and saved data uses the snapshot form.
+        initial_cash: Initial cash amount included in the portfolio input.
+        trades: Trade ledger used when input_type is trades.
+        values: Portfolio value snapshots used when input_type is values.
+        weights: Portfolio weights. For fixed_weights and drifting_weights accepts either {TepiloraCode: weight}, a list of {'date': YYYY-MM-DD, 'weights': {...}}, or a date-keyed map {'YYYY-MM-DD': {...}}.
+        input_data: Raw portfolio input payload used by the selected input_type. For holdings, the holdings key accepts either documented form and is saved as dated position snapshots.
+        benchmark: Benchmark identifier or saved benchmark reference associated with the portfolio.
+        settings: Portfolio settings such as base currency, rebalance rules, or analytics defaults.
+        visibility: Portfolio visibility policy."""
         _payload: Dict[str, Any] = {}
         _payload["name"] = name
         _payload["input_type"] = input_type
@@ -255,6 +312,8 @@ class PortfolioAPI(BaseAPI):
         *,
         compare_rebalanced: Optional[Any] = None,
         currency: Optional[str] = None,
+        id: Optional[str] = None,
+        as_of_date: Optional[str] = None,
         end_date: Optional[str] = None,
         start_date: Optional[str] = None,
         target_weights: Optional[Any] = None,
@@ -267,12 +326,24 @@ class PortfolioAPI(BaseAPI):
     ) -> Any:
         """Calculate how portfolio weights have drifted from targets over time
 
-        Tracks the divergence of actual portfolio weights from target weights over time due to differential security returns. Returns time series of drift per position and total portfolio drift metric. Optionally compares drifted vs. periodically-rebalanced scenarios. Used by the Dashboard drift monitoring and by rebalancing alert rules."""
+        Tracks the divergence of actual portfolio weights from target weights over time due to differential security returns. Returns time series of drift per position and total portfolio drift metric. Optionally compares drifted vs. periodically-rebalanced scenarios. Pass id instead of target_weights/start_date to use the portfolio's own latest decided weights as the baseline. The response separates market_drift — how far the market alone moved the decided allocation — from implementation_gap, what the portfolio actually holds versus that drifted decision, which is what price moves between decision and execution, low liquidity and time to market produce. The two are reported apart because adding them together would make an execution problem look like a market one, and the reverse. implementation_gap requires a declared portfolio source and is returned as unavailable with a reason when it cannot be computed, never as zero. Used by the Dashboard drift monitoring and by rebalancing alert rules.
+
+        Args:
+        compare_rebalanced: Whether to include a daily-rebalanced comparison series.
+        id: Saved portfolio to analyse. Its latest decided weights and the date they apply from are used as the drift baseline, so target_weights and start_date are not needed.
+        as_of_date: Consider only decisions effective on or before this date (YYYY-MM-DD). Ignored unless id is given.
+        target_weights: Target weights used as the drift baseline.
+        threshold: Drift threshold used to flag breaches.
+        user_prices: Optional caller-supplied price series keyed by TepiloraCode."""
         _payload: Dict[str, Any] = {}
         if compare_rebalanced is not None:
             _payload["compare_rebalanced"] = compare_rebalanced
         if currency is not None:
             _payload["currency"] = currency
+        if id is not None:
+            _payload["id"] = id
+        if as_of_date is not None:
+            _payload["as_of_date"] = as_of_date
         if end_date is not None:
             _payload["end_date"] = end_date
         if start_date is not None:
@@ -308,7 +379,15 @@ class PortfolioAPI(BaseAPI):
     ) -> Any:
         """Calculate portfolio exposure by sector, country, currency, or asset class
 
-        Computes weighted portfolio exposure across a chosen exposure_type: sector (GICS), geography/region, currency, or asset_class. Uses look-through analysis — resolves fund/ETF holdings to their underlying exposures. Returns exposure percentages per category. Used by the Dashboard portfolio composition pie charts and by compliance monitoring."""
+        Computes weighted portfolio exposure across a chosen exposure_type: sector (GICS), geography/region, currency, or asset_class. Uses look-through analysis — resolves fund/ETF holdings to their underlying exposures. Returns exposure percentages per category. Used by the Dashboard portfolio composition pie charts and by compliance monitoring.
+
+        Args:
+        components: Component-based portfolio input used instead of a saved portfolio id.
+        date: Exposure observation date for point-in-time exposure analysis.
+        dimensions: Exposure dimensions to return, such as sector, country, currency, or asset_class.
+        exposure_type: Primary exposure breakdown to calculate.
+        drifting: When true, portfolio weights drift with asset returns before exposure is calculated.
+        user_prices: Optional caller-supplied price series keyed by TepiloraCode."""
         _payload: Dict[str, Any] = {}
         if id is not None:
             _payload["id"] = id
@@ -340,14 +419,20 @@ class PortfolioAPI(BaseAPI):
         self,
         *,
         id: str,
+        as_of_date: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
         """Get full details for a specific portfolio
 
-        Returns the complete portfolio record: name, type, input_type, weights/holdings/trades data, benchmark, settings, creation/modification dates, and sharing status. Used by the Dashboard portfolio detail page and as input for returns/attribution/exposure calculations."""
+        Returns the complete portfolio record: name, type, input_type, weights/holdings/trades data, benchmark, settings, creation/modification dates, and sharing status. Also returns actual_weights, what the portfolio actually holds at as_of_date, in the same shape whatever the source is: reconstructing positions from a trade ledger needs prices and cannot be done by the caller, so a portfolio built from trades would otherwise read as empty. When the holdings cannot be resolved at that date the block says so with a reason instead of returning an empty allocation. Suggested portfolios also carry the proposal block, Real portfolios their target_weight_sets, the append-only history of the decisions the user has taken. Used by the Dashboard portfolio detail page and as input for returns/attribution/exposure calculations.
+
+        Args:
+        as_of_date: Date the actual_weights snapshot refers to (YYYY-MM-DD). Defaults to the latest date the portfolio can be resolved at."""
         _payload: Dict[str, Any] = {}
         _payload["id"] = id
+        if as_of_date is not None:
+            _payload["as_of_date"] = as_of_date
         return self._call("portfolio.get", params=_payload, options=options, context=context)
 
     def list(
@@ -366,7 +451,12 @@ class PortfolioAPI(BaseAPI):
     ) -> Any:
         """List all portfolios for the current user with filtering and search
 
-        Returns paginated list of portfolios belonging to the authenticated user. Filterable by type (Real/Suggested/Simulation), input_type, and name search. Each entry shows ID, name, type, creation date, and position count. Includes shared portfolios by default. Used by the Dashboard portfolio list page.
+        Returns a `portfolios` list and pagination metadata for the authenticated user. Filterable by type (Real/Suggested/Simulation), input_type, and name search. Each entry shows ID, name, type, creation date, and position count. Suggested entries also include `solver_mode` from `proposal.optimizer.solver_mode`; old proposals without optimizer return null. Includes shared portfolios by default. Used by the Dashboard portfolio list page and Compare selector.
+
+        Args:
+        input_type: Filter portfolios by stored input model, such as fixed_weights, drifting_weights, holdings, values, or trades.
+        search: Case-insensitive text search applied to portfolio name and description.
+        include_shared: Include portfolios shared with the current user in addition to portfolios owned by the user.
 
         Examples:
             >>> client.portfolio.list(limit=5)"""
@@ -401,12 +491,32 @@ class PortfolioAPI(BaseAPI):
         total_return: Optional[bool] = False,
         currency: Optional[str] = None,
         timeout: Optional[int] = None,
+        id: Optional[str] = None,
+        save_as: Optional[str] = None,
+        as_of_date: Optional[str] = None,
+        include_metrics: Optional[bool] = True,
+        description: Optional[str] = None,
+        benchmark: Optional[str] = None,
+        visibility: Optional[str] = "private",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
         """Optimize portfolio weights using the Julia-powered solver
 
-        Runs portfolio optimization via the Julia optimization server. 12 solver modes: minimum_variance, lean (custom mean-variance), full (all regularization terms), risk_parity (equal risk contribution), hrp (hierarchical risk parity), black_litterman (with investor views), factor_neutral, inverse_volatility, herc (hierarchical equal risk), cvar (conditional VaR minimization), robust (robust optimization), max_sharpe. Returns optimal weights, expected return/risk, and solver diagnostics. Use portfolio.solver_info for mathematical details on each mode. Used by the Dashboard optimizer."""
+        Runs portfolio optimization via the Julia optimization server. 12 solver modes: minimum_variance, lean (custom mean-variance), full (all regularization terms), risk_parity (equal risk contribution), hrp (hierarchical risk parity), black_litterman (with investor views), factor_neutral, inverse_volatility, herc (hierarchical equal risk), cvar (conditional VaR minimization), robust (robust optimization), max_sharpe. Returns optimal weights, expected return/risk, and solver diagnostics. Use portfolio.solver_info for mathematical details on each mode. Pass id to persist the result as a proposal for that portfolio: it becomes a Suggested portfolio with its own id, retrievable with portfolio.get, listed by portfolio.list, comparable with portfolio.compare, and applicable with portfolio.accept_proposal. The weights of that portfolio at as_of_date are frozen inside the proposal, so the Current side of a later comparison stays the one the optimizer actually worked on even if the source portfolio changes. Used by the Dashboard optimizer.
+
+        Args:
+        settings: Optimizer settings such as solver_mode, constraints, objective terms, and risk settings.
+        poll_interval: Seconds between Julia optimizer status polls.
+        securities_metadata: Optional metadata by security used by optimizer constraints.
+        timeout: Maximum optimizer wait time in seconds.
+        id: Portfolio the optimization starts from. Passing it saves the result as a proposal for that portfolio, and freezes its weights at as_of_date as the 'current' side of the comparison. Omit it to explore with identifiers only: the result is returned but not persisted, and is lost when the caller discards the response.
+        save_as: Name given to the saved proposal. Ignored unless id is present; defaults to 'Proposal <as_of_date>'.
+        as_of_date: Date the proposal is a photograph of (YYYY-MM-DD). Defaults to end_date, or today.
+        include_metrics: Compute the metrics of the proposed and current allocations over the optimization window when saving. A side that cannot be computed is reported as unavailable with a reason, never as zeros.
+        description: Description stored on the saved proposal.
+        benchmark: Benchmark identifier stored on the saved proposal.
+        visibility: Visibility of the saved proposal."""
         _payload: Dict[str, Any] = {}
         _payload["identifiers"] = identifiers
         _payload["settings"] = settings
@@ -424,6 +534,20 @@ class PortfolioAPI(BaseAPI):
             _payload["currency"] = currency
         if timeout is not None:
             _payload["timeout"] = timeout
+        if id is not None:
+            _payload["id"] = id
+        if save_as is not None:
+            _payload["save_as"] = save_as
+        if as_of_date is not None:
+            _payload["as_of_date"] = as_of_date
+        if include_metrics is not None:
+            _payload["include_metrics"] = include_metrics
+        if description is not None:
+            _payload["description"] = description
+        if benchmark is not None:
+            _payload["benchmark"] = benchmark
+        if visibility is not None:
+            _payload["visibility"] = visibility
         return self._call("portfolio.optimize", params=_payload, options=options, context=context)
 
     def rebalance(
@@ -442,7 +566,16 @@ class PortfolioAPI(BaseAPI):
     ) -> Any:
         """Calculate the trades needed to rebalance a portfolio to target weights
 
-        Given current weights (or portfolio_id) and target weights, calculates the minimum trades required to rebalance. Supports minimum trade value threshold to avoid tiny trades, and includes estimated transaction costs. Returns a trade list with direction (buy/sell), amount, and cost impact. Used by the Dashboard rebalancing wizard."""
+        Given current weights (or portfolio_id) and target weights, calculates the minimum trades required to rebalance. Supports minimum trade value threshold to avoid tiny trades, and includes estimated transaction costs. Returns a trade list with direction (buy/sell), amount, and cost impact. Used by the Dashboard rebalancing wizard.
+
+        Args:
+        current_weights: Current portfolio weights before rebalancing.
+        target_weights: Desired target weights after rebalancing.
+        costs: Optional transaction cost assumptions by security or trade.
+        min_trade_value: Minimum trade value below which suggested trades are suppressed.
+        portfolio_value: Total portfolio market value used to convert weight drift into trade values.
+        strategy: Rebalancing strategy: full, threshold, or proportional.
+        threshold: Minimum absolute weight drift required before a position is traded."""
         _payload: Dict[str, Any] = {}
         if current_weights is not None:
             _payload["current_weights"] = current_weights
@@ -500,11 +633,34 @@ class PortfolioAPI(BaseAPI):
     ) -> Any:
         """Calculate portfolio return time series using TWR, MWR, or Modified Dietz
 
-        Computes the daily return time series for a portfolio using the selected return methodology: TWR (Time-Weighted Return, for benchmark comparison), MWR (Money-Weighted Return via XIRR, for actual investor experience), or Modified Dietz (fast MWR approximation). Supports fixed weights (periodic rebalancing at configurable frequency), drifting weights (buy-and-hold drift), and transaction-based input. Returns daily NAV series, cumulative return, and period statistics. Cash flow convention: negative = deposit, positive = withdrawal. Used by the Dashboard portfolio performance chart and by all portfolio analytics.
+        Computes portfolio NAV and returns using TWR, MWR, or Modified Dietz. Supports fixed weights, drifting weights, and transaction-based input. `returns_frequency` resamples the output series, but `summary.annualized_return` is always computed from the daily NAV with the same CAGR formula as the tearsheet. It is a decimal fraction (like `summary.total_return`) after at least 260 daily returns; below that it is null with `summary.annualized_return_reason`. The tearsheet also leaves annualized CAGR and dependent ratios null below this threshold. Cash flow convention: negative = deposit, positive = withdrawal.
 
         Args:
         weights: Ad-hoc portfolio weights. Accepts either {TepiloraCode: weight}, a list of {'date': YYYY-MM-DD, 'weights': {...}}, or a date-keyed map.
-        returns_frequency: Output returns interval: daily, weekly, monthly, or annual."""
+        components: Component-based portfolio input with security and cash components.
+        holdings: Holdings input converted to weights over time.
+        trades: Trade ledger input converted to historical weights.
+        values: Portfolio value snapshots used for money-weighted return calculations.
+        allow_negative_cash: Allow generated cash components to become negative.
+        allow_short: Allow short security weights in component normalization.
+        auto_cash: Automatically add a cash component when weights do not sum to one.
+        base_currency: Base currency used to convert all security series before portfolio aggregation.
+        borrow_cost: Borrow cost model for negative cash or short exposure.
+        borrow_spread_annual: Annual borrow spread applied on top of the selected borrow cost model.
+        cash_yield: Cash return model for cash components.
+        drifting: When true, target weights drift with asset returns between rebalance dates.
+        initial_value: Initial notional portfolio value for synthetic return calculations.
+        max_stale_days: Maximum tolerated days between observations before stale-data policy is applied.
+        price_fill: Price fill policy; current engine supports forward-fill.
+        rebalance_dates: Custom rebalance dates used when rebalance_on is custom_dates.
+        rebalance_effective: When new target weights become effective after a rebalance date.
+        rebalance_frequency: Target-weight rebalance interval: daily, weekly, monthly, quarterly, annual, or none.
+        rebalance_on: Trading-day rule for scheduled rebalances.
+        returns_frequency: Output returns interval: daily, weekly, monthly, or annual.
+        settings: Portfolio-level settings overriding defaults such as base currency or rebalance rules.
+        stale_policy: Action when stale price data exceeds max_stale_days.
+        return_method: Return methodology: twr, mwr, or modified_dietz.
+        user_prices: Optional caller-supplied price series keyed by TepiloraCode."""
         _payload: Dict[str, Any] = {}
         if id is not None:
             _payload["id"] = id
@@ -581,7 +737,11 @@ class PortfolioAPI(BaseAPI):
     ) -> Any:
         """Share a portfolio with another user
 
-        Grants read or write access to a portfolio for another user (identified by target_apikey). The shared user can view the portfolio in their list and access its analytics. Used by advisor workflows sharing model portfolios with clients or colleagues."""
+        Grants read or write access to a portfolio for another user (identified by target_apikey). The shared user can view the portfolio in their list and access its analytics. Used by advisor workflows sharing model portfolios with clients or colleagues.
+
+        Args:
+        target_apikey: API key of the user who should receive access to the portfolio.
+        permission: Sharing permission granted to the target user."""
         _payload: Dict[str, Any] = {}
         _payload["id"] = id
         _payload["target_apikey"] = target_apikey
@@ -612,7 +772,10 @@ class PortfolioAPI(BaseAPI):
     ) -> Any:
         """Get financial documentation for optimization solver modes
 
-        Returns detailed financial and mathematical documentation for one or all optimization solver modes: mathematical formulation, parameters, strengths, limitations, typical use cases, and academic references. Includes the minimum_variance preset and all Julia solver modes exposed by portfolio.optimize. Used by the Dashboard optimizer help panel and by the AI assistant when explaining optimization choices."""
+        Returns detailed financial and mathematical documentation for one or all optimization solver modes: mathematical formulation, parameters, strengths, limitations, typical use cases, and academic references. Includes the minimum_variance preset and all Julia solver modes exposed by portfolio.optimize. Used by the Dashboard optimizer help panel and by the AI assistant when explaining optimization choices.
+
+        Args:
+        solver_mode: Specific optimization solver mode to document; omit to return all solver modes."""
         _payload: Dict[str, Any] = {}
         if solver_mode is not None:
             _payload["solver_mode"] = solver_mode
@@ -637,7 +800,18 @@ class PortfolioAPI(BaseAPI):
     ) -> Any:
         """Run stress test scenarios on a portfolio
 
-        Applies historical or hypothetical stress scenarios to a portfolio. Built-in scenarios: 2008 crisis, COVID crash, rate shock, sector rotation. Custom scenarios define per-security or per-asset-class return assumptions. Returns estimated portfolio loss per scenario and the most vulnerable positions. Supports sensitivity analysis (shock range with steps). Used by the Dashboard stress testing view."""
+        Applies a built-in historical scenario or custom shocks to a portfolio. `mode=scenario` accepts the documented `scenario` keys; use `mode=list` to retrieve current keys, names, and labels without portfolio weights. `shocks` requires `mode=custom`: keys are canonical asset classes (government_bonds, high_yield_bonds, investment_grade_bonds, gold, bonds, commodities, real_estate, emerging_markets, equity, unclassified) or security IDs present in weights; values are numeric fractions (-0.2 means -20%, minimum -1). Shock precedence is security, class, then parent class; unshocked positive-weight securities are listed with a warning in both custom and historical results. Returns estimated portfolio loss and vulnerable positions. Supports sensitivity analysis with a shock range and steps. Used by the Dashboard stress testing view.
+
+        Args:
+        asset_class: Asset class to shock when running asset-class stress mode.
+        mode: Stress mode, for example scenario, custom, sensitivity, or list.
+        portfolio_value: Portfolio market value used to translate stress returns into currency impact.
+        scenario: Built-in historical scenario key for mode=scenario. Valid keys: 2008_financial_crisis, 2011_euro_crisis, 2015_china, 2018_q4, 2020_covid, 2022_rate_hike. Use mode=list for names and labels.
+        scenario_name: Display name for a custom stress scenario.
+        scenarios: List of stress scenarios to run.
+        shock_range: Shock range for sensitivity analysis.
+        shocks: For mode=custom, map canonical asset classes or security IDs present in weights to finite fractional shocks (-0.2 means -20%; minimum -1). Specific security or class shocks take precedence over parent classes (bonds for government/high-yield/investment-grade bonds, commodities for gold, equity for emerging markets). Unshocked positive-weight securities are reported with a warning. Canonical classes: government_bonds, high_yield_bonds, investment_grade_bonds, gold, bonds, commodities, real_estate, emerging_markets, equity, unclassified. Unknown keys are rejected.
+        steps: Number of points to evaluate across shock_range."""
         _payload: Dict[str, Any] = {}
         if asset_class is not None:
             _payload["asset_class"] = asset_class
@@ -687,10 +861,22 @@ class PortfolioAPI(BaseAPI):
     ) -> Any:
         """Generate a portfolio tearsheet (deprecated, use reporting.tearsheet)
 
-        Deprecated: generates a portfolio performance tearsheet. Use reporting.tearsheet instead for enhanced reporting with templates, charts, PDF export, and multi-locale support. This operation will be removed after sunset date 2026-09-01.
+        Deprecated: generates a portfolio performance tearsheet. Annualized return/CAGR and dependent ratios are null, with `performance.annualized_return_reason`, until the NAV has at least 260 daily returns. Use reporting.tearsheet instead for enhanced reporting. This operation will be removed after sunset date 2026-09-01.
 
         .. deprecated:: 3.8.0
-            Use reporting.tearsheet for enhanced reporting with templates, charts, and PDF export"""
+            Use reporting.tearsheet for enhanced reporting with templates, charts, and PDF export
+
+        Args:
+        weights: Ad-hoc portfolio weights for generating the tearsheet.
+        components: Component-based portfolio input used instead of a saved portfolio id.
+        holdings: Holdings input used to build the portfolio before tearsheet generation.
+        trades: Trade ledger input used to reconstruct portfolio history.
+        values: Portfolio value snapshots used by money-weighted tearsheet metrics.
+        benchmark_id: Saved benchmark portfolio or security identifier for relative metrics.
+        benchmark_name: Human-readable benchmark name displayed in the tearsheet.
+        benchmark_weights: Ad-hoc benchmark weights used when benchmark_id is not supplied.
+        output_path: Optional filesystem output path for generated tearsheet artifacts.
+        risk_free_rate: Risk-free rate used for Sharpe and excess-return metrics."""
         import warnings
         warnings.warn("portfolio.tearsheet is deprecated: Use reporting.tearsheet for enhanced reporting with templates, charts, and PDF export", DeprecationWarning, stacklevel=2)
         _payload: Dict[str, Any] = {}
@@ -738,7 +924,10 @@ class PortfolioAPI(BaseAPI):
     ) -> Any:
         """Revoke portfolio sharing for a user
 
-        Removes portfolio access for a specific user. The user will no longer see the portfolio in their shared list."""
+        Removes portfolio access for a specific user. The user will no longer see the portfolio in their shared list.
+
+        Args:
+        target_apikey: API key of the user whose shared access should be removed."""
         _payload: Dict[str, Any] = {}
         _payload["id"] = id
         _payload["target_apikey"] = target_apikey
@@ -763,6 +952,9 @@ class PortfolioAPI(BaseAPI):
         Modifies an existing portfolio. Can update name, description, input data (new weights/holdings), benchmark, and settings. Creates an audit trail entry. Used by the Dashboard portfolio editor.
 
         Args:
+        input_data: Replacement portfolio input data such as weights, holdings, trades, or values.
+        benchmark: Benchmark identifier or saved benchmark reference associated with the portfolio.
+        settings: Portfolio settings to persist, such as base currency, rebalance rules, or analytics defaults.
         currency: Portfolio reporting currency to store in settings.
         base_currency: Portfolio base currency to store in settings."""
         _payload: Dict[str, Any] = {}
@@ -786,7 +978,32 @@ class PortfolioAPI(BaseAPI):
 
 
 class AsyncPortfolioAPI(AsyncBaseAPI):
-    """Portfolio namespace: attribution, compare, contribution, costs, create, delete, drift, exposure, get, list, optimize, rebalance, returns, share, shares, solver_info, stress, tearsheet, unshare, update."""
+    """Portfolio namespace: accept_proposal, attribution, compare, contribution, costs, create, delete, drift, exposure, get, list, optimize, rebalance, returns, share, shares, solver_info, stress, tearsheet, unshare, update."""
+
+    async def accept_proposal(
+        self,
+        *,
+        proposal_id: str,
+        effective_date: Optional[str] = None,
+        note: Optional[str] = None,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+    ) -> Any:
+        """Accept a proposal so its weights become the portfolio target weights
+
+        Applies the weights of a proposal (a Suggested portfolio produced by portfolio.optimize with id) to the Real portfolio it started from, from a given effective date. The target portfolio is not a parameter: it is the one recorded inside the proposal, so the weights cannot be applied to the wrong portfolio. effective_date cannot precede the proposal as_of_date, since the weights were chosen on data available up to that date. The accepted weights are appended to the portfolio target_weight_sets, an append-only history of the decisions taken by the user: it answers 'what had you decided to hold, at that date'. Previous entries are never rewritten. The operation is idempotent: accepting the same proposal again returns the entry already written instead of adding a second one, and two concurrent calls write one entry, not two. It is not a transaction — the weights and the proposal status live in two documents — but the weights are written first, so an interruption can only leave a proposal still pending whose weights are already recorded, which the next call repairs; it can never leave a proposal marked accepted with no weights behind it. Note that target weights are the decided allocation, not the executed one: what the user actually holds may differ because of price moves, liquidity, and time to market, and that difference is reported by portfolio.drift.
+
+        Args:
+        proposal_id: Identifier of the proposal to accept (the id of a Suggested portfolio).
+        effective_date: Date from which the accepted weights apply (YYYY-MM-DD). Defaults to the proposal as_of_date.
+        note: Free-text note stored alongside the accepted weights."""
+        _payload: Dict[str, Any] = {}
+        _payload["proposal_id"] = proposal_id
+        if effective_date is not None:
+            _payload["effective_date"] = effective_date
+        if note is not None:
+            _payload["note"] = note
+        return await self._call("portfolio.accept_proposal", params=_payload, options=options, context=context)
 
     async def attribution(
         self,
@@ -807,7 +1024,13 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
     ) -> Any:
         """Run Brinson performance attribution analysis vs. a benchmark
 
-        Performs Brinson-Hood-Beebower attribution analysis comparing portfolio returns against a benchmark. Decomposes the excess return into: allocation effect (over/underweight in asset classes), selection effect (security selection within asset classes), and interaction effect. Requires benchmark_weights. Returns multi-period attribution with cumulative effects. Used by the Dashboard attribution view and by advisor performance reporting."""
+        Performs Brinson-Hood-Beebower attribution analysis comparing portfolio returns against a benchmark. Decomposes the excess return into: allocation effect (over/underweight in asset classes), selection effect (security selection within asset classes), and interaction effect. Requires benchmark_weights. Returns multi-period attribution with cumulative effects. Used by the Dashboard attribution view and by advisor performance reporting.
+
+        Args:
+        benchmark_weights: Benchmark target weights used as attribution reference.
+        components: Optional component list used instead of a saved portfolio or simple weights.
+        drifting: Whether ad-hoc weights should drift with asset returns instead of staying rebalanced.
+        user_prices: Optional caller-supplied price series keyed by TepiloraCode."""
         _payload: Dict[str, Any] = {}
         _payload["benchmark_weights"] = benchmark_weights
         if id is not None:
@@ -847,7 +1070,13 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
     ) -> Any:
         """Compare performance and risk metrics across multiple portfolios
 
-        Side-by-side comparison of 2 or more portfolios over the same period. Returns: performance comparison (return, volatility, Sharpe, max drawdown per portfolio), cumulative return overlay series, difference series, and optional exposure comparison. Used by the Dashboard portfolio comparison view."""
+        Side-by-side comparison of 2 or more portfolios over the same period. With format=dict, rows preserves request order and gives each portfolio dated NAV points plus metric, exposure, and correlation deltas against baseline_index=0. Historical name-keyed fields remain for compatibility. The rows representation is available only with format=dict. With fewer than 260 daily returns, cagr, sharpe, and sortino are null; rows[].metrics.annualized_return_reason and the corresponding comparison entry explain that threshold. The reason is null after the threshold; a ratio can still be null when its denominator is undefined. Used by the Dashboard portfolio comparison view.
+
+        Args:
+        portfolios: Portfolio definitions to compare. Each item is either inline weights ({name, weights, start_date?, end_date?, drifting?}) or a reference to a saved portfolio ({id, label?, as_of_date?}), whose weights are resolved server-side at as_of_date so both sides of the comparison are read at the same date.
+        exposure_dimensions: Optional exposure dimensions to compare when include_exposure is true.
+        include_exposure: Whether to include exposure comparison in addition to performance metrics.
+        metrics: Metric names to compute for each portfolio."""
         _payload: Dict[str, Any] = {}
         _payload["portfolios"] = portfolios
         if currency is not None:
@@ -889,8 +1118,11 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         Decomposes total portfolio return into contributions from each holding. Each position's contribution equals its weight multiplied by its return. Returns a table of positions with individual return, weight, and contribution to total. Used by the Dashboard portfolio attribution view and by reporting modules.
 
         Args:
+        components: Optional component list used instead of a saved portfolio or simple weights.
         base_currency: Portfolio base currency used for security price conversion.
-        settings: Optional portfolio settings. Currency keys are read from settings when no explicit currency is supplied."""
+        drifting: Whether ad-hoc weights should drift with asset returns instead of staying rebalanced.
+        settings: Optional portfolio settings. Currency keys are read from settings when no explicit currency is supplied.
+        user_prices: Optional caller-supplied price series keyed by TepiloraCode."""
         _payload: Dict[str, Any] = {}
         if id is not None:
             _payload["id"] = id
@@ -927,7 +1159,10 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
     ) -> Any:
         """Analyze the total cost structure of a portfolio (TER, trading costs)
 
-        Computes the total cost of ownership for a portfolio: weighted-average TER across holdings, estimated trading costs for rebalancing, and total annual cost as percentage of portfolio value. Used by the Dashboard cost analysis view and by fee comparison workflows."""
+        Computes weighted fund TER from securities metadata; this operation does not estimate trading costs. TER values are decimal fractions (0.002 means 0.2%). Unknown TER is null per security with a reason, never zero. If any TER is missing, `weighted_ter`, `total_annual_cost`, and `annual_cost_absolute` are null; `known_weighted_ter`, `covered_weight`, and `uncovered_weight` describe the partial result.
+
+        Args:
+        portfolio_value: Optional portfolio notional used to convert percentage costs into annual absolute cost."""
         _payload: Dict[str, Any] = {}
         _payload["weights"] = weights
         if portfolio_value is not None:
@@ -963,10 +1198,24 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
     ) -> Any:
         """Create a new portfolio with specified input type and holdings
 
-        Creates a portfolio in the Portfolios MongoDB collection. Supports 5 input types: fixed_weights (static allocation percentages), drifting_weights (weights that drift with market returns), holdings (position snapshots with quantities at dates), values (position values at dates), and trades (transaction-level input). Each input type requires specific data: weights needs {TepiloraCode: weight}, holdings needs [{date, positions}], trades needs [{date, type, security, quantity, price}]. Optionally sets benchmark, description, visibility, and portfolio type (Real/Suggested/Simulation/Backtest/Model). Used by the Dashboard portfolio creation wizard and by workflow bridges.
+        Creates a portfolio in the Portfolios MongoDB collection. Supports 5 input types: fixed_weights, drifting_weights, holdings, values, and trades. Weights accept {TepiloraCode: weight}; holdings accept flat [{identifier, quantity, date}] rows or nested [{date, positions: [{security, shares}]}] snapshots. Flat identifiers are resolved to TepiloraCode and saved as nested snapshots; nested security requires TepiloraCode. Trades accept [{date, type, security, quantity, price}]. Optionally sets benchmark, description, visibility, and portfolio type (Real/Suggested/Simulation/Backtest/Model). Used by the Dashboard portfolio creation wizard and workflow bridges.
 
         Args:
-        weights: Portfolio weights. For fixed_weights and drifting_weights accepts either {TepiloraCode: weight}, a list of {'date': YYYY-MM-DD, 'weights': {...}}, or a date-keyed map {'YYYY-MM-DD': {...}}."""
+        input_type: Portfolio input model: fixed_weights, drifting_weights, holdings, values, or trades.
+        allow_negative_cash: Allow generated cash components to become negative during input normalization.
+        allow_short: Allow short security weights or negative positions.
+        auto_cash: Automatically add a cash component when weights do not sum to one.
+        base_currency: Base currency used to convert portfolio series before analytics.
+        components: Component-based portfolio input with security and cash components.
+        holdings: Holdings for input_type=holdings: flat {identifier, quantity, date} rows or dated {date, positions: [{security, shares}]} snapshots. Positive numeric quantities are required; flat identifiers resolve to TepiloraCode, nested security requires TepiloraCode, and saved data uses the snapshot form.
+        initial_cash: Initial cash amount included in the portfolio input.
+        trades: Trade ledger used when input_type is trades.
+        values: Portfolio value snapshots used when input_type is values.
+        weights: Portfolio weights. For fixed_weights and drifting_weights accepts either {TepiloraCode: weight}, a list of {'date': YYYY-MM-DD, 'weights': {...}}, or a date-keyed map {'YYYY-MM-DD': {...}}.
+        input_data: Raw portfolio input payload used by the selected input_type. For holdings, the holdings key accepts either documented form and is saved as dated position snapshots.
+        benchmark: Benchmark identifier or saved benchmark reference associated with the portfolio.
+        settings: Portfolio settings such as base currency, rebalance rules, or analytics defaults.
+        visibility: Portfolio visibility policy."""
         _payload: Dict[str, Any] = {}
         _payload["name"] = name
         _payload["input_type"] = input_type
@@ -1029,6 +1278,8 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         *,
         compare_rebalanced: Optional[Any] = None,
         currency: Optional[str] = None,
+        id: Optional[str] = None,
+        as_of_date: Optional[str] = None,
         end_date: Optional[str] = None,
         start_date: Optional[str] = None,
         target_weights: Optional[Any] = None,
@@ -1041,12 +1292,24 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
     ) -> Any:
         """Calculate how portfolio weights have drifted from targets over time
 
-        Tracks the divergence of actual portfolio weights from target weights over time due to differential security returns. Returns time series of drift per position and total portfolio drift metric. Optionally compares drifted vs. periodically-rebalanced scenarios. Used by the Dashboard drift monitoring and by rebalancing alert rules."""
+        Tracks the divergence of actual portfolio weights from target weights over time due to differential security returns. Returns time series of drift per position and total portfolio drift metric. Optionally compares drifted vs. periodically-rebalanced scenarios. Pass id instead of target_weights/start_date to use the portfolio's own latest decided weights as the baseline. The response separates market_drift — how far the market alone moved the decided allocation — from implementation_gap, what the portfolio actually holds versus that drifted decision, which is what price moves between decision and execution, low liquidity and time to market produce. The two are reported apart because adding them together would make an execution problem look like a market one, and the reverse. implementation_gap requires a declared portfolio source and is returned as unavailable with a reason when it cannot be computed, never as zero. Used by the Dashboard drift monitoring and by rebalancing alert rules.
+
+        Args:
+        compare_rebalanced: Whether to include a daily-rebalanced comparison series.
+        id: Saved portfolio to analyse. Its latest decided weights and the date they apply from are used as the drift baseline, so target_weights and start_date are not needed.
+        as_of_date: Consider only decisions effective on or before this date (YYYY-MM-DD). Ignored unless id is given.
+        target_weights: Target weights used as the drift baseline.
+        threshold: Drift threshold used to flag breaches.
+        user_prices: Optional caller-supplied price series keyed by TepiloraCode."""
         _payload: Dict[str, Any] = {}
         if compare_rebalanced is not None:
             _payload["compare_rebalanced"] = compare_rebalanced
         if currency is not None:
             _payload["currency"] = currency
+        if id is not None:
+            _payload["id"] = id
+        if as_of_date is not None:
+            _payload["as_of_date"] = as_of_date
         if end_date is not None:
             _payload["end_date"] = end_date
         if start_date is not None:
@@ -1082,7 +1345,15 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
     ) -> Any:
         """Calculate portfolio exposure by sector, country, currency, or asset class
 
-        Computes weighted portfolio exposure across a chosen exposure_type: sector (GICS), geography/region, currency, or asset_class. Uses look-through analysis — resolves fund/ETF holdings to their underlying exposures. Returns exposure percentages per category. Used by the Dashboard portfolio composition pie charts and by compliance monitoring."""
+        Computes weighted portfolio exposure across a chosen exposure_type: sector (GICS), geography/region, currency, or asset_class. Uses look-through analysis — resolves fund/ETF holdings to their underlying exposures. Returns exposure percentages per category. Used by the Dashboard portfolio composition pie charts and by compliance monitoring.
+
+        Args:
+        components: Component-based portfolio input used instead of a saved portfolio id.
+        date: Exposure observation date for point-in-time exposure analysis.
+        dimensions: Exposure dimensions to return, such as sector, country, currency, or asset_class.
+        exposure_type: Primary exposure breakdown to calculate.
+        drifting: When true, portfolio weights drift with asset returns before exposure is calculated.
+        user_prices: Optional caller-supplied price series keyed by TepiloraCode."""
         _payload: Dict[str, Any] = {}
         if id is not None:
             _payload["id"] = id
@@ -1114,14 +1385,20 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         self,
         *,
         id: str,
+        as_of_date: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
         """Get full details for a specific portfolio
 
-        Returns the complete portfolio record: name, type, input_type, weights/holdings/trades data, benchmark, settings, creation/modification dates, and sharing status. Used by the Dashboard portfolio detail page and as input for returns/attribution/exposure calculations."""
+        Returns the complete portfolio record: name, type, input_type, weights/holdings/trades data, benchmark, settings, creation/modification dates, and sharing status. Also returns actual_weights, what the portfolio actually holds at as_of_date, in the same shape whatever the source is: reconstructing positions from a trade ledger needs prices and cannot be done by the caller, so a portfolio built from trades would otherwise read as empty. When the holdings cannot be resolved at that date the block says so with a reason instead of returning an empty allocation. Suggested portfolios also carry the proposal block, Real portfolios their target_weight_sets, the append-only history of the decisions the user has taken. Used by the Dashboard portfolio detail page and as input for returns/attribution/exposure calculations.
+
+        Args:
+        as_of_date: Date the actual_weights snapshot refers to (YYYY-MM-DD). Defaults to the latest date the portfolio can be resolved at."""
         _payload: Dict[str, Any] = {}
         _payload["id"] = id
+        if as_of_date is not None:
+            _payload["as_of_date"] = as_of_date
         return await self._call("portfolio.get", params=_payload, options=options, context=context)
 
     async def list(
@@ -1140,7 +1417,12 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
     ) -> Any:
         """List all portfolios for the current user with filtering and search
 
-        Returns paginated list of portfolios belonging to the authenticated user. Filterable by type (Real/Suggested/Simulation), input_type, and name search. Each entry shows ID, name, type, creation date, and position count. Includes shared portfolios by default. Used by the Dashboard portfolio list page.
+        Returns a `portfolios` list and pagination metadata for the authenticated user. Filterable by type (Real/Suggested/Simulation), input_type, and name search. Each entry shows ID, name, type, creation date, and position count. Suggested entries also include `solver_mode` from `proposal.optimizer.solver_mode`; old proposals without optimizer return null. Includes shared portfolios by default. Used by the Dashboard portfolio list page and Compare selector.
+
+        Args:
+        input_type: Filter portfolios by stored input model, such as fixed_weights, drifting_weights, holdings, values, or trades.
+        search: Case-insensitive text search applied to portfolio name and description.
+        include_shared: Include portfolios shared with the current user in addition to portfolios owned by the user.
 
         Examples:
             >>> await client.portfolio.list(limit=5)"""
@@ -1175,12 +1457,32 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         total_return: Optional[bool] = False,
         currency: Optional[str] = None,
         timeout: Optional[int] = None,
+        id: Optional[str] = None,
+        save_as: Optional[str] = None,
+        as_of_date: Optional[str] = None,
+        include_metrics: Optional[bool] = True,
+        description: Optional[str] = None,
+        benchmark: Optional[str] = None,
+        visibility: Optional[str] = "private",
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
         """Optimize portfolio weights using the Julia-powered solver
 
-        Runs portfolio optimization via the Julia optimization server. 12 solver modes: minimum_variance, lean (custom mean-variance), full (all regularization terms), risk_parity (equal risk contribution), hrp (hierarchical risk parity), black_litterman (with investor views), factor_neutral, inverse_volatility, herc (hierarchical equal risk), cvar (conditional VaR minimization), robust (robust optimization), max_sharpe. Returns optimal weights, expected return/risk, and solver diagnostics. Use portfolio.solver_info for mathematical details on each mode. Used by the Dashboard optimizer."""
+        Runs portfolio optimization via the Julia optimization server. 12 solver modes: minimum_variance, lean (custom mean-variance), full (all regularization terms), risk_parity (equal risk contribution), hrp (hierarchical risk parity), black_litterman (with investor views), factor_neutral, inverse_volatility, herc (hierarchical equal risk), cvar (conditional VaR minimization), robust (robust optimization), max_sharpe. Returns optimal weights, expected return/risk, and solver diagnostics. Use portfolio.solver_info for mathematical details on each mode. Pass id to persist the result as a proposal for that portfolio: it becomes a Suggested portfolio with its own id, retrievable with portfolio.get, listed by portfolio.list, comparable with portfolio.compare, and applicable with portfolio.accept_proposal. The weights of that portfolio at as_of_date are frozen inside the proposal, so the Current side of a later comparison stays the one the optimizer actually worked on even if the source portfolio changes. Used by the Dashboard optimizer.
+
+        Args:
+        settings: Optimizer settings such as solver_mode, constraints, objective terms, and risk settings.
+        poll_interval: Seconds between Julia optimizer status polls.
+        securities_metadata: Optional metadata by security used by optimizer constraints.
+        timeout: Maximum optimizer wait time in seconds.
+        id: Portfolio the optimization starts from. Passing it saves the result as a proposal for that portfolio, and freezes its weights at as_of_date as the 'current' side of the comparison. Omit it to explore with identifiers only: the result is returned but not persisted, and is lost when the caller discards the response.
+        save_as: Name given to the saved proposal. Ignored unless id is present; defaults to 'Proposal <as_of_date>'.
+        as_of_date: Date the proposal is a photograph of (YYYY-MM-DD). Defaults to end_date, or today.
+        include_metrics: Compute the metrics of the proposed and current allocations over the optimization window when saving. A side that cannot be computed is reported as unavailable with a reason, never as zeros.
+        description: Description stored on the saved proposal.
+        benchmark: Benchmark identifier stored on the saved proposal.
+        visibility: Visibility of the saved proposal."""
         _payload: Dict[str, Any] = {}
         _payload["identifiers"] = identifiers
         _payload["settings"] = settings
@@ -1198,6 +1500,20 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
             _payload["currency"] = currency
         if timeout is not None:
             _payload["timeout"] = timeout
+        if id is not None:
+            _payload["id"] = id
+        if save_as is not None:
+            _payload["save_as"] = save_as
+        if as_of_date is not None:
+            _payload["as_of_date"] = as_of_date
+        if include_metrics is not None:
+            _payload["include_metrics"] = include_metrics
+        if description is not None:
+            _payload["description"] = description
+        if benchmark is not None:
+            _payload["benchmark"] = benchmark
+        if visibility is not None:
+            _payload["visibility"] = visibility
         return await self._call("portfolio.optimize", params=_payload, options=options, context=context)
 
     async def rebalance(
@@ -1216,7 +1532,16 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
     ) -> Any:
         """Calculate the trades needed to rebalance a portfolio to target weights
 
-        Given current weights (or portfolio_id) and target weights, calculates the minimum trades required to rebalance. Supports minimum trade value threshold to avoid tiny trades, and includes estimated transaction costs. Returns a trade list with direction (buy/sell), amount, and cost impact. Used by the Dashboard rebalancing wizard."""
+        Given current weights (or portfolio_id) and target weights, calculates the minimum trades required to rebalance. Supports minimum trade value threshold to avoid tiny trades, and includes estimated transaction costs. Returns a trade list with direction (buy/sell), amount, and cost impact. Used by the Dashboard rebalancing wizard.
+
+        Args:
+        current_weights: Current portfolio weights before rebalancing.
+        target_weights: Desired target weights after rebalancing.
+        costs: Optional transaction cost assumptions by security or trade.
+        min_trade_value: Minimum trade value below which suggested trades are suppressed.
+        portfolio_value: Total portfolio market value used to convert weight drift into trade values.
+        strategy: Rebalancing strategy: full, threshold, or proportional.
+        threshold: Minimum absolute weight drift required before a position is traded."""
         _payload: Dict[str, Any] = {}
         if current_weights is not None:
             _payload["current_weights"] = current_weights
@@ -1274,11 +1599,34 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
     ) -> Any:
         """Calculate portfolio return time series using TWR, MWR, or Modified Dietz
 
-        Computes the daily return time series for a portfolio using the selected return methodology: TWR (Time-Weighted Return, for benchmark comparison), MWR (Money-Weighted Return via XIRR, for actual investor experience), or Modified Dietz (fast MWR approximation). Supports fixed weights (periodic rebalancing at configurable frequency), drifting weights (buy-and-hold drift), and transaction-based input. Returns daily NAV series, cumulative return, and period statistics. Cash flow convention: negative = deposit, positive = withdrawal. Used by the Dashboard portfolio performance chart and by all portfolio analytics.
+        Computes portfolio NAV and returns using TWR, MWR, or Modified Dietz. Supports fixed weights, drifting weights, and transaction-based input. `returns_frequency` resamples the output series, but `summary.annualized_return` is always computed from the daily NAV with the same CAGR formula as the tearsheet. It is a decimal fraction (like `summary.total_return`) after at least 260 daily returns; below that it is null with `summary.annualized_return_reason`. The tearsheet also leaves annualized CAGR and dependent ratios null below this threshold. Cash flow convention: negative = deposit, positive = withdrawal.
 
         Args:
         weights: Ad-hoc portfolio weights. Accepts either {TepiloraCode: weight}, a list of {'date': YYYY-MM-DD, 'weights': {...}}, or a date-keyed map.
-        returns_frequency: Output returns interval: daily, weekly, monthly, or annual."""
+        components: Component-based portfolio input with security and cash components.
+        holdings: Holdings input converted to weights over time.
+        trades: Trade ledger input converted to historical weights.
+        values: Portfolio value snapshots used for money-weighted return calculations.
+        allow_negative_cash: Allow generated cash components to become negative.
+        allow_short: Allow short security weights in component normalization.
+        auto_cash: Automatically add a cash component when weights do not sum to one.
+        base_currency: Base currency used to convert all security series before portfolio aggregation.
+        borrow_cost: Borrow cost model for negative cash or short exposure.
+        borrow_spread_annual: Annual borrow spread applied on top of the selected borrow cost model.
+        cash_yield: Cash return model for cash components.
+        drifting: When true, target weights drift with asset returns between rebalance dates.
+        initial_value: Initial notional portfolio value for synthetic return calculations.
+        max_stale_days: Maximum tolerated days between observations before stale-data policy is applied.
+        price_fill: Price fill policy; current engine supports forward-fill.
+        rebalance_dates: Custom rebalance dates used when rebalance_on is custom_dates.
+        rebalance_effective: When new target weights become effective after a rebalance date.
+        rebalance_frequency: Target-weight rebalance interval: daily, weekly, monthly, quarterly, annual, or none.
+        rebalance_on: Trading-day rule for scheduled rebalances.
+        returns_frequency: Output returns interval: daily, weekly, monthly, or annual.
+        settings: Portfolio-level settings overriding defaults such as base currency or rebalance rules.
+        stale_policy: Action when stale price data exceeds max_stale_days.
+        return_method: Return methodology: twr, mwr, or modified_dietz.
+        user_prices: Optional caller-supplied price series keyed by TepiloraCode."""
         _payload: Dict[str, Any] = {}
         if id is not None:
             _payload["id"] = id
@@ -1355,7 +1703,11 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
     ) -> Any:
         """Share a portfolio with another user
 
-        Grants read or write access to a portfolio for another user (identified by target_apikey). The shared user can view the portfolio in their list and access its analytics. Used by advisor workflows sharing model portfolios with clients or colleagues."""
+        Grants read or write access to a portfolio for another user (identified by target_apikey). The shared user can view the portfolio in their list and access its analytics. Used by advisor workflows sharing model portfolios with clients or colleagues.
+
+        Args:
+        target_apikey: API key of the user who should receive access to the portfolio.
+        permission: Sharing permission granted to the target user."""
         _payload: Dict[str, Any] = {}
         _payload["id"] = id
         _payload["target_apikey"] = target_apikey
@@ -1386,7 +1738,10 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
     ) -> Any:
         """Get financial documentation for optimization solver modes
 
-        Returns detailed financial and mathematical documentation for one or all optimization solver modes: mathematical formulation, parameters, strengths, limitations, typical use cases, and academic references. Includes the minimum_variance preset and all Julia solver modes exposed by portfolio.optimize. Used by the Dashboard optimizer help panel and by the AI assistant when explaining optimization choices."""
+        Returns detailed financial and mathematical documentation for one or all optimization solver modes: mathematical formulation, parameters, strengths, limitations, typical use cases, and academic references. Includes the minimum_variance preset and all Julia solver modes exposed by portfolio.optimize. Used by the Dashboard optimizer help panel and by the AI assistant when explaining optimization choices.
+
+        Args:
+        solver_mode: Specific optimization solver mode to document; omit to return all solver modes."""
         _payload: Dict[str, Any] = {}
         if solver_mode is not None:
             _payload["solver_mode"] = solver_mode
@@ -1411,7 +1766,18 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
     ) -> Any:
         """Run stress test scenarios on a portfolio
 
-        Applies historical or hypothetical stress scenarios to a portfolio. Built-in scenarios: 2008 crisis, COVID crash, rate shock, sector rotation. Custom scenarios define per-security or per-asset-class return assumptions. Returns estimated portfolio loss per scenario and the most vulnerable positions. Supports sensitivity analysis (shock range with steps). Used by the Dashboard stress testing view."""
+        Applies a built-in historical scenario or custom shocks to a portfolio. `mode=scenario` accepts the documented `scenario` keys; use `mode=list` to retrieve current keys, names, and labels without portfolio weights. `shocks` requires `mode=custom`: keys are canonical asset classes (government_bonds, high_yield_bonds, investment_grade_bonds, gold, bonds, commodities, real_estate, emerging_markets, equity, unclassified) or security IDs present in weights; values are numeric fractions (-0.2 means -20%, minimum -1). Shock precedence is security, class, then parent class; unshocked positive-weight securities are listed with a warning in both custom and historical results. Returns estimated portfolio loss and vulnerable positions. Supports sensitivity analysis with a shock range and steps. Used by the Dashboard stress testing view.
+
+        Args:
+        asset_class: Asset class to shock when running asset-class stress mode.
+        mode: Stress mode, for example scenario, custom, sensitivity, or list.
+        portfolio_value: Portfolio market value used to translate stress returns into currency impact.
+        scenario: Built-in historical scenario key for mode=scenario. Valid keys: 2008_financial_crisis, 2011_euro_crisis, 2015_china, 2018_q4, 2020_covid, 2022_rate_hike. Use mode=list for names and labels.
+        scenario_name: Display name for a custom stress scenario.
+        scenarios: List of stress scenarios to run.
+        shock_range: Shock range for sensitivity analysis.
+        shocks: For mode=custom, map canonical asset classes or security IDs present in weights to finite fractional shocks (-0.2 means -20%; minimum -1). Specific security or class shocks take precedence over parent classes (bonds for government/high-yield/investment-grade bonds, commodities for gold, equity for emerging markets). Unshocked positive-weight securities are reported with a warning. Canonical classes: government_bonds, high_yield_bonds, investment_grade_bonds, gold, bonds, commodities, real_estate, emerging_markets, equity, unclassified. Unknown keys are rejected.
+        steps: Number of points to evaluate across shock_range."""
         _payload: Dict[str, Any] = {}
         if asset_class is not None:
             _payload["asset_class"] = asset_class
@@ -1461,10 +1827,22 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
     ) -> Any:
         """Generate a portfolio tearsheet (deprecated, use reporting.tearsheet)
 
-        Deprecated: generates a portfolio performance tearsheet. Use reporting.tearsheet instead for enhanced reporting with templates, charts, PDF export, and multi-locale support. This operation will be removed after sunset date 2026-09-01.
+        Deprecated: generates a portfolio performance tearsheet. Annualized return/CAGR and dependent ratios are null, with `performance.annualized_return_reason`, until the NAV has at least 260 daily returns. Use reporting.tearsheet instead for enhanced reporting. This operation will be removed after sunset date 2026-09-01.
 
         .. deprecated:: 3.8.0
-            Use reporting.tearsheet for enhanced reporting with templates, charts, and PDF export"""
+            Use reporting.tearsheet for enhanced reporting with templates, charts, and PDF export
+
+        Args:
+        weights: Ad-hoc portfolio weights for generating the tearsheet.
+        components: Component-based portfolio input used instead of a saved portfolio id.
+        holdings: Holdings input used to build the portfolio before tearsheet generation.
+        trades: Trade ledger input used to reconstruct portfolio history.
+        values: Portfolio value snapshots used by money-weighted tearsheet metrics.
+        benchmark_id: Saved benchmark portfolio or security identifier for relative metrics.
+        benchmark_name: Human-readable benchmark name displayed in the tearsheet.
+        benchmark_weights: Ad-hoc benchmark weights used when benchmark_id is not supplied.
+        output_path: Optional filesystem output path for generated tearsheet artifacts.
+        risk_free_rate: Risk-free rate used for Sharpe and excess-return metrics."""
         import warnings
         warnings.warn("portfolio.tearsheet is deprecated: Use reporting.tearsheet for enhanced reporting with templates, charts, and PDF export", DeprecationWarning, stacklevel=2)
         _payload: Dict[str, Any] = {}
@@ -1512,7 +1890,10 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
     ) -> Any:
         """Revoke portfolio sharing for a user
 
-        Removes portfolio access for a specific user. The user will no longer see the portfolio in their shared list."""
+        Removes portfolio access for a specific user. The user will no longer see the portfolio in their shared list.
+
+        Args:
+        target_apikey: API key of the user whose shared access should be removed."""
         _payload: Dict[str, Any] = {}
         _payload["id"] = id
         _payload["target_apikey"] = target_apikey
@@ -1537,6 +1918,9 @@ class AsyncPortfolioAPI(AsyncBaseAPI):
         Modifies an existing portfolio. Can update name, description, input data (new weights/holdings), benchmark, and settings. Creates an audit trail entry. Used by the Dashboard portfolio editor.
 
         Args:
+        input_data: Replacement portfolio input data such as weights, holdings, trades, or values.
+        benchmark: Benchmark identifier or saved benchmark reference associated with the portfolio.
+        settings: Portfolio settings to persist, such as base currency, rebalance rules, or analytics defaults.
         currency: Portfolio reporting currency to store in settings.
         base_currency: Portfolio base currency to store in settings."""
         _payload: Dict[str, Any] = {}

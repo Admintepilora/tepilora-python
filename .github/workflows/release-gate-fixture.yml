@@ -1,0 +1,60 @@
+name: Release Gate Offline Fixtures
+
+on:
+  push:
+    branches: [fix/release-readiness-gate-241]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  manifest-gate-negative:
+    name: Negative gate / ${{ matrix.case }} (assert BLOCK)
+    runs-on: ubuntu-latest
+    outputs:
+      blocked: ${{ steps.negative.outputs.blocked }}
+    strategy:
+      fail-fast: false
+      matrix:
+        case: [missing-manifest, missing-canary, canary-fail, sha-mismatch, version-mismatch, hash-mismatch, rc-missing, oracle-fail, diff-outside-policy]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Assert nonzero gate and exact expected reason
+        id: negative
+        run: |
+          python scripts/readiness_ci_fixture.py --package sdk --case "${{ matrix.case }}" --expect-block
+          echo "blocked=true" >> "$GITHUB_OUTPUT"
+
+  negative-build-sentinel:
+    needs: manifest-gate-negative
+    if: needs.manifest-gate-negative.outputs.blocked != 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - run: exit 99
+
+  negative-publish-sentinel:
+    needs: [manifest-gate-negative, negative-build-sentinel]
+    if: needs.manifest-gate-negative.outputs.blocked != 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - run: exit 99
+
+  manifest-gate-positive:
+    name: Positive gate (expected green)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python scripts/readiness_ci_fixture.py --package sdk --case positive
+
+  positive-build-sentinel:
+    needs: manifest-gate-positive
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Positive gate accepted; no build, install, tag, publish or live test"

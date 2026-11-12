@@ -25,7 +25,11 @@ class PublicationsAPI(BaseAPI):
     ) -> Any:
         """Get all publications from a specific institutional source
 
-        Returns all publications from a single source institution identified by its source_news_id. Provides a chronological feed of all content published by one institution. Results include title, date, content type, language, and abstract. Used for building institution-specific research feeds and for tracking a particular institution's published investment views over time. Combine with publications.facets to discover available source_news_id values."""
+        Returns all publications from a single source institution identified by its source_news_id. Provides a chronological feed of all content published by one institution. Results include title, date, content type, language, and abstract. Used for building institution-specific research feeds and for tracking a particular institution's published investment views over time. Combine with publications.facets to discover available source_news_id values.
+
+        Args:
+        source_news_id: Identifier of the source institution whose publications to return. Discover valid values via publications.facets.
+        limit: Maximum number of publications to return."""
         _payload: Dict[str, Any] = {}
         _payload["source_news_id"] = source_news_id
         if limit is not None:
@@ -41,7 +45,10 @@ class PublicationsAPI(BaseAPI):
     ) -> Any:
         """Get full publication details and content by document ID
 
-        Retrieves the complete metadata and content for a single institutional publication identified by its document ID. Returns the full title, source institution, author(s), publication date, content type, language, abstract, body text (when available), related securities (TepiloraCodes mentioned in the publication), and links to the original source. Used when a user selects a publication from the search results to read the full content within the Dashboard."""
+        Retrieves the complete metadata and content for a single institutional publication identified by its document ID. Returns the full title, source institution, author(s), publication date, content type, language, abstract, body text (when available), related securities (TepiloraCodes mentioned in the publication), and links to the original source. Used when a user selects a publication from the search results to read the full content within the Dashboard.
+
+        Args:
+        doc_id: Document identifier of the publication to retrieve, as returned by publications.latest, publications.search, or publications.by_source."""
         _payload: Dict[str, Any] = {}
         _payload["doc_id"] = doc_id
         return self._call("publications.details", params=_payload, options=options, context=context)
@@ -56,7 +63,11 @@ class PublicationsAPI(BaseAPI):
     ) -> Any:
         """Get available publication sources, content types, and languages for filtering
 
-        Returns the aggregated facets (distinct values and counts) for publication metadata fields: sources (which institutions publish content), content types (research report, market outlook, commentary, whitepaper), and languages. Used to populate filter dropdowns and chips in the publications search UI. Enables building a faceted search experience where users can drill down into specific institutions or content types."""
+        Returns the aggregated facets (distinct values and counts) for publication metadata fields: sources (which institutions publish content), content types (research report, market outlook, commentary, whitepaper), and languages. Used to populate filter dropdowns and chips in the publications search UI. Enables building a faceted search experience where users can drill down into specific institutions or content types.
+
+        Args:
+        fields: Publication metadata fields to aggregate for filter UIs.
+        limit: Maximum number of values to return per facet field."""
         _payload: Dict[str, Any] = {}
         if fields is not None:
             _payload["fields"] = fields
@@ -77,7 +88,13 @@ class PublicationsAPI(BaseAPI):
     ) -> Any:
         """Get the most recently published research reports and institutional content
 
-        Returns the most recently indexed institutional publications in reverse chronological order. Each entry includes title, source institution, publication date, content type (research report, market outlook, investment commentary, etc.), language, and a brief abstract when available. Filterable by language, platform, and publication status. Used by the Dashboard Publications page for the default latest view and by the AI assistant to surface relevant recent research when answering investment questions."""
+        Returns the most recently indexed institutional publications in reverse chronological order. Each entry includes title, source institution, publication date, content type (research report, market outlook, investment commentary, etc.), language, and a brief abstract when available. Filterable by language, platform, and publication status. Used by the Dashboard Publications page for the default latest view and by the AI assistant to surface relevant recent research when answering investment questions.
+
+        Args:
+        platform: Optional source platform filter.
+        language: Optional ISO 639-1 language filter (e.g. en, it).
+        status: Optional publication status filter.
+        limit: Maximum number of latest publications to return."""
         _payload: Dict[str, Any] = {}
         if platform is not None:
             _payload["platform"] = platform
@@ -105,6 +122,9 @@ class PublicationsAPI(BaseAPI):
         """Search research reports and institutional publications with full-text and faceted filtering
 
         Full-text search across the institutional publications database powered by Tantivy search engine. Indexes research reports, market commentary, investment outlooks, and analysis papers from asset managers, research houses, and financial institutions. Supports advanced query syntax, date range filtering, source filtering, publication type filtering, and language filtering. Returns publication title, source, publication date, content type, language, and relevance score. Results are paginated and sortable by date or relevance. Used by the Dashboard Publications page for research discovery and by AI assistants for grounding investment recommendations with institutional research.
+
+        Args:
+        filters: Optional structured filters for platform, language, status, or content_type.
 
         Examples:
             >>> client.publications.search(query='market outlook', limit=5)"""
@@ -139,7 +159,11 @@ class AsyncPublicationsAPI(AsyncBaseAPI):
     ) -> Any:
         """Get all publications from a specific institutional source
 
-        Returns all publications from a single source institution identified by its source_news_id. Provides a chronological feed of all content published by one institution. Results include title, date, content type, language, and abstract. Used for building institution-specific research feeds and for tracking a particular institution's published investment views over time. Combine with publications.facets to discover available source_news_id values."""
+        Returns all publications from a single source institution identified by its source_news_id. Provides a chronological feed of all content published by one institution. Results include title, date, content type, language, and abstract. Used for building institution-specific research feeds and for tracking a particular institution's published investment views over time. Combine with publications.facets to discover available source_news_id values.
+
+        Args:
+        source_news_id: Identifier of the source institution whose publications to return. Discover valid values via publications.facets.
+        limit: Maximum number of publications to return."""
         _payload: Dict[str, Any] = {}
         _payload["source_news_id"] = source_news_id
         if limit is not None:
@@ -155,7 +179,10 @@ class AsyncPublicationsAPI(AsyncBaseAPI):
     ) -> Any:
         """Get full publication details and content by document ID
 
-        Retrieves the complete metadata and content for a single institutional publication identified by its document ID. Returns the full title, source institution, author(s), publication date, content type, language, abstract, body text (when available), related securities (TepiloraCodes mentioned in the publication), and links to the original source. Used when a user selects a publication from the search results to read the full content within the Dashboard."""
+        Retrieves the complete metadata and content for a single institutional publication identified by its document ID. Returns the full title, source institution, author(s), publication date, content type, language, abstract, body text (when available), related securities (TepiloraCodes mentioned in the publication), and links to the original source. Used when a user selects a publication from the search results to read the full content within the Dashboard.
+
+        Args:
+        doc_id: Document identifier of the publication to retrieve, as returned by publications.latest, publications.search, or publications.by_source."""
         _payload: Dict[str, Any] = {}
         _payload["doc_id"] = doc_id
         return await self._call("publications.details", params=_payload, options=options, context=context)
@@ -170,7 +197,11 @@ class AsyncPublicationsAPI(AsyncBaseAPI):
     ) -> Any:
         """Get available publication sources, content types, and languages for filtering
 
-        Returns the aggregated facets (distinct values and counts) for publication metadata fields: sources (which institutions publish content), content types (research report, market outlook, commentary, whitepaper), and languages. Used to populate filter dropdowns and chips in the publications search UI. Enables building a faceted search experience where users can drill down into specific institutions or content types."""
+        Returns the aggregated facets (distinct values and counts) for publication metadata fields: sources (which institutions publish content), content types (research report, market outlook, commentary, whitepaper), and languages. Used to populate filter dropdowns and chips in the publications search UI. Enables building a faceted search experience where users can drill down into specific institutions or content types.
+
+        Args:
+        fields: Publication metadata fields to aggregate for filter UIs.
+        limit: Maximum number of values to return per facet field."""
         _payload: Dict[str, Any] = {}
         if fields is not None:
             _payload["fields"] = fields
@@ -191,7 +222,13 @@ class AsyncPublicationsAPI(AsyncBaseAPI):
     ) -> Any:
         """Get the most recently published research reports and institutional content
 
-        Returns the most recently indexed institutional publications in reverse chronological order. Each entry includes title, source institution, publication date, content type (research report, market outlook, investment commentary, etc.), language, and a brief abstract when available. Filterable by language, platform, and publication status. Used by the Dashboard Publications page for the default latest view and by the AI assistant to surface relevant recent research when answering investment questions."""
+        Returns the most recently indexed institutional publications in reverse chronological order. Each entry includes title, source institution, publication date, content type (research report, market outlook, investment commentary, etc.), language, and a brief abstract when available. Filterable by language, platform, and publication status. Used by the Dashboard Publications page for the default latest view and by the AI assistant to surface relevant recent research when answering investment questions.
+
+        Args:
+        platform: Optional source platform filter.
+        language: Optional ISO 639-1 language filter (e.g. en, it).
+        status: Optional publication status filter.
+        limit: Maximum number of latest publications to return."""
         _payload: Dict[str, Any] = {}
         if platform is not None:
             _payload["platform"] = platform
@@ -219,6 +256,9 @@ class AsyncPublicationsAPI(AsyncBaseAPI):
         """Search research reports and institutional publications with full-text and faceted filtering
 
         Full-text search across the institutional publications database powered by Tantivy search engine. Indexes research reports, market commentary, investment outlooks, and analysis papers from asset managers, research houses, and financial institutions. Supports advanced query syntax, date range filtering, source filtering, publication type filtering, and language filtering. Returns publication title, source, publication date, content type, language, and relevance score. Results are paginated and sortable by date or relevance. Used by the Dashboard Publications page for research discovery and by AI assistants for grounding investment recommendations with institutional research.
+
+        Args:
+        filters: Optional structured filters for platform, language, status, or content_type.
 
         Examples:
             >>> await client.publications.search(query='market outlook', limit=5)"""

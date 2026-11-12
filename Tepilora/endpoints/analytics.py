@@ -58,7 +58,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate calendar year returns
 
-        Computes annual returns for each calendar year in the price history. Returns year and percentage return per security. Used by the Dashboard for calendar year bar charts and by the reporting module for fund sheet annual performance tables."""
+        Computes annual returns for each calendar year in the price history. Returns year and percentage return per security. Used by the Dashboard for calendar year bar charts and by the reporting module for fund sheet annual performance tables.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -176,7 +212,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate annualized volatility from the full price history
 
-        Computes a single annualized volatility figure from the entire price history (not rolling). Standard deviation of daily returns times sqrt(260). Used for summary statistics and peer comparison."""
+        Computes a single annualized volatility figure from the entire price history (not rolling). Standard deviation of daily returns times sqrt(260). Used for summary statistics and peer comparison.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -294,7 +366,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate the average of all drawdown events
 
-        Computes the mean depth of all distinct drawdown episodes. A drawdown episode starts when price drops below a previous peak and ends when a new peak is reached. Average drawdown is less extreme than max drawdown and gives a better sense of typical loss experience."""
+        Computes the mean depth of all distinct drawdown episodes. A drawdown episode starts when price drops below a previous peak and ends when a new peak is reached. Average drawdown is less extreme than max drawdown and gives a better sense of typical loss experience.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -387,7 +495,10 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Execute multiple analytics functions in a single call with shared price data
 
-        Runs multiple analytics functions in one request, sharing the same price data to avoid redundant fetches. Each operation specifies a function name and optional per-function parameters. Common parameters (identifiers, start_date, end_date, prices) are shared across all operations. Returns results keyed by function name. Used by the Dashboard analytics dashboard (which computes volatility, Sharpe, drawdown, etc. in parallel) and by batch screening workflows."""
+        Runs multiple analytics functions in one request, sharing the same price data to avoid redundant fetches. Each operation specifies a function name and optional per-function parameters. Common parameters (identifiers, start_date, end_date, prices) are shared across all operations. Returns results keyed by function name. Used by the Dashboard analytics dashboard (which computes volatility, Sharpe, drawdown, etc. in parallel) and by batch screening workflows.
+
+        Args:
+        operations: Analytics operations to execute in one request. Each item contains a function name and optional per-function parameters."""
         _payload: Dict[str, Any] = dict(extra_params)
         _payload["operations"] = operations
         if currency is not None:
@@ -454,7 +565,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Find the best single-period return in the history
 
-        Returns the highest single-day (or single-period) return in the price history, along with the date it occurred. Used for return distribution analysis and for understanding maximum upside potential."""
+        Returns the highest single-day (or single-period) return in the price history, along with the date it occurred. Used for return distribution analysis and for understanding maximum upside potential.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -572,7 +719,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate the Burke ratio (return adjusted for drawdown volatility)
 
-        Computes the Burke ratio: (annualized return - risk-free rate) / sqrt(sum of squared drawdowns). Penalizes both the number and severity of drawdowns. More sophisticated than Calmar or Sterling for evaluating managers who experience multiple distinct drawdown events."""
+        Computes the Burke ratio: (annualized return - risk-free rate) / sqrt(sum of squared drawdowns). Penalizes both the number and severity of drawdowns. More sophisticated than Calmar or Sterling for evaluating managers who experience multiple distinct drawdown events.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -690,7 +873,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate combined up/down capture ratio
 
-        Computes both upside and downside capture ratios in a single call, plus the capture ratio (upside_capture / downside_capture). A capture ratio > 1 means the security captures more upside than downside — the ideal profile. Used by the Dashboard for capture analysis and by fund evaluation."""
+        Computes both upside and downside capture ratios in a single call, plus the capture ratio (upside_capture / downside_capture). A capture ratio > 1 means the security captures more upside than downside — the ideal profile. Used by the Dashboard for capture analysis and by fund evaluation.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -808,7 +1027,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate cumulative return series (growth of initial investment)
 
-        Computes the cumulative compounded return series: how a unit investment grows over time. At each date, shows the total return since inception as a multiplier (1.25 = +25%). Used by the Dashboard for the NAV/growth chart and for comparing securities on a common base."""
+        Computes the cumulative compounded return series: how a unit investment grows over time. At each date, shows the total return since inception as a multiplier (1.25 = +25%). Used by the Dashboard for the NAV/growth chart and for comparing securities on a common base.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -926,7 +1181,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate downside capture ratio vs benchmark
 
-        Computes the downside capture ratio: the percentage of benchmark losses captured during down-market periods. A ratio < 100% means the security falls less than the benchmark during declines. Investors want low downside capture. Used for defensive quality assessment."""
+        Computes the downside capture ratio: the percentage of benchmark losses captured during down-market periods. A ratio < 100% means the security falls less than the benchmark during declines. Investors want low downside capture. Used for defensive quality assessment.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -1044,7 +1335,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate downside deviation below a minimum acceptable return (MAR)
 
-        Computes the standard deviation of returns below a Minimum Acceptable Return (MAR, default 0). Unlike semi-deviation which uses the mean as threshold, downside deviation uses a user-defined target. Used in the Sortino ratio when a specific target return is required."""
+        Computes the standard deviation of returns below a Minimum Acceptable Return (MAR, default 0). Unlike semi-deviation which uses the mean as threshold, downside deviation uses a user-defined target. Used in the Sortino ratio when a specific target return is required.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -1162,7 +1489,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate the drawdown series (peak-to-trough decline at each point)
 
-        Computes the drawdown at each point: the percentage decline from the most recent peak. Values range from 0 (at a peak) to negative numbers (in a drawdown). The drawdown series visualizes how far an investment has fallen from its highest point over time. Used by the Dashboard for drawdown area charts and by risk analysis."""
+        Computes the drawdown at each point: the percentage decline from the most recent peak. Values range from 0 (at a peak) to negative numbers (in a drawdown). The drawdown series visualizes how far an investment has fallen from its highest point over time. Used by the Dashboard for drawdown area charts and by risk analysis.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -1280,7 +1643,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate the duration statistics of drawdown events
 
-        Computes duration statistics for drawdown episodes: average duration, maximum duration, and current drawdown duration (if in a drawdown). Duration is measured in trading days. Long drawdown durations can be psychologically harder for investors than deep but short drawdowns."""
+        Computes duration statistics for drawdown episodes: average duration, maximum duration, and current drawdown duration (if in a drawdown). Duration is measured in trading days. Long drawdown durations can be psychologically harder for investors than deep but short drawdowns.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -1398,7 +1797,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Estimate asymmetric volatility using EGARCH model
 
-        Fits an EGARCH (Exponential GARCH) model that captures the leverage effect: negative returns tend to increase volatility more than positive returns of the same magnitude. Returns conditional volatility series and asymmetry parameters. Used for equity risk modeling where downside moves have disproportionate volatility impact."""
+        Fits an EGARCH (Exponential GARCH) model that captures the leverage effect: negative returns tend to increase volatility more than positive returns of the same magnitude. Returns conditional volatility series and asymmetry parameters. Used for equity risk modeling where downside moves have disproportionate volatility impact.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -1516,7 +1951,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Decompose returns into factor contributions
 
-        Attributes security returns to individual factor contributions using the fitted factor model. Shows how much of the return came from market exposure, size (SMB), value (HML), profitability (RMW), investment (CMA), and alpha (unexplained). Used by the Dashboard factor attribution chart."""
+        Attributes security returns to individual factor contributions using the fitted factor model. Shows how much of the return came from market exposure, size (SMB), value (HML), profitability (RMW), investment (CMA), and alpha (unexplained). Used by the Dashboard factor attribution chart.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -1634,7 +2105,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Run Fama-French factor regression (FF3 or FF5) on security returns
 
-        Regresses security returns against Fama-French factor returns (FF3: Market, SMB, HML; FF5: adds RMW, CMA). Returns factor loadings (betas), alpha, R-squared, and statistical significance. Uses excess returns (R - RF) by default for proper factor model estimation. Used for understanding what drives a security's returns beyond market exposure."""
+        Regresses security returns against Fama-French factor returns (FF3: Market, SMB, HML; FF5: adds RMW, CMA). Returns factor loadings (betas), alpha, R-squared, and statistical significance. Uses excess returns (R - RF) by default for proper factor model estimation. Used for understanding what drives a security's returns beyond market exposure.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -1752,7 +2259,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate the average gain to average loss ratio
 
-        Computes the ratio of the average positive return to the average negative return. Unlike profit factor (which uses totals), gain/loss ratio uses averages. A ratio > 1 with a win rate > 50% indicates a robust return profile. Used for trade analysis and strategy evaluation."""
+        Computes the ratio of the average positive return to the average negative return. Unlike profit factor (which uses totals), gain/loss ratio uses averages. A ratio > 1 with a win rate > 50% indicates a robust return profile. Used for trade analysis and strategy evaluation.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -1870,7 +2413,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Forecast future volatility using a fitted GARCH model
 
-        Fits a GARCH(1,1) model and projects volatility forward for a specified number of days. Returns the forecasted volatility path showing how current volatility is expected to mean-revert. Used for option pricing inputs, risk budgeting, and VaR forecasting."""
+        Fits a GARCH(1,1) model and projects volatility forward for a specified number of days. Returns the forecasted volatility path showing how current volatility is expected to mean-revert. Used for option pricing inputs, risk budgeting, and VaR forecasting.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -1988,7 +2567,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Estimate time-varying volatility using GARCH(1,1) model
 
-        Fits a GARCH(1,1) (Generalized Autoregressive Conditional Heteroskedasticity) model to daily returns and extracts the conditional volatility series. GARCH captures volatility clustering (high-vol periods followed by high-vol) which simple rolling volatility misses. Returns fitted conditional volatility time series and model parameters (omega, alpha, beta)."""
+        Fits a GARCH(1,1) (Generalized Autoregressive Conditional Heteroskedasticity) model to daily returns and extracts the conditional volatility series. GARCH captures volatility clustering (high-vol periods followed by high-vol) which simple rolling volatility misses. Returns fitted conditional volatility time series and model parameters (omega, alpha, beta).
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -2106,7 +2721,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate the Hurst exponent (trend persistence measure)
 
-        Estimates the Hurst exponent (H) from price returns using rescaled range (R/S) analysis. H > 0.5 indicates persistent (trending) behavior, H = 0.5 indicates random walk, H < 0.5 indicates anti-persistent (mean-reverting) behavior. Used for assessing whether momentum or mean-reversion strategies are appropriate."""
+        Estimates the Hurst exponent (H) from price returns using rescaled range (R/S) analysis. H > 0.5 indicates persistent (trending) behavior, H = 0.5 indicates random walk, H < 0.5 indicates anti-persistent (mean-reverting) behavior. Used for assessing whether momentum or mean-reversion strategies are appropriate.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -2191,7 +2842,10 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Get detailed documentation for a specific analytics function
 
-        Returns the full specification of a single analytics function: name, category, description, parameter definitions (name, type, required, default), methodology reference, and usage examples. Used by the Dashboard analytics help panel, by the AI assistant when explaining function parameters, and by the SDK for method-level documentation."""
+        Returns the full specification of a single analytics function: name, category, description, parameter definitions (name, type, required, default), methodology reference, and usage examples. Used by the Dashboard analytics help panel, by the AI assistant when explaining function parameters, and by the SDK for method-level documentation.
+
+        Args:
+        function: Analytics function name to inspect."""
         _payload: Dict[str, Any] = dict(extra_params)
         _payload["function"] = function
         return self._call_analytics("info", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
@@ -2261,7 +2915,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate daily logarithmic returns from price series
 
-        Computes daily log returns (ln(P_t/P_{t-1})) for one or more securities. Log returns are additive across time (unlike simple returns) and approximately equal to simple returns for small values. Preferred for statistical analysis, risk modeling, and multi-period aggregation."""
+        Computes daily log returns (ln(P_t/P_{t-1})) for one or more securities. Log returns are additive across time (unlike simple returns) and approximately equal to simple returns for small values. Preferred for statistical analysis, risk modeling, and multi-period aggregation.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -2379,7 +3069,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate the maximum drawdown (worst peak-to-trough decline)
 
-        Returns the largest peak-to-trough percentage decline in the price history. Max drawdown is the most intuitive risk metric: it answers 'what was the worst loss an investor could have experienced?' Includes the drawdown start date, trough date, and recovery date (if recovered). Used by screening criteria, risk dashboards, and reporting."""
+        Returns the largest peak-to-trough percentage decline in the price history. Max drawdown is the most intuitive risk metric: it answers 'what was the worst loss an investor could have experienced?' Includes the drawdown start date, trough date, and recovery date (if recovered). Used by screening criteria, risk dashboards, and reporting.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -2497,7 +3223,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate price momentum over multiple lookback periods
 
-        Computes momentum as the total return over specified lookback periods (1M, 3M, 6M, 12M). Momentum is one of the most robust anomalies in finance: securities with positive recent returns tend to continue outperforming. Used by momentum-based screening strategies and by the Dashboard momentum indicators."""
+        Computes momentum as the total return over specified lookback periods (1M, 3M, 6M, 12M). Momentum is one of the most robust anomalies in finance: securities with positive recent returns tend to continue outperforming. Used by momentum-based screening strategies and by the Dashboard momentum indicators.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -2615,7 +3377,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Aggregate daily returns into monthly return table
 
-        Computes monthly returns from daily price data, organized as a pivot table with years as rows and months as columns. Returns are expressed as percentage points (1.74 = 1.74% return). Used by the Dashboard for monthly return heatmaps and by the reporting module for fund sheet monthly performance tables."""
+        Computes monthly returns from daily price data, organized as a pivot table with years as rows and months as columns. Returns are expressed as percentage points (1.74 = 1.74% return). Used by the Dashboard for monthly return heatmaps and by the reporting module for fund sheet monthly performance tables.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -2733,7 +3531,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate volatility from monthly returns
 
-        Computes annualized volatility using monthly return data instead of daily. Useful when only monthly data is available or when daily noise should be smoothed. Annualization: multiply by sqrt(12)."""
+        Computes annualized volatility using monthly return data instead of daily. Useful when only monthly data is available or when daily noise should be smoothed. Annualization: multiply by sqrt(12).
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -2851,7 +3685,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate the Omega ratio (probability-weighted gain/loss ratio)
 
-        Computes the Omega ratio: the ratio of the probability-weighted gains above a threshold to the probability-weighted losses below it. Omega captures the entire return distribution, not just mean and variance. Omega > 1 is favorable. More informative than Sharpe for non-normal return distributions."""
+        Computes the Omega ratio: the ratio of the probability-weighted gains above a threshold to the probability-weighted losses below it. Omega captures the entire return distribution, not just mean and variance. Omega > 1 is favorable. More informative than Sharpe for non-normal return distributions.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -2969,7 +3839,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate the Pain Index (average drawdown depth)
 
-        Computes the Pain Index: the average of all drawdown values over the full period. Simpler than the Ulcer Index (no squaring). Represents the average pain an investor experienced from being below prior peaks. Used alongside the Pain Ratio (return / pain index) for risk-adjusted evaluation."""
+        Computes the Pain Index: the average of all drawdown values over the full period. Simpler than the Ulcer Index (no squaring). Represents the average pain an investor experienced from being below prior peaks. Used alongside the Pain Ratio (return / pain index) for risk-adjusted evaluation.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -3087,7 +3993,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate the profit factor (gross gains / gross losses)
 
-        Computes the ratio of total positive returns to total negative returns. Profit factor > 1 means gross gains exceed gross losses. Combines win rate with average win/loss size into a single metric. Used for evaluating trading strategies and for fund quality assessment."""
+        Computes the ratio of total positive returns to total negative returns. Profit factor > 1 means gross gains exceed gross losses. Combines win rate with average win/loss size into a single metric. Used for evaluating trading strategies and for fund quality assessment.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -3205,7 +4147,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate the Rate of Change (ROC) indicator
 
-        Computes the rate of change: ((price_today / price_n_days_ago) - 1) * 100. A simple momentum indicator expressed as a percentage. Positive ROC indicates upward momentum, negative indicates downward. Used by technical analysis views and by momentum screening criteria."""
+        Computes the rate of change: ((price_today / price_n_days_ago) - 1) * 100. A simple momentum indicator expressed as a percentage. Positive ROC indicates upward momentum, negative indicates downward. Used by technical analysis views and by momentum screening criteria.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -3323,7 +4301,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate relative strength of a security vs benchmark over time
 
-        Computes the relative strength line: the ratio of the security price to the benchmark price over time. A rising relative strength line means the security is outperforming the benchmark. Used for identifying market leaders and laggards, and for sector rotation analysis."""
+        Computes the relative strength line: the ratio of the security price to the benchmark price over time. A rising relative strength line means the security is outperforming the benchmark. Used for identifying market leaders and laggards, and for sector rotation analysis.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -3441,7 +4455,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate daily simple returns from price series
 
-        Computes daily arithmetic returns (P_t/P_{t-1} - 1) for one or more securities. Returns a time series of daily percentage changes. The foundational calculation for all other analytics — volatility, Sharpe, drawdown, etc. all start from returns. Accepts TepiloraCodes (fetches prices automatically) or user-provided price data."""
+        Computes daily arithmetic returns (P_t/P_{t-1} - 1) for one or more securities. Returns a time series of daily percentage changes. The foundational calculation for all other analytics — volatility, Sharpe, drawdown, etc. all start from returns. Accepts TepiloraCodes (fetches prices automatically) or user-provided price data.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -3559,7 +4609,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling Jensen's alpha (excess return vs benchmark)
 
-        Computes the rolling alpha from CAPM regression: the intercept term representing return not explained by market exposure. Positive alpha indicates outperformance after adjusting for beta. Formula: alpha = E[R_p - R_f] - beta * E[R_m - R_f]. Requires a benchmark as the second identifier. Used by the Dashboard for alpha charts and by performance evaluation."""
+        Computes the rolling alpha from CAPM regression: the intercept term representing return not explained by market exposure. Positive alpha indicates outperformance after adjusting for beta. Formula: alpha = E[R_p - R_f] - beta * E[R_m - R_f]. Requires a benchmark as the second identifier. Used by the Dashboard for alpha charts and by performance evaluation.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -3677,7 +4763,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling autocorrelation of returns
 
-        Computes the rolling first-order autocorrelation of daily returns: the correlation between today's return and yesterday's. Significant positive autocorrelation suggests momentum, while negative autocorrelation suggests mean-reversion. Used for testing the random walk hypothesis and for momentum strategy design."""
+        Computes the rolling first-order autocorrelation of daily returns: the correlation between today's return and yesterday's. Significant positive autocorrelation suggests momentum, while negative autocorrelation suggests mean-reversion. Used for testing the random walk hypothesis and for momentum strategy design.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -3795,7 +4917,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling beta (market sensitivity)
 
-        Computes the rolling beta: the slope of the regression of security returns against benchmark returns. Beta = 1 means the security moves with the market, beta > 1 means more volatile than the market, beta < 1 means less volatile. Used by CAPM analysis, factor models, and portfolio hedging calculations."""
+        Computes the rolling beta: the slope of the regression of security returns against benchmark returns. Beta = 1 means the security moves with the market, beta > 1 means more volatile than the market, beta < 1 means less volatile. Used by CAPM analysis, factor models, and portfolio hedging calculations.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -3913,7 +5071,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling market timing coefficient (Treynor-Mazuy)
 
-        Estimates the Treynor-Mazuy market timing coefficient: a quadratic regression term that captures whether the manager increases beta before market rallies and decreases it before declines. Positive timing coefficient suggests successful market timing ability. Used for evaluating active fund managers."""
+        Estimates the Treynor-Mazuy market timing coefficient: a quadratic regression term that captures whether the manager increases beta before market rallies and decreases it before declines. Positive timing coefficient suggests successful market timing ability. Used for evaluating active fund managers.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -4031,7 +5225,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling Compound Annual Growth Rate
 
-        Computes the rolling CAGR (Compound Annual Growth Rate) over a specified window. CAGR represents the smoothed annualized return assuming reinvestment. Formula: (P_end/P_start)^(252/days) - 1. Used for comparing returns across different time horizons on an equal basis."""
+        Computes the rolling CAGR (Compound Annual Growth Rate) over a specified window. CAGR represents the smoothed annualized return assuming reinvestment. Formula: (P_end/P_start)^(252/days) - 1. Used for comparing returns across different time horizons on an equal basis.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -4149,7 +5379,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling Calmar ratio (return over max drawdown)
 
-        Computes the rolling Calmar ratio: CAGR divided by absolute max drawdown. Measures how much return is earned per unit of maximum loss risk. Higher is better. Unlike Sharpe (which uses volatility), Calmar specifically penalizes large peak-to-trough losses. Used for hedge fund and absolute return evaluation."""
+        Computes the rolling Calmar ratio: CAGR divided by absolute max drawdown. Measures how much return is earned per unit of maximum loss risk. Higher is better. Unlike Sharpe (which uses volatility), Calmar specifically penalizes large peak-to-trough losses. Used for hedge fund and absolute return evaluation.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -4267,7 +5533,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling pairwise correlation matrix between securities
 
-        Computes the rolling correlation matrix between all pairs of input securities. Correlations range from -1 (perfect inverse) to +1 (perfect co-movement). Reveals how diversification benefits change over time (correlations tend to increase during crises). Used by portfolio construction, risk management, and the Dashboard correlation heatmap."""
+        Computes the rolling correlation matrix between all pairs of input securities. Correlations range from -1 (perfect inverse) to +1 (perfect co-movement). Reveals how diversification benefits change over time (correlations tend to increase during crises). Used by portfolio construction, risk management, and the Dashboard correlation heatmap.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -4385,7 +5687,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling pairwise covariance matrix between securities
 
-        Computes the rolling covariance matrix between input securities. Covariance combines correlation with volatility magnitudes. The covariance matrix is the primary input for mean-variance portfolio optimization and for factor risk models. Used by portfolio.optimize, factors.risk_model, and risk decomposition."""
+        Computes the rolling covariance matrix between input securities. Covariance combines correlation with volatility magnitudes. The covariance matrix is the primary input for mean-variance portfolio optimization and for factor risk models. Used by portfolio.optimize, factors.risk_model, and risk decomposition.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -4503,7 +5841,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling Conditional VaR (Expected Shortfall)
 
-        Computes the rolling Conditional Value at Risk (CVaR), also called Expected Shortfall. CVaR answers: 'Given that we exceed VaR, what is the expected loss?' CVaR is always worse than VaR and is considered a more coherent risk measure. Used by risk management and by portfolio optimization (cvar solver mode)."""
+        Computes the rolling Conditional Value at Risk (CVaR), also called Expected Shortfall. CVaR answers: 'Given that we exceed VaR, what is the expected loss?' CVaR is always worse than VaR and is considered a more coherent risk measure. Used by risk management and by portfolio optimization (cvar solver mode).
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -4621,7 +5995,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling downside beta (sensitivity during down markets)
 
-        Computes beta using only periods when the benchmark return is negative. Downside beta measures how much the security falls during market declines. A security with low downside beta provides better downside protection. Used alongside upside beta for asymmetric risk analysis."""
+        Computes beta using only periods when the benchmark return is negative. Downside beta measures how much the security falls during market declines. A security with low downside beta provides better downside protection. Used alongside upside beta for asymmetric risk analysis.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -4739,7 +6149,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Run rolling Fama-French factor regression over time
 
-        Performs factor regression over rolling windows, producing time series of factor loadings. Reveals how a security's factor exposures change over time (e.g. a fund shifting from value to growth). Used for style analysis and manager evaluation."""
+        Performs factor regression over rolling windows, producing time series of factor loadings. Reveals how a security's factor exposures change over time (e.g. a fund shifting from value to growth). Used for style analysis and manager evaluation.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -4857,7 +6303,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling GARCH volatility estimates over time
 
-        Fits GARCH(1,1) models over rolling windows and extracts the final conditional volatility at each point. Produces a time series of GARCH-estimated volatility that adapts to changing market regimes. More computationally intensive than rolling standard deviation but captures volatility dynamics better."""
+        Fits GARCH(1,1) models over rolling windows and extracts the final conditional volatility at each point. Produces a time series of GARCH-estimated volatility that adapts to changing market regimes. More computationally intensive than rolling standard deviation but captures volatility dynamics better.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -4975,7 +6457,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling Information Ratio (alpha per unit of tracking error)
 
-        Computes the rolling Information Ratio: alpha divided by tracking error. Measures the consistency of excess returns over a benchmark. A high IR (> 0.5) indicates consistent outperformance, not just lucky periods. The key metric for evaluating active managers. Used by fund evaluation dashboards."""
+        Computes the rolling Information Ratio: alpha divided by tracking error. Measures the consistency of excess returns over a benchmark. A high IR (> 0.5) indicates consistent outperformance, not just lucky periods. The key metric for evaluating active managers. Used by fund evaluation dashboards.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -5093,7 +6611,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling kurtosis of returns (fat-tail measure)
 
-        Computes the rolling excess kurtosis (fourth standardized moment minus 3) of daily returns. Positive excess kurtosis indicates fat tails (more extreme events than a normal distribution). Most financial returns exhibit positive excess kurtosis. Used for tail risk assessment and VaR model validation."""
+        Computes the rolling excess kurtosis (fourth standardized moment minus 3) of daily returns. Positive excess kurtosis indicates fat tails (more extreme events than a normal distribution). Most financial returns exhibit positive excess kurtosis. Used for tail risk assessment and VaR model validation.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -5211,7 +6765,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling R-squared (proportion of variance explained by benchmark)
 
-        Computes the rolling R-squared from the regression against a benchmark. R-squared ranges from 0 to 1: high values mean the security closely tracks the benchmark, low values mean it moves independently. Used for assessing benchmark appropriateness and for tracking error analysis."""
+        Computes the rolling R-squared from the regression against a benchmark. R-squared ranges from 0 to 1: high values mean the security closely tracks the benchmark, low values mean it moves independently. Used for assessing benchmark appropriateness and for tracking error analysis.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -5329,7 +6919,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Run full rolling OLS regression with all statistics
 
-        Performs complete rolling OLS regression of security returns against benchmark returns. Returns: alpha, beta, R-squared, standard errors, t-statistics, and p-values at each rolling window endpoint. The most comprehensive regression output. Used for detailed statistical analysis and for factor model research."""
+        Performs complete rolling OLS regression of security returns against benchmark returns. Returns: alpha, beta, R-squared, standard errors, t-statistics, and p-values at each rolling window endpoint. The most comprehensive regression output. Used for detailed statistical analysis and for factor model research.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -5447,7 +7073,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling regression residuals (unexplained returns)
 
-        Returns the rolling residual series from the regression of security returns against benchmark returns. Residuals represent the portion of returns not explained by market movement. Large residuals indicate stock-specific events. Used for alpha research and for detecting structural breaks in the security-benchmark relationship."""
+        Returns the rolling residual series from the regression of security returns against benchmark returns. Residuals represent the portion of returns not explained by market movement. Large residuals indicate stock-specific events. Used for alpha research and for detecting structural breaks in the security-benchmark relationship.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -5565,7 +7227,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling Sharpe ratio (risk-adjusted return)
 
-        Computes the rolling annualized Sharpe ratio: (mean return - risk-free rate) / volatility. The most widely used risk-adjusted performance measure. A Sharpe > 1 is generally considered good, > 2 excellent. The rf parameter accepts annual rate by default (rf_frequency='annual'). Used by the Dashboard, screening criteria, and all performance reporting."""
+        Computes the rolling annualized Sharpe ratio: (mean return - risk-free rate) / volatility. The most widely used risk-adjusted performance measure. A Sharpe > 1 is generally considered good, > 2 excellent. The rf parameter accepts annual rate by default (rf_frequency='annual'). Used by the Dashboard, screening criteria, and all performance reporting.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -5683,7 +7381,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling skewness of returns
 
-        Computes the rolling skewness (third standardized moment) of daily returns. Positive skewness means the right tail is longer (more extreme gains), negative skewness means the left tail is longer (more extreme losses). Most equity returns exhibit negative skewness. Used for risk characterization beyond volatility."""
+        Computes the rolling skewness (third standardized moment) of daily returns. Positive skewness means the right tail is longer (more extreme gains), negative skewness means the left tail is longer (more extreme losses). Most equity returns exhibit negative skewness. Used for risk characterization beyond volatility.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -5801,7 +7535,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling Sortino ratio (downside risk-adjusted return)
 
-        Computes the rolling Sortino ratio: (mean return - MAR) / downside deviation. Like Sharpe but only penalizes downside volatility, not total volatility. Better for asymmetric return distributions. A Sortino > 2 is generally considered good. Used alongside Sharpe for more complete risk-adjusted assessment."""
+        Computes the rolling Sortino ratio: (mean return - MAR) / downside deviation. Like Sharpe but only penalizes downside volatility, not total volatility. Better for asymmetric return distributions. A Sortino > 2 is generally considered good. Used alongside Sharpe for more complete risk-adjusted assessment.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -5919,7 +7689,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling Treynor ratio (excess return per unit of beta)
 
-        Computes the rolling Treynor ratio: (return - risk-free rate) / beta. Unlike Sharpe (which divides by total risk), Treynor divides by systematic risk only. Appropriate for well-diversified portfolios where unsystematic risk is minimal. Used alongside Sharpe for diversified portfolio evaluation."""
+        Computes the rolling Treynor ratio: (return - risk-free rate) / beta. Unlike Sharpe (which divides by total risk), Treynor divides by systematic risk only. Appropriate for well-diversified portfolios where unsystematic risk is minimal. Used alongside Sharpe for diversified portfolio evaluation.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -6037,7 +7843,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling upside beta (sensitivity during up markets)
 
-        Computes beta using only periods when the benchmark return is positive. Upside beta measures how much the security participates in market rallies. Investors prefer high upside beta (captures gains) with low downside beta (limits losses)."""
+        Computes beta using only periods when the benchmark return is positive. Upside beta measures how much the security participates in market rallies. Investors prefer high upside beta (captures gains) with low downside beta (limits losses).
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -6155,7 +7997,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling Value at Risk (VaR)
 
-        Computes the rolling parametric Value at Risk at a specified confidence level (default 95%). VaR answers: 'What is the maximum expected loss over one day with X% confidence?' Uses the normal distribution assumption. Returns daily VaR values as negative percentages. Used by risk dashboards and regulatory reporting."""
+        Computes the rolling parametric Value at Risk at a specified confidence level (default 95%). VaR answers: 'What is the maximum expected loss over one day with X% confidence?' Uses the normal distribution assumption. Returns daily VaR values as negative percentages. Used by risk dashboards and regulatory reporting.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -6273,7 +8151,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling variance of returns
 
-        Computes the rolling variance (square of volatility) of daily returns over a specified window. Variance is the base input for covariance matrices and portfolio optimization. Not annualized by default — multiply by trading_days for annualized variance."""
+        Computes the rolling variance (square of volatility) of daily returns over a specified window. Variance is the base input for covariance matrices and portfolio optimization. Not annualized by default — multiply by trading_days for annualized variance.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -6391,7 +8305,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling annualized volatility (standard deviation of returns)
 
-        Computes the rolling annualized volatility: standard deviation of daily returns multiplied by sqrt(trading_days). Default annualization: 260 trading days (European convention). The most common risk metric for securities and portfolios. Used by the Dashboard risk view, by screening criteria, and by the reporting module."""
+        Computes the rolling annualized volatility: standard deviation of daily returns multiplied by sqrt(trading_days). Default annualization: 260 trading days (European convention). The most common risk metric for securities and portfolios. Used by the Dashboard risk view, by screening criteria, and by the reporting module.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -6509,7 +8459,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate semi-deviation (standard deviation of negative returns)
 
-        Square root of semi-variance. Measures downside volatility in the same units as returns. Used in the Sortino ratio denominator and for asymmetric risk reporting."""
+        Square root of semi-variance. Measures downside volatility in the same units as returns. Used in the Sortino ratio denominator and for asymmetric risk reporting.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -6627,7 +8613,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate semi-variance (variance of negative returns only)
 
-        Computes the variance using only returns below the mean (or a specified threshold). Semi-variance penalizes downside deviations while ignoring upside variability. Used as the basis for the Sortino ratio and for investors who care only about downside risk."""
+        Computes the variance using only returns below the mean (or a specified threshold). Semi-variance penalizes downside deviations while ignoring upside variability. Used as the basis for the Sortino ratio and for investors who care only about downside risk.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -6745,7 +8767,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate the Sterling ratio (excess return over average drawdown)
 
-        Computes the Sterling ratio: (annualized return - risk-free rate) / average of the N worst annual drawdowns. Measures return per unit of drawdown risk. Similar to Calmar but uses average worst drawdowns instead of the single worst. More stable than Calmar for shorter periods."""
+        Computes the Sterling ratio: (annualized return - risk-free rate) / average of the N worst annual drawdowns. Measures return per unit of drawdown risk. Similar to Calmar but uses average worst drawdowns instead of the single worst. More stable than Calmar for shorter periods.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -6863,7 +8921,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate the tail ratio (right tail vs left tail of return distribution)
 
-        Computes the tail ratio: the 95th percentile return divided by the absolute 5th percentile return. A ratio > 1 means the right tail (gains) is fatter than the left tail (losses). Measures return distribution asymmetry at the extremes. Used for tail risk assessment."""
+        Computes the tail ratio: the 95th percentile return divided by the absolute 5th percentile return. A ratio > 1 means the right tail (gains) is fatter than the left tail (losses). Measures return distribution asymmetry at the extremes. Used for tail risk assessment.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -6981,7 +9075,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate tracking error (volatility of return difference vs benchmark)
 
-        Computes the annualized tracking error: the standard deviation of the difference between security and benchmark daily returns. Low tracking error means the security closely follows the benchmark (index funds: < 0.5%). High tracking error indicates active management or style drift. Used for passive fund evaluation and for index replication quality."""
+        Computes the annualized tracking error: the standard deviation of the difference between security and benchmark daily returns. Low tracking error means the security closely follows the benchmark (index funds: < 0.5%). High tracking error indicates active management or style drift. Used for passive fund evaluation and for index replication quality.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -7099,7 +9229,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate tracking error decomposed into systematic and specific components
 
-        Decomposes tracking error into systematic (explained by beta deviation from 1) and specific (stock-specific) components. Helps distinguish whether tracking error comes from intentional beta positioning or unintended stock-specific bets. Used for portfolio risk attribution."""
+        Decomposes tracking error into systematic (explained by beta deviation from 1) and specific (stock-specific) components. Helps distinguish whether tracking error comes from intentional beta positioning or unintended stock-specific bets. Used for portfolio risk attribution.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -7217,7 +9383,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate the Ulcer Index (depth and duration weighted drawdown measure)
 
-        Computes the Ulcer Index: the square root of the mean of squared drawdowns. Unlike max drawdown (a single worst case), the Ulcer Index considers the depth and duration of ALL drawdowns. Named for the stomach ulcers caused by watching investments decline. Used for risk-averse investor evaluation."""
+        Computes the Ulcer Index: the square root of the mean of squared drawdowns. Unlike max drawdown (a single worst case), the Ulcer Index considers the depth and duration of ALL drawdowns. Named for the stomach ulcers caused by watching investments decline. Used for risk-averse investor evaluation.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -7335,7 +9537,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate upside capture ratio vs benchmark
 
-        Computes the upside capture ratio: the percentage of benchmark gains captured during up-market periods. A ratio > 100% means the security outperforms the benchmark during rallies. Used for evaluating fund manager skill during bull markets."""
+        Computes the upside capture ratio: the percentage of benchmark gains captured during up-market periods. A ratio > 100% means the security outperforms the benchmark during rallies. Used for evaluating fund manager skill during bull markets.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -7453,7 +9691,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate upside deviation above a threshold
 
-        Computes the standard deviation of returns above a threshold (default: mean return). Measures the variability of gains. Comparing upside vs downside deviation reveals return asymmetry: investors prefer high upside deviation with low downside deviation."""
+        Computes the standard deviation of returns above a threshold (default: mean return). Measures the variability of gains. Comparing upside vs downside deviation reveals return asymmetry: investors prefer high upside deviation with low downside deviation.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -7571,7 +9845,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Calculate the percentage of positive return periods (win rate)
 
-        Computes the percentage of days (or periods) with positive returns. A win rate > 50% means more winning days than losing days. Note: win rate alone is insufficient — a high win rate with small wins and large losses can still produce negative returns. Used alongside gain/loss ratio for complete trade analysis."""
+        Computes the percentage of days (or periods) with positive returns. A win rate > 50% means more winning days than losing days. Note: win rate alone is insufficient — a high win rate with small wins and large losses can still produce negative returns. Used alongside gain/loss ratio for complete trade analysis.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -7689,7 +9999,43 @@ class _AnalyticsMethodsMixin:
     ) -> Any:
         """Find the worst single-period return in the history
 
-        Returns the lowest single-day (or single-period) return in the price history, along with the date it occurred. Used for tail risk assessment and for stress testing context."""
+        Returns the lowest single-day (or single-period) return in the price history, along with the date it occurred. Used for tail risk assessment and for stress testing context.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -7812,7 +10158,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate calendar year returns
 
-        Computes annual returns for each calendar year in the price history. Returns year and percentage return per security. Used by the Dashboard for calendar year bar charts and by the reporting module for fund sheet annual performance tables."""
+        Computes annual returns for each calendar year in the price history. Returns year and percentage return per security. Used by the Dashboard for calendar year bar charts and by the reporting module for fund sheet annual performance tables.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -7930,7 +10312,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate annualized volatility from the full price history
 
-        Computes a single annualized volatility figure from the entire price history (not rolling). Standard deviation of daily returns times sqrt(260). Used for summary statistics and peer comparison."""
+        Computes a single annualized volatility figure from the entire price history (not rolling). Standard deviation of daily returns times sqrt(260). Used for summary statistics and peer comparison.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -8048,7 +10466,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate the average of all drawdown events
 
-        Computes the mean depth of all distinct drawdown episodes. A drawdown episode starts when price drops below a previous peak and ends when a new peak is reached. Average drawdown is less extreme than max drawdown and gives a better sense of typical loss experience."""
+        Computes the mean depth of all distinct drawdown episodes. A drawdown episode starts when price drops below a previous peak and ends when a new peak is reached. Average drawdown is less extreme than max drawdown and gives a better sense of typical loss experience.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -8141,7 +10595,10 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Execute multiple analytics functions in a single call with shared price data
 
-        Runs multiple analytics functions in one request, sharing the same price data to avoid redundant fetches. Each operation specifies a function name and optional per-function parameters. Common parameters (identifiers, start_date, end_date, prices) are shared across all operations. Returns results keyed by function name. Used by the Dashboard analytics dashboard (which computes volatility, Sharpe, drawdown, etc. in parallel) and by batch screening workflows."""
+        Runs multiple analytics functions in one request, sharing the same price data to avoid redundant fetches. Each operation specifies a function name and optional per-function parameters. Common parameters (identifiers, start_date, end_date, prices) are shared across all operations. Returns results keyed by function name. Used by the Dashboard analytics dashboard (which computes volatility, Sharpe, drawdown, etc. in parallel) and by batch screening workflows.
+
+        Args:
+        operations: Analytics operations to execute in one request. Each item contains a function name and optional per-function parameters."""
         _payload: Dict[str, Any] = dict(extra_params)
         _payload["operations"] = operations
         if currency is not None:
@@ -8208,7 +10665,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Find the best single-period return in the history
 
-        Returns the highest single-day (or single-period) return in the price history, along with the date it occurred. Used for return distribution analysis and for understanding maximum upside potential."""
+        Returns the highest single-day (or single-period) return in the price history, along with the date it occurred. Used for return distribution analysis and for understanding maximum upside potential.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -8326,7 +10819,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate the Burke ratio (return adjusted for drawdown volatility)
 
-        Computes the Burke ratio: (annualized return - risk-free rate) / sqrt(sum of squared drawdowns). Penalizes both the number and severity of drawdowns. More sophisticated than Calmar or Sterling for evaluating managers who experience multiple distinct drawdown events."""
+        Computes the Burke ratio: (annualized return - risk-free rate) / sqrt(sum of squared drawdowns). Penalizes both the number and severity of drawdowns. More sophisticated than Calmar or Sterling for evaluating managers who experience multiple distinct drawdown events.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -8444,7 +10973,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate combined up/down capture ratio
 
-        Computes both upside and downside capture ratios in a single call, plus the capture ratio (upside_capture / downside_capture). A capture ratio > 1 means the security captures more upside than downside — the ideal profile. Used by the Dashboard for capture analysis and by fund evaluation."""
+        Computes both upside and downside capture ratios in a single call, plus the capture ratio (upside_capture / downside_capture). A capture ratio > 1 means the security captures more upside than downside — the ideal profile. Used by the Dashboard for capture analysis and by fund evaluation.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -8562,7 +11127,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate cumulative return series (growth of initial investment)
 
-        Computes the cumulative compounded return series: how a unit investment grows over time. At each date, shows the total return since inception as a multiplier (1.25 = +25%). Used by the Dashboard for the NAV/growth chart and for comparing securities on a common base."""
+        Computes the cumulative compounded return series: how a unit investment grows over time. At each date, shows the total return since inception as a multiplier (1.25 = +25%). Used by the Dashboard for the NAV/growth chart and for comparing securities on a common base.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -8680,7 +11281,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate downside capture ratio vs benchmark
 
-        Computes the downside capture ratio: the percentage of benchmark losses captured during down-market periods. A ratio < 100% means the security falls less than the benchmark during declines. Investors want low downside capture. Used for defensive quality assessment."""
+        Computes the downside capture ratio: the percentage of benchmark losses captured during down-market periods. A ratio < 100% means the security falls less than the benchmark during declines. Investors want low downside capture. Used for defensive quality assessment.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -8798,7 +11435,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate downside deviation below a minimum acceptable return (MAR)
 
-        Computes the standard deviation of returns below a Minimum Acceptable Return (MAR, default 0). Unlike semi-deviation which uses the mean as threshold, downside deviation uses a user-defined target. Used in the Sortino ratio when a specific target return is required."""
+        Computes the standard deviation of returns below a Minimum Acceptable Return (MAR, default 0). Unlike semi-deviation which uses the mean as threshold, downside deviation uses a user-defined target. Used in the Sortino ratio when a specific target return is required.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -8916,7 +11589,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate the drawdown series (peak-to-trough decline at each point)
 
-        Computes the drawdown at each point: the percentage decline from the most recent peak. Values range from 0 (at a peak) to negative numbers (in a drawdown). The drawdown series visualizes how far an investment has fallen from its highest point over time. Used by the Dashboard for drawdown area charts and by risk analysis."""
+        Computes the drawdown at each point: the percentage decline from the most recent peak. Values range from 0 (at a peak) to negative numbers (in a drawdown). The drawdown series visualizes how far an investment has fallen from its highest point over time. Used by the Dashboard for drawdown area charts and by risk analysis.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -9034,7 +11743,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate the duration statistics of drawdown events
 
-        Computes duration statistics for drawdown episodes: average duration, maximum duration, and current drawdown duration (if in a drawdown). Duration is measured in trading days. Long drawdown durations can be psychologically harder for investors than deep but short drawdowns."""
+        Computes duration statistics for drawdown episodes: average duration, maximum duration, and current drawdown duration (if in a drawdown). Duration is measured in trading days. Long drawdown durations can be psychologically harder for investors than deep but short drawdowns.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -9152,7 +11897,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Estimate asymmetric volatility using EGARCH model
 
-        Fits an EGARCH (Exponential GARCH) model that captures the leverage effect: negative returns tend to increase volatility more than positive returns of the same magnitude. Returns conditional volatility series and asymmetry parameters. Used for equity risk modeling where downside moves have disproportionate volatility impact."""
+        Fits an EGARCH (Exponential GARCH) model that captures the leverage effect: negative returns tend to increase volatility more than positive returns of the same magnitude. Returns conditional volatility series and asymmetry parameters. Used for equity risk modeling where downside moves have disproportionate volatility impact.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -9270,7 +12051,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Decompose returns into factor contributions
 
-        Attributes security returns to individual factor contributions using the fitted factor model. Shows how much of the return came from market exposure, size (SMB), value (HML), profitability (RMW), investment (CMA), and alpha (unexplained). Used by the Dashboard factor attribution chart."""
+        Attributes security returns to individual factor contributions using the fitted factor model. Shows how much of the return came from market exposure, size (SMB), value (HML), profitability (RMW), investment (CMA), and alpha (unexplained). Used by the Dashboard factor attribution chart.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -9388,7 +12205,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Run Fama-French factor regression (FF3 or FF5) on security returns
 
-        Regresses security returns against Fama-French factor returns (FF3: Market, SMB, HML; FF5: adds RMW, CMA). Returns factor loadings (betas), alpha, R-squared, and statistical significance. Uses excess returns (R - RF) by default for proper factor model estimation. Used for understanding what drives a security's returns beyond market exposure."""
+        Regresses security returns against Fama-French factor returns (FF3: Market, SMB, HML; FF5: adds RMW, CMA). Returns factor loadings (betas), alpha, R-squared, and statistical significance. Uses excess returns (R - RF) by default for proper factor model estimation. Used for understanding what drives a security's returns beyond market exposure.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -9506,7 +12359,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate the average gain to average loss ratio
 
-        Computes the ratio of the average positive return to the average negative return. Unlike profit factor (which uses totals), gain/loss ratio uses averages. A ratio > 1 with a win rate > 50% indicates a robust return profile. Used for trade analysis and strategy evaluation."""
+        Computes the ratio of the average positive return to the average negative return. Unlike profit factor (which uses totals), gain/loss ratio uses averages. A ratio > 1 with a win rate > 50% indicates a robust return profile. Used for trade analysis and strategy evaluation.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -9624,7 +12513,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Forecast future volatility using a fitted GARCH model
 
-        Fits a GARCH(1,1) model and projects volatility forward for a specified number of days. Returns the forecasted volatility path showing how current volatility is expected to mean-revert. Used for option pricing inputs, risk budgeting, and VaR forecasting."""
+        Fits a GARCH(1,1) model and projects volatility forward for a specified number of days. Returns the forecasted volatility path showing how current volatility is expected to mean-revert. Used for option pricing inputs, risk budgeting, and VaR forecasting.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -9742,7 +12667,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Estimate time-varying volatility using GARCH(1,1) model
 
-        Fits a GARCH(1,1) (Generalized Autoregressive Conditional Heteroskedasticity) model to daily returns and extracts the conditional volatility series. GARCH captures volatility clustering (high-vol periods followed by high-vol) which simple rolling volatility misses. Returns fitted conditional volatility time series and model parameters (omega, alpha, beta)."""
+        Fits a GARCH(1,1) (Generalized Autoregressive Conditional Heteroskedasticity) model to daily returns and extracts the conditional volatility series. GARCH captures volatility clustering (high-vol periods followed by high-vol) which simple rolling volatility misses. Returns fitted conditional volatility time series and model parameters (omega, alpha, beta).
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -9860,7 +12821,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate the Hurst exponent (trend persistence measure)
 
-        Estimates the Hurst exponent (H) from price returns using rescaled range (R/S) analysis. H > 0.5 indicates persistent (trending) behavior, H = 0.5 indicates random walk, H < 0.5 indicates anti-persistent (mean-reverting) behavior. Used for assessing whether momentum or mean-reversion strategies are appropriate."""
+        Estimates the Hurst exponent (H) from price returns using rescaled range (R/S) analysis. H > 0.5 indicates persistent (trending) behavior, H = 0.5 indicates random walk, H < 0.5 indicates anti-persistent (mean-reverting) behavior. Used for assessing whether momentum or mean-reversion strategies are appropriate.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -9945,7 +12942,10 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Get detailed documentation for a specific analytics function
 
-        Returns the full specification of a single analytics function: name, category, description, parameter definitions (name, type, required, default), methodology reference, and usage examples. Used by the Dashboard analytics help panel, by the AI assistant when explaining function parameters, and by the SDK for method-level documentation."""
+        Returns the full specification of a single analytics function: name, category, description, parameter definitions (name, type, required, default), methodology reference, and usage examples. Used by the Dashboard analytics help panel, by the AI assistant when explaining function parameters, and by the SDK for method-level documentation.
+
+        Args:
+        function: Analytics function name to inspect."""
         _payload: Dict[str, Any] = dict(extra_params)
         _payload["function"] = function
         return await self._call_analytics("info", _payload, options=options, context=context, response_format=response_format, as_table=as_table, strict=strict)
@@ -10015,7 +13015,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate daily logarithmic returns from price series
 
-        Computes daily log returns (ln(P_t/P_{t-1})) for one or more securities. Log returns are additive across time (unlike simple returns) and approximately equal to simple returns for small values. Preferred for statistical analysis, risk modeling, and multi-period aggregation."""
+        Computes daily log returns (ln(P_t/P_{t-1})) for one or more securities. Log returns are additive across time (unlike simple returns) and approximately equal to simple returns for small values. Preferred for statistical analysis, risk modeling, and multi-period aggregation.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -10133,7 +13169,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate the maximum drawdown (worst peak-to-trough decline)
 
-        Returns the largest peak-to-trough percentage decline in the price history. Max drawdown is the most intuitive risk metric: it answers 'what was the worst loss an investor could have experienced?' Includes the drawdown start date, trough date, and recovery date (if recovered). Used by screening criteria, risk dashboards, and reporting."""
+        Returns the largest peak-to-trough percentage decline in the price history. Max drawdown is the most intuitive risk metric: it answers 'what was the worst loss an investor could have experienced?' Includes the drawdown start date, trough date, and recovery date (if recovered). Used by screening criteria, risk dashboards, and reporting.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -10251,7 +13323,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate price momentum over multiple lookback periods
 
-        Computes momentum as the total return over specified lookback periods (1M, 3M, 6M, 12M). Momentum is one of the most robust anomalies in finance: securities with positive recent returns tend to continue outperforming. Used by momentum-based screening strategies and by the Dashboard momentum indicators."""
+        Computes momentum as the total return over specified lookback periods (1M, 3M, 6M, 12M). Momentum is one of the most robust anomalies in finance: securities with positive recent returns tend to continue outperforming. Used by momentum-based screening strategies and by the Dashboard momentum indicators.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -10369,7 +13477,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Aggregate daily returns into monthly return table
 
-        Computes monthly returns from daily price data, organized as a pivot table with years as rows and months as columns. Returns are expressed as percentage points (1.74 = 1.74% return). Used by the Dashboard for monthly return heatmaps and by the reporting module for fund sheet monthly performance tables."""
+        Computes monthly returns from daily price data, organized as a pivot table with years as rows and months as columns. Returns are expressed as percentage points (1.74 = 1.74% return). Used by the Dashboard for monthly return heatmaps and by the reporting module for fund sheet monthly performance tables.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -10487,7 +13631,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate volatility from monthly returns
 
-        Computes annualized volatility using monthly return data instead of daily. Useful when only monthly data is available or when daily noise should be smoothed. Annualization: multiply by sqrt(12)."""
+        Computes annualized volatility using monthly return data instead of daily. Useful when only monthly data is available or when daily noise should be smoothed. Annualization: multiply by sqrt(12).
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -10605,7 +13785,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate the Omega ratio (probability-weighted gain/loss ratio)
 
-        Computes the Omega ratio: the ratio of the probability-weighted gains above a threshold to the probability-weighted losses below it. Omega captures the entire return distribution, not just mean and variance. Omega > 1 is favorable. More informative than Sharpe for non-normal return distributions."""
+        Computes the Omega ratio: the ratio of the probability-weighted gains above a threshold to the probability-weighted losses below it. Omega captures the entire return distribution, not just mean and variance. Omega > 1 is favorable. More informative than Sharpe for non-normal return distributions.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -10723,7 +13939,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate the Pain Index (average drawdown depth)
 
-        Computes the Pain Index: the average of all drawdown values over the full period. Simpler than the Ulcer Index (no squaring). Represents the average pain an investor experienced from being below prior peaks. Used alongside the Pain Ratio (return / pain index) for risk-adjusted evaluation."""
+        Computes the Pain Index: the average of all drawdown values over the full period. Simpler than the Ulcer Index (no squaring). Represents the average pain an investor experienced from being below prior peaks. Used alongside the Pain Ratio (return / pain index) for risk-adjusted evaluation.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -10841,7 +14093,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate the profit factor (gross gains / gross losses)
 
-        Computes the ratio of total positive returns to total negative returns. Profit factor > 1 means gross gains exceed gross losses. Combines win rate with average win/loss size into a single metric. Used for evaluating trading strategies and for fund quality assessment."""
+        Computes the ratio of total positive returns to total negative returns. Profit factor > 1 means gross gains exceed gross losses. Combines win rate with average win/loss size into a single metric. Used for evaluating trading strategies and for fund quality assessment.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -10959,7 +14247,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate the Rate of Change (ROC) indicator
 
-        Computes the rate of change: ((price_today / price_n_days_ago) - 1) * 100. A simple momentum indicator expressed as a percentage. Positive ROC indicates upward momentum, negative indicates downward. Used by technical analysis views and by momentum screening criteria."""
+        Computes the rate of change: ((price_today / price_n_days_ago) - 1) * 100. A simple momentum indicator expressed as a percentage. Positive ROC indicates upward momentum, negative indicates downward. Used by technical analysis views and by momentum screening criteria.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -11077,7 +14401,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate relative strength of a security vs benchmark over time
 
-        Computes the relative strength line: the ratio of the security price to the benchmark price over time. A rising relative strength line means the security is outperforming the benchmark. Used for identifying market leaders and laggards, and for sector rotation analysis."""
+        Computes the relative strength line: the ratio of the security price to the benchmark price over time. A rising relative strength line means the security is outperforming the benchmark. Used for identifying market leaders and laggards, and for sector rotation analysis.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -11195,7 +14555,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate daily simple returns from price series
 
-        Computes daily arithmetic returns (P_t/P_{t-1} - 1) for one or more securities. Returns a time series of daily percentage changes. The foundational calculation for all other analytics — volatility, Sharpe, drawdown, etc. all start from returns. Accepts TepiloraCodes (fetches prices automatically) or user-provided price data."""
+        Computes daily arithmetic returns (P_t/P_{t-1} - 1) for one or more securities. Returns a time series of daily percentage changes. The foundational calculation for all other analytics — volatility, Sharpe, drawdown, etc. all start from returns. Accepts TepiloraCodes (fetches prices automatically) or user-provided price data.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -11313,7 +14709,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling Jensen's alpha (excess return vs benchmark)
 
-        Computes the rolling alpha from CAPM regression: the intercept term representing return not explained by market exposure. Positive alpha indicates outperformance after adjusting for beta. Formula: alpha = E[R_p - R_f] - beta * E[R_m - R_f]. Requires a benchmark as the second identifier. Used by the Dashboard for alpha charts and by performance evaluation."""
+        Computes the rolling alpha from CAPM regression: the intercept term representing return not explained by market exposure. Positive alpha indicates outperformance after adjusting for beta. Formula: alpha = E[R_p - R_f] - beta * E[R_m - R_f]. Requires a benchmark as the second identifier. Used by the Dashboard for alpha charts and by performance evaluation.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -11431,7 +14863,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling autocorrelation of returns
 
-        Computes the rolling first-order autocorrelation of daily returns: the correlation between today's return and yesterday's. Significant positive autocorrelation suggests momentum, while negative autocorrelation suggests mean-reversion. Used for testing the random walk hypothesis and for momentum strategy design."""
+        Computes the rolling first-order autocorrelation of daily returns: the correlation between today's return and yesterday's. Significant positive autocorrelation suggests momentum, while negative autocorrelation suggests mean-reversion. Used for testing the random walk hypothesis and for momentum strategy design.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -11549,7 +15017,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling beta (market sensitivity)
 
-        Computes the rolling beta: the slope of the regression of security returns against benchmark returns. Beta = 1 means the security moves with the market, beta > 1 means more volatile than the market, beta < 1 means less volatile. Used by CAPM analysis, factor models, and portfolio hedging calculations."""
+        Computes the rolling beta: the slope of the regression of security returns against benchmark returns. Beta = 1 means the security moves with the market, beta > 1 means more volatile than the market, beta < 1 means less volatile. Used by CAPM analysis, factor models, and portfolio hedging calculations.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -11667,7 +15171,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling market timing coefficient (Treynor-Mazuy)
 
-        Estimates the Treynor-Mazuy market timing coefficient: a quadratic regression term that captures whether the manager increases beta before market rallies and decreases it before declines. Positive timing coefficient suggests successful market timing ability. Used for evaluating active fund managers."""
+        Estimates the Treynor-Mazuy market timing coefficient: a quadratic regression term that captures whether the manager increases beta before market rallies and decreases it before declines. Positive timing coefficient suggests successful market timing ability. Used for evaluating active fund managers.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -11785,7 +15325,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling Compound Annual Growth Rate
 
-        Computes the rolling CAGR (Compound Annual Growth Rate) over a specified window. CAGR represents the smoothed annualized return assuming reinvestment. Formula: (P_end/P_start)^(252/days) - 1. Used for comparing returns across different time horizons on an equal basis."""
+        Computes the rolling CAGR (Compound Annual Growth Rate) over a specified window. CAGR represents the smoothed annualized return assuming reinvestment. Formula: (P_end/P_start)^(252/days) - 1. Used for comparing returns across different time horizons on an equal basis.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -11903,7 +15479,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling Calmar ratio (return over max drawdown)
 
-        Computes the rolling Calmar ratio: CAGR divided by absolute max drawdown. Measures how much return is earned per unit of maximum loss risk. Higher is better. Unlike Sharpe (which uses volatility), Calmar specifically penalizes large peak-to-trough losses. Used for hedge fund and absolute return evaluation."""
+        Computes the rolling Calmar ratio: CAGR divided by absolute max drawdown. Measures how much return is earned per unit of maximum loss risk. Higher is better. Unlike Sharpe (which uses volatility), Calmar specifically penalizes large peak-to-trough losses. Used for hedge fund and absolute return evaluation.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -12021,7 +15633,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling pairwise correlation matrix between securities
 
-        Computes the rolling correlation matrix between all pairs of input securities. Correlations range from -1 (perfect inverse) to +1 (perfect co-movement). Reveals how diversification benefits change over time (correlations tend to increase during crises). Used by portfolio construction, risk management, and the Dashboard correlation heatmap."""
+        Computes the rolling correlation matrix between all pairs of input securities. Correlations range from -1 (perfect inverse) to +1 (perfect co-movement). Reveals how diversification benefits change over time (correlations tend to increase during crises). Used by portfolio construction, risk management, and the Dashboard correlation heatmap.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -12139,7 +15787,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling pairwise covariance matrix between securities
 
-        Computes the rolling covariance matrix between input securities. Covariance combines correlation with volatility magnitudes. The covariance matrix is the primary input for mean-variance portfolio optimization and for factor risk models. Used by portfolio.optimize, factors.risk_model, and risk decomposition."""
+        Computes the rolling covariance matrix between input securities. Covariance combines correlation with volatility magnitudes. The covariance matrix is the primary input for mean-variance portfolio optimization and for factor risk models. Used by portfolio.optimize, factors.risk_model, and risk decomposition.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -12257,7 +15941,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling Conditional VaR (Expected Shortfall)
 
-        Computes the rolling Conditional Value at Risk (CVaR), also called Expected Shortfall. CVaR answers: 'Given that we exceed VaR, what is the expected loss?' CVaR is always worse than VaR and is considered a more coherent risk measure. Used by risk management and by portfolio optimization (cvar solver mode)."""
+        Computes the rolling Conditional Value at Risk (CVaR), also called Expected Shortfall. CVaR answers: 'Given that we exceed VaR, what is the expected loss?' CVaR is always worse than VaR and is considered a more coherent risk measure. Used by risk management and by portfolio optimization (cvar solver mode).
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -12375,7 +16095,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling downside beta (sensitivity during down markets)
 
-        Computes beta using only periods when the benchmark return is negative. Downside beta measures how much the security falls during market declines. A security with low downside beta provides better downside protection. Used alongside upside beta for asymmetric risk analysis."""
+        Computes beta using only periods when the benchmark return is negative. Downside beta measures how much the security falls during market declines. A security with low downside beta provides better downside protection. Used alongside upside beta for asymmetric risk analysis.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -12493,7 +16249,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Run rolling Fama-French factor regression over time
 
-        Performs factor regression over rolling windows, producing time series of factor loadings. Reveals how a security's factor exposures change over time (e.g. a fund shifting from value to growth). Used for style analysis and manager evaluation."""
+        Performs factor regression over rolling windows, producing time series of factor loadings. Reveals how a security's factor exposures change over time (e.g. a fund shifting from value to growth). Used for style analysis and manager evaluation.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -12611,7 +16403,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling GARCH volatility estimates over time
 
-        Fits GARCH(1,1) models over rolling windows and extracts the final conditional volatility at each point. Produces a time series of GARCH-estimated volatility that adapts to changing market regimes. More computationally intensive than rolling standard deviation but captures volatility dynamics better."""
+        Fits GARCH(1,1) models over rolling windows and extracts the final conditional volatility at each point. Produces a time series of GARCH-estimated volatility that adapts to changing market regimes. More computationally intensive than rolling standard deviation but captures volatility dynamics better.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -12729,7 +16557,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling Information Ratio (alpha per unit of tracking error)
 
-        Computes the rolling Information Ratio: alpha divided by tracking error. Measures the consistency of excess returns over a benchmark. A high IR (> 0.5) indicates consistent outperformance, not just lucky periods. The key metric for evaluating active managers. Used by fund evaluation dashboards."""
+        Computes the rolling Information Ratio: alpha divided by tracking error. Measures the consistency of excess returns over a benchmark. A high IR (> 0.5) indicates consistent outperformance, not just lucky periods. The key metric for evaluating active managers. Used by fund evaluation dashboards.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -12847,7 +16711,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling kurtosis of returns (fat-tail measure)
 
-        Computes the rolling excess kurtosis (fourth standardized moment minus 3) of daily returns. Positive excess kurtosis indicates fat tails (more extreme events than a normal distribution). Most financial returns exhibit positive excess kurtosis. Used for tail risk assessment and VaR model validation."""
+        Computes the rolling excess kurtosis (fourth standardized moment minus 3) of daily returns. Positive excess kurtosis indicates fat tails (more extreme events than a normal distribution). Most financial returns exhibit positive excess kurtosis. Used for tail risk assessment and VaR model validation.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -12965,7 +16865,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling R-squared (proportion of variance explained by benchmark)
 
-        Computes the rolling R-squared from the regression against a benchmark. R-squared ranges from 0 to 1: high values mean the security closely tracks the benchmark, low values mean it moves independently. Used for assessing benchmark appropriateness and for tracking error analysis."""
+        Computes the rolling R-squared from the regression against a benchmark. R-squared ranges from 0 to 1: high values mean the security closely tracks the benchmark, low values mean it moves independently. Used for assessing benchmark appropriateness and for tracking error analysis.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -13083,7 +17019,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Run full rolling OLS regression with all statistics
 
-        Performs complete rolling OLS regression of security returns against benchmark returns. Returns: alpha, beta, R-squared, standard errors, t-statistics, and p-values at each rolling window endpoint. The most comprehensive regression output. Used for detailed statistical analysis and for factor model research."""
+        Performs complete rolling OLS regression of security returns against benchmark returns. Returns: alpha, beta, R-squared, standard errors, t-statistics, and p-values at each rolling window endpoint. The most comprehensive regression output. Used for detailed statistical analysis and for factor model research.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -13201,7 +17173,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling regression residuals (unexplained returns)
 
-        Returns the rolling residual series from the regression of security returns against benchmark returns. Residuals represent the portion of returns not explained by market movement. Large residuals indicate stock-specific events. Used for alpha research and for detecting structural breaks in the security-benchmark relationship."""
+        Returns the rolling residual series from the regression of security returns against benchmark returns. Residuals represent the portion of returns not explained by market movement. Large residuals indicate stock-specific events. Used for alpha research and for detecting structural breaks in the security-benchmark relationship.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -13319,7 +17327,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling Sharpe ratio (risk-adjusted return)
 
-        Computes the rolling annualized Sharpe ratio: (mean return - risk-free rate) / volatility. The most widely used risk-adjusted performance measure. A Sharpe > 1 is generally considered good, > 2 excellent. The rf parameter accepts annual rate by default (rf_frequency='annual'). Used by the Dashboard, screening criteria, and all performance reporting."""
+        Computes the rolling annualized Sharpe ratio: (mean return - risk-free rate) / volatility. The most widely used risk-adjusted performance measure. A Sharpe > 1 is generally considered good, > 2 excellent. The rf parameter accepts annual rate by default (rf_frequency='annual'). Used by the Dashboard, screening criteria, and all performance reporting.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -13437,7 +17481,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling skewness of returns
 
-        Computes the rolling skewness (third standardized moment) of daily returns. Positive skewness means the right tail is longer (more extreme gains), negative skewness means the left tail is longer (more extreme losses). Most equity returns exhibit negative skewness. Used for risk characterization beyond volatility."""
+        Computes the rolling skewness (third standardized moment) of daily returns. Positive skewness means the right tail is longer (more extreme gains), negative skewness means the left tail is longer (more extreme losses). Most equity returns exhibit negative skewness. Used for risk characterization beyond volatility.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -13555,7 +17635,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling Sortino ratio (downside risk-adjusted return)
 
-        Computes the rolling Sortino ratio: (mean return - MAR) / downside deviation. Like Sharpe but only penalizes downside volatility, not total volatility. Better for asymmetric return distributions. A Sortino > 2 is generally considered good. Used alongside Sharpe for more complete risk-adjusted assessment."""
+        Computes the rolling Sortino ratio: (mean return - MAR) / downside deviation. Like Sharpe but only penalizes downside volatility, not total volatility. Better for asymmetric return distributions. A Sortino > 2 is generally considered good. Used alongside Sharpe for more complete risk-adjusted assessment.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -13673,7 +17789,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling Treynor ratio (excess return per unit of beta)
 
-        Computes the rolling Treynor ratio: (return - risk-free rate) / beta. Unlike Sharpe (which divides by total risk), Treynor divides by systematic risk only. Appropriate for well-diversified portfolios where unsystematic risk is minimal. Used alongside Sharpe for diversified portfolio evaluation."""
+        Computes the rolling Treynor ratio: (return - risk-free rate) / beta. Unlike Sharpe (which divides by total risk), Treynor divides by systematic risk only. Appropriate for well-diversified portfolios where unsystematic risk is minimal. Used alongside Sharpe for diversified portfolio evaluation.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -13791,7 +17943,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling upside beta (sensitivity during up markets)
 
-        Computes beta using only periods when the benchmark return is positive. Upside beta measures how much the security participates in market rallies. Investors prefer high upside beta (captures gains) with low downside beta (limits losses)."""
+        Computes beta using only periods when the benchmark return is positive. Upside beta measures how much the security participates in market rallies. Investors prefer high upside beta (captures gains) with low downside beta (limits losses).
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -13909,7 +18097,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling Value at Risk (VaR)
 
-        Computes the rolling parametric Value at Risk at a specified confidence level (default 95%). VaR answers: 'What is the maximum expected loss over one day with X% confidence?' Uses the normal distribution assumption. Returns daily VaR values as negative percentages. Used by risk dashboards and regulatory reporting."""
+        Computes the rolling parametric Value at Risk at a specified confidence level (default 95%). VaR answers: 'What is the maximum expected loss over one day with X% confidence?' Uses the normal distribution assumption. Returns daily VaR values as negative percentages. Used by risk dashboards and regulatory reporting.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -14027,7 +18251,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling variance of returns
 
-        Computes the rolling variance (square of volatility) of daily returns over a specified window. Variance is the base input for covariance matrices and portfolio optimization. Not annualized by default — multiply by trading_days for annualized variance."""
+        Computes the rolling variance (square of volatility) of daily returns over a specified window. Variance is the base input for covariance matrices and portfolio optimization. Not annualized by default — multiply by trading_days for annualized variance.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -14145,7 +18405,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate rolling annualized volatility (standard deviation of returns)
 
-        Computes the rolling annualized volatility: standard deviation of daily returns multiplied by sqrt(trading_days). Default annualization: 260 trading days (European convention). The most common risk metric for securities and portfolios. Used by the Dashboard risk view, by screening criteria, and by the reporting module."""
+        Computes the rolling annualized volatility: standard deviation of daily returns multiplied by sqrt(trading_days). Default annualization: 260 trading days (European convention). The most common risk metric for securities and portfolios. Used by the Dashboard risk view, by screening criteria, and by the reporting module.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -14263,7 +18559,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate semi-deviation (standard deviation of negative returns)
 
-        Square root of semi-variance. Measures downside volatility in the same units as returns. Used in the Sortino ratio denominator and for asymmetric risk reporting."""
+        Square root of semi-variance. Measures downside volatility in the same units as returns. Used in the Sortino ratio denominator and for asymmetric risk reporting.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -14381,7 +18713,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate semi-variance (variance of negative returns only)
 
-        Computes the variance using only returns below the mean (or a specified threshold). Semi-variance penalizes downside deviations while ignoring upside variability. Used as the basis for the Sortino ratio and for investors who care only about downside risk."""
+        Computes the variance using only returns below the mean (or a specified threshold). Semi-variance penalizes downside deviations while ignoring upside variability. Used as the basis for the Sortino ratio and for investors who care only about downside risk.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -14499,7 +18867,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate the Sterling ratio (excess return over average drawdown)
 
-        Computes the Sterling ratio: (annualized return - risk-free rate) / average of the N worst annual drawdowns. Measures return per unit of drawdown risk. Similar to Calmar but uses average worst drawdowns instead of the single worst. More stable than Calmar for shorter periods."""
+        Computes the Sterling ratio: (annualized return - risk-free rate) / average of the N worst annual drawdowns. Measures return per unit of drawdown risk. Similar to Calmar but uses average worst drawdowns instead of the single worst. More stable than Calmar for shorter periods.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -14617,7 +19021,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate the tail ratio (right tail vs left tail of return distribution)
 
-        Computes the tail ratio: the 95th percentile return divided by the absolute 5th percentile return. A ratio > 1 means the right tail (gains) is fatter than the left tail (losses). Measures return distribution asymmetry at the extremes. Used for tail risk assessment."""
+        Computes the tail ratio: the 95th percentile return divided by the absolute 5th percentile return. A ratio > 1 means the right tail (gains) is fatter than the left tail (losses). Measures return distribution asymmetry at the extremes. Used for tail risk assessment.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -14735,7 +19175,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate tracking error (volatility of return difference vs benchmark)
 
-        Computes the annualized tracking error: the standard deviation of the difference between security and benchmark daily returns. Low tracking error means the security closely follows the benchmark (index funds: < 0.5%). High tracking error indicates active management or style drift. Used for passive fund evaluation and for index replication quality."""
+        Computes the annualized tracking error: the standard deviation of the difference between security and benchmark daily returns. Low tracking error means the security closely follows the benchmark (index funds: < 0.5%). High tracking error indicates active management or style drift. Used for passive fund evaluation and for index replication quality.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -14853,7 +19329,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate tracking error decomposed into systematic and specific components
 
-        Decomposes tracking error into systematic (explained by beta deviation from 1) and specific (stock-specific) components. Helps distinguish whether tracking error comes from intentional beta positioning or unintended stock-specific bets. Used for portfolio risk attribution."""
+        Decomposes tracking error into systematic (explained by beta deviation from 1) and specific (stock-specific) components. Helps distinguish whether tracking error comes from intentional beta positioning or unintended stock-specific bets. Used for portfolio risk attribution.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -14971,7 +19483,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate the Ulcer Index (depth and duration weighted drawdown measure)
 
-        Computes the Ulcer Index: the square root of the mean of squared drawdowns. Unlike max drawdown (a single worst case), the Ulcer Index considers the depth and duration of ALL drawdowns. Named for the stomach ulcers caused by watching investments decline. Used for risk-averse investor evaluation."""
+        Computes the Ulcer Index: the square root of the mean of squared drawdowns. Unlike max drawdown (a single worst case), the Ulcer Index considers the depth and duration of ALL drawdowns. Named for the stomach ulcers caused by watching investments decline. Used for risk-averse investor evaluation.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -15089,7 +19637,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate upside capture ratio vs benchmark
 
-        Computes the upside capture ratio: the percentage of benchmark gains captured during up-market periods. A ratio > 100% means the security outperforms the benchmark during rallies. Used for evaluating fund manager skill during bull markets."""
+        Computes the upside capture ratio: the percentage of benchmark gains captured during up-market periods. A ratio > 100% means the security outperforms the benchmark during rallies. Used for evaluating fund manager skill during bull markets.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -15207,7 +19791,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate upside deviation above a threshold
 
-        Computes the standard deviation of returns above a threshold (default: mean return). Measures the variability of gains. Comparing upside vs downside deviation reveals return asymmetry: investors prefer high upside deviation with low downside deviation."""
+        Computes the standard deviation of returns above a threshold (default: mean return). Measures the variability of gains. Comparing upside vs downside deviation reveals return asymmetry: investors prefer high upside deviation with low downside deviation.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -15325,7 +19945,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Calculate the percentage of positive return periods (win rate)
 
-        Computes the percentage of days (or periods) with positive returns. A win rate > 50% means more winning days than losing days. Note: win rate alone is insufficient — a high win rate with small wins and large losses can still produce negative returns. Used alongside gain/loss ratio for complete trade analysis."""
+        Computes the percentage of days (or periods) with positive returns. A win rate > 50% means more winning days than losing days. Note: win rate alone is insufficient — a high win rate with small wins and large losses can still produce negative returns. Used alongside gain/loss ratio for complete trade analysis.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -15443,7 +20099,43 @@ class _AsyncAnalyticsMethodsMixin:
     ) -> Any:
         """Find the worst single-period return in the history
 
-        Returns the lowest single-day (or single-period) return in the price history, along with the date it occurred. Used for tail risk assessment and for stress testing context."""
+        Returns the lowest single-day (or single-period) return in the price history, along with the date it occurred. Used for tail risk assessment and for stress testing context.
+
+        Args:
+        identifiers: Security identifier or identifiers used to load price series when prices is not supplied.
+        query: Securities search query used to build the analytics universe when identifiers and prices are not supplied.
+        filter: Securities filter applied with query before loading analytics price series.
+        prices: Pre-loaded price table with date column D and one column per security; bypasses identifier lookup.
+        prices_file: Path to a CSV, JSON, Parquet, Arrow, or Excel price file with dates and security columns.
+        start_date: Inclusive first date for loaded price observations, in YYYY-MM-DD format.
+        end_date: Inclusive last date for loaded price observations, in YYYY-MM-DD format.
+        TR: Use total-return price series where available; accepts boolean values and legacy string flags.
+        currency: ISO 4217 currency used to convert loaded price series before analytics are computed.
+        Obs: Observation selector applied after calculation: L latest row, M month-end, W week-end, A/Y year-end, integer last N rows, or empty for all rows.
+        period: Function-specific lookback or rolling window length, usually expressed in trading observations.
+        Annualized: Annualization control: false disables it, true uses the default trading-year factor, strings select a frequency, and integers provide a custom factor.
+        rf: Risk-free rate used by Sharpe, Treynor, alpha, and related excess-return calculations; interpreted according to rf_frequency.
+        rf_frequency: Frequency of the rf input rate: annual, daily, monthly, or weekly.
+        MAR: Minimum acceptable return used by downside deviation and Sortino-style analytics.
+        confidence: Confidence level for Value at Risk and Conditional Value at Risk calculations.
+        method: Risk calculation method for functions that expose alternatives, such as rolling_var: historical, parametric, or both.
+        min_samples: Minimum non-null observations required inside a rolling window for functions that expose this override.
+        n_periods: Length of the sub-period used by best_period and worst_period inside the rolling window.
+        threshold: Return threshold used by downside, upside, and omega-style analytics to separate gains from losses.
+        percentile: Tail percentile used by tail_ratio; for example 5 compares the 95th and 5th percentiles.
+        base: Starting index value for cumulative_performance.
+        excess: For rolling_kurtosis, return excess kurtosis by subtracting 3 from raw kurtosis.
+        horizon: Number of future periods to forecast in GARCH forecast analytics.
+        lag: Lag length used by rolling_autocorrelation to compare returns with prior observations.
+        p: GARCH-family model order for symmetric innovation terms.
+        o: EGARCH asymmetric term order used to model leverage effects.
+        q: GARCH-family model order for lagged volatility terms.
+        x: Explanatory variable or variables for regression-style analytics; defaults to all non-y security columns.
+        y: Dependent variable for regression-style analytics; defaults to the first security column.
+        model: Factor model selector for factor analytics, such as custom, ff3, or ff5.
+        factors: Factor return series for factor regression or attribution, keyed by factor name and optionally including RF for excess-return calculations.
+        annualize_alpha: Annualize alpha in factor regression outputs by multiplying the daily alpha by the trading-year factor.
+        use_excess_returns: Subtract RF from asset returns in factor regression and attribution when factor data includes a risk-free series."""
         _payload: Dict[str, Any] = dict(extra_params)
         if identifiers is not None:
             _payload["identifiers"] = identifiers

@@ -23,7 +23,10 @@ class EsgAPI(BaseAPI):
     ) -> Any:
         """Compare ESG profiles of multiple securities side by side
 
-        Returns a comparison table of ESG metrics for 2 or more securities. Each security shows overall ESG score, E/S/G pillar scores, controversy level, carbon intensity, and SFDR classification. Enables visual comparison for security selection based on sustainability criteria. Used by the Dashboard comparison view ESG tab."""
+        Returns a comparison table of ESG metrics for 2 or more securities. Each security shows overall ESG score, E/S/G pillar scores, controversy level, carbon intensity, and SFDR classification. Enables visual comparison for security selection based on sustainability criteria. Used by the Dashboard comparison view ESG tab.
+
+        Args:
+        portfolios: Portfolio definitions to compare. Each item must include a name and a weights mapping from security identifier to portfolio weight."""
         _payload: Dict[str, Any] = {}
         _payload["portfolios"] = portfolios
         return self._call("esg.compare", params=_payload, options=options, context=context)
@@ -76,7 +79,15 @@ class EsgAPI(BaseAPI):
     ) -> Any:
         """Screen securities by ESG criteria and exclusion filters
 
-        Filters the securities universe by ESG criteria: minimum ESG score, pillar thresholds, controversy exclusions, sector exclusions (weapons, tobacco, gambling, fossil fuels), and SFDR article classification. Returns securities passing all ESG criteria with their scores. Used by ESG-conscious portfolio construction and by the Dashboard ESG screening view."""
+        Filters the securities universe by ESG criteria: minimum ESG score, pillar thresholds, controversy exclusions, sector exclusions (weapons, tobacco, gambling, fossil fuels), and SFDR article classification. Returns securities passing all ESG criteria with their scores. Used by ESG-conscious portfolio construction and by the Dashboard ESG screening view.
+
+        Args:
+        criteria: Optional compatibility wrapper for ESG screen filters. Supported keys are universe, min_sri, max_sri, min_esg_score, sfdr_filter, and limit.
+        universe: Optional list of security identifiers to screen. When omitted, the full ESG cache is screened.
+        min_sri: Minimum Sustainability Risk Indicator value to include, from 1 to 7.
+        max_sri: Maximum Sustainability Risk Indicator value to include, from 1 to 7.
+        min_esg_score: Minimum ESG score to include, using the stored score or the SRI-derived proxy when needed.
+        sfdr_filter: Optional SFDR classifications to include."""
         _payload: Dict[str, Any] = {}
         if criteria is not None:
             _payload["criteria"] = criteria
@@ -104,7 +115,10 @@ class EsgAPI(BaseAPI):
     ) -> Any:
         """Get a global summary of ESG coverage across the securities catalog
 
-        Returns an aggregate snapshot of the entire securities catalog ESG coverage: total security count, count of securities with an SRI rating, and the SRI distribution histogram (by risk-level bucket). NOTE: this operation is catalog-wide, not per-security. Any provided `identifiers` are currently ignored by the handler. To get ESG data for specific securities, use esg.get. Used by the Dashboard ESG landing page and as an availability indicator before drilling into per-security data."""
+        Returns an aggregate snapshot of the entire securities catalog ESG coverage: total security count, count of securities with an SRI rating, and the SRI distribution histogram (by risk-level bucket). NOTE: this operation is catalog-wide, not per-security. Any provided `identifiers` are currently ignored by the handler. To get ESG data for specific securities, use esg.get. Used by the Dashboard ESG landing page and as an availability indicator before drilling into per-security data.
+
+        Args:
+        filter: Optional compatibility filter accepted by the request model. The current summary handler returns catalog-wide ESG coverage and ignores this value."""
         _payload: Dict[str, Any] = {}
         if identifiers is not None:
             _payload["identifiers"] = identifiers
@@ -126,7 +140,10 @@ class AsyncEsgAPI(AsyncBaseAPI):
     ) -> Any:
         """Compare ESG profiles of multiple securities side by side
 
-        Returns a comparison table of ESG metrics for 2 or more securities. Each security shows overall ESG score, E/S/G pillar scores, controversy level, carbon intensity, and SFDR classification. Enables visual comparison for security selection based on sustainability criteria. Used by the Dashboard comparison view ESG tab."""
+        Returns a comparison table of ESG metrics for 2 or more securities. Each security shows overall ESG score, E/S/G pillar scores, controversy level, carbon intensity, and SFDR classification. Enables visual comparison for security selection based on sustainability criteria. Used by the Dashboard comparison view ESG tab.
+
+        Args:
+        portfolios: Portfolio definitions to compare. Each item must include a name and a weights mapping from security identifier to portfolio weight."""
         _payload: Dict[str, Any] = {}
         _payload["portfolios"] = portfolios
         return await self._call("esg.compare", params=_payload, options=options, context=context)
@@ -179,7 +196,15 @@ class AsyncEsgAPI(AsyncBaseAPI):
     ) -> Any:
         """Screen securities by ESG criteria and exclusion filters
 
-        Filters the securities universe by ESG criteria: minimum ESG score, pillar thresholds, controversy exclusions, sector exclusions (weapons, tobacco, gambling, fossil fuels), and SFDR article classification. Returns securities passing all ESG criteria with their scores. Used by ESG-conscious portfolio construction and by the Dashboard ESG screening view."""
+        Filters the securities universe by ESG criteria: minimum ESG score, pillar thresholds, controversy exclusions, sector exclusions (weapons, tobacco, gambling, fossil fuels), and SFDR article classification. Returns securities passing all ESG criteria with their scores. Used by ESG-conscious portfolio construction and by the Dashboard ESG screening view.
+
+        Args:
+        criteria: Optional compatibility wrapper for ESG screen filters. Supported keys are universe, min_sri, max_sri, min_esg_score, sfdr_filter, and limit.
+        universe: Optional list of security identifiers to screen. When omitted, the full ESG cache is screened.
+        min_sri: Minimum Sustainability Risk Indicator value to include, from 1 to 7.
+        max_sri: Maximum Sustainability Risk Indicator value to include, from 1 to 7.
+        min_esg_score: Minimum ESG score to include, using the stored score or the SRI-derived proxy when needed.
+        sfdr_filter: Optional SFDR classifications to include."""
         _payload: Dict[str, Any] = {}
         if criteria is not None:
             _payload["criteria"] = criteria
@@ -207,7 +232,10 @@ class AsyncEsgAPI(AsyncBaseAPI):
     ) -> Any:
         """Get a global summary of ESG coverage across the securities catalog
 
-        Returns an aggregate snapshot of the entire securities catalog ESG coverage: total security count, count of securities with an SRI rating, and the SRI distribution histogram (by risk-level bucket). NOTE: this operation is catalog-wide, not per-security. Any provided `identifiers` are currently ignored by the handler. To get ESG data for specific securities, use esg.get. Used by the Dashboard ESG landing page and as an availability indicator before drilling into per-security data."""
+        Returns an aggregate snapshot of the entire securities catalog ESG coverage: total security count, count of securities with an SRI rating, and the SRI distribution histogram (by risk-level bucket). NOTE: this operation is catalog-wide, not per-security. Any provided `identifiers` are currently ignored by the handler. To get ESG data for specific securities, use esg.get. Used by the Dashboard ESG landing page and as an availability indicator before drilling into per-security data.
+
+        Args:
+        filter: Optional compatibility filter accepted by the request model. The current summary handler returns catalog-wide ESG coverage and ignores this value."""
         _payload: Dict[str, Any] = {}
         if identifiers is not None:
             _payload["identifiers"] = identifiers

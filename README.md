@@ -4,6 +4,13 @@ Python SDK (sync + async) for Tepilora API v3.
 
 **262 operations** across **28 namespaces**, auto-generated from the registry.
 
+This SDK is developed in the private TepiloraSDK source repository. Its
+[public mirror](https://github.com/Admintepilora/tepilora-python) is updated
+automatically with every release. Issues are welcome on the mirror; please do
+not submit pull requests there. Find the release version in `Tepilora/version.py`,
+the release tag, and the mirror commit message
+`release: vX.Y.Z (synced from private repo <sha>)`.
+
 ## Install
 
 ```bash
@@ -264,5 +271,5 @@ except TepiloraAPIError as e:
 
 ```python
 import Tepilora
-print(Tepilora.__version__)  # 0.5.0
+print(Tepilora.__version__)
 ```

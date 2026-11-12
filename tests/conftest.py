@@ -3,6 +3,7 @@ Shared pytest fixtures for TepiloraSDK tests.
 """
 
 import json
+import re
 from pathlib import Path
 from typing import Any, Dict, List
 
@@ -13,6 +14,7 @@ from Tepilora import TepiloraClient, AsyncTepiloraClient
 
 
 SCHEMA_PATH = Path(__file__).parent.parent / "schema" / "registry.json"
+V3_PREFIX = "/T-Api/v3"
 
 
 def _load_schema() -> Dict[str, Any]:
@@ -22,6 +24,59 @@ def _load_schema() -> Dict[str, Any]:
             return json.load(f)
     from Tepilora._schema import SCHEMA
     return SCHEMA
+
+
+def _payload_from_request(request: httpx.Request) -> Dict[str, Any]:
+    """Parse JSON calls and provide structural payloads for multipart calls."""
+    content_type = request.headers.get("Content-Type", "")
+    if "multipart/form-data" in content_type and request.url.path.startswith(f"{V3_PREFIX}/"):
+        rest = request.url.path[len(V3_PREFIX) + 1:]
+        category, _, operation = rest.partition("/")
+        field_names = [
+            match.decode("utf-8")
+            for match in re.findall(rb'name="([^"]+)"', request.content)
+        ]
+        return {
+            "action": f"{category}.{operation}",
+            "params": {name: "multipart" for name in field_names},
+            "raw": request.content,
+        }
+    try:
+        payload = json.loads(request.content.decode("utf-8"))
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        return {"raw": request.content}
+    if request.url.path.startswith(f"{V3_PREFIX}/") and request.url.path != V3_PREFIX:
+        rest = request.url.path[len(V3_PREFIX) + 1:]
+        category, _, operation = rest.partition("/")
+        if category and operation and isinstance(payload, dict) and "action" not in payload:
+            return {
+                "action": f"{category}.{operation}",
+                "params": payload,
+            }
+    return payload
+
+
+def _mock_response_for_request(request: httpx.Request, payload: Dict[str, Any]) -> httpx.Response:
+    action = payload.get("action", "unknown")
+    if request.headers.get("Accept") == "application/octet-stream":
+        return httpx.Response(
+            200,
+            headers={
+                "Content-Type": "application/octet-stream",
+                "Content-Disposition": 'attachment; filename="mock.bin"',
+                "X-Tepilora-Request-Id": "test-123",
+            },
+            content=b"mock binary",
+        )
+    return httpx.Response(
+        200,
+        json={
+            "success": True,
+            "action": action,
+            "data": {"result": "mock"},
+            "meta": {"request_id": "test-123"},
+        },
+    )
 
 
 @pytest.fixture(scope="session")
@@ -46,11 +101,7 @@ def mock_transport():
     calls: List[Dict[str, Any]] = []
 
     def handler(request: httpx.Request) -> httpx.Response:
-        # Parse request
-        try:
-            payload = json.loads(request.content.decode("utf-8"))
-        except (json.JSONDecodeError, UnicodeDecodeError):
-            payload = {"raw": request.content}
+        payload = _payload_from_request(request)
 
         calls.append({
             "method": request.method,
@@ -59,17 +110,7 @@ def mock_transport():
             "headers": dict(request.headers),
         })
 
-        # Return success response
-        action = payload.get("action", "unknown")
-        return httpx.Response(
-            200,
-            json={
-                "success": True,
-                "action": action,
-                "data": {"result": "mock"},
-                "meta": {"request_id": "test-123"},
-            },
-        )
+        return _mock_response_for_request(request, payload)
 
     transport = httpx.MockTransport(handler)
     transport.calls = calls  # type: ignore
@@ -94,10 +135,7 @@ def async_mock_transport():
     calls: List[Dict[str, Any]] = []
 
     async def handler(request: httpx.Request) -> httpx.Response:
-        try:
-            payload = json.loads(request.content.decode("utf-8"))
-        except (json.JSONDecodeError, UnicodeDecodeError):
-            payload = {"raw": request.content}
+        payload = _payload_from_request(request)
 
         calls.append({
             "method": request.method,
@@ -105,16 +143,7 @@ def async_mock_transport():
             "payload": payload,
         })
 
-        action = payload.get("action", "unknown")
-        return httpx.Response(
-            200,
-            json={
-                "success": True,
-                "action": action,
-                "data": {"result": "mock"},
-                "meta": {"request_id": "test-123"},
-            },
-        )
+        return _mock_response_for_request(request, payload)
 
     transport = httpx.MockTransport(handler)
     transport.calls = calls  # type: ignore
@@ -142,6 +171,7 @@ def generate_test_value(type_name: str) -> Any:
         "bool": True,
         "list": ["item1", "item2"],
         "dict": {"key": "value"},
+        "file": b"test file payload",
     }.get(type_name, "test")
 
 

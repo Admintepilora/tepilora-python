@@ -30,6 +30,7 @@ class FhAPI(BaseAPI):
         Returns the three main financial statements in structured format: Income Statement (revenue, COGS, operating income, net income, EPS), Balance Sheet (total assets, equity, debt, cash), and Cash Flow Statement (operating, investing, financing cash flows, free cash flow). Data is organized by statement type with line items and time periods. Used by the Dashboard for financial statement views and by fundamental analysis workflows.
 
         Args:
+        statement: Financial statement section to return: all statements, income statement, balance sheet, or cash flow.
         start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
         end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)"""
         _payload: Dict[str, Any] = {}
@@ -54,7 +55,10 @@ class FhAPI(BaseAPI):
     ) -> Any:
         """Get the historical time series of fundamental metrics for a security
 
-        Returns the full time series of fundamentals data for a security, with quarterly or annual data points depending on the metric. Enables trend analysis of financial metrics over time (e.g. margin expansion, revenue growth trajectory, leverage changes). Supports column filtering and date range selection. Used by the Dashboard for fundamentals charts and by analytical workflows studying fundamental trends."""
+        Returns the full time series of fundamentals data for a security, with quarterly or annual data points depending on the metric. Enables trend analysis of financial metrics over time (e.g. margin expansion, revenue growth trajectory, leverage changes). Supports column filtering and date range selection. Used by the Dashboard for fundamentals charts and by analytical workflows studying fundamental trends.
+
+        Args:
+        columns: Optional FH column names to include in each historical fundamentals row."""
         _payload: Dict[str, Any] = {}
         _payload["identifier"] = identifier
         if columns is not None:
@@ -91,6 +95,9 @@ class FhAPI(BaseAPI):
 
         Returns the most recent fundamentals record for each security. Includes 92 columns from the FH parquet: revenue, net income, EPS, margins (gross, operating, net), profitability ratios (ROE, ROA, ROIC), leverage (debt-to-equity), liquidity (current ratio), growth rates (1Y/3Y/5Y), and valuation multiples (PE, PB, PS). Supports column filtering to request only specific metrics. Used by the Dashboard fundamentals tab, by the reporting module for fund sheet fundamentals section, and by the AI assistant for quick financial data queries.
 
+        Args:
+        columns: Optional FH column names to include in the latest fundamentals snapshot.
+
         Examples:
             >>> client.fh.latest(identifiers='US0378331005USDXNAS')"""
         _payload: Dict[str, Any] = {}
@@ -117,7 +124,9 @@ class FhAPI(BaseAPI):
 
         Args:
         start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
-        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)"""
+        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)
+        columns: Optional FH parquet column names to return; omit to return the default raw fundamentals fields.
+        rt_policy: Return-type selection policy used when multiple reported/restated values are available."""
         _payload: Dict[str, Any] = {}
         _payload["identifiers"] = identifiers
         if start_date is not None:
@@ -149,7 +158,10 @@ class FhAPI(BaseAPI):
 
         Args:
         start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
-        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)"""
+        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)
+        rt_policy: Return-type selection policy used when multiple reported/restated values are available.
+        metrics: Derived metric group or metric names to return; omit to return the default metric set.
+        output_columns: Optional final output columns to keep after derived metrics are calculated."""
         _payload: Dict[str, Any] = {}
         _payload["identifiers"] = identifiers
         if start_date is not None:
@@ -200,6 +212,7 @@ class AsyncFhAPI(AsyncBaseAPI):
         Returns the three main financial statements in structured format: Income Statement (revenue, COGS, operating income, net income, EPS), Balance Sheet (total assets, equity, debt, cash), and Cash Flow Statement (operating, investing, financing cash flows, free cash flow). Data is organized by statement type with line items and time periods. Used by the Dashboard for financial statement views and by fundamental analysis workflows.
 
         Args:
+        statement: Financial statement section to return: all statements, income statement, balance sheet, or cash flow.
         start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
         end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)"""
         _payload: Dict[str, Any] = {}
@@ -224,7 +237,10 @@ class AsyncFhAPI(AsyncBaseAPI):
     ) -> Any:
         """Get the historical time series of fundamental metrics for a security
 
-        Returns the full time series of fundamentals data for a security, with quarterly or annual data points depending on the metric. Enables trend analysis of financial metrics over time (e.g. margin expansion, revenue growth trajectory, leverage changes). Supports column filtering and date range selection. Used by the Dashboard for fundamentals charts and by analytical workflows studying fundamental trends."""
+        Returns the full time series of fundamentals data for a security, with quarterly or annual data points depending on the metric. Enables trend analysis of financial metrics over time (e.g. margin expansion, revenue growth trajectory, leverage changes). Supports column filtering and date range selection. Used by the Dashboard for fundamentals charts and by analytical workflows studying fundamental trends.
+
+        Args:
+        columns: Optional FH column names to include in each historical fundamentals row."""
         _payload: Dict[str, Any] = {}
         _payload["identifier"] = identifier
         if columns is not None:
@@ -261,6 +277,9 @@ class AsyncFhAPI(AsyncBaseAPI):
 
         Returns the most recent fundamentals record for each security. Includes 92 columns from the FH parquet: revenue, net income, EPS, margins (gross, operating, net), profitability ratios (ROE, ROA, ROIC), leverage (debt-to-equity), liquidity (current ratio), growth rates (1Y/3Y/5Y), and valuation multiples (PE, PB, PS). Supports column filtering to request only specific metrics. Used by the Dashboard fundamentals tab, by the reporting module for fund sheet fundamentals section, and by the AI assistant for quick financial data queries.
 
+        Args:
+        columns: Optional FH column names to include in the latest fundamentals snapshot.
+
         Examples:
             >>> await client.fh.latest(identifiers='US0378331005USDXNAS')"""
         _payload: Dict[str, Any] = {}
@@ -287,7 +306,9 @@ class AsyncFhAPI(AsyncBaseAPI):
 
         Args:
         start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
-        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)"""
+        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)
+        columns: Optional FH parquet column names to return; omit to return the default raw fundamentals fields.
+        rt_policy: Return-type selection policy used when multiple reported/restated values are available."""
         _payload: Dict[str, Any] = {}
         _payload["identifiers"] = identifiers
         if start_date is not None:
@@ -319,7 +340,10 @@ class AsyncFhAPI(AsyncBaseAPI):
 
         Args:
         start_date: Start date for time range queries (ISO 8601 YYYY-MM-DD)
-        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)"""
+        end_date: End date for time range queries (ISO 8601 YYYY-MM-DD)
+        rt_policy: Return-type selection policy used when multiple reported/restated values are available.
+        metrics: Derived metric group or metric names to return; omit to return the default metric set.
+        output_columns: Optional final output columns to keep after derived metrics are calculated."""
         _payload: Dict[str, Any] = {}
         _payload["identifiers"] = identifiers
         if start_date is not None:

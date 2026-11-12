@@ -25,7 +25,10 @@ class ProfilingAPI(BaseAPI):
     ) -> Any:
         """Archive a MiFID II profile (mark as no longer current)
 
-        Marks a profile as archived, making it no longer the active profile for the linked client. Archived profiles are retained for regulatory record-keeping but excluded from suitability checks. Used when a client completes a new questionnaire."""
+        Marks a profile as archived, making it no longer the active profile for the linked client. Archived profiles are retained for regulatory record-keeping but excluded from suitability checks. Used when a client completes a new questionnaire.
+
+        Args:
+        profile_id: MiFID profile identifier to archive; equivalent to id when both are accepted by the handler."""
         _payload: Dict[str, Any] = {}
         if id is not None:
             _payload["id"] = id
@@ -65,7 +68,11 @@ class ProfilingAPI(BaseAPI):
     ) -> Any:
         """Convert raw questionnaire answers into scored profile dimensions
 
-        Transforms raw questionnaire answers into numerical scores across MiFID II dimensions: risk tolerance (1-7), investment horizon, knowledge level, loss capacity, and investment objectives. Each dimension is scored based on the answer weighting scheme. Returns the scored dimensions ready for profile creation. Used as an intermediate step between validation and profile creation."""
+        Transforms raw questionnaire answers into numerical scores across MiFID II dimensions: risk tolerance (1-7), investment horizon, knowledge level, loss capacity, and investment objectives. Each dimension is scored based on the answer weighting scheme. Returns the scored dimensions ready for profile creation. Used as an intermediate step between validation and profile creation.
+
+        Args:
+        answers: Raw questionnaire answers keyed by question id.
+        language: Language code used for localized score labels in the conversion output."""
         _payload: Dict[str, Any] = {}
         _payload["answers"] = answers
         if language is not None:
@@ -84,7 +91,12 @@ class ProfilingAPI(BaseAPI):
     ) -> Any:
         """Create a MiFID II investor profile from scored dimensions
 
-        Creates a new MiFID II investor profile in the MifidProfiles MongoDB collection. Accepts scored dimensions from profiling.convert_answers and generates: risk profile category (conservative to aggressive), recommended asset allocation ranges, suitability constraints, and regulatory classification. Links to a client entity if client_id is provided. Used by the Dashboard after questionnaire completion."""
+        Creates a new MiFID II investor profile in the MifidProfiles MongoDB collection. Accepts scored dimensions from profiling.convert_answers and generates: risk profile category (conservative to aggressive), recommended asset allocation ranges, suitability constraints, and regulatory classification. Links to a client entity if client_id is provided. Used by the Dashboard after questionnaire completion.
+
+        Args:
+        questionnaire: Scored questionnaire profile generated from profiling.convert_answers.
+        classification: Regulatory client classification used for suitability rules.
+        visibility: Profile visibility scope."""
         _payload: Dict[str, Any] = {}
         _payload["client_id"] = client_id
         _payload["questionnaire"] = questionnaire
@@ -120,7 +132,11 @@ class ProfilingAPI(BaseAPI):
     ) -> Any:
         """Get a specific MiFID II profile by ID
 
-        Returns the complete MiFID II profile: risk category, scored dimensions, recommended allocations, suitability constraints, creation date, and linked client. Used by the Dashboard profile detail view and by suitability check workflows."""
+        Returns the complete MiFID II profile: risk category, scored dimensions, recommended allocations, suitability constraints, creation date, and linked client. Used by the Dashboard profile detail view and by suitability check workflows.
+
+        Args:
+        profile_id: MiFID profile identifier to retrieve; equivalent to id when both are accepted by the handler.
+        version: Optional historical profile version to retrieve when querying by client_id."""
         _payload: Dict[str, Any] = {}
         if id is not None:
             _payload["id"] = id
@@ -145,7 +161,10 @@ class ProfilingAPI(BaseAPI):
     ) -> Any:
         """List MiFID II profiles with optional client and status filters
 
-        Returns paginated list of MiFID II profiles. Filterable by client_id, status (active/archived), and current_only flag. Supports limit and offset pagination. Used by the Dashboard profiles management page and by compliance reporting workflows."""
+        Returns paginated list of MiFID II profiles. Filterable by client_id, status (active/archived), and current_only flag. Supports limit and offset pagination. Used by the Dashboard profiles management page and by compliance reporting workflows.
+
+        Args:
+        current_only: Return only the current active profile for each client."""
         _payload: Dict[str, Any] = {}
         if client_id is not None:
             _payload["client_id"] = client_id
@@ -169,7 +188,11 @@ class ProfilingAPI(BaseAPI):
     ) -> Any:
         """Get the MiFID II suitability questionnaire template
 
-        Returns the structured MiFID II investor profiling questionnaire with all sections: investment experience, financial knowledge, risk tolerance, investment objectives, time horizon, and loss capacity. Each question includes type (single choice, multiple choice, slider), options with scores, and regulatory mapping. Used by the Dashboard client onboarding flow to render the questionnaire form."""
+        Returns the structured MiFID II investor profiling questionnaire with all sections: investment experience, financial knowledge, risk tolerance, investment objectives, time horizon, and loss capacity. Each question includes type (single choice, multiple choice, slider), options with scores, and regulatory mapping. Used by the Dashboard client onboarding flow to render the questionnaire form.
+
+        Args:
+        flat: Return a flat list of questions instead of the full sectioned questionnaire.
+        language: Language code used to localize questionnaire labels and help text."""
         _payload: Dict[str, Any] = {}
         if flat is not None:
             _payload["flat"] = flat
@@ -188,7 +211,11 @@ class ProfilingAPI(BaseAPI):
     ) -> Any:
         """Update an existing MiFID II profile
 
-        Modifies an existing profile's dimensions, risk category, or metadata. Creates an audit trail entry. Note: typically a new profile is created rather than updating an existing one, to preserve the historical record. Used for corrections."""
+        Modifies an existing profile's dimensions, risk category, or metadata. Creates an audit trail entry. Note: typically a new profile is created rather than updating an existing one, to preserve the historical record. Used for corrections.
+
+        Args:
+        questionnaire: Partial or complete MiFID questionnaire fields to merge into a new profile version.
+        classification: Optional regulatory client classification override for the new profile version."""
         _payload: Dict[str, Any] = {}
         _payload["client_id"] = client_id
         if questionnaire is not None:
@@ -206,7 +233,10 @@ class ProfilingAPI(BaseAPI):
     ) -> Any:
         """Validate questionnaire answers before profile creation
 
-        Validates a set of questionnaire answers against the question schema: checks required fields, valid option values, answer types, and logical consistency. Returns validation result with any errors or warnings. Used as a prerequisite step before profiling.create_profile to catch issues early."""
+        Validates a set of questionnaire answers against the question schema: checks required fields, valid option values, answer types, and logical consistency. Returns validation result with any errors or warnings. Used as a prerequisite step before profiling.create_profile to catch issues early.
+
+        Args:
+        answers: Raw questionnaire answers keyed by question id."""
         _payload: Dict[str, Any] = {}
         _payload["answers"] = answers
         return self._call("profiling.validate_answers", params=_payload, options=options, context=context)
@@ -227,7 +257,10 @@ class AsyncProfilingAPI(AsyncBaseAPI):
     ) -> Any:
         """Archive a MiFID II profile (mark as no longer current)
 
-        Marks a profile as archived, making it no longer the active profile for the linked client. Archived profiles are retained for regulatory record-keeping but excluded from suitability checks. Used when a client completes a new questionnaire."""
+        Marks a profile as archived, making it no longer the active profile for the linked client. Archived profiles are retained for regulatory record-keeping but excluded from suitability checks. Used when a client completes a new questionnaire.
+
+        Args:
+        profile_id: MiFID profile identifier to archive; equivalent to id when both are accepted by the handler."""
         _payload: Dict[str, Any] = {}
         if id is not None:
             _payload["id"] = id
@@ -267,7 +300,11 @@ class AsyncProfilingAPI(AsyncBaseAPI):
     ) -> Any:
         """Convert raw questionnaire answers into scored profile dimensions
 
-        Transforms raw questionnaire answers into numerical scores across MiFID II dimensions: risk tolerance (1-7), investment horizon, knowledge level, loss capacity, and investment objectives. Each dimension is scored based on the answer weighting scheme. Returns the scored dimensions ready for profile creation. Used as an intermediate step between validation and profile creation."""
+        Transforms raw questionnaire answers into numerical scores across MiFID II dimensions: risk tolerance (1-7), investment horizon, knowledge level, loss capacity, and investment objectives. Each dimension is scored based on the answer weighting scheme. Returns the scored dimensions ready for profile creation. Used as an intermediate step between validation and profile creation.
+
+        Args:
+        answers: Raw questionnaire answers keyed by question id.
+        language: Language code used for localized score labels in the conversion output."""
         _payload: Dict[str, Any] = {}
         _payload["answers"] = answers
         if language is not None:
@@ -286,7 +323,12 @@ class AsyncProfilingAPI(AsyncBaseAPI):
     ) -> Any:
         """Create a MiFID II investor profile from scored dimensions
 
-        Creates a new MiFID II investor profile in the MifidProfiles MongoDB collection. Accepts scored dimensions from profiling.convert_answers and generates: risk profile category (conservative to aggressive), recommended asset allocation ranges, suitability constraints, and regulatory classification. Links to a client entity if client_id is provided. Used by the Dashboard after questionnaire completion."""
+        Creates a new MiFID II investor profile in the MifidProfiles MongoDB collection. Accepts scored dimensions from profiling.convert_answers and generates: risk profile category (conservative to aggressive), recommended asset allocation ranges, suitability constraints, and regulatory classification. Links to a client entity if client_id is provided. Used by the Dashboard after questionnaire completion.
+
+        Args:
+        questionnaire: Scored questionnaire profile generated from profiling.convert_answers.
+        classification: Regulatory client classification used for suitability rules.
+        visibility: Profile visibility scope."""
         _payload: Dict[str, Any] = {}
         _payload["client_id"] = client_id
         _payload["questionnaire"] = questionnaire
@@ -322,7 +364,11 @@ class AsyncProfilingAPI(AsyncBaseAPI):
     ) -> Any:
         """Get a specific MiFID II profile by ID
 
-        Returns the complete MiFID II profile: risk category, scored dimensions, recommended allocations, suitability constraints, creation date, and linked client. Used by the Dashboard profile detail view and by suitability check workflows."""
+        Returns the complete MiFID II profile: risk category, scored dimensions, recommended allocations, suitability constraints, creation date, and linked client. Used by the Dashboard profile detail view and by suitability check workflows.
+
+        Args:
+        profile_id: MiFID profile identifier to retrieve; equivalent to id when both are accepted by the handler.
+        version: Optional historical profile version to retrieve when querying by client_id."""
         _payload: Dict[str, Any] = {}
         if id is not None:
             _payload["id"] = id
@@ -347,7 +393,10 @@ class AsyncProfilingAPI(AsyncBaseAPI):
     ) -> Any:
         """List MiFID II profiles with optional client and status filters
 
-        Returns paginated list of MiFID II profiles. Filterable by client_id, status (active/archived), and current_only flag. Supports limit and offset pagination. Used by the Dashboard profiles management page and by compliance reporting workflows."""
+        Returns paginated list of MiFID II profiles. Filterable by client_id, status (active/archived), and current_only flag. Supports limit and offset pagination. Used by the Dashboard profiles management page and by compliance reporting workflows.
+
+        Args:
+        current_only: Return only the current active profile for each client."""
         _payload: Dict[str, Any] = {}
         if client_id is not None:
             _payload["client_id"] = client_id
@@ -371,7 +420,11 @@ class AsyncProfilingAPI(AsyncBaseAPI):
     ) -> Any:
         """Get the MiFID II suitability questionnaire template
 
-        Returns the structured MiFID II investor profiling questionnaire with all sections: investment experience, financial knowledge, risk tolerance, investment objectives, time horizon, and loss capacity. Each question includes type (single choice, multiple choice, slider), options with scores, and regulatory mapping. Used by the Dashboard client onboarding flow to render the questionnaire form."""
+        Returns the structured MiFID II investor profiling questionnaire with all sections: investment experience, financial knowledge, risk tolerance, investment objectives, time horizon, and loss capacity. Each question includes type (single choice, multiple choice, slider), options with scores, and regulatory mapping. Used by the Dashboard client onboarding flow to render the questionnaire form.
+
+        Args:
+        flat: Return a flat list of questions instead of the full sectioned questionnaire.
+        language: Language code used to localize questionnaire labels and help text."""
         _payload: Dict[str, Any] = {}
         if flat is not None:
             _payload["flat"] = flat
@@ -390,7 +443,11 @@ class AsyncProfilingAPI(AsyncBaseAPI):
     ) -> Any:
         """Update an existing MiFID II profile
 
-        Modifies an existing profile's dimensions, risk category, or metadata. Creates an audit trail entry. Note: typically a new profile is created rather than updating an existing one, to preserve the historical record. Used for corrections."""
+        Modifies an existing profile's dimensions, risk category, or metadata. Creates an audit trail entry. Note: typically a new profile is created rather than updating an existing one, to preserve the historical record. Used for corrections.
+
+        Args:
+        questionnaire: Partial or complete MiFID questionnaire fields to merge into a new profile version.
+        classification: Optional regulatory client classification override for the new profile version."""
         _payload: Dict[str, Any] = {}
         _payload["client_id"] = client_id
         if questionnaire is not None:
@@ -408,7 +465,10 @@ class AsyncProfilingAPI(AsyncBaseAPI):
     ) -> Any:
         """Validate questionnaire answers before profile creation
 
-        Validates a set of questionnaire answers against the question schema: checks required fields, valid option values, answer types, and logical consistency. Returns validation result with any errors or warnings. Used as a prerequisite step before profiling.create_profile to catch issues early."""
+        Validates a set of questionnaire answers against the question schema: checks required fields, valid option values, answer types, and logical consistency. Returns validation result with any errors or warnings. Used as a prerequisite step before profiling.create_profile to catch issues early.
+
+        Args:
+        answers: Raw questionnaire answers keyed by question id."""
         _payload: Dict[str, Any] = {}
         _payload["answers"] = answers
         return await self._call("profiling.validate_answers", params=_payload, options=options, context=context)
