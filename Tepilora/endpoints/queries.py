@@ -97,8 +97,8 @@ class QueriesAPI(BaseAPI):
         query_id: Optional[str] = None,
         name: Optional[str] = None,
         category: Optional[str] = None,
-        limit: Optional[int] = 100,
-        offset: Optional[int] = 0,
+        limit: Optional[int] = None,
+        offset: Optional[int] = None,
         output_path: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
@@ -106,10 +106,12 @@ class QueriesAPI(BaseAPI):
     ) -> Any:
         """Execute a saved query and return fresh results
 
-        Runs a saved query (by ID, name, or name+category) and returns the current results. For dynamic queries, re-evaluates the filter definition against current data. For static queries, returns the fixed identifier list with current metadata. Results are cached for 15 minutes. Supports multiple output formats. Used by the Dashboard to refresh query results and by scheduled alerting workflows.
+        Runs a saved query by ID or by name+category and returns the same current result for either identity form. Dynamic definitions flow to the category search operation, including saved sort, order, limit, and offset. Explicit execute limit/offset override the saved values; omitted execute pagination preserves them. Static and composite queries apply execute pagination to their final item set; composite expressions do not define sort/order. Supports JSON and XLSX output.
 
         Args:
         query_id: Saved query identifier to execute; equivalent to id when both are accepted by the handler.
+        limit: Optional runtime result limit. When omitted, a dynamic query keeps its saved definition limit; static and composite queries use 100.
+        offset: Optional runtime result offset. When omitted, a dynamic query keeps its saved definition offset; static and composite queries use 0.
         output_path: Optional server-side file path used when exporting query execution results."""
         _payload: Dict[str, Any] = {}
         if id is not None:
@@ -160,7 +162,7 @@ class QueriesAPI(BaseAPI):
     ) -> Any:
         """List all saved queries for the current user with filtering and pagination
 
-        Returns the saved queries belonging to the authenticated user from the SavedQueries MongoDB collection. Queries are reusable search/filter/screening definitions that can be executed on demand. Filterable by category, type (dynamic/static/expression), tags, and name search. Used by the Dashboard Saved Queries panel and by the AI assistant to list available screening strategies.
+        Returns saved queries visible to the authenticated user. Every item includes its id so clients can execute it by ID, plus name and category for compound-key execution. Filterable by category, type (dynamic/static/composite), tags, and name search, with pagination and list ordering.
 
         Args:
         search: Case-insensitive search term applied to saved query names."""
@@ -243,11 +245,11 @@ class QueriesAPI(BaseAPI):
     ) -> Any:
         """Save a new query definition for later reuse
 
-        Creates a new saved query in the SavedQueries MongoDB collection. Supports three query types: dynamic (filter definition re-evaluated each execution), static (fixed list of identifiers), and expression (computed formula). Includes name, category, visibility (private/workspace), description, and tags. Used by the Dashboard Save Query button and by the AI assistant when helping users create reusable screens.
+        Creates a reusable saved query. Dynamic definitions accept query, filters, sort, order, limit, and offset and pass them to the category search operation on execution; for securities this includes global sorting and the 5000-row materialization cap. Static queries store identifiers. Composite queries store set expressions and intentionally have no definition sort/order; execution pagination applies to their final item set. Includes private/workspace visibility, description, and tags.
 
         Args:
         visibility: Saved query visibility scope: private for the current user or workspace for shared workspace queries.
-        definition: Dynamic query definition, usually containing query text and filters.
+        definition: Dynamic search definition. Supported fields include query, filters, sort, order, limit, and offset; they flow to the category search operation when executed. Securities definitions therefore use securities.search global sorting and its 5000-row materialization cap.
         items: Fixed TepiloraCode or identifier list for static saved queries.
         expression: Composite query expression combining saved query names with set operators."""
         _payload: Dict[str, Any] = {}
@@ -357,8 +359,8 @@ class AsyncQueriesAPI(AsyncBaseAPI):
         query_id: Optional[str] = None,
         name: Optional[str] = None,
         category: Optional[str] = None,
-        limit: Optional[int] = 100,
-        offset: Optional[int] = 0,
+        limit: Optional[int] = None,
+        offset: Optional[int] = None,
         output_path: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
@@ -366,10 +368,12 @@ class AsyncQueriesAPI(AsyncBaseAPI):
     ) -> Any:
         """Execute a saved query and return fresh results
 
-        Runs a saved query (by ID, name, or name+category) and returns the current results. For dynamic queries, re-evaluates the filter definition against current data. For static queries, returns the fixed identifier list with current metadata. Results are cached for 15 minutes. Supports multiple output formats. Used by the Dashboard to refresh query results and by scheduled alerting workflows.
+        Runs a saved query by ID or by name+category and returns the same current result for either identity form. Dynamic definitions flow to the category search operation, including saved sort, order, limit, and offset. Explicit execute limit/offset override the saved values; omitted execute pagination preserves them. Static and composite queries apply execute pagination to their final item set; composite expressions do not define sort/order. Supports JSON and XLSX output.
 
         Args:
         query_id: Saved query identifier to execute; equivalent to id when both are accepted by the handler.
+        limit: Optional runtime result limit. When omitted, a dynamic query keeps its saved definition limit; static and composite queries use 100.
+        offset: Optional runtime result offset. When omitted, a dynamic query keeps its saved definition offset; static and composite queries use 0.
         output_path: Optional server-side file path used when exporting query execution results."""
         _payload: Dict[str, Any] = {}
         if id is not None:
@@ -420,7 +424,7 @@ class AsyncQueriesAPI(AsyncBaseAPI):
     ) -> Any:
         """List all saved queries for the current user with filtering and pagination
 
-        Returns the saved queries belonging to the authenticated user from the SavedQueries MongoDB collection. Queries are reusable search/filter/screening definitions that can be executed on demand. Filterable by category, type (dynamic/static/expression), tags, and name search. Used by the Dashboard Saved Queries panel and by the AI assistant to list available screening strategies.
+        Returns saved queries visible to the authenticated user. Every item includes its id so clients can execute it by ID, plus name and category for compound-key execution. Filterable by category, type (dynamic/static/composite), tags, and name search, with pagination and list ordering.
 
         Args:
         search: Case-insensitive search term applied to saved query names."""
@@ -503,11 +507,11 @@ class AsyncQueriesAPI(AsyncBaseAPI):
     ) -> Any:
         """Save a new query definition for later reuse
 
-        Creates a new saved query in the SavedQueries MongoDB collection. Supports three query types: dynamic (filter definition re-evaluated each execution), static (fixed list of identifiers), and expression (computed formula). Includes name, category, visibility (private/workspace), description, and tags. Used by the Dashboard Save Query button and by the AI assistant when helping users create reusable screens.
+        Creates a reusable saved query. Dynamic definitions accept query, filters, sort, order, limit, and offset and pass them to the category search operation on execution; for securities this includes global sorting and the 5000-row materialization cap. Static queries store identifiers. Composite queries store set expressions and intentionally have no definition sort/order; execution pagination applies to their final item set. Includes private/workspace visibility, description, and tags.
 
         Args:
         visibility: Saved query visibility scope: private for the current user or workspace for shared workspace queries.
-        definition: Dynamic query definition, usually containing query text and filters.
+        definition: Dynamic search definition. Supported fields include query, filters, sort, order, limit, and offset; they flow to the category search operation when executed. Securities definitions therefore use securities.search global sorting and its 5000-row materialization cap.
         items: Fixed TepiloraCode or identifier list for static saved queries.
         expression: Composite query expression combining saved query names with set operators."""
         _payload: Dict[str, Any] = {}

@@ -115,7 +115,7 @@ class NewsAPI(BaseAPI):
     ) -> Any:
         """Search financial news articles with full-text and faceted filtering
 
-        Full-text search across the financial news database powered by Tantivy search engine. Indexes articles from major financial news sources (Bloomberg, Reuters, Financial Times, CNBC, MarketWatch, local financial media). Supports advanced query syntax (AND, OR, phrases), date range filtering, source filtering, and topic exclusion. Returns article headline, source, publication date, URL, matched topics/entities, and relevance score. Results are paginated and sortable by date or relevance. Used by the Dashboard News page as the primary news search, by the AI assistant for news context grounding, and by alert rules that monitor specific topics or entities.
+        Full-text search across the financial news database powered by Tantivy search engine. Indexes articles from international and local financial news outlets. Supports advanced query syntax (AND, OR, phrases), date range filtering, source filtering, and topic exclusion. Returns article headline, source, publication date, URL, matched topics/entities, and relevance score. Results are paginated and sortable by date or relevance. Used by the Dashboard News page as the primary news search, by the AI assistant for news context grounding, and by alert rules that monitor specific topics or entities.
 
         Args:
         filters: Optional structured filters, currently including searchKey/search_key and source.
@@ -351,7 +351,7 @@ class AsyncNewsAPI(AsyncBaseAPI):
     ) -> Any:
         """Search financial news articles with full-text and faceted filtering
 
-        Full-text search across the financial news database powered by Tantivy search engine. Indexes articles from major financial news sources (Bloomberg, Reuters, Financial Times, CNBC, MarketWatch, local financial media). Supports advanced query syntax (AND, OR, phrases), date range filtering, source filtering, and topic exclusion. Returns article headline, source, publication date, URL, matched topics/entities, and relevance score. Results are paginated and sortable by date or relevance. Used by the Dashboard News page as the primary news search, by the AI assistant for news context grounding, and by alert rules that monitor specific topics or entities.
+        Full-text search across the financial news database powered by Tantivy search engine. Indexes articles from international and local financial news outlets. Supports advanced query syntax (AND, OR, phrases), date range filtering, source filtering, and topic exclusion. Returns article headline, source, publication date, URL, matched topics/entities, and relevance score. Results are paginated and sortable by date or relevance. Used by the Dashboard News page as the primary news search, by the AI assistant for news context grounding, and by alert rules that monitor specific topics or entities.
 
         Args:
         filters: Optional structured filters, currently including searchKey/search_key and source.

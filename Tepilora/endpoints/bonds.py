@@ -31,7 +31,7 @@ class BondsAPI(BaseAPI):
         Calculates comprehensive bond analytics: yield to maturity (YTM), Macaulay duration, modified duration, convexity, accrued interest, clean/dirty price conversion, and projected cash flow schedule. Auto-populates coupon rate, maturity date, and frequency from D_full.parquet metadata when available — user params always override. Supports all major day count conventions (ACT/ACT, ACT/365, 30/360, ACT/360, 30E/360). Used by the Dashboard bond detail page, by portfolio fixed-income analytics, and by the AI assistant for bond valuation.
 
         Args:
-        identifier: Single security identifier: ISIN, TepiloraCode, or Bloomberg ticker
+        identifier: Single security identifier: ISIN, TepiloraCode, or exchange ticker
         face_value: Bond redemption face value used for cash-flow and yield calculations.
         coupon_rate: Annual coupon rate as a decimal. If omitted, the bond catalog coupon is used when available.
         maturity_date: Bond maturity date in ISO 8601 format. If omitted, the catalog maturity date is used when available.
@@ -263,7 +263,7 @@ class AsyncBondsAPI(AsyncBaseAPI):
         Calculates comprehensive bond analytics: yield to maturity (YTM), Macaulay duration, modified duration, convexity, accrued interest, clean/dirty price conversion, and projected cash flow schedule. Auto-populates coupon rate, maturity date, and frequency from D_full.parquet metadata when available — user params always override. Supports all major day count conventions (ACT/ACT, ACT/365, 30/360, ACT/360, 30E/360). Used by the Dashboard bond detail page, by portfolio fixed-income analytics, and by the AI assistant for bond valuation.
 
         Args:
-        identifier: Single security identifier: ISIN, TepiloraCode, or Bloomberg ticker
+        identifier: Single security identifier: ISIN, TepiloraCode, or exchange ticker
         face_value: Bond redemption face value used for cash-flow and yield calculations.
         coupon_rate: Annual coupon rate as a decimal. If omitted, the bond catalog coupon is used when available.
         maturity_date: Bond maturity date in ISO 8601 format. If omitted, the catalog maturity date is used when available.

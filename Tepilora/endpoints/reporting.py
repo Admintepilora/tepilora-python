@@ -34,14 +34,18 @@ class ReportingAPI(BaseAPI):
         end_date: Optional[str] = None,
         risk_free_rate: Optional[float] = 0.0,
         locale: Optional[str] = "en",
+        base_currency: Optional[str] = None,
         output_path: Optional[str] = None,
         ai: Optional[bool] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Generate a comprehensive fund factsheet for an ETF or mutual fund
+        """Generate a comprehensive factsheet for a fund, ETF, or equity
 
-        Produces a two-page A4 fund factsheet in HTML or PDF. Automatically fetches all required data: security description, NAV history, performance metrics (YTD, 1Y, 3Y, 5Y), risk metrics (volatility, Sharpe, Sortino, max drawdown), portfolio breakdowns (holdings, sectors, countries), monthly return heatmap, and fee structure. Accepts ISIN (auto-resolves to TepiloraCode) or TepiloraCode directly. Supports 5 locales and custom branding. Phase 1: ETF and Fund types only. Used by the Dashboard fund detail page and by client reporting workflows."""
+        Produces a two-page A4 factsheet in HTML or PDF. Automatically fetches all required data: security description, price/NAV history, performance metrics (YTD, 1Y, 3Y, 5Y), risk metrics (volatility, Sharpe, Sortino, max drawdown), base-aware rating, and instrument-specific sections. Fund/ETF sheets include portfolio breakdowns, holdings, monthly return heatmap, and fee structure. Equity sheets include valuation, profitability, financials, dividends, technicals, and signal/momentum sections. Optional base_currency controls the displayed Tepilora Rating; request-level rating base resolution is reported in _meta.resolution. Accepts ISIN (auto-resolves to TepiloraCode) or TepiloraCode directly. Supports 5 locales and custom branding. Used by Dashboard detail pages and by client reporting workflows.
+
+        Args:
+        base_currency: Optional rating base currency. Supported values are EUR, USD, GBP, and CHF. Resolution order is explicit request, user settings, user country, then USD; unsupported candidates are skipped and reported in response metadata."""
         _payload: Dict[str, Any] = {}
         _payload["identifier"] = identifier
         if start_date is not None:
@@ -52,6 +56,8 @@ class ReportingAPI(BaseAPI):
             _payload["risk_free_rate"] = risk_free_rate
         if locale is not None:
             _payload["locale"] = locale
+        if base_currency is not None:
+            _payload["base_currency"] = base_currency
         if output_path is not None:
             _payload["output_path"] = output_path
         if ai is not None:
@@ -106,7 +112,7 @@ class ReportingAPI(BaseAPI):
     ) -> Any:
         """Build a structured portfolio performance tearsheet payload
 
-        Returns a structured portfolio performance payload: cumulative return series, calendar year returns, monthly return heatmap, risk metrics dashboard block, attribution breakdown, and holdings summary. Accepts either a portfolio `id` (fetches weights from the saved portfolio) or inline `weights`. Supports benchmark overlay via `benchmark_id` or `benchmark_weights`. NOTE: the `format` parameter is accepted for API compatibility but currently ignored — this operation always returns the structured dict, not rendered HTML/PDF. For an HTML tearsheet render, use reporting.render with the 'tearsheet' template."""
+        Returns a report envelope with `tearsheet`, `html`, `generated_at`, and `warnings`. `tearsheet.rolling` contains monthly last-observation `rolling_sharpe` ratios and `rolling_volatility` annualized fractions after a complete 260-return window, using the analytics rolling functions and the tearsheet annual `risk_free_rate`. Annualized return/CAGR and dependent ratios are null, with `tearsheet.performance.annualized_return_reason`, until the NAV has 260 daily returns. Accepts a saved portfolio `id` or inline `weights`, with optional benchmark overlay via `benchmark_id` (a security code or `port_` portfolio id) or `benchmark_weights`; a requested benchmark without series raises a validation error. `format` is accepted but ignored; this operation always returns the report envelope, not a PDF. For Suggested portfolios, defaults to the optimizer's historical window and marks the result with `basis=backtest_in_sample` and `window`; these are in-sample modelled returns, not realized performance. If no return series exists, `tearsheet` and `html` are null with `reason=no_series_data`. Use reporting.render for a rendered report."""
         _payload: Dict[str, Any] = {}
         if id is not None:
             _payload["id"] = id
@@ -209,14 +215,18 @@ class AsyncReportingAPI(AsyncBaseAPI):
         end_date: Optional[str] = None,
         risk_free_rate: Optional[float] = 0.0,
         locale: Optional[str] = "en",
+        base_currency: Optional[str] = None,
         output_path: Optional[str] = None,
         ai: Optional[bool] = False,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
-        """Generate a comprehensive fund factsheet for an ETF or mutual fund
+        """Generate a comprehensive factsheet for a fund, ETF, or equity
 
-        Produces a two-page A4 fund factsheet in HTML or PDF. Automatically fetches all required data: security description, NAV history, performance metrics (YTD, 1Y, 3Y, 5Y), risk metrics (volatility, Sharpe, Sortino, max drawdown), portfolio breakdowns (holdings, sectors, countries), monthly return heatmap, and fee structure. Accepts ISIN (auto-resolves to TepiloraCode) or TepiloraCode directly. Supports 5 locales and custom branding. Phase 1: ETF and Fund types only. Used by the Dashboard fund detail page and by client reporting workflows."""
+        Produces a two-page A4 factsheet in HTML or PDF. Automatically fetches all required data: security description, price/NAV history, performance metrics (YTD, 1Y, 3Y, 5Y), risk metrics (volatility, Sharpe, Sortino, max drawdown), base-aware rating, and instrument-specific sections. Fund/ETF sheets include portfolio breakdowns, holdings, monthly return heatmap, and fee structure. Equity sheets include valuation, profitability, financials, dividends, technicals, and signal/momentum sections. Optional base_currency controls the displayed Tepilora Rating; request-level rating base resolution is reported in _meta.resolution. Accepts ISIN (auto-resolves to TepiloraCode) or TepiloraCode directly. Supports 5 locales and custom branding. Used by Dashboard detail pages and by client reporting workflows.
+
+        Args:
+        base_currency: Optional rating base currency. Supported values are EUR, USD, GBP, and CHF. Resolution order is explicit request, user settings, user country, then USD; unsupported candidates are skipped and reported in response metadata."""
         _payload: Dict[str, Any] = {}
         _payload["identifier"] = identifier
         if start_date is not None:
@@ -227,6 +237,8 @@ class AsyncReportingAPI(AsyncBaseAPI):
             _payload["risk_free_rate"] = risk_free_rate
         if locale is not None:
             _payload["locale"] = locale
+        if base_currency is not None:
+            _payload["base_currency"] = base_currency
         if output_path is not None:
             _payload["output_path"] = output_path
         if ai is not None:
@@ -281,7 +293,7 @@ class AsyncReportingAPI(AsyncBaseAPI):
     ) -> Any:
         """Build a structured portfolio performance tearsheet payload
 
-        Returns a structured portfolio performance payload: cumulative return series, calendar year returns, monthly return heatmap, risk metrics dashboard block, attribution breakdown, and holdings summary. Accepts either a portfolio `id` (fetches weights from the saved portfolio) or inline `weights`. Supports benchmark overlay via `benchmark_id` or `benchmark_weights`. NOTE: the `format` parameter is accepted for API compatibility but currently ignored — this operation always returns the structured dict, not rendered HTML/PDF. For an HTML tearsheet render, use reporting.render with the 'tearsheet' template."""
+        Returns a report envelope with `tearsheet`, `html`, `generated_at`, and `warnings`. `tearsheet.rolling` contains monthly last-observation `rolling_sharpe` ratios and `rolling_volatility` annualized fractions after a complete 260-return window, using the analytics rolling functions and the tearsheet annual `risk_free_rate`. Annualized return/CAGR and dependent ratios are null, with `tearsheet.performance.annualized_return_reason`, until the NAV has 260 daily returns. Accepts a saved portfolio `id` or inline `weights`, with optional benchmark overlay via `benchmark_id` (a security code or `port_` portfolio id) or `benchmark_weights`; a requested benchmark without series raises a validation error. `format` is accepted but ignored; this operation always returns the report envelope, not a PDF. For Suggested portfolios, defaults to the optimizer's historical window and marks the result with `basis=backtest_in_sample` and `window`; these are in-sample modelled returns, not realized performance. If no return series exists, `tearsheet` and `html` are null with `reason=no_series_data`. Use reporting.render for a rendered report."""
         _payload: Dict[str, Any] = {}
         if id is not None:
             _payload["id"] = id

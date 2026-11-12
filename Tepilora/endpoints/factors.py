@@ -27,7 +27,7 @@ class FactorsAPI(BaseAPI):
     ) -> Any:
         """Get Fama-French factor returns data (FF3 or FF5 model)
 
-        Returns the daily factor return time series for the selected factor model: FF3 (Market, SMB, HML) or FF5 (Market, SMB, HML, RMW, CMA). Includes the risk-free rate (RF) series. Data is downloaded and cached from Kenneth French's data library. Supports date range filtering. Used as input for factor regression, factor attribution, and risk model construction.
+        Returns locally distributed daily factor returns for FF3, FF5 or MOM. FF3 and FF5 include the risk-free rate (RF). Data originates from Kenneth French's data library and is refreshed by scheduled producer/distribution jobs, never by a read request. Supports date filtering. Unavailable server data or zero usable observations returns DATA_UNAVAILABLE (HTTP 503), with model and full-archive data_through (ISO date or null). Valid partial/historical coverage remains successful; invalid inputs return validation errors (HTTP 400). Used for factor regression, attribution and risk model construction.
 
         Args:
         model: Factor model to return: FF3, FF5, MOM, or another supported local model.
@@ -75,7 +75,7 @@ class FactorsAPI(BaseAPI):
     ) -> Any:
         """Calculate weighted factor exposure for a portfolio
 
-        Computes portfolio-level factor exposures by aggregating individual security factor loadings weighted by portfolio weights. Returns the portfolio's net exposure to each factor (Market, SMB, HML, RMW, CMA), along with factor contribution to portfolio risk. Used by the Dashboard portfolio factor view and by risk-aware rebalancing workflows.
+        Computes portfolio factor exposures from security loadings and portfolio weights, returning net factor exposures and risk contributions. Unavailable server factors or zero usable date overlap returns DATA_UNAVAILABLE (HTTP 503), with normalized model and full-archive data_through (joint FF3/MOM coverage for Carhart). Valid partial/historical overlap remains successful; invalid inputs remain validation errors (HTTP 400). Used by the Dashboard portfolio factor view and risk-aware rebalancing workflows.
 
         Args:
         benchmark: Optional benchmark identifier used as market comparison for portfolio factor exposure.
@@ -121,7 +121,7 @@ class FactorsAPI(BaseAPI):
     ) -> Any:
         """Build a factor risk model for a set of securities
 
-        Constructs a factor risk model by regressing each security's returns against the selected factor model (FF3/FF5). Returns: factor loadings (betas) per security, factor covariance matrix, idiosyncratic risk, explained variance (R-squared), and optionally beta statistics (standard errors, t-stats, p-values). Supports multiple covariance estimation methods (sample, Ledoit-Wolf, OAS, EWMA). Used by portfolio risk decomposition and by the Dashboard factor exposure view.
+        Constructs a factor risk model by regressing each security's returns against FF3, FF5 or Carhart (FF3 + MOM). Returns factor loadings, factor covariance, idiosyncratic risk, explained variance and optional beta statistics. Supports sample, Ledoit-Wolf, OAS and EWMA covariance. Unavailable server factors or zero usable date overlap returns DATA_UNAVAILABLE (HTTP 503), with normalized model and full-archive data_through (joint FF3/MOM coverage for Carhart). Valid partial/historical overlap remains successful; invalid inputs remain validation errors (HTTP 400). Used by portfolio risk decomposition and the Dashboard factor exposure view.
 
         Args:
         model: Factor model used for regressions and covariance estimation.
@@ -165,7 +165,7 @@ class FactorsAPI(BaseAPI):
     ) -> Any:
         """Calculate rolling factor covariance matrix over time
 
-        Computes the factor-factor covariance matrix over a rolling window, producing a time series of covariance snapshots. Reveals how factor correlations evolve over time (e.g. whether SMB and HML become more correlated during crises). Used by advanced risk analysis and by time-varying risk model construction.
+        Computes rolling factor covariance/correlation snapshots for time-varying risk analysis. Unavailable server factors or zero usable observations returns DATA_UNAVAILABLE (HTTP 503), with normalized model and full-archive data_through (joint FF3/MOM coverage for Carhart). Valid partial/historical coverage remains successful when a requested rolling window can be formed; invalid inputs or an undersized nonempty window remain validation errors (HTTP 400). Used by advanced risk analysis and time-varying risk model construction.
 
         Args:
         model: Factor model whose factor covariance is calculated.
@@ -211,7 +211,7 @@ class FactorsAPI(BaseAPI):
     ) -> Any:
         """Run factor-based stress scenarios on a portfolio
 
-        Applies hypothetical factor shock scenarios to estimate portfolio impact. Define scenarios as factor return assumptions (e.g. Market=-10%, SMB=+5%) and the model estimates the portfolio's expected return under each scenario using the factor loadings. Used by the Dashboard stress testing view and by risk management workflows.
+        Applies hypothetical factor shocks to portfolio or security loadings to estimate scenario impact. Unavailable server factors or zero usable date overlap returns DATA_UNAVAILABLE (HTTP 503), with normalized model and full-archive data_through (joint FF3/MOM coverage for Carhart). Valid partial/historical overlap remains successful; invalid inputs remain validation errors (HTTP 400). Used by the Dashboard stress testing view and risk management workflows.
 
         Args:
         scenarios: Scenario definitions with factor shocks, keyed by scenario name or supplied as a list.
@@ -277,7 +277,7 @@ class AsyncFactorsAPI(AsyncBaseAPI):
     ) -> Any:
         """Get Fama-French factor returns data (FF3 or FF5 model)
 
-        Returns the daily factor return time series for the selected factor model: FF3 (Market, SMB, HML) or FF5 (Market, SMB, HML, RMW, CMA). Includes the risk-free rate (RF) series. Data is downloaded and cached from Kenneth French's data library. Supports date range filtering. Used as input for factor regression, factor attribution, and risk model construction.
+        Returns locally distributed daily factor returns for FF3, FF5 or MOM. FF3 and FF5 include the risk-free rate (RF). Data originates from Kenneth French's data library and is refreshed by scheduled producer/distribution jobs, never by a read request. Supports date filtering. Unavailable server data or zero usable observations returns DATA_UNAVAILABLE (HTTP 503), with model and full-archive data_through (ISO date or null). Valid partial/historical coverage remains successful; invalid inputs return validation errors (HTTP 400). Used for factor regression, attribution and risk model construction.
 
         Args:
         model: Factor model to return: FF3, FF5, MOM, or another supported local model.
@@ -325,7 +325,7 @@ class AsyncFactorsAPI(AsyncBaseAPI):
     ) -> Any:
         """Calculate weighted factor exposure for a portfolio
 
-        Computes portfolio-level factor exposures by aggregating individual security factor loadings weighted by portfolio weights. Returns the portfolio's net exposure to each factor (Market, SMB, HML, RMW, CMA), along with factor contribution to portfolio risk. Used by the Dashboard portfolio factor view and by risk-aware rebalancing workflows.
+        Computes portfolio factor exposures from security loadings and portfolio weights, returning net factor exposures and risk contributions. Unavailable server factors or zero usable date overlap returns DATA_UNAVAILABLE (HTTP 503), with normalized model and full-archive data_through (joint FF3/MOM coverage for Carhart). Valid partial/historical overlap remains successful; invalid inputs remain validation errors (HTTP 400). Used by the Dashboard portfolio factor view and risk-aware rebalancing workflows.
 
         Args:
         benchmark: Optional benchmark identifier used as market comparison for portfolio factor exposure.
@@ -371,7 +371,7 @@ class AsyncFactorsAPI(AsyncBaseAPI):
     ) -> Any:
         """Build a factor risk model for a set of securities
 
-        Constructs a factor risk model by regressing each security's returns against the selected factor model (FF3/FF5). Returns: factor loadings (betas) per security, factor covariance matrix, idiosyncratic risk, explained variance (R-squared), and optionally beta statistics (standard errors, t-stats, p-values). Supports multiple covariance estimation methods (sample, Ledoit-Wolf, OAS, EWMA). Used by portfolio risk decomposition and by the Dashboard factor exposure view.
+        Constructs a factor risk model by regressing each security's returns against FF3, FF5 or Carhart (FF3 + MOM). Returns factor loadings, factor covariance, idiosyncratic risk, explained variance and optional beta statistics. Supports sample, Ledoit-Wolf, OAS and EWMA covariance. Unavailable server factors or zero usable date overlap returns DATA_UNAVAILABLE (HTTP 503), with normalized model and full-archive data_through (joint FF3/MOM coverage for Carhart). Valid partial/historical overlap remains successful; invalid inputs remain validation errors (HTTP 400). Used by portfolio risk decomposition and the Dashboard factor exposure view.
 
         Args:
         model: Factor model used for regressions and covariance estimation.
@@ -415,7 +415,7 @@ class AsyncFactorsAPI(AsyncBaseAPI):
     ) -> Any:
         """Calculate rolling factor covariance matrix over time
 
-        Computes the factor-factor covariance matrix over a rolling window, producing a time series of covariance snapshots. Reveals how factor correlations evolve over time (e.g. whether SMB and HML become more correlated during crises). Used by advanced risk analysis and by time-varying risk model construction.
+        Computes rolling factor covariance/correlation snapshots for time-varying risk analysis. Unavailable server factors or zero usable observations returns DATA_UNAVAILABLE (HTTP 503), with normalized model and full-archive data_through (joint FF3/MOM coverage for Carhart). Valid partial/historical coverage remains successful when a requested rolling window can be formed; invalid inputs or an undersized nonempty window remain validation errors (HTTP 400). Used by advanced risk analysis and time-varying risk model construction.
 
         Args:
         model: Factor model whose factor covariance is calculated.
@@ -461,7 +461,7 @@ class AsyncFactorsAPI(AsyncBaseAPI):
     ) -> Any:
         """Run factor-based stress scenarios on a portfolio
 
-        Applies hypothetical factor shock scenarios to estimate portfolio impact. Define scenarios as factor return assumptions (e.g. Market=-10%, SMB=+5%) and the model estimates the portfolio's expected return under each scenario using the factor loadings. Used by the Dashboard stress testing view and by risk management workflows.
+        Applies hypothetical factor shocks to portfolio or security loadings to estimate scenario impact. Unavailable server factors or zero usable date overlap returns DATA_UNAVAILABLE (HTTP 503), with normalized model and full-archive data_through (joint FF3/MOM coverage for Carhart). Valid partial/historical overlap remains successful; invalid inputs remain validation errors (HTTP 400). Used by the Dashboard stress testing view and risk management workflows.
 
         Args:
         scenarios: Scenario definitions with factor shocks, keyed by scenario name or supplied as a list.

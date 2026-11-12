@@ -48,17 +48,19 @@ class SecuritiesAPI(BaseAPI):
         *,
         identifier: Optional[str] = None,
         identifiers: Optional[Union[str, List[str]]] = None,
+        base_currency: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
         """Get the complete metadata profile for one or more securities
 
-        Returns the full metadata record (80+ fields from D parquet) for one or multiple securities identified by TepiloraCode. Includes identity, classification, ratings, costs, size, provider, regulatory, and fund-specific fields. Accepts both single identifier and batch identifiers. Used by the Dashboard security detail page, by the reporting module for fund sheet header data, by portfolio modules for position metadata enrichment, and by the AI assistant.
+        Returns the full metadata record (80+ fields from D parquet) for one or multiple securities identified by TepiloraCode. Includes identity, classification, legacy TepiloraRating, base-aware rating, costs, size, provider, regulatory, and fund-specific fields. Accepts both single identifier and batch identifiers. Optional base_currency controls the base-aware rating; legacy TepiloraRating remains unchanged for R1 compatibility, and request-level rating base resolution is reported in _meta.resolution. Each security also carries price_last_change_date (date of the last real price movement, for stale-price badges), populated only when a base-aware rating is served. price_last_change_as_of is the date of the latest price read for that security by the daily freshness file, and price_last_change_before_window is true when the price has not moved inside its scan window (current and previous calendar year) (the real date is then on or before price_last_change_date); both are null when unknown, and null never means fresh. Used by the Dashboard security detail page, by the reporting module for fund sheet header data, by portfolio modules for position metadata enrichment, and by the AI assistant.
 
         Args:
         identifier: Optional security identifier
         identifiers: Optional list of security identifiers
+        base_currency: Optional rating base currency. Supported values are EUR, USD, GBP, and CHF. Resolution order is explicit request, user settings, user country, then USD; unsupported candidates are skipped and reported in response metadata.
 
         Examples:
             >>> client.securities.details(identifier='IE00B4L5Y983EURXMIL')"""
@@ -67,6 +69,8 @@ class SecuritiesAPI(BaseAPI):
             _payload["identifier"] = identifier
         if identifiers is not None:
             _payload["identifiers"] = identifiers
+        if base_currency is not None:
+            _payload["base_currency"] = base_currency
         return self._call("securities.details", params=_payload, options=options, context=context, response_format=response_format)
 
     def facets(
@@ -104,7 +108,7 @@ class SecuritiesAPI(BaseAPI):
     ) -> Any:
         """Get the complete fee structure and cost breakdown for securities
 
-        Returns detailed fee and cost information for one or more securities. For ETFs and funds includes TER (as decimal fraction, e.g. 0.002 = 0.20%), ongoing charges, management fee, performance fee, entry/exit charges, and transaction costs. Used by the Dashboard for cost comparison tables, by the reporting module for fund sheet fee sections, and by the billing module for total cost of ownership calculations.
+        Returns fee and cost information for one or more securities. All fee values listed here use percentage points (2.54 means 2.54%): TER, OngoingFees, MgmtFees, OngoingCostCurrent (reference date: OngoingCostCurrentDate), OngoingCostEstimated, ManagementFeeExDistFeeCurrent (reference date: ManagementFeeExDistFeeCurrentDate), PerformanceFeeCurrent (reference date: PerformanceFeeCurrentDate), TransactionFeeCurrent (reference date: TransactionFeeCurrentDate), MaximumEntryCostAcquired, MaximumExitCostAcquired, TypicalExitCost, and DistributionFeePercOfNAVCurrent. Numeric values are returned as numbers, while source-formatted values (e.g. containing '%') are returned unchanged as strings. Reference-date fields are included when available; the other listed fee fields do not expose separate reference-date fields in this response.
 
         Args:
         identifier: Optional security identifier
@@ -130,20 +134,27 @@ class SecuritiesAPI(BaseAPI):
         order: Optional[str] = None,
         group_by: Optional[str] = None,
         preferred_currency: Optional[str] = None,
+        base_currency: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
         """Filter the securities universe by field values without text search
 
-        Structured filtering of the securities universe by metadata field values, without full-text search. Requires at least one filter. Returns matching securities with metadata. Supports sort, group_by deduplication, preferred_currency, and faceted aggregations. Better than securities.search for programmatic screening. Used by the Dashboard for pre-built category screens, by asset allocation modules for ETF proxy discovery, and by screening workflows.
+        Structured filtering of the securities universe by metadata field values, without full-text search. Requires at least one filter. Returns matching securities with metadata including legacy TepiloraRating and base-aware rating. Supports group_by deduplication, preferred_currency, and faceted aggregations. Global sort fields are TepiloraRating, rating, TER, AUM, and Name; rating uses the resolved base_currency, sorting happens before limit/offset, and candidate sets above 5000 must be narrowed with filters. Optional base_currency controls the base-aware rating; legacy TepiloraRating remains unchanged for R1 sorting/filtering compatibility, and request-level rating base resolution is reported in _meta.resolution. Each result also carries price_last_change_date (date of the last real price movement, for stale-price badges), populated only when a base-aware rating is served. price_last_change_as_of is the date of the latest price read for that security by the daily freshness file, and price_last_change_before_window is true when the price has not moved inside its scan window (current and previous calendar year) (the real date is then on or before price_last_change_date); both are null when unknown, and null never means fresh. Better than securities.search for programmatic screening. Used by the Dashboard for pre-built category screens and default securities browse, by asset allocation modules for ETF proxy discovery, and by screening workflows.
 
         Args:
         filters: Required Tepilora metadata filters used to select securities without text search.
         include_facets: Whether to include aggregation facets for the filtered universe.
         offset: Pagination offset
+        sort: Global sort field: TepiloraRating, rating, TER, AUM, or Name. rating uses the resolved base_currency. Candidate sets above 5000 must be narrowed with filters.
+        order: Sort order, asc or desc. Defaults depend on the selected sort field.
         group_by: Optional deduplication field; commonly TepiloraParentId to keep one share class per fund family.
-        preferred_currency: Optional ISO 4217 currency code"""
+        preferred_currency: Optional ISO 4217 currency code
+        base_currency: Optional rating base currency. Supported values are EUR, USD, GBP, and CHF. Resolution order is explicit request, user settings, user country, then USD; unsupported candidates are skipped and reported in response metadata.
+
+        Examples:
+            >>> client.securities.filter(filters={'TepiloraType': 'ETF'}, limit=5, base_currency='EUR')"""
         _payload: Dict[str, Any] = {}
         _payload["filters"] = filters
         if include_facets is not None:
@@ -160,6 +171,8 @@ class SecuritiesAPI(BaseAPI):
             _payload["group_by"] = group_by
         if preferred_currency is not None:
             _payload["preferred_currency"] = preferred_currency
+        if base_currency is not None:
+            _payload["base_currency"] = base_currency
         return self._call("securities.filter", params=_payload, options=options, context=context, response_format=response_format)
 
     def filter_fields(
@@ -194,7 +207,7 @@ class SecuritiesAPI(BaseAPI):
     ) -> Any:
         """Get historical daily NAV/price time series for one or more securities
 
-        Returns daily historical prices (NAV for funds/ETFs, close price for stocks) from the H parquet files. Supports date range filtering, result limiting, and pivot format for multi-security comparison. This is the foundational data operation for the entire analytics module: all rolling metrics and portfolio returns calculations consume history data. Used by the Dashboard for NAV charts, by the reporting module for fund sheet performance charts, and by the portfolio module for return computation.
+        Returns daily historical prices (NAV for funds/ETFs, close price for stocks) from the H parquet files. Supports date range filtering, result limiting, and pivot format for multi-security comparison. With currency conversion, data.fx_method maps each security code to the applied conversion method(s). This is the foundational data operation for the entire analytics module: all rolling metrics and portfolio returns calculations consume history data. Used by the Dashboard for NAV charts, by the reporting module for fund sheet performance charts, and by the portfolio module for return computation.
 
         Args:
         identifier: Optional security identifier
@@ -232,17 +245,19 @@ class SecuritiesAPI(BaseAPI):
         *,
         identifier: str,
         filters: Optional[Dict[str, Any]] = None,
+        base_currency: Optional[str] = None,
         query: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
         """Direct lookup of a security by ISIN, TepiloraCode, or ticker
 
-        Resolves a single security identifier to its full metadata record. Accepts ISIN (e.g. 'IE00B4L5Y983'), TepiloraCode (e.g. 'IE00B4L5Y983EURXMIL'), or ticker (e.g. 'IWDA'). When an ISIN matches multiple share classes (common for ETFs and funds listed on multiple exchanges and currencies), returns all matching share classes so the caller can select the appropriate one. Returns the complete metadata record including Name, ISIN, TepiloraCode, TepiloraType, Currency, Exchange, TepiloraRating, TER, AUM, TepiloraArea, TepiloraCategory, TepiloraAssetClass, ManagementCompany, and InceptionDate. Used by the reporting module's resolve_identifier() to auto-resolve ISINs to TepiloraCodes, by the Dashboard security detail page, and by the AI assistant when a user provides an ISIN without specifying the share class.
+        Resolves a single security identifier to its full metadata record. Accepts ISIN (e.g. 'IE00B4L5Y983'), TepiloraCode (e.g. 'IE00B4L5Y983EURXMIL'), or ticker (e.g. 'IWDA'). When an ISIN matches multiple share classes (common for ETFs and funds listed on multiple exchanges and currencies), returns all matching share classes so the caller can select the appropriate one. Returns the complete metadata record including Name, ISIN, TepiloraCode, TepiloraType, Currency, Exchange, legacy TepiloraRating, base-aware rating, TER, AUM, TepiloraArea, TepiloraCategory, TepiloraAssetClass, ManagementCompany, and InceptionDate. Optional base_currency controls the base-aware rating; legacy TepiloraRating remains unchanged for R1 sorting/filtering compatibility. Used by the reporting module's resolve_identifier() to auto-resolve ISINs to TepiloraCodes, by the Dashboard security detail page, and by the AI assistant when a user provides an ISIN without specifying the share class.
 
         Args:
-        identifier: Single security identifier: ISIN, TepiloraCode, or Bloomberg ticker
+        identifier: Single security identifier: ISIN, TepiloraCode, or exchange ticker
         filters: Optional metadata filters applied after resolving the identifier.
+        base_currency: Optional rating base currency. Supported values are EUR, USD, GBP, and CHF. Resolution order is explicit request, user settings, user country, then USD; unsupported candidates are skipped and reported in response metadata.
 
         Examples:
             >>> client.securities.lookup(identifier='IE00B4L5Y983EURXMIL')
@@ -251,6 +266,8 @@ class SecuritiesAPI(BaseAPI):
         _payload["identifier"] = identifier
         if filters is not None:
             _payload["filters"] = filters
+        if base_currency is not None:
+            _payload["base_currency"] = base_currency
         if query is not None:
             _payload["query"] = query
         return self._call("securities.lookup", params=_payload, options=options, context=context)
@@ -283,23 +300,30 @@ class SecuritiesAPI(BaseAPI):
         *,
         identifier: Optional[str] = None,
         identifiers: Optional[Union[str, List[str]]] = None,
+        base_currency: Optional[str] = None,
         limit: Optional[int] = 36,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Get the historical Tepilora Rating time series with all 7 component scores
+        """Get the historical Tepilora Rating time series and component scores
 
-        Returns the monthly time series of the Tepilora Rating (1-5 star composite) along with the 7 individual component percentile scores: Performance, Volatility, Consistency, Drawdown, Recovery, Cost, and Flows. Each component is a percentile (0.0-1.0) within the fund's peer group, calculated monthly from Rating.parquet. Default limit is 36 months. Used by the Dashboard for the rating evolution chart and by the reporting module for fund sheet rating section.
+        Returns the monthly Tepilora Rating time series and the latest component percentile scores. With base_currency, the shared resolver selects EUR, USD, GBP, or CHF using explicit request, user settings, user country, then USD; fallback details are reported in _meta.resolution. The base-aware result includes liquidity and is capped at the exact rating_as_of served by D_rating_mc, so newer parquet rows are never used for the component breakdown. Without base_currency, the legacy Rating.parquet response remains unchanged. Default limit is 36 months. Used by the Dashboard rating chart and by reporting.fund_sheet.
 
         Args:
         identifier: Optional security identifier
-        identifiers: Optional list of security identifiers"""
+        identifiers: Optional list of security identifiers
+        base_currency: Optional rating base currency. Supported values are EUR, USD, GBP, and CHF. Resolution order is explicit request, user settings, user country, then USD; unsupported candidates are skipped and reported in response metadata.
+
+        Examples:
+            >>> client.securities.rating_history(identifier='DE0002635299EURXMIL', base_currency='EUR')"""
         _payload: Dict[str, Any] = {}
         if identifier is not None:
             _payload["identifier"] = identifier
         if identifiers is not None:
             _payload["identifiers"] = identifiers
+        if base_currency is not None:
+            _payload["base_currency"] = base_currency
         if limit is not None:
             _payload["limit"] = limit
         return self._call("securities.rating_history", params=_payload, options=options, context=context, response_format=response_format)
@@ -390,21 +414,25 @@ class SecuritiesAPI(BaseAPI):
         order: Optional[str] = None,
         group_by: Optional[str] = None,
         preferred_currency: Optional[str] = None,
+        base_currency: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
         """Search securities by name, ISIN, or ticker with full-text and faceted filtering
 
-        Full-text search across the securities universe (ETFs, funds, stocks, bonds, indices) powered by Tantivy search engine. Accepts free-text queries and returns matching securities with metadata including Name, ISIN, TepiloraCode, TepiloraType, Currency, TepiloraRating, TER, AUM. Supports field-based filters, faceted aggregations, sort by key metrics, and deduplication via group_by=TepiloraParentId. Used by the Dashboard Securities page, by the AI assistant for security discovery, and by workflow bridges for cross-module composition.
+        Full-text search across the securities universe (ETFs, funds, stocks, bonds, indices) powered by Tantivy search engine. Accepts free-text queries and returns matching securities with metadata including Name, ISIN, TepiloraCode, TepiloraType, Currency, legacy TepiloraRating, base-aware rating, TER, and AUM. Without an explicit sort, all-term keyword matches with at most 5000 candidates use descending AUM converted to EUR when all candidates are funds/ETFs or all have valid AUM. Default AUM results use stable ISIN rounds before pagination (first listing per ISIN, then second and so on), without removing results or changing the total count. Within each round, ties use text relevance then security code and missing or non-convertible AUM follows available AUM, ordered by text relevance then security code. Conversion uses available exchange rates on or before the current UTC date, at most seven days old; the daily exchange-rate snapshot is kept only in process memory and expires on the next UTC date. Returned AUM values are unchanged. Identifier, explicit-prefix, fuzzy, mixed-type queries without complete AUM and queries above 5000 candidates retain text relevance unless an explicit sort is requested. Returned TER values and filters.ter_min / filters.ter_max use decimal fractions (0.0254 = 2.54%). Supports field-based filters, faceted aggregations, and deduplication via group_by=TepiloraParentId. Global sort fields are TepiloraRating, rating, TER, AUM, and Name; rating uses the request's resolved base_currency, sorting is applied before limit/offset, and candidate sets above 5000 securities must be narrowed via query or filters. Optional base_currency controls the base-aware rating; legacy TepiloraRating remains unchanged for R1 sorting/filtering compatibility, and request-level rating base resolution is reported in _meta.resolution. Each result also carries price_last_change_date (date of the last real price movement, for stale-price badges), populated only when a base-aware rating is served. price_last_change_as_of is the date of the latest price read for that security by the daily freshness file, and price_last_change_before_window is true when the price has not moved inside its scan window (current and previous calendar year) (the real date is then on or before price_last_change_date); both are null when unknown, and null never means fresh. Used by the Dashboard Securities page, by the AI assistant for security discovery, and by workflow bridges for cross-module composition.
 
         Args:
         filters: Optional Tepilora metadata filters applied together with the text query.
         offset: Pagination offset
         include_facets: Whether to include aggregation facets for UI filters.
         include_metrics: Whether to enrich results with available TER, AUM, rating, and parent-family metrics.
+        sort: Global sort field: TepiloraRating, rating, TER, AUM, or Name. rating is base-aware and uses the request's resolved base_currency. Candidate sets above 5000 are rejected and must be narrowed with query or filters.
+        order: Sort order, asc or desc. Defaults depend on the selected sort field.
         group_by: Optional deduplication field; commonly TepiloraParentId to keep one share class per fund family.
         preferred_currency: Optional ISO 4217 currency code
+        base_currency: Optional rating base currency. Supported values are EUR, USD, GBP, and CHF. Resolution order is explicit request, user settings, user country, then USD; unsupported candidates are skipped and reported in response metadata.
 
         Examples:
             >>> client.securities.search(query='msci world', limit=5)
@@ -430,6 +458,8 @@ class SecuritiesAPI(BaseAPI):
             _payload["group_by"] = group_by
         if preferred_currency is not None:
             _payload["preferred_currency"] = preferred_currency
+        if base_currency is not None:
+            _payload["base_currency"] = base_currency
         return self._call("securities.search", params=_payload, options=options, context=context, response_format=response_format)
 
 
@@ -471,17 +501,19 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
         *,
         identifier: Optional[str] = None,
         identifiers: Optional[Union[str, List[str]]] = None,
+        base_currency: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
         """Get the complete metadata profile for one or more securities
 
-        Returns the full metadata record (80+ fields from D parquet) for one or multiple securities identified by TepiloraCode. Includes identity, classification, ratings, costs, size, provider, regulatory, and fund-specific fields. Accepts both single identifier and batch identifiers. Used by the Dashboard security detail page, by the reporting module for fund sheet header data, by portfolio modules for position metadata enrichment, and by the AI assistant.
+        Returns the full metadata record (80+ fields from D parquet) for one or multiple securities identified by TepiloraCode. Includes identity, classification, legacy TepiloraRating, base-aware rating, costs, size, provider, regulatory, and fund-specific fields. Accepts both single identifier and batch identifiers. Optional base_currency controls the base-aware rating; legacy TepiloraRating remains unchanged for R1 compatibility, and request-level rating base resolution is reported in _meta.resolution. Each security also carries price_last_change_date (date of the last real price movement, for stale-price badges), populated only when a base-aware rating is served. price_last_change_as_of is the date of the latest price read for that security by the daily freshness file, and price_last_change_before_window is true when the price has not moved inside its scan window (current and previous calendar year) (the real date is then on or before price_last_change_date); both are null when unknown, and null never means fresh. Used by the Dashboard security detail page, by the reporting module for fund sheet header data, by portfolio modules for position metadata enrichment, and by the AI assistant.
 
         Args:
         identifier: Optional security identifier
         identifiers: Optional list of security identifiers
+        base_currency: Optional rating base currency. Supported values are EUR, USD, GBP, and CHF. Resolution order is explicit request, user settings, user country, then USD; unsupported candidates are skipped and reported in response metadata.
 
         Examples:
             >>> await client.securities.details(identifier='IE00B4L5Y983EURXMIL')"""
@@ -490,6 +522,8 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
             _payload["identifier"] = identifier
         if identifiers is not None:
             _payload["identifiers"] = identifiers
+        if base_currency is not None:
+            _payload["base_currency"] = base_currency
         return await self._call("securities.details", params=_payload, options=options, context=context, response_format=response_format)
 
     async def facets(
@@ -527,7 +561,7 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
     ) -> Any:
         """Get the complete fee structure and cost breakdown for securities
 
-        Returns detailed fee and cost information for one or more securities. For ETFs and funds includes TER (as decimal fraction, e.g. 0.002 = 0.20%), ongoing charges, management fee, performance fee, entry/exit charges, and transaction costs. Used by the Dashboard for cost comparison tables, by the reporting module for fund sheet fee sections, and by the billing module for total cost of ownership calculations.
+        Returns fee and cost information for one or more securities. All fee values listed here use percentage points (2.54 means 2.54%): TER, OngoingFees, MgmtFees, OngoingCostCurrent (reference date: OngoingCostCurrentDate), OngoingCostEstimated, ManagementFeeExDistFeeCurrent (reference date: ManagementFeeExDistFeeCurrentDate), PerformanceFeeCurrent (reference date: PerformanceFeeCurrentDate), TransactionFeeCurrent (reference date: TransactionFeeCurrentDate), MaximumEntryCostAcquired, MaximumExitCostAcquired, TypicalExitCost, and DistributionFeePercOfNAVCurrent. Numeric values are returned as numbers, while source-formatted values (e.g. containing '%') are returned unchanged as strings. Reference-date fields are included when available; the other listed fee fields do not expose separate reference-date fields in this response.
 
         Args:
         identifier: Optional security identifier
@@ -553,20 +587,27 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
         order: Optional[str] = None,
         group_by: Optional[str] = None,
         preferred_currency: Optional[str] = None,
+        base_currency: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
         """Filter the securities universe by field values without text search
 
-        Structured filtering of the securities universe by metadata field values, without full-text search. Requires at least one filter. Returns matching securities with metadata. Supports sort, group_by deduplication, preferred_currency, and faceted aggregations. Better than securities.search for programmatic screening. Used by the Dashboard for pre-built category screens, by asset allocation modules for ETF proxy discovery, and by screening workflows.
+        Structured filtering of the securities universe by metadata field values, without full-text search. Requires at least one filter. Returns matching securities with metadata including legacy TepiloraRating and base-aware rating. Supports group_by deduplication, preferred_currency, and faceted aggregations. Global sort fields are TepiloraRating, rating, TER, AUM, and Name; rating uses the resolved base_currency, sorting happens before limit/offset, and candidate sets above 5000 must be narrowed with filters. Optional base_currency controls the base-aware rating; legacy TepiloraRating remains unchanged for R1 sorting/filtering compatibility, and request-level rating base resolution is reported in _meta.resolution. Each result also carries price_last_change_date (date of the last real price movement, for stale-price badges), populated only when a base-aware rating is served. price_last_change_as_of is the date of the latest price read for that security by the daily freshness file, and price_last_change_before_window is true when the price has not moved inside its scan window (current and previous calendar year) (the real date is then on or before price_last_change_date); both are null when unknown, and null never means fresh. Better than securities.search for programmatic screening. Used by the Dashboard for pre-built category screens and default securities browse, by asset allocation modules for ETF proxy discovery, and by screening workflows.
 
         Args:
         filters: Required Tepilora metadata filters used to select securities without text search.
         include_facets: Whether to include aggregation facets for the filtered universe.
         offset: Pagination offset
+        sort: Global sort field: TepiloraRating, rating, TER, AUM, or Name. rating uses the resolved base_currency. Candidate sets above 5000 must be narrowed with filters.
+        order: Sort order, asc or desc. Defaults depend on the selected sort field.
         group_by: Optional deduplication field; commonly TepiloraParentId to keep one share class per fund family.
-        preferred_currency: Optional ISO 4217 currency code"""
+        preferred_currency: Optional ISO 4217 currency code
+        base_currency: Optional rating base currency. Supported values are EUR, USD, GBP, and CHF. Resolution order is explicit request, user settings, user country, then USD; unsupported candidates are skipped and reported in response metadata.
+
+        Examples:
+            >>> await client.securities.filter(filters={'TepiloraType': 'ETF'}, limit=5, base_currency='EUR')"""
         _payload: Dict[str, Any] = {}
         _payload["filters"] = filters
         if include_facets is not None:
@@ -583,6 +624,8 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
             _payload["group_by"] = group_by
         if preferred_currency is not None:
             _payload["preferred_currency"] = preferred_currency
+        if base_currency is not None:
+            _payload["base_currency"] = base_currency
         return await self._call("securities.filter", params=_payload, options=options, context=context, response_format=response_format)
 
     async def filter_fields(
@@ -617,7 +660,7 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
     ) -> Any:
         """Get historical daily NAV/price time series for one or more securities
 
-        Returns daily historical prices (NAV for funds/ETFs, close price for stocks) from the H parquet files. Supports date range filtering, result limiting, and pivot format for multi-security comparison. This is the foundational data operation for the entire analytics module: all rolling metrics and portfolio returns calculations consume history data. Used by the Dashboard for NAV charts, by the reporting module for fund sheet performance charts, and by the portfolio module for return computation.
+        Returns daily historical prices (NAV for funds/ETFs, close price for stocks) from the H parquet files. Supports date range filtering, result limiting, and pivot format for multi-security comparison. With currency conversion, data.fx_method maps each security code to the applied conversion method(s). This is the foundational data operation for the entire analytics module: all rolling metrics and portfolio returns calculations consume history data. Used by the Dashboard for NAV charts, by the reporting module for fund sheet performance charts, and by the portfolio module for return computation.
 
         Args:
         identifier: Optional security identifier
@@ -655,17 +698,19 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
         *,
         identifier: str,
         filters: Optional[Dict[str, Any]] = None,
+        base_currency: Optional[str] = None,
         query: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> Any:
         """Direct lookup of a security by ISIN, TepiloraCode, or ticker
 
-        Resolves a single security identifier to its full metadata record. Accepts ISIN (e.g. 'IE00B4L5Y983'), TepiloraCode (e.g. 'IE00B4L5Y983EURXMIL'), or ticker (e.g. 'IWDA'). When an ISIN matches multiple share classes (common for ETFs and funds listed on multiple exchanges and currencies), returns all matching share classes so the caller can select the appropriate one. Returns the complete metadata record including Name, ISIN, TepiloraCode, TepiloraType, Currency, Exchange, TepiloraRating, TER, AUM, TepiloraArea, TepiloraCategory, TepiloraAssetClass, ManagementCompany, and InceptionDate. Used by the reporting module's resolve_identifier() to auto-resolve ISINs to TepiloraCodes, by the Dashboard security detail page, and by the AI assistant when a user provides an ISIN without specifying the share class.
+        Resolves a single security identifier to its full metadata record. Accepts ISIN (e.g. 'IE00B4L5Y983'), TepiloraCode (e.g. 'IE00B4L5Y983EURXMIL'), or ticker (e.g. 'IWDA'). When an ISIN matches multiple share classes (common for ETFs and funds listed on multiple exchanges and currencies), returns all matching share classes so the caller can select the appropriate one. Returns the complete metadata record including Name, ISIN, TepiloraCode, TepiloraType, Currency, Exchange, legacy TepiloraRating, base-aware rating, TER, AUM, TepiloraArea, TepiloraCategory, TepiloraAssetClass, ManagementCompany, and InceptionDate. Optional base_currency controls the base-aware rating; legacy TepiloraRating remains unchanged for R1 sorting/filtering compatibility. Used by the reporting module's resolve_identifier() to auto-resolve ISINs to TepiloraCodes, by the Dashboard security detail page, and by the AI assistant when a user provides an ISIN without specifying the share class.
 
         Args:
-        identifier: Single security identifier: ISIN, TepiloraCode, or Bloomberg ticker
+        identifier: Single security identifier: ISIN, TepiloraCode, or exchange ticker
         filters: Optional metadata filters applied after resolving the identifier.
+        base_currency: Optional rating base currency. Supported values are EUR, USD, GBP, and CHF. Resolution order is explicit request, user settings, user country, then USD; unsupported candidates are skipped and reported in response metadata.
 
         Examples:
             >>> await client.securities.lookup(identifier='IE00B4L5Y983EURXMIL')
@@ -674,6 +719,8 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
         _payload["identifier"] = identifier
         if filters is not None:
             _payload["filters"] = filters
+        if base_currency is not None:
+            _payload["base_currency"] = base_currency
         if query is not None:
             _payload["query"] = query
         return await self._call("securities.lookup", params=_payload, options=options, context=context)
@@ -706,23 +753,30 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
         *,
         identifier: Optional[str] = None,
         identifiers: Optional[Union[str, List[str]]] = None,
+        base_currency: Optional[str] = None,
         limit: Optional[int] = 36,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
-        """Get the historical Tepilora Rating time series with all 7 component scores
+        """Get the historical Tepilora Rating time series and component scores
 
-        Returns the monthly time series of the Tepilora Rating (1-5 star composite) along with the 7 individual component percentile scores: Performance, Volatility, Consistency, Drawdown, Recovery, Cost, and Flows. Each component is a percentile (0.0-1.0) within the fund's peer group, calculated monthly from Rating.parquet. Default limit is 36 months. Used by the Dashboard for the rating evolution chart and by the reporting module for fund sheet rating section.
+        Returns the monthly Tepilora Rating time series and the latest component percentile scores. With base_currency, the shared resolver selects EUR, USD, GBP, or CHF using explicit request, user settings, user country, then USD; fallback details are reported in _meta.resolution. The base-aware result includes liquidity and is capped at the exact rating_as_of served by D_rating_mc, so newer parquet rows are never used for the component breakdown. Without base_currency, the legacy Rating.parquet response remains unchanged. Default limit is 36 months. Used by the Dashboard rating chart and by reporting.fund_sheet.
 
         Args:
         identifier: Optional security identifier
-        identifiers: Optional list of security identifiers"""
+        identifiers: Optional list of security identifiers
+        base_currency: Optional rating base currency. Supported values are EUR, USD, GBP, and CHF. Resolution order is explicit request, user settings, user country, then USD; unsupported candidates are skipped and reported in response metadata.
+
+        Examples:
+            >>> await client.securities.rating_history(identifier='DE0002635299EURXMIL', base_currency='EUR')"""
         _payload: Dict[str, Any] = {}
         if identifier is not None:
             _payload["identifier"] = identifier
         if identifiers is not None:
             _payload["identifiers"] = identifiers
+        if base_currency is not None:
+            _payload["base_currency"] = base_currency
         if limit is not None:
             _payload["limit"] = limit
         return await self._call("securities.rating_history", params=_payload, options=options, context=context, response_format=response_format)
@@ -813,21 +867,25 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
         order: Optional[str] = None,
         group_by: Optional[str] = None,
         preferred_currency: Optional[str] = None,
+        base_currency: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None,
         context: Optional[Dict[str, Any]] = None,
         response_format: Optional[str] = None,
     ) -> Any:
         """Search securities by name, ISIN, or ticker with full-text and faceted filtering
 
-        Full-text search across the securities universe (ETFs, funds, stocks, bonds, indices) powered by Tantivy search engine. Accepts free-text queries and returns matching securities with metadata including Name, ISIN, TepiloraCode, TepiloraType, Currency, TepiloraRating, TER, AUM. Supports field-based filters, faceted aggregations, sort by key metrics, and deduplication via group_by=TepiloraParentId. Used by the Dashboard Securities page, by the AI assistant for security discovery, and by workflow bridges for cross-module composition.
+        Full-text search across the securities universe (ETFs, funds, stocks, bonds, indices) powered by Tantivy search engine. Accepts free-text queries and returns matching securities with metadata including Name, ISIN, TepiloraCode, TepiloraType, Currency, legacy TepiloraRating, base-aware rating, TER, and AUM. Without an explicit sort, all-term keyword matches with at most 5000 candidates use descending AUM converted to EUR when all candidates are funds/ETFs or all have valid AUM. Default AUM results use stable ISIN rounds before pagination (first listing per ISIN, then second and so on), without removing results or changing the total count. Within each round, ties use text relevance then security code and missing or non-convertible AUM follows available AUM, ordered by text relevance then security code. Conversion uses available exchange rates on or before the current UTC date, at most seven days old; the daily exchange-rate snapshot is kept only in process memory and expires on the next UTC date. Returned AUM values are unchanged. Identifier, explicit-prefix, fuzzy, mixed-type queries without complete AUM and queries above 5000 candidates retain text relevance unless an explicit sort is requested. Returned TER values and filters.ter_min / filters.ter_max use decimal fractions (0.0254 = 2.54%). Supports field-based filters, faceted aggregations, and deduplication via group_by=TepiloraParentId. Global sort fields are TepiloraRating, rating, TER, AUM, and Name; rating uses the request's resolved base_currency, sorting is applied before limit/offset, and candidate sets above 5000 securities must be narrowed via query or filters. Optional base_currency controls the base-aware rating; legacy TepiloraRating remains unchanged for R1 sorting/filtering compatibility, and request-level rating base resolution is reported in _meta.resolution. Each result also carries price_last_change_date (date of the last real price movement, for stale-price badges), populated only when a base-aware rating is served. price_last_change_as_of is the date of the latest price read for that security by the daily freshness file, and price_last_change_before_window is true when the price has not moved inside its scan window (current and previous calendar year) (the real date is then on or before price_last_change_date); both are null when unknown, and null never means fresh. Used by the Dashboard Securities page, by the AI assistant for security discovery, and by workflow bridges for cross-module composition.
 
         Args:
         filters: Optional Tepilora metadata filters applied together with the text query.
         offset: Pagination offset
         include_facets: Whether to include aggregation facets for UI filters.
         include_metrics: Whether to enrich results with available TER, AUM, rating, and parent-family metrics.
+        sort: Global sort field: TepiloraRating, rating, TER, AUM, or Name. rating is base-aware and uses the request's resolved base_currency. Candidate sets above 5000 are rejected and must be narrowed with query or filters.
+        order: Sort order, asc or desc. Defaults depend on the selected sort field.
         group_by: Optional deduplication field; commonly TepiloraParentId to keep one share class per fund family.
         preferred_currency: Optional ISO 4217 currency code
+        base_currency: Optional rating base currency. Supported values are EUR, USD, GBP, and CHF. Resolution order is explicit request, user settings, user country, then USD; unsupported candidates are skipped and reported in response metadata.
 
         Examples:
             >>> await client.securities.search(query='msci world', limit=5)
@@ -853,6 +911,8 @@ class AsyncSecuritiesAPI(AsyncBaseAPI):
             _payload["group_by"] = group_by
         if preferred_currency is not None:
             _payload["preferred_currency"] = preferred_currency
+        if base_currency is not None:
+            _payload["base_currency"] = base_currency
         return await self._call("securities.search", params=_payload, options=options, context=context, response_format=response_format)
 
 

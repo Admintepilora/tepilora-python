@@ -12,6 +12,7 @@ permissions:
 jobs:
   lane-ancestry-gate:
     name: Lane ancestry gate
+    if: github.repository == 'Admintepilora/tepilora-python'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -169,7 +170,7 @@ jobs:
 
                   if status == "completed":
                       if conclusion == "success":
-                          print(f"CI workflow on {target_sha} is success. Publish allowed.")
+                          print(f"CI workflow on {target_sha} is success. Readiness gate still required.")
                           print(f"Workflow: {run_label}")
                           print(f"Run: {run_url}")
                           sys.exit(0)
@@ -194,14 +195,41 @@ jobs:
               time.sleep(poll_seconds)
           PY
 
+  manifest-gate:
+    name: Release readiness manifest gate
+    needs:
+      - lane-ancestry-gate
+      - gate-ci-status
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.lane-ancestry-gate.outputs.target_sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate annotated readiness manifest
+        env:
+          TARGET_SHA: ${{ needs.lane-ancestry-gate.outputs.target_sha }}
+          PACKAGE_INDEX: ${{ needs.lane-ancestry-gate.outputs.package_index }}
+          TAG_NAME: ${{ github.ref_name }}
+        run: >-
+          python scripts/readiness_gate.py --package sdk
+          --tag "$TAG_NAME" --index "$PACKAGE_INDEX" --commit "$TARGET_SHA"
+          --repository "$GITHUB_REPOSITORY"
+
   build:
     needs:
       - lane-ancestry-gate
       - gate-ci-status
+      - manifest-gate
     if: github.repository == 'Admintepilora/tepilora-python'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.lane-ancestry-gate.outputs.target_sha }}
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -235,6 +263,7 @@ jobs:
   publish-testpypi:
     needs:
       - lane-ancestry-gate
+      - manifest-gate
       - build
     if: github.repository == 'Admintepilora/tepilora-python' && needs.lane-ancestry-gate.outputs.package_index == 'testpypi'
     runs-on: ubuntu-latest
@@ -256,6 +285,7 @@ jobs:
   publish-pypi:
     needs:
       - lane-ancestry-gate
+      - manifest-gate
       - build
     if: github.repository == 'Admintepilora/tepilora-python' && needs.lane-ancestry-gate.outputs.package_index == 'pypi'
     runs-on: ubuntu-latest

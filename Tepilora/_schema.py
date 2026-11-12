@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from typing import Any, Dict
 
-SCHEMA: Dict[str, Any] = {'version': '3.12.0',
+SCHEMA: Dict[str, Any] = {'version': '3.12.2',
  'generated_by': 'export_schema',
  'categories': ['alerts',
                 'alternatives',
@@ -36,6 +36,7 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                 'reporting',
                 'search',
                 'securities',
+                'settings',
                 'stocks',
                 'workflows'],
  'operations': {'alerts.ack': {'action': 'alerts.ack',
@@ -17822,6 +17823,41 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                      'supports_format': False,
                                      'examples': [],
                                      'method_name': 'list'},
+                'attachments.parse': {'action': 'attachments.parse',
+                                      'category': 'attachments',
+                                      'operation': 'parse',
+                                      'summary': 'Extract text from an owned attachment',
+                                      'description': 'Extracts capped text and lightweight structure from the '
+                                                     "authenticated user's PDF, XLSX, or XLS attachment. The operation "
+                                                     'accepts only a fileId returned by attachments.upload; it never '
+                                                     'accepts raw file paths and resolves ownership from the execution '
+                                                     'context before opening the blob.',
+                                      'methodology_doc': '',
+                                      'params': [{'name': 'file_id',
+                                                  'type': 'string',
+                                                  'required': True,
+                                                  'description': 'Attachment fileId returned by attachments.upload.'},
+                                                 {'name': 'max_chars',
+                                                  'type': 'int',
+                                                  'required': False,
+                                                  'description': 'Maximum number of extracted text characters to '
+                                                                 'return.',
+                                                  'default': 50000},
+                                                 {'name': 'max_pages',
+                                                  'type': 'int',
+                                                  'required': False,
+                                                  'description': 'Maximum number of PDF pages or spreadsheet sheets to '
+                                                                 'parse.',
+                                                  'default': 20}],
+                                      'required_params': ['file_id'],
+                                      'optional_params': ['max_chars', 'max_pages'],
+                                      'credits': 1,
+                                      'tags': ['attachments', 'documents', 'pdf', 'xlsx', 'ownership'],
+                                      'deprecated': False,
+                                      'internal': False,
+                                      'supports_format': False,
+                                      'examples': [],
+                                      'method_name': 'parse'},
                 'attachments.read': {'action': 'attachments.read',
                                      'category': 'attachments',
                                      'operation': 'read',
@@ -17895,6 +17931,7 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                                                   'multipart/form-data.',
                                                    'max_bytes': 10485760,
                                                    'allowed_mime': ['application/pdf',
+                                                                    'application/vnd.ms-excel',
                                                                     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
                                                                     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                                                                     'image/png',
@@ -18628,7 +18665,7 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                               'type': 'string',
                                               'required': True,
                                               'description': 'Single security identifier: ISIN, TepiloraCode, or '
-                                                             'Bloomberg ticker'},
+                                                             'exchange ticker'},
                                              {'name': 'face_value',
                                               'type': 'float',
                                               'required': False,
@@ -19283,7 +19320,7 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                               'type': 'string',
                                               'required': True,
                                               'description': 'Single security identifier: ISIN, TepiloraCode, or '
-                                                             'Bloomberg ticker',
+                                                             'exchange ticker',
                                               'aliases': ['id']},
                                              {'name': 'fields',
                                               'type': 'list',
@@ -19305,11 +19342,14 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                                       'server',
                                            'description': 'Returns the availability status of document parsing '
                                                           'dependencies: pdfplumber (PDF text extraction), PyMuPDF '
-                                                          '(PDF rendering), pytesseract (OCR), and openpyxl (Excel '
-                                                          'parsing). Each dependency reports installed/available '
-                                                          'status. Used by the Dashboard to show/hide document upload '
-                                                          'features based on server capabilities and by health checks '
-                                                          'to verify the parsing pipeline.',
+                                                          '(PDF rendering), pytesseract (OCR), and openpyxl. Each '
+                                                          'dependency reports installed/available status. Note that '
+                                                          'openpyxl being installed does not make Excel parsing '
+                                                          'available: documents.parse accepts PDF only, and no '
+                                                          'operation in this category reads a spreadsheet today. Used '
+                                                          'by the Dashboard to show/hide document upload features '
+                                                          'based on server capabilities and by health checks to verify '
+                                                          'the parsing pipeline.',
                                            'methodology_doc': '',
                                            'params': [],
                                            'required_params': [],
@@ -19348,16 +19388,20 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                 'documents.parse': {'action': 'documents.parse',
                                     'category': 'documents',
                                     'operation': 'parse',
-                                    'summary': 'Parse and extract structured data from PDF and Excel financial '
-                                               'documents',
-                                    'description': 'Extracts structured data from uploaded financial documents (PDF '
-                                                   'portfolio statements, Excel holdings files, fund factsheets). Uses '
-                                                   'multiple extraction strategies: tabular extraction for structured '
-                                                   'PDFs (pdfplumber), OCR fallback for scanned documents '
-                                                   '(pytesseract), and native parsing for Excel/CSV. Returns extracted '
-                                                   'positions (security name, ISIN, quantity, value, weight) in a '
-                                                   'normalized format ready for portfolio creation. Used by the '
-                                                   'Dashboard document upload flow and by client onboarding workflows.',
+                                    'summary': 'Parse and extract structured data from a PDF financial document',
+                                    'description': 'Extracts structured data from an uploaded PDF financial document. '
+                                                   "**PDF only**: any other extension is rejected with 'Unsupported "
+                                                   "file type'. Recognises five document types — capital call notice, "
+                                                   'quarterly statement, bank statement, brokerage statement, fund '
+                                                   'factsheet — using tabular extraction (pdfplumber) with an OCR '
+                                                   'fallback for scanned pages when pytesseract is installed. Returns '
+                                                   'the extracted fields plus a confidence score; a brokerage '
+                                                   'statement yields holdings (security name, ISIN, quantity, value) '
+                                                   'usable to build a portfolio, though turning them into one is a '
+                                                   'separate, explicit step. file_path must resolve inside the working '
+                                                   'directory or /tmp — uploaded files are reachable, arbitrary '
+                                                   'filesystem paths are not. Used by the Dashboard document upload '
+                                                   'flow and by client onboarding workflows.',
                                     'methodology_doc': '',
                                     'params': [{'name': 'file_path',
                                                 'type': 'string',
@@ -19445,9 +19489,8 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                             'summary': 'Get ESG scores and ratings for a security',
                             'description': 'Returns Environmental, Social, and Governance (ESG) scores for a security. '
                                            'Includes overall ESG score, individual E/S/G pillar scores, controversy '
-                                           'flags, carbon intensity, and ESG risk rating. Data sourced from '
-                                           'Morningstar Sustainalytics. Used by the Dashboard ESG tab and by portfolio '
-                                           'ESG analysis.',
+                                           'flags, carbon intensity, and ESG risk rating. Used by the Dashboard ESG '
+                                           'tab and by portfolio ESG analysis.',
                             'methodology_doc': '',
                             'params': [{'name': 'identifiers',
                                         'type': 'any',
@@ -20070,12 +20113,15 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                 'category': 'factors',
                                 'operation': 'get',
                                 'summary': 'Get Fama-French factor returns data (FF3 or FF5 model)',
-                                'description': 'Returns the daily factor return time series for the selected factor '
-                                               'model: FF3 (Market, SMB, HML) or FF5 (Market, SMB, HML, RMW, CMA). '
-                                               'Includes the risk-free rate (RF) series. Data is downloaded and cached '
-                                               "from Kenneth French's data library. Supports date range filtering. "
-                                               'Used as input for factor regression, factor attribution, and risk '
-                                               'model construction.',
+                                'description': 'Returns locally distributed daily factor returns for FF3, FF5 or MOM. '
+                                               'FF3 and FF5 include the risk-free rate (RF). Data originates from '
+                                               "Kenneth French's data library and is refreshed by scheduled "
+                                               'producer/distribution jobs, never by a read request. Supports date '
+                                               'filtering. Unavailable server data or zero usable observations returns '
+                                               'DATA_UNAVAILABLE (HTTP 503), with model and full-archive data_through '
+                                               '(ISO date or null). Valid partial/historical coverage remains '
+                                               'successful; invalid inputs return validation errors (HTTP 400). Used '
+                                               'for factor regression, attribution and risk model construction.',
                                 'methodology_doc': '',
                                 'params': [{'name': 'model',
                                             'type': 'string',
@@ -20131,13 +20177,16 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                                'category': 'factors',
                                                'operation': 'portfolio_exposure',
                                                'summary': 'Calculate weighted factor exposure for a portfolio',
-                                               'description': 'Computes portfolio-level factor exposures by '
-                                                              'aggregating individual security factor loadings '
-                                                              "weighted by portfolio weights. Returns the portfolio's "
-                                                              'net exposure to each factor (Market, SMB, HML, RMW, '
-                                                              'CMA), along with factor contribution to portfolio risk. '
-                                                              'Used by the Dashboard portfolio factor view and by '
-                                                              'risk-aware rebalancing workflows.',
+                                               'description': 'Computes portfolio factor exposures from security '
+                                                              'loadings and portfolio weights, returning net factor '
+                                                              'exposures and risk contributions. Unavailable server '
+                                                              'factors or zero usable date overlap returns '
+                                                              'DATA_UNAVAILABLE (HTTP 503), with normalized model and '
+                                                              'full-archive data_through (joint FF3/MOM coverage for '
+                                                              'Carhart). Valid partial/historical overlap remains '
+                                                              'successful; invalid inputs remain validation errors '
+                                                              '(HTTP 400). Used by the Dashboard portfolio factor view '
+                                                              'and risk-aware rebalancing workflows.',
                                                'methodology_doc': '',
                                                'params': [{'name': 'portfolio_id',
                                                            'type': 'string',
@@ -20207,13 +20256,16 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                        'operation': 'risk_model',
                                        'summary': 'Build a factor risk model for a set of securities',
                                        'description': "Constructs a factor risk model by regressing each security's "
-                                                      'returns against the selected factor model (FF3/FF5). Returns: '
-                                                      'factor loadings (betas) per security, factor covariance matrix, '
-                                                      'idiosyncratic risk, explained variance (R-squared), and '
-                                                      'optionally beta statistics (standard errors, t-stats, '
-                                                      'p-values). Supports multiple covariance estimation methods '
-                                                      '(sample, Ledoit-Wolf, OAS, EWMA). Used by portfolio risk '
-                                                      'decomposition and by the Dashboard factor exposure view.',
+                                                      'returns against FF3, FF5 or Carhart (FF3 + MOM). Returns factor '
+                                                      'loadings, factor covariance, idiosyncratic risk, explained '
+                                                      'variance and optional beta statistics. Supports sample, '
+                                                      'Ledoit-Wolf, OAS and EWMA covariance. Unavailable server '
+                                                      'factors or zero usable date overlap returns DATA_UNAVAILABLE '
+                                                      '(HTTP 503), with normalized model and full-archive data_through '
+                                                      '(joint FF3/MOM coverage for Carhart). Valid partial/historical '
+                                                      'overlap remains successful; invalid inputs remain validation '
+                                                      'errors (HTTP 400). Used by portfolio risk decomposition and the '
+                                                      'Dashboard factor exposure view.',
                                        'methodology_doc': '',
                                        'params': [{'name': 'identifiers',
                                                    'type': 'any',
@@ -20280,12 +20332,16 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                                'category': 'factors',
                                                'operation': 'rolling_covariance',
                                                'summary': 'Calculate rolling factor covariance matrix over time',
-                                               'description': 'Computes the factor-factor covariance matrix over a '
-                                                              'rolling window, producing a time series of covariance '
-                                                              'snapshots. Reveals how factor correlations evolve over '
-                                                              'time (e.g. whether SMB and HML become more correlated '
-                                                              'during crises). Used by advanced risk analysis and by '
-                                                              'time-varying risk model construction.',
+                                               'description': 'Computes rolling factor covariance/correlation '
+                                                              'snapshots for time-varying risk analysis. Unavailable '
+                                                              'server factors or zero usable observations returns '
+                                                              'DATA_UNAVAILABLE (HTTP 503), with normalized model and '
+                                                              'full-archive data_through (joint FF3/MOM coverage for '
+                                                              'Carhart). Valid partial/historical coverage remains '
+                                                              'successful when a requested rolling window can be '
+                                                              'formed; invalid inputs or an undersized nonempty window '
+                                                              'remain validation errors (HTTP 400). Used by advanced '
+                                                              'risk analysis and time-varying risk model construction.',
                                                'methodology_doc': '',
                                                'params': [{'name': 'model',
                                                            'type': 'string',
@@ -20348,12 +20404,14 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                      'category': 'factors',
                                      'operation': 'scenario',
                                      'summary': 'Run factor-based stress scenarios on a portfolio',
-                                     'description': 'Applies hypothetical factor shock scenarios to estimate portfolio '
-                                                    'impact. Define scenarios as factor return assumptions (e.g. '
-                                                    "Market=-10%, SMB=+5%) and the model estimates the portfolio's "
-                                                    'expected return under each scenario using the factor loadings. '
-                                                    'Used by the Dashboard stress testing view and by risk management '
-                                                    'workflows.',
+                                     'description': 'Applies hypothetical factor shocks to portfolio or security '
+                                                    'loadings to estimate scenario impact. Unavailable server factors '
+                                                    'or zero usable date overlap returns DATA_UNAVAILABLE (HTTP 503), '
+                                                    'with normalized model and full-archive data_through (joint '
+                                                    'FF3/MOM coverage for Carhart). Valid partial/historical overlap '
+                                                    'remains successful; invalid inputs remain validation errors (HTTP '
+                                                    '400). Used by the Dashboard stress testing view and risk '
+                                                    'management workflows.',
                                      'methodology_doc': '',
                                      'params': [{'name': 'identifiers',
                                                  'type': 'any',
@@ -20572,11 +20630,11 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                             'operation': 'load',
                             'summary': 'Load raw fundamentals data from the FH parquet for a security',
                             'description': 'Returns the raw fundamentals history record from the FH (Fundamentals '
-                                           'History) parquet file. Contains 92 columns of financial statement data '
-                                           'from Morningstar: revenue, earnings, margins, ratios, growth rates, '
-                                           'valuation multiples, and balance sheet items. Data is quarterly/annual '
-                                           'depending on the metric. Used as the data foundation for fh.latest, '
-                                           'fh.metrics, and fh.quality operations.',
+                                           'History) parquet file. Contains 92 columns of financial statement data, '
+                                           'including revenue, earnings, margins, ratios, growth rates, valuation '
+                                           'multiples, and balance sheet items. Data is quarterly/annual depending on '
+                                           'the metric. Used as the data foundation for fh.latest, fh.metrics, and '
+                                           'fh.quality operations.',
                             'methodology_doc': '',
                             'params': [{'name': 'identifiers',
                                         'type': 'any',
@@ -21088,10 +21146,9 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                 'operation': 'search',
                                 'summary': 'Search financial news articles with full-text and faceted filtering',
                                 'description': 'Full-text search across the financial news database powered by Tantivy '
-                                               'search engine. Indexes articles from major financial news sources '
-                                               '(Bloomberg, Reuters, Financial Times, CNBC, MarketWatch, local '
-                                               'financial media). Supports advanced query syntax (AND, OR, phrases), '
-                                               'date range filtering, source filtering, and topic exclusion. Returns '
+                                               'search engine. Indexes articles from international and local financial '
+                                               'news outlets. Supports advanced query syntax (AND, OR, phrases), date '
+                                               'range filtering, source filtering, and topic exclusion. Returns '
                                                'article headline, source, publication date, URL, matched '
                                                'topics/entities, and relevance score. Results are paginated and '
                                                'sortable by date or relevance. Used by the Dashboard News page as the '
@@ -21600,6 +21657,63 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                      'supports_format': False,
                                      'examples': [],
                                      'method_name': 'strategy'},
+                'portfolio.accept_proposal': {'action': 'portfolio.accept_proposal',
+                                              'category': 'portfolio',
+                                              'operation': 'accept_proposal',
+                                              'summary': 'Accept a proposal so its weights become the portfolio target '
+                                                         'weights',
+                                              'description': 'Applies the weights of a proposal (a Suggested portfolio '
+                                                             'produced by portfolio.optimize with id) to the Real '
+                                                             'portfolio it started from, from a given effective date. '
+                                                             'The target portfolio is not a parameter: it is the one '
+                                                             'recorded inside the proposal, so the weights cannot be '
+                                                             'applied to the wrong portfolio. effective_date cannot '
+                                                             'precede the proposal as_of_date, since the weights were '
+                                                             'chosen on data available up to that date. The accepted '
+                                                             'weights are appended to the portfolio '
+                                                             'target_weight_sets, an append-only history of the '
+                                                             "decisions taken by the user: it answers 'what had you "
+                                                             "decided to hold, at that date'. Previous entries are "
+                                                             'never rewritten. The operation is idempotent: accepting '
+                                                             'the same proposal again returns the entry already '
+                                                             'written instead of adding a second one, and two '
+                                                             'concurrent calls write one entry, not two. It is not a '
+                                                             'transaction — the weights and the proposal status live '
+                                                             'in two documents — but the weights are written first, so '
+                                                             'an interruption can only leave a proposal still pending '
+                                                             'whose weights are already recorded, which the next call '
+                                                             'repairs; it can never leave a proposal marked accepted '
+                                                             'with no weights behind it. Note that target weights are '
+                                                             'the decided allocation, not the executed one: what the '
+                                                             'user actually holds may differ because of price moves, '
+                                                             'liquidity, and time to market, and that difference is '
+                                                             'reported by portfolio.drift.',
+                                              'methodology_doc': '',
+                                              'params': [{'name': 'proposal_id',
+                                                          'type': 'string',
+                                                          'required': True,
+                                                          'description': 'Identifier of the proposal to accept (the id '
+                                                                         'of a Suggested portfolio).'},
+                                                         {'name': 'effective_date',
+                                                          'type': 'string',
+                                                          'required': False,
+                                                          'description': 'Date from which the accepted weights apply '
+                                                                         '(YYYY-MM-DD). Defaults to the proposal '
+                                                                         'as_of_date.'},
+                                                         {'name': 'note',
+                                                          'type': 'string',
+                                                          'required': False,
+                                                          'description': 'Free-text note stored alongside the accepted '
+                                                                         'weights.'}],
+                                              'required_params': ['proposal_id'],
+                                              'optional_params': ['effective_date', 'note'],
+                                              'credits': 1,
+                                              'tags': ['write'],
+                                              'deprecated': False,
+                                              'internal': False,
+                                              'supports_format': False,
+                                              'examples': [],
+                                              'method_name': 'accept_proposal'},
                 'portfolio.attribution': {'action': 'portfolio.attribution',
                                           'category': 'portfolio',
                                           'operation': 'attribution',
@@ -21683,16 +21797,27 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                       'operation': 'compare',
                                       'summary': 'Compare performance and risk metrics across multiple portfolios',
                                       'description': 'Side-by-side comparison of 2 or more portfolios over the same '
-                                                     'period. Returns: performance comparison (return, volatility, '
-                                                     'Sharpe, max drawdown per portfolio), cumulative return overlay '
-                                                     'series, difference series, and optional exposure comparison. '
-                                                     'Used by the Dashboard portfolio comparison view.',
+                                                     'period. With format=dict, rows preserves request order and gives '
+                                                     'each portfolio dated NAV points plus metric, exposure, and '
+                                                     'correlation deltas against baseline_index=0. Historical '
+                                                     'name-keyed fields remain for compatibility. The rows '
+                                                     'representation is available only with format=dict. With fewer '
+                                                     'than 260 daily returns, cagr, sharpe, and sortino are null; '
+                                                     'rows[].metrics.annualized_return_reason and the corresponding '
+                                                     'comparison entry explain that threshold. The reason is null '
+                                                     'after the threshold; a ratio can still be null when its '
+                                                     'denominator is undefined. Used by the Dashboard portfolio '
+                                                     'comparison view.',
                                       'methodology_doc': '',
                                       'params': [{'name': 'portfolios',
                                                   'type': 'list',
                                                   'required': True,
-                                                  'description': 'Portfolio definitions to compare; each item may '
-                                                                 'reference a saved id or provide weights/components.'},
+                                                  'description': 'Portfolio definitions to compare. Each item is '
+                                                                 'either inline weights ({name, weights, start_date?, '
+                                                                 'end_date?, drifting?}) or a reference to a saved '
+                                                                 'portfolio ({id, label?, as_of_date?}), whose weights '
+                                                                 'are resolved server-side at as_of_date so both sides '
+                                                                 'of the comparison are read at the same date.'},
                                                  {'name': 'currency',
                                                   'type': 'string',
                                                   'required': False,
@@ -21829,11 +21954,13 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                     'category': 'portfolio',
                                     'operation': 'costs',
                                     'summary': 'Analyze the total cost structure of a portfolio (TER, trading costs)',
-                                    'description': 'Computes the total cost of ownership for a portfolio: '
-                                                   'weighted-average TER across holdings, estimated trading costs for '
-                                                   'rebalancing, and total annual cost as percentage of portfolio '
-                                                   'value. Used by the Dashboard cost analysis view and by fee '
-                                                   'comparison workflows.',
+                                    'description': 'Computes weighted fund TER from securities metadata; this '
+                                                   'operation does not estimate trading costs. TER values are decimal '
+                                                   'fractions (0.002 means 0.2%). Unknown TER is null per security '
+                                                   'with a reason, never zero. If any TER is missing, `weighted_ter`, '
+                                                   '`total_annual_cost`, and `annual_cost_absolute` are null; '
+                                                   '`known_weighted_ter`, `covered_weight`, and `uncovered_weight` '
+                                                   'describe the partial result.',
                                     'methodology_doc': '',
                                     'params': [{'name': 'weights', 'type': 'dict', 'required': True, 'description': ''},
                                                {'name': 'portfolio_value',
@@ -21855,16 +21982,16 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                      'operation': 'create',
                                      'summary': 'Create a new portfolio with specified input type and holdings',
                                      'description': 'Creates a portfolio in the Portfolios MongoDB collection. '
-                                                    'Supports 5 input types: fixed_weights (static allocation '
-                                                    'percentages), drifting_weights (weights that drift with market '
-                                                    'returns), holdings (position snapshots with quantities at dates), '
-                                                    'values (position values at dates), and trades (transaction-level '
-                                                    'input). Each input type requires specific data: weights needs '
-                                                    '{TepiloraCode: weight}, holdings needs [{date, positions}], '
-                                                    'trades needs [{date, type, security, quantity, price}]. '
-                                                    'Optionally sets benchmark, description, visibility, and portfolio '
-                                                    'type (Real/Suggested/Simulation/Backtest/Model). Used by the '
-                                                    'Dashboard portfolio creation wizard and by workflow bridges.',
+                                                    'Supports 5 input types: fixed_weights, drifting_weights, '
+                                                    'holdings, values, and trades. Weights accept {TepiloraCode: '
+                                                    'weight}; holdings accept flat [{identifier, quantity, date}] rows '
+                                                    'or nested [{date, positions: [{security, shares}]}] snapshots. '
+                                                    'Flat identifiers are resolved to TepiloraCode and saved as nested '
+                                                    'snapshots; nested security requires TepiloraCode. Trades accept '
+                                                    '[{date, type, security, quantity, price}]. Optionally sets '
+                                                    'benchmark, description, visibility, and portfolio type '
+                                                    '(Real/Suggested/Simulation/Backtest/Model). Used by the Dashboard '
+                                                    'portfolio creation wizard and workflow bridges.',
                                      'methodology_doc': '',
                                      'params': [{'name': 'name', 'type': 'string', 'required': True, 'description': ''},
                                                 {'name': 'input_type',
@@ -21903,7 +22030,12 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                                 {'name': 'holdings',
                                                  'type': 'list',
                                                  'required': False,
-                                                 'description': 'Holdings snapshots used when input_type is holdings.'},
+                                                 'description': 'Holdings for input_type=holdings: flat {identifier, '
+                                                                'quantity, date} rows or dated {date, positions: '
+                                                                '[{security, shares}]} snapshots. Positive numeric '
+                                                                'quantities are required; flat identifiers resolve to '
+                                                                'TepiloraCode, nested security requires TepiloraCode, '
+                                                                'and saved data uses the snapshot form.'},
                                                 {'name': 'initial_cash',
                                                  'type': 'float',
                                                  'required': False,
@@ -21943,7 +22075,9 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                                  'type': 'dict',
                                                  'required': False,
                                                  'description': 'Raw portfolio input payload used by the selected '
-                                                                'input_type.'},
+                                                                'input_type. For holdings, the holdings key accepts '
+                                                                'either documented form and is saved as dated position '
+                                                                'snapshots.'},
                                                 {'name': 'benchmark',
                                                  'type': 'string',
                                                  'required': False,
@@ -22016,8 +22150,18 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                                    'weights over time due to differential security returns. Returns '
                                                    'time series of drift per position and total portfolio drift '
                                                    'metric. Optionally compares drifted vs. periodically-rebalanced '
-                                                   'scenarios. Used by the Dashboard drift monitoring and by '
-                                                   'rebalancing alert rules.',
+                                                   'scenarios. Pass id instead of target_weights/start_date to use the '
+                                                   "portfolio's own latest decided weights as the baseline. The "
+                                                   'response separates market_drift — how far the market alone moved '
+                                                   'the decided allocation — from implementation_gap, what the '
+                                                   'portfolio actually holds versus that drifted decision, which is '
+                                                   'what price moves between decision and execution, low liquidity and '
+                                                   'time to market produce. The two are reported apart because adding '
+                                                   'them together would make an execution problem look like a market '
+                                                   'one, and the reverse. implementation_gap requires a declared '
+                                                   'portfolio source and is returned as unavailable with a reason when '
+                                                   'it cannot be computed, never as zero. Used by the Dashboard drift '
+                                                   'monitoring and by rebalancing alert rules.',
                                     'methodology_doc': '',
                                     'params': [{'name': 'compare_rebalanced',
                                                 'type': 'any',
@@ -22028,6 +22172,18 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                                 'type': 'string',
                                                 'required': False,
                                                 'description': ''},
+                                               {'name': 'id',
+                                                'type': 'string',
+                                                'required': False,
+                                                'description': 'Saved portfolio to analyse. Its latest decided weights '
+                                                               'and the date they apply from are used as the drift '
+                                                               'baseline, so target_weights and start_date are not '
+                                                               'needed.'},
+                                               {'name': 'as_of_date',
+                                                'type': 'string',
+                                                'required': False,
+                                                'description': 'Consider only decisions effective on or before this '
+                                                               'date (YYYY-MM-DD). Ignored unless id is given.'},
                                                {'name': 'end_date',
                                                 'type': 'string',
                                                 'required': False,
@@ -22060,6 +22216,8 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                     'required_params': [],
                                     'optional_params': ['compare_rebalanced',
                                                         'currency',
+                                                        'id',
+                                                        'as_of_date',
                                                         'end_date',
                                                         'start_date',
                                                         'target_weights',
@@ -22169,13 +22327,27 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                   'summary': 'Get full details for a specific portfolio',
                                   'description': 'Returns the complete portfolio record: name, type, input_type, '
                                                  'weights/holdings/trades data, benchmark, settings, '
-                                                 'creation/modification dates, and sharing status. Used by the '
-                                                 'Dashboard portfolio detail page and as input for '
-                                                 'returns/attribution/exposure calculations.',
+                                                 'creation/modification dates, and sharing status. Also returns '
+                                                 'actual_weights, what the portfolio actually holds at as_of_date, in '
+                                                 'the same shape whatever the source is: reconstructing positions from '
+                                                 'a trade ledger needs prices and cannot be done by the caller, so a '
+                                                 'portfolio built from trades would otherwise read as empty. When the '
+                                                 'holdings cannot be resolved at that date the block says so with a '
+                                                 'reason instead of returning an empty allocation. Suggested '
+                                                 'portfolios also carry the proposal block, Real portfolios their '
+                                                 'target_weight_sets, the append-only history of the decisions the '
+                                                 'user has taken. Used by the Dashboard portfolio detail page and as '
+                                                 'input for returns/attribution/exposure calculations.',
                                   'methodology_doc': '',
-                                  'params': [{'name': 'id', 'type': 'string', 'required': True, 'description': ''}],
+                                  'params': [{'name': 'id', 'type': 'string', 'required': True, 'description': ''},
+                                             {'name': 'as_of_date',
+                                              'type': 'string',
+                                              'required': False,
+                                              'description': 'Date the actual_weights snapshot refers to (YYYY-MM-DD). '
+                                                             'Defaults to the latest date the portfolio can be '
+                                                             'resolved at.'}],
                                   'required_params': ['id'],
-                                  'optional_params': [],
+                                  'optional_params': ['as_of_date'],
                                   'credits': 1,
                                   'tags': [],
                                   'deprecated': False,
@@ -22187,11 +22359,14 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                    'category': 'portfolio',
                                    'operation': 'list',
                                    'summary': 'List all portfolios for the current user with filtering and search',
-                                   'description': 'Returns paginated list of portfolios belonging to the authenticated '
-                                                  'user. Filterable by type (Real/Suggested/Simulation), input_type, '
-                                                  'and name search. Each entry shows ID, name, type, creation date, '
-                                                  'and position count. Includes shared portfolios by default. Used by '
-                                                  'the Dashboard portfolio list page.',
+                                   'description': 'Returns a `portfolios` list and pagination metadata for the '
+                                                  'authenticated user. Filterable by type (Real/Suggested/Simulation), '
+                                                  'input_type, and name search. Each entry shows ID, name, type, '
+                                                  'creation date, and position count. Suggested entries also include '
+                                                  '`solver_mode` from `proposal.optimizer.solver_mode`; old proposals '
+                                                  'without optimizer return null. Includes shared portfolios by '
+                                                  'default. Used by the Dashboard portfolio list page and Compare '
+                                                  'selector.',
                                    'methodology_doc': '',
                                    'params': [{'name': 'type', 'type': 'string', 'required': False, 'description': ''},
                                               {'name': 'input_type',
@@ -22263,7 +22438,15 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                                       'robust (robust optimization), max_sharpe. Returns optimal '
                                                       'weights, expected return/risk, and solver diagnostics. Use '
                                                       'portfolio.solver_info for mathematical details on each mode. '
-                                                      'Used by the Dashboard optimizer.',
+                                                      'Pass id to persist the result as a proposal for that portfolio: '
+                                                      'it becomes a Suggested portfolio with its own id, retrievable '
+                                                      'with portfolio.get, listed by portfolio.list, comparable with '
+                                                      'portfolio.compare, and applicable with '
+                                                      'portfolio.accept_proposal. The weights of that portfolio at '
+                                                      'as_of_date are frozen inside the proposal, so the Current side '
+                                                      'of a later comparison stays the one the optimizer actually '
+                                                      'worked on even if the source portfolio changes. Used by the '
+                                                      'Dashboard optimizer.',
                                        'methodology_doc': '',
                                        'params': [{'name': 'identifiers',
                                                    'type': 'any',
@@ -22308,7 +22491,49 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                                   {'name': 'timeout',
                                                    'type': 'int',
                                                    'required': False,
-                                                   'description': 'Maximum optimizer wait time in seconds.'}],
+                                                   'description': 'Maximum optimizer wait time in seconds.'},
+                                                  {'name': 'id',
+                                                   'type': 'string',
+                                                   'required': False,
+                                                   'description': 'Portfolio the optimization starts from. Passing it '
+                                                                  'saves the result as a proposal for that portfolio, '
+                                                                  'and freezes its weights at as_of_date as the '
+                                                                  "'current' side of the comparison. Omit it to "
+                                                                  'explore with identifiers only: the result is '
+                                                                  'returned but not persisted, and is lost when the '
+                                                                  'caller discards the response.'},
+                                                  {'name': 'save_as',
+                                                   'type': 'string',
+                                                   'required': False,
+                                                   'description': 'Name given to the saved proposal. Ignored unless id '
+                                                                  "is present; defaults to 'Proposal <as_of_date>'."},
+                                                  {'name': 'as_of_date',
+                                                   'type': 'string',
+                                                   'required': False,
+                                                   'description': 'Date the proposal is a photograph of (YYYY-MM-DD). '
+                                                                  'Defaults to end_date, or today.'},
+                                                  {'name': 'include_metrics',
+                                                   'type': 'bool',
+                                                   'required': False,
+                                                   'description': 'Compute the metrics of the proposed and current '
+                                                                  'allocations over the optimization window when '
+                                                                  'saving. A side that cannot be computed is reported '
+                                                                  'as unavailable with a reason, never as zeros.',
+                                                   'default': True,
+                                                   'aliases': ['includeMetrics']},
+                                                  {'name': 'description',
+                                                   'type': 'string',
+                                                   'required': False,
+                                                   'description': 'Description stored on the saved proposal.'},
+                                                  {'name': 'benchmark',
+                                                   'type': 'string',
+                                                   'required': False,
+                                                   'description': 'Benchmark identifier stored on the saved proposal.'},
+                                                  {'name': 'visibility',
+                                                   'type': 'string',
+                                                   'required': False,
+                                                   'description': 'Visibility of the saved proposal.',
+                                                   'default': 'private'}],
                                        'required_params': ['identifiers', 'settings'],
                                        'optional_params': ['poll_interval',
                                                            'securities_metadata',
@@ -22316,7 +22541,14 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                                            'end_date',
                                                            'total_return',
                                                            'currency',
-                                                           'timeout'],
+                                                           'timeout',
+                                                           'id',
+                                                           'save_as',
+                                                           'as_of_date',
+                                                           'include_metrics',
+                                                           'description',
+                                                           'benchmark',
+                                                           'visibility'],
                                        'credits': 1,
                                        'tags': [],
                                        'deprecated': False,
@@ -22390,16 +22622,17 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                       'operation': 'returns',
                                       'summary': 'Calculate portfolio return time series using TWR, MWR, or Modified '
                                                  'Dietz',
-                                      'description': 'Computes the daily return time series for a portfolio using the '
-                                                     'selected return methodology: TWR (Time-Weighted Return, for '
-                                                     'benchmark comparison), MWR (Money-Weighted Return via XIRR, for '
-                                                     'actual investor experience), or Modified Dietz (fast MWR '
-                                                     'approximation). Supports fixed weights (periodic rebalancing at '
-                                                     'configurable frequency), drifting weights (buy-and-hold drift), '
-                                                     'and transaction-based input. Returns daily NAV series, '
-                                                     'cumulative return, and period statistics. Cash flow convention: '
-                                                     'negative = deposit, positive = withdrawal. Used by the Dashboard '
-                                                     'portfolio performance chart and by all portfolio analytics.',
+                                      'description': 'Computes portfolio NAV and returns using TWR, MWR, or Modified '
+                                                     'Dietz. Supports fixed weights, drifting weights, and '
+                                                     'transaction-based input. `returns_frequency` resamples the '
+                                                     'output series, but `summary.annualized_return` is always '
+                                                     'computed from the daily NAV with the same CAGR formula as the '
+                                                     'tearsheet. It is a decimal fraction (like '
+                                                     '`summary.total_return`) after at least 260 daily returns; below '
+                                                     'that it is null with `summary.annualized_return_reason`. The '
+                                                     'tearsheet also leaves annualized CAGR and dependent ratios null '
+                                                     'below this threshold. Cash flow convention: negative = deposit, '
+                                                     'positive = withdrawal.',
                                       'methodology_doc': '',
                                       'params': [{'name': 'id', 'type': 'string', 'required': False, 'description': ''},
                                                  {'name': 'weights',
@@ -22662,13 +22895,20 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                      'category': 'portfolio',
                                      'operation': 'stress',
                                      'summary': 'Run stress test scenarios on a portfolio',
-                                     'description': 'Applies historical or hypothetical stress scenarios to a '
-                                                    'portfolio. Built-in scenarios: 2008 crisis, COVID crash, rate '
-                                                    'shock, sector rotation. Custom scenarios define per-security or '
-                                                    'per-asset-class return assumptions. Returns estimated portfolio '
-                                                    'loss per scenario and the most vulnerable positions. Supports '
-                                                    'sensitivity analysis (shock range with steps). Used by the '
-                                                    'Dashboard stress testing view.',
+                                     'description': 'Applies a built-in historical scenario or custom shocks to a '
+                                                    'portfolio. `mode=scenario` accepts the documented `scenario` '
+                                                    'keys; use `mode=list` to retrieve current keys, names, and labels '
+                                                    'without portfolio weights. `shocks` requires `mode=custom`: keys '
+                                                    'are canonical asset classes (government_bonds, high_yield_bonds, '
+                                                    'investment_grade_bonds, gold, bonds, commodities, real_estate, '
+                                                    'emerging_markets, equity, unclassified) or security IDs present '
+                                                    'in weights; values are numeric fractions (-0.2 means -20%, '
+                                                    'minimum -1). Shock precedence is security, class, then parent '
+                                                    'class; unshocked positive-weight securities are listed with a '
+                                                    'warning in both custom and historical results. Returns estimated '
+                                                    'portfolio loss and vulnerable positions. Supports sensitivity '
+                                                    'analysis with a shock range and steps. Used by the Dashboard '
+                                                    'stress testing view.',
                                      'methodology_doc': '',
                                      'params': [{'name': 'asset_class',
                                                  'type': 'string',
@@ -22689,7 +22929,10 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                                 {'name': 'scenario',
                                                  'type': 'string',
                                                  'required': False,
-                                                 'description': 'Built-in historical or hypothetical scenario name.'},
+                                                 'description': 'Built-in historical scenario key for mode=scenario. '
+                                                                'Valid keys: 2008_financial_crisis, 2011_euro_crisis, '
+                                                                '2015_china, 2018_q4, 2020_covid, 2022_rate_hike. Use '
+                                                                'mode=list for names and labels.'},
                                                 {'name': 'scenario_name',
                                                  'type': 'string',
                                                  'required': False,
@@ -22705,7 +22948,18 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                                 {'name': 'shocks',
                                                  'type': 'any',
                                                  'required': False,
-                                                 'description': 'Custom shock map by security, asset class, or factor.',
+                                                 'description': 'For mode=custom, map canonical asset classes or '
+                                                                'security IDs present in weights to finite fractional '
+                                                                'shocks (-0.2 means -20%; minimum -1). Specific '
+                                                                'security or class shocks take precedence over parent '
+                                                                'classes (bonds for '
+                                                                'government/high-yield/investment-grade bonds, '
+                                                                'commodities for gold, equity for emerging markets). '
+                                                                'Unshocked positive-weight securities are reported '
+                                                                'with a warning. Canonical classes: government_bonds, '
+                                                                'high_yield_bonds, investment_grade_bonds, gold, '
+                                                                'bonds, commodities, real_estate, emerging_markets, '
+                                                                'equity, unclassified. Unknown keys are rejected.',
                                                  'aliases': ['customShocks', 'custom_shocks']},
                                                 {'name': 'steps',
                                                  'type': 'any',
@@ -22739,10 +22993,12 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                         'operation': 'tearsheet',
                                         'summary': 'Generate a portfolio tearsheet (deprecated, use '
                                                    'reporting.tearsheet)',
-                                        'description': 'Deprecated: generates a portfolio performance tearsheet. Use '
-                                                       'reporting.tearsheet instead for enhanced reporting with '
-                                                       'templates, charts, PDF export, and multi-locale support. This '
-                                                       'operation will be removed after sunset date 2026-09-01.',
+                                        'description': 'Deprecated: generates a portfolio performance tearsheet. '
+                                                       'Annualized return/CAGR and dependent ratios are null, with '
+                                                       '`performance.annualized_return_reason`, until the NAV has at '
+                                                       'least 260 daily returns. Use reporting.tearsheet instead for '
+                                                       'enhanced reporting. This operation will be removed after '
+                                                       'sunset date 2026-09-01.',
                                         'methodology_doc': '',
                                         'params': [{'name': 'id',
                                                     'type': 'string',
@@ -23556,13 +23812,14 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                     'category': 'queries',
                                     'operation': 'execute',
                                     'summary': 'Execute a saved query and return fresh results',
-                                    'description': 'Runs a saved query (by ID, name, or name+category) and returns the '
-                                                   'current results. For dynamic queries, re-evaluates the filter '
-                                                   'definition against current data. For static queries, returns the '
-                                                   'fixed identifier list with current metadata. Results are cached '
-                                                   'for 15 minutes. Supports multiple output formats. Used by the '
-                                                   'Dashboard to refresh query results and by scheduled alerting '
-                                                   'workflows.',
+                                    'description': 'Runs a saved query by ID or by name+category and returns the same '
+                                                   'current result for either identity form. Dynamic definitions flow '
+                                                   'to the category search operation, including saved sort, order, '
+                                                   'limit, and offset. Explicit execute limit/offset override the '
+                                                   'saved values; omitted execute pagination preserves them. Static '
+                                                   'and composite queries apply execute pagination to their final item '
+                                                   'set; composite expressions do not define sort/order. Supports JSON '
+                                                   'and XLSX output.',
                                     'methodology_doc': '',
                                     'params': [{'name': 'id', 'type': 'string', 'required': False, 'description': ''},
                                                {'name': 'query_id',
@@ -23579,14 +23836,16 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                                {'name': 'limit',
                                                 'type': 'int',
                                                 'required': False,
-                                                'description': '',
-                                                'default': 100,
+                                                'description': 'Optional runtime result limit. When omitted, a dynamic '
+                                                               'query keeps its saved definition limit; static and '
+                                                               'composite queries use 100.',
                                                 'aliases': ['maxTopics']},
                                                {'name': 'offset',
                                                 'type': 'int',
                                                 'required': False,
-                                                'description': '',
-                                                'default': 0},
+                                                'description': 'Optional runtime result offset. When omitted, a '
+                                                               'dynamic query keeps its saved definition offset; '
+                                                               'static and composite queries use 0.'},
                                                {'name': 'output_path',
                                                 'type': 'string',
                                                 'required': False,
@@ -23631,12 +23890,11 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                  'category': 'queries',
                                  'operation': 'list',
                                  'summary': 'List all saved queries for the current user with filtering and pagination',
-                                 'description': 'Returns the saved queries belonging to the authenticated user from '
-                                                'the SavedQueries MongoDB collection. Queries are reusable '
-                                                'search/filter/screening definitions that can be executed on demand. '
-                                                'Filterable by category, type (dynamic/static/expression), tags, and '
-                                                'name search. Used by the Dashboard Saved Queries panel and by the AI '
-                                                'assistant to list available screening strategies.',
+                                 'description': 'Returns saved queries visible to the authenticated user. Every item '
+                                                'includes its id so clients can execute it by ID, plus name and '
+                                                'category for compound-key execution. Filterable by category, type '
+                                                '(dynamic/static/composite), tags, and name search, with pagination '
+                                                'and list ordering.',
                                  'methodology_doc': '',
                                  'params': [{'name': 'category',
                                              'type': 'string',
@@ -23751,13 +24009,14 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                  'category': 'queries',
                                  'operation': 'save',
                                  'summary': 'Save a new query definition for later reuse',
-                                 'description': 'Creates a new saved query in the SavedQueries MongoDB collection. '
-                                                'Supports three query types: dynamic (filter definition re-evaluated '
-                                                'each execution), static (fixed list of identifiers), and expression '
-                                                '(computed formula). Includes name, category, visibility '
-                                                '(private/workspace), description, and tags. Used by the Dashboard '
-                                                'Save Query button and by the AI assistant when helping users create '
-                                                'reusable screens.',
+                                 'description': 'Creates a reusable saved query. Dynamic definitions accept query, '
+                                                'filters, sort, order, limit, and offset and pass them to the category '
+                                                'search operation on execution; for securities this includes global '
+                                                'sorting and the 5000-row materialization cap. Static queries store '
+                                                'identifiers. Composite queries store set expressions and '
+                                                'intentionally have no definition sort/order; execution pagination '
+                                                'applies to their final item set. Includes private/workspace '
+                                                'visibility, description, and tags.',
                                  'methodology_doc': '',
                                  'params': [{'name': 'name', 'type': 'string', 'required': True, 'description': ''},
                                             {'name': 'category', 'type': 'string', 'required': True, 'description': ''},
@@ -23775,8 +24034,11 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                             {'name': 'definition',
                                              'type': 'dict',
                                              'required': False,
-                                             'description': 'Dynamic query definition, usually containing query text '
-                                                            'and filters.'},
+                                             'description': 'Dynamic search definition. Supported fields include '
+                                                            'query, filters, sort, order, limit, and offset; they flow '
+                                                            'to the category search operation when executed. '
+                                                            'Securities definitions therefore use securities.search '
+                                                            'global sorting and its 5000-row materialization cap.'},
                                             {'name': 'items',
                                              'type': 'list',
                                              'required': False,
@@ -23872,17 +24134,17 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                 'realtime.health': {'action': 'realtime.health',
                                     'category': 'realtime',
                                     'operation': 'health',
-                                    'summary': 'Check the health and freshness status of all realtime data sources',
-                                    'description': 'Returns the health status of each realtime data category (fx, idx, '
-                                                   'cmd, crypto, rate, calendar) including: last update timestamp, '
-                                                   'staleness (seconds since last update), number of symbols tracked, '
-                                                   'and a health verdict (healthy/stale/down). A category is '
-                                                   "considered 'stale' if the last update exceeds the expected refresh "
-                                                   'interval (typically 60 seconds for market data, 300 seconds for '
-                                                   'calendar). Used by the Dashboard Market Snapshot page for data '
-                                                   'freshness indicators, by monitoring systems to detect pipeline '
-                                                   'failures, and as a prerequisite check before serving realtime data '
-                                                   'to users.',
+                                    'summary': 'Check the health of the realtime data feed',
+                                    'description': 'Returns the health of the realtime data feed as one aggregated '
+                                                   'entry: sources has the single key "aggregated". Only feeds that '
+                                                   'report ok or error count; feeds on standby or without a report are '
+                                                   'ignored. status is error if any counted feed is in error, '
+                                                   'otherwise ok if any is ok, otherwise unknown; last_ok is the '
+                                                   'oldest last successful update among the counted feeds (null if '
+                                                   'none); fails is their maximum failure count. _meta.last_poll is '
+                                                   'the last poll time. Individual feeds are not named. Used by the '
+                                                   'Dashboard Market Snapshot page for data freshness indicators and '
+                                                   'by monitoring.',
                                     'methodology_doc': '',
                                     'params': [],
                                     'required_params': [],
@@ -23903,18 +24165,18 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                               'category',
                                    'description': 'Returns the latest realtime price data for a single symbol within a '
                                                   'specified market category (fx, idx, cmd, crypto, rate). Data is '
-                                                  'sourced from Redis DB 1, populated by the realtime data pipeline '
-                                                  'from Investing.com feeds. Each quote includes: last price, change '
-                                                  '(absolute and percentage), bid/ask (when available), high/low, '
-                                                  'open, previous close, volume, and timestamp. The category parameter '
-                                                  "selects the market segment: 'fx' for currency pairs (EUR/USD, "
-                                                  "GBP/JPY), 'idx' for stock indices (S&P 500, DAX, FTSE), 'cmd' for "
-                                                  "commodities (Gold, Oil, Natural Gas), 'crypto' for cryptocurrencies "
-                                                  "(BTC, ETH), 'rate' for government bond yields (US 10Y, German "
-                                                  'Bund). Quotes are enriched with TepiloraCode via reverse rt:map:tc '
-                                                  'lookup, enabling fallback to securities.history for 1M/1Y charts. '
-                                                  'Used by the Dashboard Market Snapshot page for individual '
-                                                  'instrument detail and by the AI assistant for current market data.',
+                                                  'sourced from Redis DB 1, populated by the realtime data pipeline. '
+                                                  'Each quote includes: last price, change (absolute and percentage), '
+                                                  'bid/ask (when available), high/low, open, previous close, volume, '
+                                                  'and timestamp. The category parameter selects the market segment: '
+                                                  "'fx' for currency pairs (EUR/USD, GBP/JPY), 'idx' for stock indices "
+                                                  "(S&P 500, DAX, FTSE), 'cmd' for commodities (Gold, Oil, Natural "
+                                                  "Gas), 'crypto' for cryptocurrencies (BTC, ETH), 'rate' for "
+                                                  'government bond yields (US 10Y, German Bund). Quotes are enriched '
+                                                  'with TepiloraCode via reverse rt:map:tc lookup, enabling fallback '
+                                                  'to securities.history for 1M/1Y charts. Used by the Dashboard '
+                                                  'Market Snapshot page for individual instrument detail and by the AI '
+                                                  'assistant for current market data.',
                                    'methodology_doc': '',
                                    'params': [{'name': 'category',
                                                'type': 'string',
@@ -23951,12 +24213,12 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                                    'universe across fx, idx, cmd, crypto, and rate. Each quote '
                                                    'includes: symbol, last price, change, percentage change, bid/ask, '
                                                    'high/low, open, previous close, and timestamp. Data is sourced '
-                                                   'from Redis DB 1 with sub-minute refresh from Investing.com feeds. '
-                                                   'Quotes are enriched with TepiloraCode via reverse rt:map:tc '
-                                                   'lookup. Used by the Dashboard Market Snapshot page for the full '
-                                                   'market overview tables (currencies grid, indices table, '
-                                                   'commodities strip, crypto ticker, bond yields curve) and by alert '
-                                                   'rules that monitor cross-market conditions.',
+                                                   'from Redis DB 1 with sub-minute refresh. Quotes are enriched with '
+                                                   'TepiloraCode via reverse rt:map:tc lookup. Used by the Dashboard '
+                                                   'Market Snapshot page for the full market overview tables '
+                                                   '(currencies grid, indices table, commodities strip, crypto ticker, '
+                                                   'bond yields curve) and by alert rules that monitor cross-market '
+                                                   'conditions.',
                                     'methodology_doc': '',
                                     'params': [{'name': 'category',
                                                 'type': 'string',
@@ -23995,17 +24257,22 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                 'reporting.fund_sheet': {'action': 'reporting.fund_sheet',
                                          'category': 'reporting',
                                          'operation': 'fund_sheet',
-                                         'summary': 'Generate a comprehensive fund factsheet for an ETF or mutual fund',
-                                         'description': 'Produces a two-page A4 fund factsheet in HTML or PDF. '
+                                         'summary': 'Generate a comprehensive factsheet for a fund, ETF, or equity',
+                                         'description': 'Produces a two-page A4 factsheet in HTML or PDF. '
                                                         'Automatically fetches all required data: security '
-                                                        'description, NAV history, performance metrics (YTD, 1Y, 3Y, '
-                                                        '5Y), risk metrics (volatility, Sharpe, Sortino, max '
-                                                        'drawdown), portfolio breakdowns (holdings, sectors, '
-                                                        'countries), monthly return heatmap, and fee structure. '
-                                                        'Accepts ISIN (auto-resolves to TepiloraCode) or TepiloraCode '
-                                                        'directly. Supports 5 locales and custom branding. Phase 1: '
-                                                        'ETF and Fund types only. Used by the Dashboard fund detail '
-                                                        'page and by client reporting workflows.',
+                                                        'description, price/NAV history, performance metrics (YTD, 1Y, '
+                                                        '3Y, 5Y), risk metrics (volatility, Sharpe, Sortino, max '
+                                                        'drawdown), base-aware rating, and instrument-specific '
+                                                        'sections. Fund/ETF sheets include portfolio breakdowns, '
+                                                        'holdings, monthly return heatmap, and fee structure. Equity '
+                                                        'sheets include valuation, profitability, financials, '
+                                                        'dividends, technicals, and signal/momentum sections. Optional '
+                                                        'base_currency controls the displayed Tepilora Rating; '
+                                                        'request-level rating base resolution is reported in '
+                                                        '_meta.resolution. Accepts ISIN (auto-resolves to '
+                                                        'TepiloraCode) or TepiloraCode directly. Supports 5 locales '
+                                                        'and custom branding. Used by Dashboard detail pages and by '
+                                                        'client reporting workflows.',
                                          'methodology_doc': '',
                                          'params': [{'name': 'identifier',
                                                      'type': 'string',
@@ -24031,6 +24298,14 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                                      'required': False,
                                                      'description': '',
                                                      'default': 'en'},
+                                                    {'name': 'base_currency',
+                                                     'type': 'string',
+                                                     'required': False,
+                                                     'description': 'Optional rating base currency. Supported values '
+                                                                    'are EUR, USD, GBP, and CHF. Resolution order is '
+                                                                    'explicit request, user settings, user country, '
+                                                                    'then USD; unsupported candidates are skipped and '
+                                                                    'reported in response metadata.'},
                                                     {'name': 'output_path',
                                                      'type': 'string',
                                                      'required': False,
@@ -24045,6 +24320,7 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                                              'end_date',
                                                              'risk_free_rate',
                                                              'locale',
+                                                             'base_currency',
                                                              'output_path',
                                                              'ai'],
                                          'credits': 1,
@@ -24103,17 +24379,27 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                         'category': 'reporting',
                                         'operation': 'tearsheet',
                                         'summary': 'Build a structured portfolio performance tearsheet payload',
-                                        'description': 'Returns a structured portfolio performance payload: cumulative '
-                                                       'return series, calendar year returns, monthly return heatmap, '
-                                                       'risk metrics dashboard block, attribution breakdown, and '
-                                                       'holdings summary. Accepts either a portfolio `id` (fetches '
-                                                       'weights from the saved portfolio) or inline `weights`. '
-                                                       'Supports benchmark overlay via `benchmark_id` or '
-                                                       '`benchmark_weights`. NOTE: the `format` parameter is accepted '
-                                                       'for API compatibility but currently ignored — this operation '
-                                                       'always returns the structured dict, not rendered HTML/PDF. For '
-                                                       'an HTML tearsheet render, use reporting.render with the '
-                                                       "'tearsheet' template.",
+                                        'description': 'Returns a report envelope with `tearsheet`, `html`, '
+                                                       '`generated_at`, and `warnings`. `tearsheet.rolling` contains '
+                                                       'monthly last-observation `rolling_sharpe` ratios and '
+                                                       '`rolling_volatility` annualized fractions after a complete '
+                                                       '260-return window, using the analytics rolling functions and '
+                                                       'the tearsheet annual `risk_free_rate`. Annualized return/CAGR '
+                                                       'and dependent ratios are null, with '
+                                                       '`tearsheet.performance.annualized_return_reason`, until the '
+                                                       'NAV has 260 daily returns. Accepts a saved portfolio `id` or '
+                                                       'inline `weights`, with optional benchmark overlay via '
+                                                       '`benchmark_id` (a security code or `port_` portfolio id) or '
+                                                       '`benchmark_weights`; a requested benchmark without series '
+                                                       'raises a validation error. `format` is accepted but ignored; '
+                                                       'this operation always returns the report envelope, not a PDF. '
+                                                       "For Suggested portfolios, defaults to the optimizer's "
+                                                       'historical window and marks the result with '
+                                                       '`basis=backtest_in_sample` and `window`; these are in-sample '
+                                                       'modelled returns, not realized performance. If no return '
+                                                       'series exists, `tearsheet` and `html` are null with '
+                                                       '`reason=no_series_data`. Use reporting.render for a rendered '
+                                                       'report.',
                                         'methodology_doc': '',
                                         'params': [{'name': 'id',
                                                     'type': 'string',
@@ -24367,12 +24653,25 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                        'summary': 'Get the complete metadata profile for one or more securities',
                                        'description': 'Returns the full metadata record (80+ fields from D parquet) '
                                                       'for one or multiple securities identified by TepiloraCode. '
-                                                      'Includes identity, classification, ratings, costs, size, '
-                                                      'provider, regulatory, and fund-specific fields. Accepts both '
-                                                      'single identifier and batch identifiers. Used by the Dashboard '
-                                                      'security detail page, by the reporting module for fund sheet '
-                                                      'header data, by portfolio modules for position metadata '
-                                                      'enrichment, and by the AI assistant.',
+                                                      'Includes identity, classification, legacy TepiloraRating, '
+                                                      'base-aware rating, costs, size, provider, regulatory, and '
+                                                      'fund-specific fields. Accepts both single identifier and batch '
+                                                      'identifiers. Optional base_currency controls the base-aware '
+                                                      'rating; legacy TepiloraRating remains unchanged for R1 '
+                                                      'compatibility, and request-level rating base resolution is '
+                                                      'reported in _meta.resolution. Each security also carries '
+                                                      'price_last_change_date (date of the last real price movement, '
+                                                      'for stale-price badges), populated only when a base-aware '
+                                                      'rating is served. price_last_change_as_of is the date of the '
+                                                      'latest price read for that security by the daily freshness '
+                                                      'file, and price_last_change_before_window is true when the '
+                                                      'price has not moved inside its scan window (current and '
+                                                      'previous calendar year) (the real date is then on or before '
+                                                      'price_last_change_date); both are null when unknown, and null '
+                                                      'never means fresh. Used by the Dashboard security detail page, '
+                                                      'by the reporting module for fund sheet header data, by '
+                                                      'portfolio modules for position metadata enrichment, and by the '
+                                                      'AI assistant.',
                                        'methodology_doc': '',
                                        'params': [{'name': 'identifier',
                                                    'type': 'string',
@@ -24382,9 +24681,17 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                                    'type': 'list',
                                                    'required': False,
                                                    'description': 'Optional list of security identifiers',
-                                                   'aliases': ['TepiloraCode', 'tepiloraCode']}],
+                                                   'aliases': ['TepiloraCode', 'tepiloraCode']},
+                                                  {'name': 'base_currency',
+                                                   'type': 'string',
+                                                   'required': False,
+                                                   'description': 'Optional rating base currency. Supported values are '
+                                                                  'EUR, USD, GBP, and CHF. Resolution order is '
+                                                                  'explicit request, user settings, user country, then '
+                                                                  'USD; unsupported candidates are skipped and '
+                                                                  'reported in response metadata.'}],
                                        'required_params': [],
-                                       'optional_params': ['identifier', 'identifiers'],
+                                       'optional_params': ['identifier', 'identifiers', 'base_currency'],
                                        'credits': 1,
                                        'tags': [],
                                        'deprecated': False,
@@ -24431,13 +24738,21 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                     'category': 'securities',
                                     'operation': 'fees',
                                     'summary': 'Get the complete fee structure and cost breakdown for securities',
-                                    'description': 'Returns detailed fee and cost information for one or more '
-                                                   'securities. For ETFs and funds includes TER (as decimal fraction, '
-                                                   'e.g. 0.002 = 0.20%), ongoing charges, management fee, performance '
-                                                   'fee, entry/exit charges, and transaction costs. Used by the '
-                                                   'Dashboard for cost comparison tables, by the reporting module for '
-                                                   'fund sheet fee sections, and by the billing module for total cost '
-                                                   'of ownership calculations.',
+                                    'description': 'Returns fee and cost information for one or more securities. All '
+                                                   'fee values listed here use percentage points (2.54 means 2.54%): '
+                                                   'TER, OngoingFees, MgmtFees, OngoingCostCurrent (reference date: '
+                                                   'OngoingCostCurrentDate), OngoingCostEstimated, '
+                                                   'ManagementFeeExDistFeeCurrent (reference date: '
+                                                   'ManagementFeeExDistFeeCurrentDate), PerformanceFeeCurrent '
+                                                   '(reference date: PerformanceFeeCurrentDate), TransactionFeeCurrent '
+                                                   '(reference date: TransactionFeeCurrentDate), '
+                                                   'MaximumEntryCostAcquired, MaximumExitCostAcquired, '
+                                                   'TypicalExitCost, and DistributionFeePercOfNAVCurrent. Numeric '
+                                                   'values are returned as numbers, while source-formatted values '
+                                                   "(e.g. containing '%') are returned unchanged as strings. "
+                                                   'Reference-date fields are included when available; the other '
+                                                   'listed fee fields do not expose separate reference-date fields in '
+                                                   'this response.',
                                     'methodology_doc': '',
                                     'params': [{'name': 'identifier',
                                                 'type': 'string',
@@ -24465,12 +24780,29 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                       'summary': 'Filter the securities universe by field values without text search',
                                       'description': 'Structured filtering of the securities universe by metadata '
                                                      'field values, without full-text search. Requires at least one '
-                                                     'filter. Returns matching securities with metadata. Supports '
-                                                     'sort, group_by deduplication, preferred_currency, and faceted '
-                                                     'aggregations. Better than securities.search for programmatic '
-                                                     'screening. Used by the Dashboard for pre-built category screens, '
-                                                     'by asset allocation modules for ETF proxy discovery, and by '
-                                                     'screening workflows.',
+                                                     'filter. Returns matching securities with metadata including '
+                                                     'legacy TepiloraRating and base-aware rating. Supports group_by '
+                                                     'deduplication, preferred_currency, and faceted aggregations. '
+                                                     'Global sort fields are TepiloraRating, rating, TER, AUM, and '
+                                                     'Name; rating uses the resolved base_currency, sorting happens '
+                                                     'before limit/offset, and candidate sets above 5000 must be '
+                                                     'narrowed with filters. Optional base_currency controls the '
+                                                     'base-aware rating; legacy TepiloraRating remains unchanged for '
+                                                     'R1 sorting/filtering compatibility, and request-level rating '
+                                                     'base resolution is reported in _meta.resolution. Each result '
+                                                     'also carries price_last_change_date (date of the last real price '
+                                                     'movement, for stale-price badges), populated only when a '
+                                                     'base-aware rating is served. price_last_change_as_of is the date '
+                                                     'of the latest price read for that security by the daily '
+                                                     'freshness file, and price_last_change_before_window is true when '
+                                                     'the price has not moved inside its scan window (current and '
+                                                     'previous calendar year) (the real date is then on or before '
+                                                     'price_last_change_date); both are null when unknown, and null '
+                                                     'never means fresh. Better than securities.search for '
+                                                     'programmatic screening. Used by the Dashboard for pre-built '
+                                                     'category screens and default securities browse, by asset '
+                                                     'allocation modules for ETF proxy discovery, and by screening '
+                                                     'workflows.',
                                       'methodology_doc': '',
                                       'params': [{'name': 'filters',
                                                   'type': 'dict',
@@ -24497,11 +24829,15 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                                  {'name': 'sort',
                                                   'type': 'string',
                                                   'required': False,
-                                                  'description': ''},
+                                                  'description': 'Global sort field: TepiloraRating, rating, TER, AUM, '
+                                                                 'or Name. rating uses the resolved base_currency. '
+                                                                 'Candidate sets above 5000 must be narrowed with '
+                                                                 'filters.'},
                                                  {'name': 'order',
                                                   'type': 'string',
                                                   'required': False,
-                                                  'description': ''},
+                                                  'description': 'Sort order, asc or desc. Defaults depend on the '
+                                                                 'selected sort field.'},
                                                  {'name': 'group_by',
                                                   'type': 'string',
                                                   'required': False,
@@ -24511,7 +24847,15 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                                  {'name': 'preferred_currency',
                                                   'type': 'string',
                                                   'required': False,
-                                                  'description': 'Optional ISO 4217 currency code'}],
+                                                  'description': 'Optional ISO 4217 currency code'},
+                                                 {'name': 'base_currency',
+                                                  'type': 'string',
+                                                  'required': False,
+                                                  'description': 'Optional rating base currency. Supported values are '
+                                                                 'EUR, USD, GBP, and CHF. Resolution order is explicit '
+                                                                 'request, user settings, user country, then USD; '
+                                                                 'unsupported candidates are skipped and reported in '
+                                                                 'response metadata.'}],
                                       'required_params': ['filters'],
                                       'optional_params': ['include_facets',
                                                           'limit',
@@ -24519,13 +24863,19 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                                           'sort',
                                                           'order',
                                                           'group_by',
-                                                          'preferred_currency'],
+                                                          'preferred_currency',
+                                                          'base_currency'],
                                       'credits': 1,
                                       'tags': [],
                                       'deprecated': False,
                                       'internal': False,
                                       'supports_format': True,
-                                      'examples': [],
+                                      'examples': [{'name': 'filter_etf_eur_rating',
+                                                    'description': 'Filter ETF securities and request EUR base-aware '
+                                                                   'ratings.',
+                                                    'params': {'filters': {'TepiloraType': 'ETF'},
+                                                               'limit': 5,
+                                                               'base_currency': 'EUR'}}],
                                       'method_name': 'filter'},
                 'securities.filter_fields': {'action': 'securities.filter_fields',
                                              'category': 'securities',
@@ -24563,12 +24913,13 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                        'description': 'Returns daily historical prices (NAV for funds/ETFs, close '
                                                       'price for stocks) from the H parquet files. Supports date range '
                                                       'filtering, result limiting, and pivot format for multi-security '
-                                                      'comparison. This is the foundational data operation for the '
-                                                      'entire analytics module: all rolling metrics and portfolio '
-                                                      'returns calculations consume history data. Used by the '
-                                                      'Dashboard for NAV charts, by the reporting module for fund '
-                                                      'sheet performance charts, and by the portfolio module for '
-                                                      'return computation.',
+                                                      'comparison. With currency conversion, data.fx_method maps each '
+                                                      'security code to the applied conversion method(s). This is the '
+                                                      'foundational data operation for the entire analytics module: '
+                                                      'all rolling metrics and portfolio returns calculations consume '
+                                                      'history data. Used by the Dashboard for NAV charts, by the '
+                                                      'reporting module for fund sheet performance charts, and by the '
+                                                      'portfolio module for return computation.',
                                        'methodology_doc': '',
                                        'params': [{'name': 'identifier',
                                                    'type': 'string',
@@ -24641,30 +24992,40 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                                      'on multiple exchanges and currencies), returns all matching '
                                                      'share classes so the caller can select the appropriate one. '
                                                      'Returns the complete metadata record including Name, ISIN, '
-                                                     'TepiloraCode, TepiloraType, Currency, Exchange, TepiloraRating, '
-                                                     'TER, AUM, TepiloraArea, TepiloraCategory, TepiloraAssetClass, '
-                                                     'ManagementCompany, and InceptionDate. Used by the reporting '
-                                                     "module's resolve_identifier() to auto-resolve ISINs to "
-                                                     'TepiloraCodes, by the Dashboard security detail page, and by the '
-                                                     'AI assistant when a user provides an ISIN without specifying the '
-                                                     'share class.',
+                                                     'TepiloraCode, TepiloraType, Currency, Exchange, legacy '
+                                                     'TepiloraRating, base-aware rating, TER, AUM, TepiloraArea, '
+                                                     'TepiloraCategory, TepiloraAssetClass, ManagementCompany, and '
+                                                     'InceptionDate. Optional base_currency controls the base-aware '
+                                                     'rating; legacy TepiloraRating remains unchanged for R1 '
+                                                     "sorting/filtering compatibility. Used by the reporting module's "
+                                                     'resolve_identifier() to auto-resolve ISINs to TepiloraCodes, by '
+                                                     'the Dashboard security detail page, and by the AI assistant when '
+                                                     'a user provides an ISIN without specifying the share class.',
                                       'methodology_doc': '',
                                       'params': [{'name': 'identifier',
                                                   'type': 'string',
                                                   'required': True,
                                                   'description': 'Single security identifier: ISIN, TepiloraCode, or '
-                                                                 'Bloomberg ticker'},
+                                                                 'exchange ticker'},
                                                  {'name': 'filters',
                                                   'type': 'dict',
                                                   'required': False,
                                                   'description': 'Optional metadata filters applied after resolving '
                                                                  'the identifier.'},
+                                                 {'name': 'base_currency',
+                                                  'type': 'string',
+                                                  'required': False,
+                                                  'description': 'Optional rating base currency. Supported values are '
+                                                                 'EUR, USD, GBP, and CHF. Resolution order is explicit '
+                                                                 'request, user settings, user country, then USD; '
+                                                                 'unsupported candidates are skipped and reported in '
+                                                                 'response metadata.'},
                                                  {'name': 'query',
                                                   'type': 'string',
                                                   'required': False,
                                                   'description': ''}],
                                       'required_params': ['identifier'],
-                                      'optional_params': ['filters', 'query'],
+                                      'optional_params': ['filters', 'base_currency', 'query'],
                                       'credits': 1,
                                       'tags': [],
                                       'deprecated': False,
@@ -24719,17 +25080,20 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                 'securities.rating_history': {'action': 'securities.rating_history',
                                               'category': 'securities',
                                               'operation': 'rating_history',
-                                              'summary': 'Get the historical Tepilora Rating time series with all 7 '
-                                                         'component scores',
-                                              'description': 'Returns the monthly time series of the Tepilora Rating '
-                                                             '(1-5 star composite) along with the 7 individual '
-                                                             'component percentile scores: Performance, Volatility, '
-                                                             'Consistency, Drawdown, Recovery, Cost, and Flows. Each '
-                                                             "component is a percentile (0.0-1.0) within the fund's "
-                                                             'peer group, calculated monthly from Rating.parquet. '
-                                                             'Default limit is 36 months. Used by the Dashboard for '
-                                                             'the rating evolution chart and by the reporting module '
-                                                             'for fund sheet rating section.',
+                                              'summary': 'Get the historical Tepilora Rating time series and component '
+                                                         'scores',
+                                              'description': 'Returns the monthly Tepilora Rating time series and the '
+                                                             'latest component percentile scores. With base_currency, '
+                                                             'the shared resolver selects EUR, USD, GBP, or CHF using '
+                                                             'explicit request, user settings, user country, then USD; '
+                                                             'fallback details are reported in _meta.resolution. The '
+                                                             'base-aware result includes liquidity and is capped at '
+                                                             'the exact rating_as_of served by D_rating_mc, so newer '
+                                                             'parquet rows are never used for the component breakdown. '
+                                                             'Without base_currency, the legacy Rating.parquet '
+                                                             'response remains unchanged. Default limit is 36 months. '
+                                                             'Used by the Dashboard rating chart and by '
+                                                             'reporting.fund_sheet.',
                                               'methodology_doc': '',
                                               'params': [{'name': 'identifier',
                                                           'type': 'string',
@@ -24740,6 +25104,15 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                                           'required': False,
                                                           'description': 'Optional list of security identifiers',
                                                           'aliases': ['TepiloraCode', 'tepiloraCode']},
+                                                         {'name': 'base_currency',
+                                                          'type': 'string',
+                                                          'required': False,
+                                                          'description': 'Optional rating base currency. Supported '
+                                                                         'values are EUR, USD, GBP, and CHF. '
+                                                                         'Resolution order is explicit request, user '
+                                                                         'settings, user country, then USD; '
+                                                                         'unsupported candidates are skipped and '
+                                                                         'reported in response metadata.'},
                                                          {'name': 'limit',
                                                           'type': 'int',
                                                           'required': False,
@@ -24747,13 +25120,20 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                                           'default': 36,
                                                           'aliases': ['maxTopics']}],
                                               'required_params': [],
-                                              'optional_params': ['identifier', 'identifiers', 'limit'],
+                                              'optional_params': ['identifier',
+                                                                  'identifiers',
+                                                                  'base_currency',
+                                                                  'limit'],
                                               'credits': 1,
                                               'tags': [],
                                               'deprecated': False,
                                               'internal': False,
                                               'supports_format': True,
-                                              'examples': [],
+                                              'examples': [{'name': 'rating_history_eur',
+                                                            'description': 'Get the EUR-based Tepilora Rating history '
+                                                                           'and component breakdown for an ETF.',
+                                                            'params': {'identifier': 'DE0002635299EURXMIL',
+                                                                       'base_currency': 'EUR'}}],
                                               'method_name': 'rating_history'},
                 'securities.rels': {'action': 'securities.rels',
                                     'category': 'securities',
@@ -24873,11 +25253,44 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                                      'stocks, bonds, indices) powered by Tantivy search engine. '
                                                      'Accepts free-text queries and returns matching securities with '
                                                      'metadata including Name, ISIN, TepiloraCode, TepiloraType, '
-                                                     'Currency, TepiloraRating, TER, AUM. Supports field-based '
-                                                     'filters, faceted aggregations, sort by key metrics, and '
-                                                     'deduplication via group_by=TepiloraParentId. Used by the '
-                                                     'Dashboard Securities page, by the AI assistant for security '
-                                                     'discovery, and by workflow bridges for cross-module composition.',
+                                                     'Currency, legacy TepiloraRating, base-aware rating, TER, and '
+                                                     'AUM. Without an explicit sort, all-term keyword matches with at '
+                                                     'most 5000 candidates use descending AUM converted to EUR when '
+                                                     'all candidates are funds/ETFs or all have valid AUM. Default AUM '
+                                                     'results use stable ISIN rounds before pagination (first listing '
+                                                     'per ISIN, then second and so on), without removing results or '
+                                                     'changing the total count. Within each round, ties use text '
+                                                     'relevance then security code and missing or non-convertible AUM '
+                                                     'follows available AUM, ordered by text relevance then security '
+                                                     'code. Conversion uses available exchange rates on or before the '
+                                                     'current UTC date, at most seven days old; the daily '
+                                                     'exchange-rate snapshot is kept only in process memory and '
+                                                     'expires on the next UTC date. Returned AUM values are unchanged. '
+                                                     'Identifier, explicit-prefix, fuzzy, mixed-type queries without '
+                                                     'complete AUM and queries above 5000 candidates retain text '
+                                                     'relevance unless an explicit sort is requested. Returned TER '
+                                                     'values and filters.ter_min / filters.ter_max use decimal '
+                                                     'fractions (0.0254 = 2.54%). Supports field-based filters, '
+                                                     'faceted aggregations, and deduplication via '
+                                                     'group_by=TepiloraParentId. Global sort fields are '
+                                                     'TepiloraRating, rating, TER, AUM, and Name; rating uses the '
+                                                     "request's resolved base_currency, sorting is applied before "
+                                                     'limit/offset, and candidate sets above 5000 securities must be '
+                                                     'narrowed via query or filters. Optional base_currency controls '
+                                                     'the base-aware rating; legacy TepiloraRating remains unchanged '
+                                                     'for R1 sorting/filtering compatibility, and request-level rating '
+                                                     'base resolution is reported in _meta.resolution. Each result '
+                                                     'also carries price_last_change_date (date of the last real price '
+                                                     'movement, for stale-price badges), populated only when a '
+                                                     'base-aware rating is served. price_last_change_as_of is the date '
+                                                     'of the latest price read for that security by the daily '
+                                                     'freshness file, and price_last_change_before_window is true when '
+                                                     'the price has not moved inside its scan window (current and '
+                                                     'previous calendar year) (the real date is then on or before '
+                                                     'price_last_change_date); both are null when unknown, and null '
+                                                     'never means fresh. Used by the Dashboard Securities page, by the '
+                                                     'AI assistant for security discovery, and by workflow bridges for '
+                                                     'cross-module composition.',
                                       'methodology_doc': '',
                                       'params': [{'name': 'query',
                                                   'type': 'string',
@@ -24916,11 +25329,16 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                                  {'name': 'sort',
                                                   'type': 'string',
                                                   'required': False,
-                                                  'description': ''},
+                                                  'description': 'Global sort field: TepiloraRating, rating, TER, AUM, '
+                                                                 "or Name. rating is base-aware and uses the request's "
+                                                                 'resolved base_currency. Candidate sets above 5000 '
+                                                                 'are rejected and must be narrowed with query or '
+                                                                 'filters.'},
                                                  {'name': 'order',
                                                   'type': 'string',
                                                   'required': False,
-                                                  'description': ''},
+                                                  'description': 'Sort order, asc or desc. Defaults depend on the '
+                                                                 'selected sort field.'},
                                                  {'name': 'group_by',
                                                   'type': 'string',
                                                   'required': False,
@@ -24930,7 +25348,15 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                                  {'name': 'preferred_currency',
                                                   'type': 'string',
                                                   'required': False,
-                                                  'description': 'Optional ISO 4217 currency code'}],
+                                                  'description': 'Optional ISO 4217 currency code'},
+                                                 {'name': 'base_currency',
+                                                  'type': 'string',
+                                                  'required': False,
+                                                  'description': 'Optional rating base currency. Supported values are '
+                                                                 'EUR, USD, GBP, and CHF. Resolution order is explicit '
+                                                                 'request, user settings, user country, then USD; '
+                                                                 'unsupported candidates are skipped and reported in '
+                                                                 'response metadata.'}],
                                       'required_params': [],
                                       'optional_params': ['query',
                                                           'filters',
@@ -24941,7 +25367,8 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                                           'sort',
                                                           'order',
                                                           'group_by',
-                                                          'preferred_currency'],
+                                                          'preferred_currency',
+                                                          'base_currency'],
                                       'credits': 1,
                                       'tags': [],
                                       'deprecated': False,
@@ -24957,6 +25384,79 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                                                'filters': {'TepiloraType': 'ETF'},
                                                                'limit': 3}}],
                                       'method_name': 'search'},
+                'settings.get': {'action': 'settings.get',
+                                 'category': 'settings',
+                                 'operation': 'get',
+                                 'summary': 'Read persisted settings for the authenticated user',
+                                 'description': "Returns the current user's application settings from "
+                                                'APIs.user_settings. If no document exists, stable defaults are '
+                                                'returned. The target user is derived exclusively from dispatcher '
+                                                'context (user_id, then user_email); the request payload cannot select '
+                                                'another user.',
+                                 'methodology_doc': '',
+                                 'params': [],
+                                 'required_params': [],
+                                 'optional_params': [],
+                                 'credits': 1,
+                                 'tags': [],
+                                 'deprecated': False,
+                                 'internal': False,
+                                 'supports_format': False,
+                                 'examples': [{'name': 'settings_get_current_user',
+                                               'description': "Read the current user's persisted settings or defaults.",
+                                               'params': {}}],
+                                 'method_name': 'get'},
+                'settings.update': {'action': 'settings.update',
+                                    'category': 'settings',
+                                    'operation': 'update',
+                                    'summary': 'Persist settings for the authenticated user',
+                                    'description': "Applies a partial update to the current user's application "
+                                                   'settings in APIs.user_settings. Currency is validated against the '
+                                                   'supported rating bases (EUR, USD, GBP, CHF). The target user is '
+                                                   'derived exclusively from dispatcher context, never from request '
+                                                   'parameters.',
+                                    'methodology_doc': '',
+                                    'params': [{'name': 'currency',
+                                                'type': 'string',
+                                                'required': False,
+                                                'description': 'Application currency used as default rating base '
+                                                               'currency.'},
+                                               {'name': 'theme',
+                                                'type': 'string',
+                                                'required': False,
+                                                'description': 'Dashboard theme preference.'},
+                                               {'name': 'language',
+                                                'type': 'string',
+                                                'required': False,
+                                                'description': 'Dashboard language preference.'},
+                                               {'name': 'dateFormat',
+                                                'type': 'string',
+                                                'required': False,
+                                                'description': 'Dashboard date display format.'},
+                                               {'name': 'notifications',
+                                                'type': 'string',
+                                                'required': False,
+                                                'description': 'Partial notification settings update.'},
+                                               {'name': 'privacy',
+                                                'type': 'string',
+                                                'required': False,
+                                                'description': 'Partial privacy settings update.'}],
+                                    'required_params': [],
+                                    'optional_params': ['currency',
+                                                        'theme',
+                                                        'language',
+                                                        'dateFormat',
+                                                        'notifications',
+                                                        'privacy'],
+                                    'credits': 1,
+                                    'tags': [],
+                                    'deprecated': False,
+                                    'internal': False,
+                                    'supports_format': False,
+                                    'examples': [{'name': 'settings_update_currency',
+                                                  'description': "Persist the current user's application currency.",
+                                                  'params': {'currency': 'EUR'}}],
+                                    'method_name': 'update'},
                 'stocks.compare': {'action': 'stocks.compare',
                                    'category': 'stocks',
                                    'operation': 'compare',
@@ -25476,7 +25976,7 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                       'stress',
                                       'suggest_securities',
                                       'validate'],
-                 'attachments': ['delete', 'download', 'info', 'list', 'read', 'rename', 'upload'],
+                 'attachments': ['delete', 'download', 'info', 'list', 'parse', 'read', 'rename', 'upload'],
                  'audit': ['history', 'query'],
                  'billing': ['aggregate',
                              'calculate',
@@ -25532,7 +26032,8 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                  'macro': ['calendar', 'countries', 'history', 'indicators', 'latest', 'search'],
                  'news': ['details', 'facets', 'latest', 'search', 'trending', 'trending_compare', 'trending_history'],
                  'options': ['greeks', 'iv', 'payoff', 'price', 'strategies', 'strategy'],
-                 'portfolio': ['attribution',
+                 'portfolio': ['accept_proposal',
+                               'attribution',
                                'compare',
                                'contribution',
                                'costs',
@@ -25587,6 +26088,7 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                 'rels',
                                 'screen',
                                 'search'],
+                 'settings': ['get', 'update'],
                  'stocks': ['compare',
                             'dividends',
                             'indicators',
@@ -25597,13 +26099,13 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                             'technicals',
                             'valuation'],
                  'workflows': ['list', 'map']},
- 'stats': {'total_operations': 270,
-           'categories': 29,
+ 'stats': {'total_operations': 274,
+           'categories': 30,
            'operations_by_category': {'alerts': 9,
                                       'alternatives': 9,
                                       'analytics': 68,
                                       'asset_allocation': 10,
-                                      'attachments': 7,
+                                      'attachments': 8,
                                       'audit': 2,
                                       'billing': 10,
                                       'bonds': 9,
@@ -25618,7 +26120,7 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                       'macro': 6,
                                       'news': 7,
                                       'options': 6,
-                                      'portfolio': 20,
+                                      'portfolio': 21,
                                       'profiling': 10,
                                       'publications': 5,
                                       'queries': 8,
@@ -25626,5 +26128,6 @@ SCHEMA: Dict[str, Any] = {'version': '3.12.0',
                                       'reporting': 8,
                                       'search': 1,
                                       'securities': 13,
+                                      'settings': 2,
                                       'stocks': 9,
                                       'workflows': 2}}}

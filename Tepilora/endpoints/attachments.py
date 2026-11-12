@@ -12,7 +12,7 @@ from ._base import AsyncBaseAPI, BaseAPI
 
 
 class AttachmentsAPI(BaseAPI):
-    """Attachments namespace: delete, download, info, list, read, rename, upload."""
+    """Attachments namespace: delete, download, info, list, parse, read, rename, upload."""
 
     def delete(
         self,
@@ -90,6 +90,31 @@ class AttachmentsAPI(BaseAPI):
             _payload["offset"] = offset
         return self._call("attachments.list", params=_payload, options=options, context=context)
 
+    def parse(
+        self,
+        *,
+        file_id: str,
+        max_chars: Optional[int] = 50000,
+        max_pages: Optional[int] = 20,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+    ) -> Any:
+        """Extract text from an owned attachment
+
+        Extracts capped text and lightweight structure from the authenticated user's PDF, XLSX, or XLS attachment. The operation accepts only a fileId returned by attachments.upload; it never accepts raw file paths and resolves ownership from the execution context before opening the blob.
+
+        Args:
+        file_id: Attachment fileId returned by attachments.upload.
+        max_chars: Maximum number of extracted text characters to return.
+        max_pages: Maximum number of PDF pages or spreadsheet sheets to parse."""
+        _payload: Dict[str, Any] = {}
+        _payload["file_id"] = file_id
+        if max_chars is not None:
+            _payload["max_chars"] = max_chars
+        if max_pages is not None:
+            _payload["max_pages"] = max_pages
+        return self._call("attachments.parse", params=_payload, options=options, context=context)
+
     def read(
         self,
         *,
@@ -162,7 +187,7 @@ class AttachmentsAPI(BaseAPI):
 
 
 class AsyncAttachmentsAPI(AsyncBaseAPI):
-    """Attachments namespace: delete, download, info, list, read, rename, upload."""
+    """Attachments namespace: delete, download, info, list, parse, read, rename, upload."""
 
     async def delete(
         self,
@@ -239,6 +264,31 @@ class AsyncAttachmentsAPI(AsyncBaseAPI):
         if offset is not None:
             _payload["offset"] = offset
         return await self._call("attachments.list", params=_payload, options=options, context=context)
+
+    async def parse(
+        self,
+        *,
+        file_id: str,
+        max_chars: Optional[int] = 50000,
+        max_pages: Optional[int] = 20,
+        options: Optional[Dict[str, Any]] = None,
+        context: Optional[Dict[str, Any]] = None,
+    ) -> Any:
+        """Extract text from an owned attachment
+
+        Extracts capped text and lightweight structure from the authenticated user's PDF, XLSX, or XLS attachment. The operation accepts only a fileId returned by attachments.upload; it never accepts raw file paths and resolves ownership from the execution context before opening the blob.
+
+        Args:
+        file_id: Attachment fileId returned by attachments.upload.
+        max_chars: Maximum number of extracted text characters to return.
+        max_pages: Maximum number of PDF pages or spreadsheet sheets to parse."""
+        _payload: Dict[str, Any] = {}
+        _payload["file_id"] = file_id
+        if max_chars is not None:
+            _payload["max_chars"] = max_chars
+        if max_pages is not None:
+            _payload["max_pages"] = max_pages
+        return await self._call("attachments.parse", params=_payload, options=options, context=context)
 
     async def read(
         self,

@@ -413,6 +413,7 @@ class TepiloraClient:
             ReportingAPI,
             SearchAPI,
             SecuritiesAPI,
+            SettingsAPI,
             StocksAPI,
             WorkflowsAPI,
         )
@@ -447,6 +448,7 @@ class TepiloraClient:
         self.reporting = ReportingAPI(self)
         self.search = SearchAPI(self)
         self.securities = SecuritiesAPI(self)
+        self.settings = SettingsAPI(self)
         self.stocks = StocksAPI(self)
         self.workflows = WorkflowsAPI(self)
         # --- AUTO-GENERATED NAMESPACE REGISTRATIONS END ---
@@ -930,6 +932,7 @@ class AsyncTepiloraClient:
             AsyncReportingAPI,
             AsyncSearchAPI,
             AsyncSecuritiesAPI,
+            AsyncSettingsAPI,
             AsyncStocksAPI,
             AsyncWorkflowsAPI,
         )
@@ -964,6 +967,7 @@ class AsyncTepiloraClient:
         self.reporting = AsyncReportingAPI(self)
         self.search = AsyncSearchAPI(self)
         self.securities = AsyncSecuritiesAPI(self)
+        self.settings = AsyncSettingsAPI(self)
         self.stocks = AsyncStocksAPI(self)
         self.workflows = AsyncWorkflowsAPI(self)
         # --- AUTO-GENERATED NAMESPACE REGISTRATIONS END ---
